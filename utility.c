@@ -111,9 +111,6 @@ free_data (data* d)
   else if (d->type == ARBEL_FILE)
     {
       free(d);
-      if (d->data != NULL)
-	fclose((FILE*) d->data);
-      
     }
   else
     {

@@ -1847,17 +1847,113 @@ op_is_file (registry* reg)
 }
 
 void
+op_is_nothing (registry* reg)
+{
+  op_is_type(reg, NOTHING);
+}
+
+
+void
 op_open_text_file (registry* reg)
 {
   data* arg1 = lookup(reg, "#1", 0);
-  FILE* f = fopen((char*) arg1->data, "r+");
 
+  if (arg1 == NULL)
+    {
+      do_error("`open-text-file` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("Argument to `open-text-file` must be a string.");
+      return;
+    }
+  
+  FILE* f = fopen((char*) arg1->data, "r+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
       return;
     }
 
+  data* d;
+  assign_file(&d,f);
+  ret_ans(reg,d);
+
+}
+
+void
+op_read (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`read` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != ARBEL_FILE)
+    {
+      do_error("Argument to `read` must be a file.");
+      return;
+    }
+
+  char c = fgetc((FILE*) arg1->data);
+  char ret[2];
+  data* d;
+  if (c == EOF || c == '\0')
+    {
+      assign_str(&d, "");
+    }
+  else
+    {
+      ret[0] = c;
+      ret[1] = '\0';
+      assign_str(&d, ret);
+    }
+  ret_ans(reg,d);
+}
+
+void
+op_close (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`close` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != REGISTER)
+    {
+      do_error("Argument to `close` must be a register.");
+      return;
+    }
+
+  data* f = lookup(reg->up, (regstr) arg1->data, 0);
+
+  if (f == NULL)
+    {
+      do_error("Register does not exist.");
+      return;
+    }
+
+  if (f->type != ARBEL_FILE)
+    {
+      do_error("Register does not contain a file.");
+      return;
+    }
+
+  if (f->data != NULL)
+    {
+      fclose((FILE*) f->data);
+    }
+
+  del(reg->up, (regstr) arg1->data, 1);
+  
 }
 
 
@@ -2046,6 +2142,21 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_is_file);
   set(reg,d,"is-file");
+
+  assign_op(&d, op_is_nothing);
+  set(reg,d,"is-nothing");
+
+  assign_op(&d, op_open_text_file);
+  set(reg,d,"open-text-file");
+
+  assign_op(&d, op_read);
+  set(reg,d,"read");
+
+  assign_op(&d, op_close);
+  set(reg,d,"close");
+
+
+  
   
 }
   
