@@ -1,0 +1,197 @@
+* DONE Implement loop construct
+  CLOSED: [2019-08-03 Sat 20:01]
+* DONE Come to final decision on if's
+  CLOSED: [2019-08-03 Sat 20:01]
+* DONE Implement expressions that are executed greedy ([]'s) instead of lazy (()'s)
+  CLOSED: [2019-08-03 Sat 20:01]
+* DONE Review memory managment of interpreter and make it work without leaking
+  CLOSED: [2019-08-03 Sat 23:03]
+* DONE Develop an easy way to name elements of registry, the key data type in regular
+  CLOSED: [2019-08-03 Sat 20:58]
+
+Maybe something like?:
+
+reg < key1 value1 > < key2 value2 > .
+=> registry with key1 => value1 and key2 => value2
+
+Or:
+
+reg [ pair key1 value1 . ] [ pair key1 value1 . ]
+
+I kind of think because it is a central concept, it is fine to introduce a special notation, but the second idea is cleaner conceptually.
+
+Decided on [ name value key . ]
+* TODO Add ability to switch output from screen to also write to file
+This requires an output object or something like that.
+* DONE Make registers more than just names but have associated registries so that they can be accessed
+  CLOSED: [2019-08-04 Sun 21:44]
+* DONE Add "next" so that next $XX1 . => $XX2 and so on. 
+  CLOSED: [2019-08-05 Mon 15:19]
+* DONE Function to return key of register (the literal string associated with it) and to turn a string into a register
+  CLOSED: [2019-08-07 Wed 21:35]
+* DONE Basic comparison and other operators for basic numeric, string types, registry types (should be able to get length of each, get type of reference, etc).
+  CLOSED: [2019-08-07 Wed 21:35]
+* DONE Conversion between types that can be converted
+  CLOSED: [2019-08-12 Mon 23:04]
+
+String => Register (Done)
+Numeric => String
+String => Numeric
+
+
+* DONE Add apply to apply a function to each element of a registry and return a registry with same registers.
+  CLOSED: [2019-08-05 Mon 08:40]
+* DONE Be able to write instructions typed in out as source code
+  CLOSED: [2019-08-12 Mon 23:22]
+* DONE Be able to load/save current workspace
+  CLOSED: [2019-08-09 Fri 08:57]
+* DONE Append function to add to registry a new object as $#N if $#1,...,$#(N-1) already exist.
+  CLOSED: [2019-08-05 Mon 16:26]
+* DONE Add a `with` command to apply an expression within a registry
+  CLOSED: [2019-08-05 Mon 21:24]
+
+with $reg 
+{
+	add $#1 $#2 .
+  other code...
+}
+
+All operates with registry refered to by $reg.
+
+* DONE Review how we are going to use registers whether we are going to allow pass by reference in this way or always return by value
+  CLOSED: [2019-08-05 Mon 21:24]
+
+Idea: everything is passed by value except registries which are passed by reference. [scratched]
+
+Everything is pass-by-value.  Will implement a command like this:
+
+in $object 
+(
+	set $a "hello" .
+) .
+
+modifies the contents of object (a registry) without copying.  Temporarily moves registry `object` essentially to root registry.
+
+Look into whether having registers resolve to objects on "lookup" would allow us to use them generically as pass-by-reference.  Could probably do this with an explicit reference instead to prevent built-in's from acting differently than user commands.  Something like:
+
+set $one 1 .
+set $two 2 .
+add \one \two . 
+=> 3 
+
+
+* DONE Simplify adding new operations.  Clearly they are all the same type. Probably can replace the enum with direct pointers to the functions
+  CLOSED: [2019-08-05 Mon 21:24]
+
+* Name ideas
+the unstructured expression language = tuel (not bad, sounds kind of like tool but to rhyme with jewel)
+an unstructured expression language = auel (how to pronounce?)
+less structured expression language = lsel (sounds like select might think a query language)
+kinda unstructured expression language = kuel (sounds like kewl, lame)
+sorta unstructured expression lanague = suel (apparently some D&D thing)
+a little unstructured expression language = luel (not bad, doesn't sound like anything english)
+
+sideeffect
+commands with side effects = cwse?
+a command language = acl (clearly some programming thing)
+
+a simple unstructural language
+
+a modern unstructured imperative language = muil
+
+a data modification language
+
+a registry modifica
+
+remodel
+
+Narl is A Registry Language
+
+I like this one.
+* DONE Figure out why `in` doesn't work with empty registry
+  CLOSED: [2019-08-06 Tue 08:21]
+* DONE Need a direct loop operator for efficiency because recursion is not optimized.  The language is not functional, side-effects are a feature, no reason not to have explicit loop.
+  CLOSED: [2019-08-06 Tue 09:36]
+
+This syntax is standard C, but it would be a special form...
+
+while { condition } { action }
+
+I think what we really need is a special variable to refer to the global registry.
+
+Then
+
+while ( condition ) ( action ) .
+
+Would be able to run:
+
+if [ call condition \% . ] { call action \% . } .
+
+repeatedly.
+
+Also need a for loop over all elements of a registry
+
+for registry ( action #1 ) "regular-expression" .
+
+loops over all registry elements that match the regular expression
+
+names for global registry... \% or \global or \data
+
+* DONE Need to include \up for referencing upwards registry
+  CLOSED: [2019-08-06 Tue 00:47]
+
+* DONE Should find a way to eliminate NAMED_DATA as a type
+  CLOSED: [2019-08-06 Tue 10:34]
+
+* DONE Maybe reg should be REGISTER DATA REGISTER DATA and list should be DATA DATA DATA ?
+  CLOSED: [2019-08-06 Tue 16:37]
+
+like, 
+
+reg $word1 "hello" $word2 "world" .
+
+versus
+
+list "hello" "world" => $#1 = "hello" and $#2 = "world"
+
+
+* DONE Implement collapse which walks the registers $#1,...,$#N and applies a function to $#1 and $#2 and then the $ans to $#3 and so on
+  CLOSED: [2019-08-07 Wed 08:44]
+
+
+* DONE Fix segfault in collapse when registry not found
+  CLOSED: [2019-08-13 Tue 22:24]
+* DONE Add env command to enter a registry as new environment
+  CLOSED: [2019-08-08 Thu 15:30]
+
+Remember the idea is to write a language that is easy to use interactively; interactive first. Maybe called `go-in`.  Paired with command: `go-out` to go back up the environment stack.
+
+* DONE Consider renaming expression/operation to direction/command/order or something more imperative-sounding
+  CLOSED: [2019-08-08 Thu 15:30]
+
+Argument should be an Order 
+Argument should be a Direction 
+Argument should be a Command (much clearer)
+
+* DONE Crash with following to reproduce
+  CLOSED: [2019-08-10 Sat 16:25]
+
+add 3 10-00 .
+add 30 1000 .
+
+Problem was an earlier malloc did not cover range, corrupting mem.
+
+* DONE Type assert
+  CLOSED: [2019-08-14 Wed 20:50]
+
+* DONE Raise errors (op_error)
+  CLOSED: [2019-08-14 Wed 20:50]
+
+* DONE Remove arbitrary limit on collapse list length
+  CLOSED: [2019-08-11 Sun 12:05]
+
+* DONE Rename the letters instructions to characters instructions
+  CLOSED: [2019-08-13 Tue 22:24]
+
+* DONE Instruction to clear code cache
+  CLOSED: [2019-08-14 Wed 20:05]
