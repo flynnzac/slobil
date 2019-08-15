@@ -776,12 +776,29 @@ is-decimal VALUE .
 is-string VALUE .
 is-register VALUE .
 is-registry VALUE .
-is-instruction VALUE .</programlisting>
+is-instruction VALUE .
+is-file VALUE .</programlisting>
 
           <para>
             Check whether the VALUE is a certain type. Sets the <code>ans</code> register to 1 if it is that type and to 0 if it is not.
           </para>
       </listitem>
+
+      <listitem>
+	<para>
+	  The file modification instructions:
+	</para>
+	<programlisting>
+open-text-file STRING .
+read FILE .
+close REGISTER .</programlisting>
+
+<para>
+  <code>open-text-file</code> sets the <code>ans</code> register to a file handle. <code>read</code> sets the <code>ans</code> register to the next character in the file. <code>close</code> closes the file presumably located at the register and empties the register.
+</para>
+      </listitem>
+	  
+	  
       
       
     </itemizedlist>

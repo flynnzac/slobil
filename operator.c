@@ -2155,8 +2155,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_close);
   set(reg,d,"close");
 
-
-  
   
 }
   
