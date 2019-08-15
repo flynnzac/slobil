@@ -4,6 +4,26 @@ ARBEL is a programming language based on a named-list data type called a registr
 
 For a manual see: docs/arbel.html
 
+# Installation
+
+I have tested that the interpreter works on GNU/Linux and under MSYS on Windows. GNU Readline is a required depedency. Other than the standard GNU C Library, nothing else is required to build.
+
+To build, do:
+
+```
+make
+```
+
+The make process is extremely simple (a one-line compilation command) so nothing else should be required.  If you do not have a Make program, you can just copy the compilation command from the Makefile and execute it. 
+
+# Command-line Switches
+
+ARBEL accepts the following command-line switches:
+
+- `-l FILE` executes the file before starting the interpreter.
+- `-s FILE` executes the file after any loading done by an `-l` option and exits after executing the script.
+- `-n` do not start the interpreter. Exit after any loading.
+- `-m` do not print out information unless explicitly using a `print` instruction.
 
 
 
