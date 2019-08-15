@@ -42,6 +42,7 @@ enum data_type
    ACTIVE_INSTRUCTION,
    OPERATION,
    REFERENCE,
+   ARBEL_FILE,
    NOTHING
   };
 
@@ -126,6 +127,9 @@ assign_regstr (data** d, const char* name);
 
 void
 assign_ref (data** d, registry* reg, const char* name);
+
+void
+assign_file (data** d, FILE* f);
 
 int
 is_numeric (data* d);

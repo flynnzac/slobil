@@ -1841,6 +1841,27 @@ op_is_instruction (registry* reg)
 }
 
 void
+op_is_file (registry* reg)
+{
+  op_is_type(reg, ARBEL_FILE);
+}
+
+void
+op_open_text_file (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  FILE* f = fopen((char*) arg1->data, "r+");
+
+  if (f == NULL)
+    {
+      do_error("File did not open.  Possibly, it does not exist.");
+      return;
+    }
+
+}
+
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2023,6 +2044,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_instruction);
   set(reg,d,"is-instruction");
 
+  assign_op(&d, op_is_file);
+  set(reg,d,"is-file");
   
 }
   

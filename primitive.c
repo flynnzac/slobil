@@ -122,6 +122,15 @@ assign_ref (data** d, registry* reg, const char* name)
   
 }
 
+void
+assign_file (data** d, FILE* f)
+{
+  *d = malloc(sizeof(data));
+  (*d)->type = ARBEL_FILE;
+  (*d)->data = f;
+  
+}
+
 
 void
 assign_nothing (data** d)
@@ -400,6 +409,9 @@ copy_data (data* d_in)
       break;
     case ACTIVE_INSTRUCTION:
       assign_active(&d, (char*) d_in->data);
+      break;
+    case ARBEL_FILE:
+      assign_file(&d, (FILE*) d_in->data);
       break;
     case NOTHING:
       assign_nothing(&d);

@@ -108,6 +108,13 @@ free_data (data* d)
     {
       free(d);
     }
+  else if (d->type == ARBEL_FILE)
+    {
+      free(d);
+      if (d->data != NULL)
+	fclose((FILE*) d->data);
+      
+    }
   else
     {
       if (d->data != NULL)
@@ -238,6 +245,9 @@ print_data (data* d, int print_cmd)
     case REFERENCE:
       printf("Reference to: $%s\n", ((ref*) d->data)->key);
       break;
+    case ARBEL_FILE:
+      printf("A file.\n");
+      break;
     default:
       break;
     }
@@ -280,6 +290,8 @@ str_type (data_type type)
     case NOTHING:
       s = "Nothing";
       break;
+    case ARBEL_FILE:
+      s = "File";
     }
 
   return s;
