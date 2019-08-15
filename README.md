@@ -14,7 +14,12 @@ To build, do:
 make
 ```
 
-The make process is extremely simple (a one-line compilation command) so nothing else should be required.  If you do not have a Make program, you can just copy the compilation command from the Makefile and execute it. 
+from the source directory. The make process is extremely simple (a one-line compilation command) so nothing else should be required.  If you do not have a Make program, you can just copy the compilation command from the Makefile and execute it. 
+
+The program is built in the current directory. To start the interpreter, type:
+```
+./arbel
+```
 
 # Command-line Switches
 
