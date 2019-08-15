@@ -1956,6 +1956,100 @@ op_close (registry* reg)
   
 }
 
+void
+op_or (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`or` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != INTEGER || arg2->type != INTEGER)
+    {
+      do_error("Both arguments to `or` should be integers.");
+      return;
+    }
+
+  data* d;
+  if (*((int*) arg1->data) || *((int*) arg2->data))
+    {
+      assign_int(&d, 1);
+    }
+  else
+    {
+      assign_int(&d,0);
+    }
+
+  ret_ans(reg,d);
+}
+
+void
+op_and (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`and` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != INTEGER || arg2->type != INTEGER)
+    {
+      do_error("Both arguments to `and` should be integers.");
+      return;
+    }
+
+  data* d;
+  if (*((int*) arg1->data) && *((int*) arg2->data))
+    {
+      assign_int(&d, 1);
+    }
+  else
+    {
+      assign_int(&d,0);
+    }
+
+  ret_ans(reg,d);
+}
+
+void
+op_not (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`not` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != INTEGER)
+    {
+      do_error("The argument to `not` should be an integer.");
+      return;
+    }
+
+  data* d;
+  if (*((int*) arg1->data))
+    {
+      assign_int(&d, 0);
+    }
+  else
+    {
+      assign_int(&d, 1);
+    }
+
+  ret_ans(reg,d);
+}
+
+
+
 
 void
 add_basic_ops (registry* reg)
@@ -2155,6 +2249,16 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_close);
   set(reg,d,"close");
 
+  assign_op(&d, op_and);
+  set(reg,d,"and");
+
+  assign_op(&d, op_or);
+  set(reg,d,"or");
+
+  assign_op(&d, op_not);
+  set(reg,d,"not");
+
+  
   
 }
   
