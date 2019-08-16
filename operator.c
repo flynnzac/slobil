@@ -1905,7 +1905,7 @@ op_read (registry* reg)
   data* d;
   if (c == EOF || c == '\0')
     {
-      assign_str(&d, "");
+      assign_nothing(&d);
     }
   else
     {
@@ -2073,6 +2073,11 @@ op_read_line (registry* reg)
   if (ret >= 0)
     {
       assign_str(&d, line);
+      ret_ans(reg,d);
+    }
+  else
+    {
+      assign_nothing(&d);
       ret_ans(reg,d);
     }
 }

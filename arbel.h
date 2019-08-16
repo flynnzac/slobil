@@ -129,6 +129,9 @@ void
 assign_ref (data** d, registry* reg, const char* name);
 
 void
+assign_nothing (data** d);
+
+void
 assign_file (data** d, FILE* f);
 
 int

@@ -355,6 +355,12 @@ parse (FILE* f, registry* reg, registry** arg_reg,
           state->i++;
           complete = 0;
         }
+
+      if (is_error(-1))
+	{
+	  break;
+
+	}
     }
 
   if (is_error(-1))
