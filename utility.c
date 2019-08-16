@@ -83,7 +83,7 @@ is_reference (const char* str)
 int
 is_whitespace (const char c)
 {
-  if ((c == ' ') || (c == '\t') || (c == '\n'))
+  if ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))
     return 1;
   else
     return 0;
