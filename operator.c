@@ -2048,8 +2048,34 @@ op_not (registry* reg)
   ret_ans(reg,d);
 }
 
+void
+op_read_line (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`read-line` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != ARBEL_FILE)
+    {
+      do_error("`read-line`'s argument must be a File.");
+      return;
+    }
 
 
+  char* line  = NULL;
+  size_t len = 0;
+  ssize_t ret = getline(&line, &len, (FILE*) arg1->data);
+  data* d;
+  if (ret >= 0)
+    {
+      assign_str(&d, line);
+      ret_ans(reg,d);
+    }
+}
 
 void
 add_basic_ops (registry* reg)
@@ -2258,6 +2284,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_not);
   set(reg,d,"not");
 
+  assign_op(&d, op_read_line);
+  set(reg,d,"read-line");
+  
   
   
 }
