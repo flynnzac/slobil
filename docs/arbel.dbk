@@ -934,6 +934,29 @@ set $parse-csv
   answer \parsed .
 ) .</programlisting>    
     </example>
+
+    <example>
+      <title>Simple text editor</title>
+
+      <programlisting>
+rem "arbed" is a simple text editor to demonstrate a convenient way to make applications in the ARBEL environment .
+
+set $arbed [ reg . ] .
+
+in \arbed ( set $buffer [ list . ] . ) .
+in \arbed ( set $cur-line 0 . ) .
+in \arbed ( set $n ( in \up ( set $cur-line [ add cur-line 1 . ] . ) . ) . ) .
+in \arbed ( set $p ( in \up ( set $cur-line [ subtract cur-line 1 . ] . ) . ) . ) .
+in \arbed ( set $i ( 
+                     in \buffer
+		     (
+		       to-register [ concat "#" [ to-string cur-line . ] . ] .
+		       set ans arbed-str .
+		     ) $arbed-str \#1 . ) . ) .</programlisting>
+		     
+    </example>
+
+	
   </section>
 <appendix id="fdl">
   <title>GNU Free Documentation License</title>
