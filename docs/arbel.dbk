@@ -915,7 +915,7 @@ tokenize "hello,world" "," .</programlisting>
     <example>
       <title>Parse a Comma-Separated File</title>
       <para>
-	Parses a comma-separated file and return each row as a registry.
+	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
       </para>
       <programlisting>
 set $parse-csv
