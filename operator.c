@@ -1498,6 +1498,10 @@ op_go_in (registry* reg)
     }
 
   arg1 = lookup(reg, "#1", 0);
+
+  if (is_error(-1))
+    return;
+
   if (arg1->type != REGISTRY)
     {
       do_error("Argument to `go-in` must be a reference to a registry.");
