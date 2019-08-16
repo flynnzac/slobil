@@ -791,10 +791,11 @@ is-file VALUE .</programlisting>
 	<programlisting>
 open-text-file STRING .
 read FILE .
+read-line FILE .
 close REGISTER .</programlisting>
 
 <para>
-  <code>open-text-file</code> sets the <code>ans</code> register to a file handle. <code>read</code> sets the <code>ans</code> register to the next character in the file. <code>close</code> closes the file presumably located at the register and empties the register.
+  <code>open-text-file</code> sets the <code>ans</code> register to a file handle. <code>read</code> sets the <code>ans</code> register to the next character in the file. <code>read-line</code> sets the <code>ans</code> register to the next line of the file. <code>close</code> closes the file presumably located at the register and empties the register.
 </para>
       </listitem>
 	  
@@ -876,6 +877,42 @@ set $transpose
   answer \out .
 ) .
       </programlisting>
+    </example>
+
+    <example>
+      <title>Tokenize a string</title>
+      <programlisting>
+rem Tokenize a string $#1 by splitting on string $#2
+set $tokenize
+(
+  set $i 1 .
+  set $len [ count-characters \#1 . ] .
+  set $cur-reg $#1 .
+  set $tokened [ list . ] .
+  set $init 1 .
+  while ( lteq i len . )
+  (
+    set $c [ character \#1 i . ] .
+    if [ string-eq c \#2 . ]
+    {
+      in \tokened ( set cur-reg buffer . ) .
+      set $cur-reg [ next cur-reg . ] .
+      set $init 1 .
+    }
+    {
+      if [ eq init 1 . ] { set $buffer c . set $init 0 . }
+         { set $buffer [ concat buffer c . ] . } .
+    } .
+    set $i [ add i 1 . ] .
+  ) .
+
+  in \tokened ( set cur-reg buffer . ) .
+
+  answer \tokened .
+)  .
+tokenize "hello,world" "," .</programlisting>
+
+
     </example>
   </section>
 <appendix id="fdl">

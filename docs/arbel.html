@@ -1,6 +1,6 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ARBEL: an interactive programming language</title><link rel="stylesheet" type="text/css" href="arbel.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idm1"></a>ARBEL: an interactive programming language</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Zach</span> <span class="surname">Flynn</span></h3></div></div><div><p class="copyright">Copyright © 2019 Zach Flynn</p></div><div><div class="legalnotice"><a name="idm17"></a>
       Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 by the Free Software Foundation. A copy of the license is included in the section entitled "GNU Free Documentation License".
-    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm32">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm107">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm422">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
+    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm32">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm107">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm443">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
       ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of that registry.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </p><p>
       ARBEL is easy to use interactively because it is not block-based.  Instructions are naturally single-line and entering sub-statements is straightforward.  ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
@@ -373,11 +373,27 @@ is-decimal VALUE .
 is-string VALUE .
 is-register VALUE .
 is-registry VALUE .
-is-instruction VALUE .</pre><p>
+is-instruction VALUE .
+is-file VALUE .</pre><p>
             Check whether the VALUE is a certain type. Sets the <code class="code">ans</code> register to 1 if it is that type and to 0 if it is not.
-          </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm422"></a>Examples</h2></div></div></div><p>
+          </p></li><li class="listitem"><p>
+	  The file modification instructions:
+	</p><pre class="programlisting">
+open-text-file STRING .
+read FILE .
+read-line FILE .
+close REGISTER .</pre><p>
+  <code class="code">open-text-file</code> sets the <code class="code">ans</code> register to a file handle. <code class="code">read</code> sets the <code class="code">ans</code> register to the next character in the file. <code class="code">read-line</code> sets the <code class="code">ans</code> register to the next line of the file. <code class="code">close</code> closes the file presumably located at the register and empties the register.
+</p></li><li class="listitem"><p>
+	  The logical instructions:
+	</p><pre class="programlisting">
+or INTEGER INTEGER .
+and INTEGER INTEGER .
+not INTEGER .</pre><p>
+  <code class="code">or</code> sets the <code class="code">ans</code> register to 1 if either integer is not 0 and to 0 otherwise.  <code class="code">and</code> sets the <code class="code">ans</code> register to 1 if both integers are not 0 and to 0 otherwise.  <code class="code">not</code> sets the <code class="code">ans</code> register to 1 if the integer is 0 and to 0 otherwise.
+</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm443"></a>Examples</h2></div></div></div><p>
       The purpose of this section is to give some more "full-fledged" examples of ARBEL in action to get a feel for the language.
-    </p><div class="example"><a name="idm425"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
+    </p><div class="example"><a name="idm446"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
       </p><pre class="programlisting">
 rem Computes v^T v for a vector .
@@ -423,7 +439,36 @@ set $transpose
   ) .
   answer \out .
 ) .
-      </pre></div></div><br class="example-break"></div><div class="appendix"><h2 class="title" style="clear: both"><a name="fdl"></a>A. GNU Free Documentation License</h2><p>Version 1.3, 3 November 2008</p><p>
+      </pre></div></div><br class="example-break"><div class="example"><a name="idm451"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">
+rem Tokenize a string $#1 by splitting on string $#2
+set $tokenize
+(
+  set $i 1 .
+  set $len [ count-characters \#1 . ] .
+  set $cur-reg $#1 .
+  set $tokened [ list . ] .
+  set $init 1 .
+  while ( lteq i len . )
+  (
+    set $c [ character \#1 i . ] .
+    if [ string-eq c \#2 . ]
+    {
+      in \tokened ( set cur-reg buffer . ) .
+      set $cur-reg [ next cur-reg . ] .
+      set $init 1 .
+    }
+    {
+      if [ eq init 1 . ] { set $buffer c . set $init 0 . }
+         { set $buffer [ concat buffer c . ] . } .
+    } .
+    set $i [ add i 1 . ] .
+  ) .
+
+  in \tokened ( set cur-reg buffer . ) .
+
+  answer \tokened .
+)  .
+tokenize "hello,world" "," .</pre></div></div><br class="example-break"></div><div class="appendix"><h2 class="title" style="clear: both"><a name="fdl"></a>A. GNU Free Documentation License</h2><p>Version 1.3, 3 November 2008</p><p>
     Copyright © 2000, 2001, 2002, 2007, 2008
     <a class="ulink" href="https://www.fsf.org/" target="_top">Free Software Foundation, Inc.</a>
   </p><p>
