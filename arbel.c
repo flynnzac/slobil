@@ -126,7 +126,7 @@ main (int argc, char** argv)
       add_history(code);
       code = append_nl(code);
       source_code = append_to_source_code(source_code, code);
-      f = fmemopen(code, sizeof(char)*(strlen(code)+1), "r");
+      f = fmemopen(code, sizeof(char)*strlen(code), "r");
       complete = parse(f, current_parse_registry, &arg_reg, &state);
       fclose(f);
       free(code);

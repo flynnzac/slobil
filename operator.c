@@ -424,7 +424,7 @@ op_call (registry* reg)
 
   char* instr = (char*) arg1->data;
   FILE* f;
-  f = fmemopen(instr, sizeof(char)*(strlen(instr)+1), "r");
+  f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
   struct parser_state state = fresh_state(0);
   int complete = parse(f, env, &arg_reg, &state);
   if (!complete)
@@ -784,7 +784,7 @@ op_source (registry* reg)
     {
       char* msg = malloc(sizeof(char)*(strlen("File not found.")
                                        + strlen((char*) arg1->data) +
-                                       5));
+                                       6));
       sprintf(msg, "File `%s` not found.", (char*) arg1->data);
       do_error(msg);
       free(msg);
@@ -988,7 +988,7 @@ op_in (registry* reg)
 
   FILE* f;
   char* instr = (char*) arg2->data;
-  f = fmemopen(instr, sizeof(char)*(strlen(instr)+1), "r");
+  f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
   struct parser_state state = fresh_state(0);
   registry* arg_reg = NULL;
   int complete = parse(f, (registry*) arg1->data, &arg_reg,
@@ -1040,7 +1040,7 @@ op_while (registry* reg)
   while (1)
     {
       instr = (char*) arg1->data;
-      f = fmemopen(instr, sizeof(char)*(strlen(instr)+1), "r");
+      f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
       state = fresh_state(0);
       if (arg_reg != NULL)
         free_registry(arg_reg);
@@ -1074,7 +1074,7 @@ op_while (registry* reg)
         }
 
       instr = (char*) arg2->data;
-      f = fmemopen(instr, sizeof(char)*(strlen(instr)+1), "r");
+      f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
       state = fresh_state(0);
       if (arg_reg != NULL)
         free_registry(arg_reg);

@@ -87,7 +87,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                       sentence_parser = fresh_state(0);
                       sentence_stream = fmemopen(code,
                                                  sizeof(char)*
-                                                 (strlen(code)+1),
+                                                 strlen(code),
                                                  "r");
 
                       if (parse(sentence_stream, reg, &sentence_registry,
@@ -233,6 +233,12 @@ parse (FILE* f, registry* reg, registry** arg_reg,
               state->buffer[0] = '\0';
               state->i = 0;
             }
+	  else if (is_whitespace(c))
+	    {
+	      state->buffer[0] = '\0';
+	      state->i = 0;
+	    }
+
         }
       else if (c == '(')
         {
