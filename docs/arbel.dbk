@@ -319,10 +319,10 @@ ans = 10</programlisting>
         <para>
           The <code>set</code> instruction:
         </para>
-        <programlisting>set REGISTER VALUE .</programlisting>
+        <programlisting>set REGISTER VALUE REGISTRY .</programlisting>
 
         <para>
-          Sets the REGISTER in the current registry to contain VALUE.
+          Sets the REGISTER in the REGISTRY to contain VALUE.  If no REGISTRY is given, the current registry is assumed.
         </para>
       </listitem>
 
@@ -822,6 +822,25 @@ not INTEGER .</programlisting>
   </section>
 
   <section>
+    <title>Global and environmental variables</title>
+    <para>
+      There are currently two special references in ARBEL.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          <code>\up</code> refers to the registry that contains the current registry.  Recall that the arguments to an instruction are entered into a new registry that is below the current registry.  So <code>\up</code> as an argument refers to the registry executing the instruction.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <code>\data</code> refers to the top-level registry.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
     <title>Examples</title>
 
     <para>
@@ -939,21 +958,45 @@ set $parse-csv
     <example>
       <title>Simple text editor</title>
 
+      <para>
+        This example is a simple line-oriented text-editor.  It lets you change lines with <code>n</code> and <code>p</code>, insert text with <code>i</code>, and print a line out with <code>o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code>go-in</code> the registry to use the text editing environment.
+      </para>
       <programlisting>
-rem "arbed" is a simple text editor to demonstrate a convenient way to make applications in the ARBEL environment .
+rem a simple text editor to demonstrate a convenient way to make applications in the ARBEL environment .
 
 set $arbed [ reg . ] .
 
-in \arbed ( set $buffer [ list . ] . ) .
-in \arbed ( set $cur-line 0 . ) .
-in \arbed ( set $n ( in \up ( set $cur-line [ add cur-line 1 . ] . ) . ) . ) .
-in \arbed ( set $p ( in \up ( set $cur-line [ subtract cur-line 1 . ] . ) . ) . ) .
-in \arbed ( set $i ( 
-                     in \buffer
-		     (
-		       to-register [ concat "#" [ to-string cur-line . ] . ] .
-		       set ans arbed-str .
-		     ) $arbed-str \#1 . ) . ) .</programlisting>
+in \arbed
+(
+  set $buffer [ list . ] . 
+  set $cur-line 1 . 
+  set $n ( set $cur-line [ add cur-line 1 . ] \up . ) .
+  set $p ( set $cur-line [ subtract cur-line 1 . ] \up . ) .
+  set $i
+  (
+    set $arbed-str \#1 \buffer .
+    in \buffer
+    (
+		  to-register [ concat "#" [ to-string cur-line . ] . ] .
+      set ans arbed-str .
+    ) .
+  ) .
+  set $o
+  (
+    to-register [ concat "#" [ to-string cur-line . ] . ] .
+    print [ get ans \buffer . ] .
+  ) .
+) .
+
+
+go-in \arbed .
+i "Hello, world!" .
+o .
+n .
+i "Goodbye!" .
+o .
+p .
+o .</programlisting>
 		     
     </example>
 
