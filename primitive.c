@@ -46,7 +46,63 @@ assign_str (data** d, const char* str)
   (*d)->type = STRING;
   (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
 
-  strcpy((char*) ((*d)->data), str);
+  int escape = 0;
+  int i;
+  int j = 0;
+  for (i=0; i < strlen(str); i++)
+    {
+      if (str[i] == '\\' && escape == 0)
+        {
+          escape = 1;
+        }
+      else if (escape == 1)
+        {
+          escape = 0;
+          switch (str[i])
+            {
+            case '\\':
+              ((char*) ((*d)->data))[j] = '\\';
+              j++;
+              break;
+            case '\'':
+              ((char*) ((*d)->data))[j] = '\'';
+              j++;
+              break;
+            case 't':
+              ((char*) ((*d)->data))[j] = '\t';
+              j++;
+              break;
+            case 'n':
+              ((char*) ((*d)->data))[j] = '\n';
+              j++;
+              break;
+            case 'r':
+              ((char*) ((*d)->data))[j] = '\r';
+              j++;
+              break;
+            default:
+              ((char*) ((*d)->data))[j] = '\\';
+              j++;
+              ((char*) ((*d)->data))[j] = str[i];
+              j++;
+              break;
+            }
+        }
+      else if (str[i] == '\'')
+        {
+          ((char*) ((*d)->data))[j] = '"';
+          j++;
+        }
+      else
+        {
+          ((char*) ((*d)->data))[j] = str[i];
+          j++;
+        }
+    }
+
+  ((char*) ((*d)->data))[j] = '\0';
+  
+  
 }
 
 void

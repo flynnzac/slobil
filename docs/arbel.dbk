@@ -793,10 +793,11 @@ is-file VALUE .</programlisting>
 open-text-file STRING .
 read FILE .
 read-line FILE .
+write STRING FILE .
 close REGISTER .</programlisting>
 
 <para>
-  <code>open-text-file</code> sets the <code>ans</code> register to a file handle. <code>read</code> sets the <code>ans</code> register to the next character in the file. <code>read-line</code> sets the <code>ans</code> register to the next line of the file. <code>close</code> closes the file presumably located at the register and empties the register.
+  <code>open-text-file</code> sets the <code>ans</code> register to a file handle. <code>read</code> sets the <code>ans</code> register to the next character in the file. <code>read-line</code> sets the <code>ans</code> register to the next line of the file. <code>write</code> writes the string to the file. <code>close</code> closes the file presumably located at the register and empties the register.
 </para>
       </listitem>
 	  
@@ -822,22 +823,65 @@ not INTEGER .</programlisting>
   </section>
 
   <section>
-    <title>Global and environmental variables</title>
-    <para>
-      There are currently two special references in ARBEL.
-    </para>
-    <itemizedlist>
-      <listitem>
-        <para>
-          <code>\up</code> refers to the registry that contains the current registry.  Recall that the arguments to an instruction are entered into a new registry that is below the current registry.  So <code>\up</code> as an argument refers to the registry executing the instruction.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <code>\data</code> refers to the top-level registry.
-        </para>
-      </listitem>
-    </itemizedlist>
+    <title>Miscellaneous Tidbits</title>
+
+    <section>
+      <title>Global Variables</title>
+      <para>
+        There are currently two special references in ARBEL.
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <code>\up</code> refers to the registry that contains the current registry.  Recall that the arguments to an instruction are entered into a new registry that is below the current registry.  So <code>\up</code> as an argument refers to the registry executing the instruction.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <code>\data</code> refers to the top-level registry.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>String Escape Sequences</title>
+      <para>
+        Here are the escape sequences to enter special characters in strings in ARBEL.  Escape characters start with a backslash.  If no pattern matches, the literal sequence will be entered.  For example, "\w" will insert "\w" while "\n" will insert a newline character.
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            "\\" inserts a backslash character ("\").
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            "\'" inserts a single quote character (').
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            "\t" inserts a tab character.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            "\n" inserts a newline character.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            "\r" inserts a carriage return.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            An unescaped single quote character (') inserts a double quote character (").
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
   </section>
 
   <section>

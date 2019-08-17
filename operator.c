@@ -2108,6 +2108,36 @@ op_read_line (registry* reg)
 }
 
 void
+op_write (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`write` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("The first argument to `write` must be a string.");
+      return;
+    }
+
+  if (arg2->type != ARBEL_FILE)
+    {
+      do_error("The second argument to `write` must be a file.");
+      return;
+    }
+
+  fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
+  data* d;
+  assign_nothing(&d);
+  ret_ans(reg,d);
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2317,6 +2347,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_read_line);
   set(reg,d,"read-line");
   
+  assign_op(&d, op_write);
+  set(reg,d,"write");
   
   
 }
