@@ -195,21 +195,42 @@ op_set (registry* reg)
 {
   data* arg1 = lookup(reg, "#1",0);
   data* arg2 = lookup(reg, "#2",0);
+  data* arg3 = lookup(reg, "#3",0);
 
   if (arg1 == NULL || arg2 == NULL)
-    do_error("Set needs two arguments.");
+    {
+      do_error("`set` needs two arguments.");
+      return;
+    }
 
   if (arg1->type != REGISTER)
-    do_error("First argument must be a register.");
+    {
+      do_error("First argument to `set` must be a register.");
+      return;
+    }
 
-
-  if (is_error(-1))
-    return;
+  registry* to_set;
+  if (arg3 != NULL)
+    {
+      if (arg3->type != REGISTRY)
+        {
+          do_error("Third argument to `set` must be a registry.");
+          return;
+        }
+      
+      to_set = (registry*) arg3->data;
+    }
+  else
+    {
+      to_set = reg->up;
+    }
+  
 
   char* name = (regstr) arg1->data;
   data* d = copy_data(arg2);
 
-  ret(reg, d, name);
+  set(to_set, d, name);
+
 }
 
 void
