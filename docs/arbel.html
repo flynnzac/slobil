@@ -1,6 +1,6 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ARBEL: an interactive programming language</title><link rel="stylesheet" type="text/css" href="arbel.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idm1"></a>ARBEL: an interactive programming language</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Zach</span> <span class="surname">Flynn</span></h3></div></div><div><p class="copyright">Copyright © 2019 Zach Flynn</p></div><div><div class="legalnotice"><a name="idm17"></a>
       Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 by the Free Software Foundation. A copy of the license is included in the section entitled "GNU Free Documentation License".
-    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm32">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm107">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm444">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm446">Global Variables</a></span></dt><dt><span class="section"><a href="#idm457">String Escape Sequences</a></span></dt></dl></dd><dt><span class="section"><a href="#idm473">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
+    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm32">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm107">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm444">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm446">Global Variables</a></span></dt><dt><span class="section"><a href="#idm457">String Escape Sequences</a></span></dt><dt><span class="section"><a href="#idm473">Records</a></span></dt></dl></dd><dt><span class="section"><a href="#idm476">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
       ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of that registry.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </p><p>
       ARBEL is easy to use interactively because it is not block-based.  Instructions are naturally single-line and entering sub-statements is straightforward.  ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
@@ -402,7 +402,7 @@ not INTEGER .</pre><p>
           </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm457"></a>String Escape Sequences</h3></div></div></div><p>
         Here are the escape sequences to enter special characters in strings in ARBEL.  Escape characters start with a backslash.  If no pattern matches, the literal sequence will be entered.  For example, "\w" will insert "\w" while "\n" will insert a newline character.
       </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
-            "\\" inserts a backslash character ("\").
+            "\\" inserts a backslash character (\).
           </p></li><li class="listitem"><p>
             "\'" inserts a single quote character (').
           </p></li><li class="listitem"><p>
@@ -413,9 +413,11 @@ not INTEGER .</pre><p>
             "\r" inserts a carriage return.
           </p></li><li class="listitem"><p>
             An unescaped single quote character (') inserts a double quote character (").
-          </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm473"></a>Examples</h2></div></div></div><p>
+          </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm473"></a>Records</h3></div></div></div><p>
+        Records (structures in some language) do not exist as a separate feature in ARBEL because registries are naturally records.  They have named locations for various values.  In a way, the fundamental object type of ARBEL is a (mutable) record.
+      </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm476"></a>Examples</h2></div></div></div><p>
       The purpose of this section is to give some more "full-fledged" examples of ARBEL in action to get a feel for the language.
-    </p><div class="example"><a name="idm476"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
+    </p><div class="example"><a name="idm479"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
       </p><pre class="programlisting">
 rem Computes v^T v for a vector .
@@ -461,7 +463,7 @@ set $transpose
   ) .
   answer \out .
 ) .
-      </pre></div></div><br class="example-break"><div class="example"><a name="idm481"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">
+      </pre></div></div><br class="example-break"><div class="example"><a name="idm484"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">
 rem Tokenize a string $#1 by splitting on string $#2
 set $tokenize
 (
@@ -490,7 +492,7 @@ set $tokenize
 
   answer \tokened .
 )  .
-tokenize "hello,world" "," .</pre></div></div><br class="example-break"><div class="example"><a name="idm484"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
+tokenize "hello,world" "," .</pre></div></div><br class="example-break"><div class="example"><a name="idm487"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
 	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
       </p><pre class="programlisting">
 set $parse-csv
@@ -507,7 +509,7 @@ set $parse-csv
   ) .
   close $file .
   answer \parsed .
-) .</pre></div></div><br class="example-break"><div class="example"><a name="idm488"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
+) .</pre></div></div><br class="example-break"><div class="example"><a name="idm491"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code class="code">n</code> and <code class="code">p</code>, insert text with <code class="code">i</code>, and print a line out with <code class="code">o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code class="code">go-in</code> the registry to use the text editing environment.
       </p><pre class="programlisting">
 rem a simple text editor to demonstrate a convenient way to make applications in the ARBEL environment .

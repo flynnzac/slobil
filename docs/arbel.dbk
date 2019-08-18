@@ -852,7 +852,7 @@ not INTEGER .</programlisting>
       <itemizedlist>
         <listitem>
           <para>
-            "\\" inserts a backslash character ("\").
+            "\\" inserts a backslash character (\).
           </para>
         </listitem>
         <listitem>
@@ -877,10 +877,18 @@ not INTEGER .</programlisting>
         </listitem>
         <listitem>
           <para>
-            An unescaped single quote character (') inserts a double quote character (").
+            An unescaped single quote character (') inserts a double quote character (&quot;).
           </para>
         </listitem>
       </itemizedlist>
+    </section>
+
+    <section>
+      <title>Records</title>
+
+      <para>
+        Records (structures in some language) do not exist as a separate feature in ARBEL because registries are naturally records.  They have named locations for various values.  In a way, the fundamental object type of ARBEL is a (mutable) record.
+      </para>
     </section>
   </section>
 
@@ -1043,7 +1051,7 @@ p .
 o .</programlisting>
 		     
     </example>
-
+    
 	
   </section>
 <appendix id="fdl">
