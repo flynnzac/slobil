@@ -49,7 +49,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is instruction-based.  ARBEL follows instructions to modify state. Side-effects are not a dirty word.  Side-effects are the natural function of instructions.
+        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. Side-effects are not a dirty word.  Side-effects are the natural function of instructions.
       </listitem>
 
       <listitem>
@@ -66,14 +66,20 @@
       ARBEL is an acroynym for A Register-Based Environment and Language. I pronounce it AR-bel (rhymes with "garble").  You, of course, may pronounce it however you like.
     </para>
 
+    <para>
+      The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects, but there is currently no "API" for doing so.  You can check out <code>operator.c</code> in the distribution for the implementation of the built-in functions to see how to do so.  Currently, the API would be adding the function to that file and add the new C function to the <code>add_basic_ops</code> function.
+    </para>
+
   </section>
+
+
 
   <section id="syntax">
     <title>Grammar: ARBEL Syntax</title>
     <section>
       <title>Basic Syntax</title>
       <para>
-        This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instruction and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
+        This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instructions and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
       </para>
     
       <para>
@@ -169,18 +175,20 @@ ans = 120</programlisting>
     set $prod [ multiply i prod . ] .
     set $i [ add i 1 . ] .
   ) .
-  ret prod .
+  answer prod .
 ) .
 ~> factorial 5 .
 ans = 120 </programlisting>
 
     <para>
-      The last important component of basic ARBEL syntax is the special register <code>ans</code>.  Many instructions set this register.  It is the place to "return" values in ARBEL from instructions. This makes it simple to build on previous instructions.  For example,
+      The last important component of basic ARBEL syntax is the special register <code>ans</code>.  Many instructions set this register.  It is the place to "return" values in ARBEL from instructions. This makes it simple to build on previous instructions.  Substatements, like those enclosed in []'s or {}'s, evaluate to the value they set the ans register to. For example,
     </para>
     <programlisting>
 ~> add 40 25 .
 ~> subtract ans 3.5 .
 ~> print ans .
+61.5
+~> print [ subtract [ add 40 25 . ] 3.f5 . ] .
 61.5</programlisting>
     
   </section>
