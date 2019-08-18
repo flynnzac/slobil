@@ -2138,6 +2138,31 @@ op_write (registry* reg)
 }
 
 void
+op_input (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  if (arg1 == NULL)
+    {
+      do_error("`input` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != REGISTER)
+    {
+      do_error("Argument to `input` should be a register.");
+      return;
+    }
+
+  char* input = readline("");
+  data* d;
+  assign_str(&d, input);
+  
+  set(reg->up, d, (regstr) arg1->data);
+  free(input);
+  
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2350,6 +2375,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_write);
   set(reg,d,"write");
   
+  assign_op(&d, op_input);
+  set(reg,d,"input");
   
 }
   
