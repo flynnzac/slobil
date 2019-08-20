@@ -21,6 +21,74 @@
 
 #include "arbel.h"
 
+void
+add_argument (data* d, struct parser_state* state, registry** arg_reg)
+{
+  if (d != NULL)
+    {
+      char* name = argument_name(state->arg_n);
+      set(*arg_reg, d, name);
+      free(name);
+      state->arg_n++;
+    }
+}
+
+void
+clear_state_buffer (struct parser_state* state)
+{
+  state->buffer[0] = '\0';
+  state->i = 0;
+}
+
+void
+add_to_state_buffer (struct parser_state* state, const char c)
+{
+  state->buffer[state->i] = c;
+  state->i++;
+}
+
+void
+square_bracket (data** d, const char* buffer, registry* reg)
+{
+  char* code = malloc(sizeof(char)*
+		      (strlen(buffer)+1));
+  strcpy(code, buffer);
+  struct parser_state sentence_parser = fresh_state(0);
+  FILE* sentence_stream = fmemopen(code,
+				   sizeof(char)*
+				   strlen(code),
+				   "r");
+
+  registry* sentence_registry = NULL;
+
+  if (parse(sentence_stream, reg, &sentence_registry,
+	    &sentence_parser))
+    {
+      *d = get(reg, "ans",0);
+      if (*d == NULL)
+	{
+	  do_error("Statement in []'s does not set $ans register.");
+	}
+      else
+	{
+	  *d = copy_data(*d);
+	}
+    }
+  else
+    {
+      do_error("Incomplete sentence in []'s.  Must complete sentence in square brackets.");
+      *d = NULL;
+    }
+  fclose(sentence_stream);
+  free(code);
+
+  if (sentence_registry != NULL)
+    {
+      free_registry(sentence_registry);
+      sentence_registry = NULL;
+    }
+}
+
 int
 parse (FILE* f, registry* reg, registry** arg_reg,
        struct parser_state* state)
@@ -68,57 +136,15 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                     {
                     case '(':
                       assign_instr(&d, state->buffer);
-                      name = argument_name(state->arg_n);
-                      set(*arg_reg, d, name);
-                      free(name); 
-                      state->arg_n++;
+		      add_argument(d, state, arg_reg);
                       break;
                     case '{':
                       assign_active(&d, state->buffer);
-                      name = argument_name(state->arg_n);
-                      set(*arg_reg, d, name);
-                      free(name);
-                      state->arg_n++;
+		      add_argument(d, state, arg_reg);
                       break;
                     case '[':
-                      code = malloc(sizeof(char)*
-                                    (strlen(state->buffer)+1));
-                      strcpy(code, state->buffer);
-                      sentence_parser = fresh_state(0);
-                      sentence_stream = fmemopen(code,
-                                                 sizeof(char)*
-                                                 strlen(code),
-                                                 "r");
-
-                      if (parse(sentence_stream, reg, &sentence_registry,
-                                &sentence_parser))
-                        {
-                          d = get(reg, "ans",0);
-                          if (d == NULL)
-                            {
-                              do_error("Code in []'s did not return an answer.");
-                            }
-                          else
-                            {
-                              d = copy_data(d);
-                              name = argument_name(state->arg_n);
-                              set(*arg_reg, d, name);
-                              free(name);
-                              state->arg_n++;
-                            }
-                          fclose(sentence_stream);
-                        }
-                      else
-                        {
-                          do_error("Incomplete sentence in []'s.  Must complete sentence in square brackets.");
-                          fclose(sentence_stream);
-                        }
-                      free(code);
-                      if (sentence_registry != NULL)
-                        {
-                          free_registry(sentence_registry);
-                          sentence_registry = NULL;
-                        }
+		      square_bracket(&d, state->buffer, reg);
+		      add_argument(d, state, arg_reg);
                       break;
                     }
 
@@ -129,38 +155,26 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                 {
                   state->after_quote = 0;
                   assign_str(&d, state->buffer);
-                  name = argument_name(state->arg_n);
-                  set(*arg_reg, d, name);
-                  free(name);
-                  state->arg_n++;
+		  add_argument(d, state, arg_reg);
                 }
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
                   assign_int(&d, entry);
-                  name = argument_name(state->arg_n);
-                  set(*arg_reg, d, name);
-                  free(name);
-                  state->arg_n++;
+		  add_argument(d, state, arg_reg);
                 }
               else if (is_decimal(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
                   double entry = atof(state->buffer);
                   assign_dec(&d, entry);
-                  name = argument_name(state->arg_n);
-                  set(*arg_reg, d, name);
-                  free(name);
-                  state->arg_n++;
+		  add_argument(d, state, arg_reg);
                 }
               else if (is_register(state->buffer))
                 {
                   str_shift_left(state->buffer);
                   assign_regstr(&d, state->buffer);
-                  name = argument_name(state->arg_n);
-                  set(*arg_reg, d, name);
-                  free(name);
-                  state->arg_n++;
+		  add_argument(d, state, arg_reg);
                 }
               else if (strcmp(state->buffer,".")==0)
                 {
@@ -200,10 +214,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                 {
                   str_shift_left(state->buffer);
                   assign_ref(&d, reg, state->buffer);
-                  name = argument_name(state->arg_n);
-                  set(*arg_reg, d, name);
-                  free(name);
-                  state->arg_n++;
+		  add_argument(d, state, arg_reg);
                 }
               else 
                 {
@@ -211,11 +222,8 @@ parse (FILE* f, registry* reg, registry** arg_reg,
 
                   if (d != NULL)
                     {
-                      name = argument_name(state->arg_n);
-                      d_new = copy_data(d);
-                      set(*arg_reg, d_new, name);
-                      free(name);
-                      state->arg_n++;
+		      d_new = copy_data(d);
+		      add_argument(d_new, state, arg_reg);
                     }
                   else
                     {
@@ -230,13 +238,11 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                       break;
                     }
                 }
-              state->buffer[0] = '\0';
-              state->i = 0;
+	      clear_state_buffer(state);
             }
 	  else if (is_whitespace(c))
 	    {
-	      state->buffer[0] = '\0';
-	      state->i = 0;
+	      clear_state_buffer(state);
 	    }
 
         }
@@ -248,8 +254,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state, c);
             }
 
           state->in_instr++;
@@ -269,8 +274,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state,c);
             }
         }
       else if (c == '{')
@@ -281,8 +285,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state,c);
             }
           
           state->in_instr++;
@@ -301,8 +304,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state,c);
             }
 
         }
@@ -314,8 +316,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state,c);
             }
           state->in_instr++;
         }
@@ -351,8 +352,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
         }
       else
         {
-          state->buffer[state->i] = c;
-          state->i++;
+	  add_to_state_buffer(state,c);
           complete = 0;
         }
 
@@ -365,11 +365,12 @@ parse (FILE* f, registry* reg, registry** arg_reg,
 
   if (is_error(-1))
     {
+      clear_state_buffer(state);
+
       state->arg_n = 0;
-      state->i = 0;
-      state->buffer[0] = '\0';
       state->in_instr = 0;
       state->after_instr = 0;
+      
       is_error(0);
       complete = 1;
       if ((*arg_reg) != NULL)

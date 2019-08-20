@@ -196,6 +196,7 @@ assign_nothing (data** d)
   (*d)->data = NULL;
 }
 
+
 void
 set (registry* reg, data* d, const char* name)
 {
