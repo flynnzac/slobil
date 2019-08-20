@@ -1,6 +1,6 @@
 <article xmlns='http://docbook.org/ns/docbook'>
   <info>
-    <title>ARBEL: an interactive programming language</title>
+    <title>ARBEL</title>
     <titleabbrev>ARBEL</titleabbrev>
     <author>
       <personname>
@@ -29,11 +29,11 @@
     <title>Introducing ARBEL</title>
 
     <para>
-      ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of that registry.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+      ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </para>
 
     <para>
-      ARBEL is easy to use interactively because it is not block-based.  Instructions are naturally single-line and entering sub-statements is straightforward.  ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
+      ARBEL is easy to use interactively because it is not block-based.  Many "complicated" instructions are naturally single-line because entering sub-statements is straightforward.  ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
     </para>
 
     <para>
@@ -49,7 +49,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. Side-effects are not a dirty word.  Side-effects are the natural function of instructions.
+        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. 
       </listitem>
 
       <listitem>
@@ -69,6 +69,32 @@
     <para>
       The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects, but there is currently no "API" for doing so.  You can check out <code>operator.c</code> in the distribution for the implementation of the built-in functions to see how to do so.  Currently, the API would be adding the function to that file and add the new C function to the <code>add_basic_ops</code> function.
     </para>
+
+    <para>
+      The other item on the road map is compiling to a bytecode.  The structure of the language makes the mapping to a registry-based virtual machine, well, very similar to the registry based syntax of the language.  The two paths forward are either to write its own VM or else choose a target VM that is already available to compile to.
+    </para>
+
+    <para>
+      The current goal of the interpreter is correctness.  So speed has not been optimized.  It is probably the case that some things that don't need to be copied are (if you find one, send me a pull request, and I'll accept!).  The way user-written instructions are currently implemented is literally interpreting the code when it is called in a new registry.  This obviously leaves lots of room for improvement!
+    </para>
+      
+
+    <section>
+      <title>Categorizing ARBEL</title>
+
+      <para>
+        ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and values have a certain type and the type does not change without explicit instruction.
+      </para>
+
+      <para>
+        Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
+      </para>
+
+      <para>
+        ARBEL does not have any special object-orientation or "multiple dispatch" constructs.  I personally never program using those kinds of methods so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code>$class</code> register.  Instructions could then do different things based on the value in the <code>$class</code> register.  Similar to what R does with S3 classes.
+      </para>
+
+    </section>
 
   </section>
 
@@ -120,17 +146,16 @@ $hello</programlisting>
       The command <code>set $hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set $hello "Hello, world!" .</code> in the following way:
     </para>
     <programlisting>
-~> set $instruction [ reg $#0 set $#1 $hello $#2 "Hello, world!" . ] .
-~> compute instruction .
+~> compute [ reg $#0 set $#1 $hello $#2 "Hello, world!" . ] .
 ~> print hello .
 Hello, world!</programlisting>
 
     <para>
-      This illustrates what the syntax <code>.</code> (a period) means.  It can be viewed as the statement terminator of ARBEL, but what it actually does is create a registry of the elements proceeding it and then call <code>compute</code> with that registry as an argument.
+      This illustrates what the syntax <code>.</code> (a period) means.  It can be viewed as the statement terminator of ARBEL, but what it actually does is create a registry of the elements proceeding it and then call <code>compute</code> with that registry as an argument.  In fact, this is the only kind of statement in ARBEL: the <code>compute</code> instruction called on a registry.
     </para>
 
     <para>
-      The above code introduces another syntax element of ARBEL: parenthesis.  ARBEL uses three types of parenthesis: open paranethesis ("(" and ")"), square parenthesis ("[" and "]", as above), and curly parenthesis ("{" and "}").  All parenthesis group statements, but the different parenthesis types in ARBEL control <emphasis>when</emphasis> the statements they contain are executed.
+      The above code introduces the other syntax element of ARBEL: parenthesis.  ARBEL uses three types of parenthesis: open paranethesis ("(" and ")"), square parenthesis ("[" and "]", as above), and curly parenthesis ("{" and "}").  All parenthesis group statements, but the different parenthesis types in ARBEL control <emphasis>when</emphasis> the statements they contain are executed.
     </para>
 
     <para>
@@ -188,7 +213,7 @@ ans = 120 </programlisting>
 ~> subtract ans 3.5 .
 ~> print ans .
 61.5
-~> print [ subtract [ add 40 25 . ] 3.f5 . ] .
+~> print [ subtract [ add 40 25 . ] 3.5 . ] .
 61.5</programlisting>
     
   </section>
@@ -862,27 +887,27 @@ not INTEGER .</programlisting>
       <itemizedlist>
         <listitem>
           <para>
-            "\\" inserts a backslash character (\).
+            \\ inserts a backslash character (\).
           </para>
         </listitem>
         <listitem>
           <para>
-            "\'" inserts a single quote character (').
+            \' inserts a single quote character (').
           </para>
         </listitem>
         <listitem>
           <para>
-            "\t" inserts a tab character.
+            \t inserts a tab character.
           </para>
         </listitem>
         <listitem>
           <para>
-            "\n" inserts a newline character.
+            \n inserts a newline character.
           </para>
         </listitem>
         <listitem>
           <para>
-            "\r" inserts a carriage return.
+            \r inserts a carriage return.
           </para>
         </listitem>
         <listitem>
@@ -893,13 +918,6 @@ not INTEGER .</programlisting>
       </itemizedlist>
     </section>
 
-    <section>
-      <title>Records</title>
-
-      <para>
-        Records (structures in some language) do not exist as a separate feature in ARBEL because registries are naturally records.  They have named locations for various values.  In a way, the fundamental object type of ARBEL is a (mutable) record.
-      </para>
-    </section>
   </section>
 
   <section>
