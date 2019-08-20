@@ -68,6 +68,8 @@ save_registry (FILE* f, registry* reg)
               fwrite(reg->value->data, sizeof(char),
                      strlen((char*) reg->value->data), f);
               break;
+	    default:
+	      break;
             }
 
           size = strlen(reg->key);
@@ -147,6 +149,8 @@ read_registry (FILE* f, registry* reg)
           assign_instr(&d, (char*) cache);
           free(cache);           
           break;
+	default:
+	  break;
         }
       cache = malloc(sizeof(int));
       fread(cache, sizeof(int), 1, f);

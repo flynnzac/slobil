@@ -27,7 +27,7 @@ is_integer (const char* str)
   int i;
   for (i=0; i < strlen(str); i++)
     {
-      if (!(isdigit(str[i]) || ((i==0) && str[i]=='-')))
+      if (!(isdigit((int) str[i]) || ((i==0) && str[i]=='-')))
         return 0;
     }
   return 1;
@@ -40,7 +40,7 @@ is_decimal (const char* str)
   int decimals = 0;
   for (i=0; i < strlen(str); i++)
     {
-      if (!(isdigit(str[i]) || ((i==0) && str[i]=='-') ||
+      if (!(isdigit((int) str[i]) || ((i==0) && str[i]=='-') ||
             str[i] == '.'))
         return 0;
 
@@ -185,9 +185,10 @@ is_error (int e)
   static int error = 0;
 
   if (e >= 0)
-    error = e;
-  else
-    return error;
+    {
+      error = e;
+    }
+  return error;
 }
 
 
@@ -333,10 +334,7 @@ is_exit (int e)
     {
       do_exit = e;
     }
-  else
-    {
-      return do_exit;
-    }
+  return do_exit;
 }
     
 registry*

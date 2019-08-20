@@ -100,14 +100,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
   char c;
   data* d;
   data* d_new;
-  char* name = NULL;
   int complete = 0;
-  char* code;
-  size_t n_digits;
-
-  struct parser_state sentence_parser;
-  registry* sentence_registry = NULL;
-  FILE* sentence_stream;
 
   while (((c = fgetc(f)) != EOF) && c != '\0')
     {
@@ -378,7 +371,6 @@ parse (FILE* f, registry* reg, registry** arg_reg,
           free_registry(*arg_reg);
           *arg_reg = NULL;
         }
-
     }
 
   return complete;

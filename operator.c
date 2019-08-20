@@ -768,7 +768,6 @@ op_concat (registry* reg)
 void
 op_compute (registry* reg)
 {
-  int i = 1;
   data* d;
 
   d = lookup(reg, "#1", 0);
@@ -905,7 +904,7 @@ op_next (registry* reg)
 
   int i = strlen(cur_name)-1;
   int j;
-  while (i >= 0 && isdigit(cur_name[i]))
+  while (i >= 0 && isdigit((int) cur_name[i]))
     i--;
 
   if (i == (strlen(cur_name)-1))

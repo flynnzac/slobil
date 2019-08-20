@@ -379,9 +379,7 @@ mov (registry* reg, const char* name, const char* new_name)
 void
 del (registry* reg, const char* name, int del_data)
 {
-  int i;
   registry* cur;
-  registry* tmp;
 
   cur = tail(reg);
 
