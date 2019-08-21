@@ -1079,8 +1079,32 @@ p .
 o .</programlisting>
 		     
     </example>
-    
-	
+
+    <example>
+      <title>Numerical Integration</title>
+      Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code>ans</code> register to something numeric.
+      <programlisting>
+set $integrate
+(
+  mov $#1 $f .
+  mov $#2 $lb .
+  mov $#3 $ub .
+  mov $#4 $n .
+
+  set $delta [ divide [ subtract \ub \lb . ] n . ] .
+  set $x \lb .
+  set $int 0.0 .
+  while ( lt x ub . )
+  (
+    f x .
+    set $int [ add \int [ multiply ans delta . ] . ] .
+    set $x [ add \x delta . ] .
+  ) .
+  answer int .
+) .
+set $testfunc ( answer \#1 . ) .
+integrate testfunc 0.0 1.0 100 .</programlisting>
+    </example>
   </section>
 <appendix id="fdl">
   <title>GNU Free Documentation License</title>

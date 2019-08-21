@@ -1,5 +1,8 @@
-* TODO Add ability to switch output from screen to also write to file
+* CANCELLED Add ability to switch output from screen to also write to file
+  CLOSED: [2019-08-21 Wed 18:11]
 
+  - State "CANCELLED"  from "TODO"       [2019-08-21 Wed 18:11] \\
+    Don't think this is as useful as I though, should just have a logging function
 * DONE File input / a File datatype
   CLOSED: [2019-08-15 Thu 12:08]
 
@@ -9,7 +12,8 @@
    CLOSED: [2019-08-16 Fri 14:48]
 ** TODO Add write/write-line
 ** TODO Add Perl-ish "slurp"
-* TODO Documentation: Better explanation of how substatements work in the docs/how the system uses the ans register.
+* DONE Documentation: Better explanation of how substatements work in the docs/how the system uses the ans register.
+  CLOSED: [2019-08-21 Wed 18:11]
 * DONE OR/AND/NOT
   CLOSED: [2019-08-15 Thu 12:08]
 * DONE Any error should stop whole instruction
@@ -28,11 +32,35 @@ It's probably easier to just have
 set REGISTER VALUE REGISTRY .
 as an option
 
-* TODO Consider whether want [ instruction ] to run in new registry (I think so)
+* DONE Consider whether want [ instruction ] to run in new registry (I think so)
+  CLOSED: [2019-08-21 Wed 17:49]
+
+Implemented
 
 * TODO Have a for loop.  It's basically just some sugar for the while statement, but do it because very common.
 
-* TODO Add a way to call shell
+Idea would be:
+
+for REGISTER VALUE INSTRUCTION1 INSTRUCTION2 INSTRUCTION3
+
+Where: 
+
+REGISTER is the register that is being iterated
+VALUE is the initial value of the register
+INSTRUCTION1 is the instruction to execute that sets the ans register to the next value.  
+INSTRUCTION2 is the instruction to execute to see if we should continue (set ans to 1 if yes, 0 if no)
+INSTRUCTION3 is the body of the loop
+
+So:
+
+for $i $#1 ( next \i . ) ( exist-in \i \reg . ) ( print \i . ) .
+
+
+
+
+
+* DONE Add a way to call shell
+  CLOSED: [2019-08-21 Wed 18:11]
 
 Some instruction like "shell"
 

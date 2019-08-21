@@ -29,7 +29,7 @@
       </p><p>
         Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
       </p><p>
-        ARBEL does not have any special object-orientation or "multiple dispatch" constructs.  I personally never program using those kinds of methods so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code class="code">$class</code> register.  Instructions could then do different things based on the value in the <code class="code">$class</code> register.  Similar to what R does with S3 classes.
+        ARBEL does not have any special object-orientation or "multiple dispatch" constructs.  I personally don't program using those kinds of methods so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code class="code">$class</code> register.  Instructions could then do different things based on the value in the <code class="code">$class</code> register.  Similar to what R does with S3 classes.
       </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="syntax"></a>Grammar: ARBEL Syntax</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm44"></a>Basic Syntax</h3></div></div></div><p>
         This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instructions and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
       </p><p>
@@ -559,7 +559,29 @@ n .
 i "Goodbye!" .
 o .
 p .
-o .</pre></div></div><br class="example-break"></div><div class="appendix"><h2 class="title" style="clear: both"><a name="fdl"></a>A. GNU Free Documentation License</h2><p>Version 1.3, 3 November 2008</p><p>
+o .</pre></div></div><br class="example-break"><div class="example"><a name="idm511"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents">
+      Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
+      <pre class="programlisting">
+set $integrate
+(
+  mov $#1 $f .
+  mov $#2 $lb .
+  mov $#3 $ub .
+  mov $#4 $n .
+
+  set $delta [ divide [ subtract \ub \lb . ] n . ] .
+  set $x \lb .
+  set $int 0.0 .
+  while ( lt x ub . )
+  (
+    f x .
+    set $int [ add \int [ multiply ans delta . ] . ] .
+    set $x [ add \x delta . ] .
+  ) .
+  answer int .
+) .
+set $testfunc ( answer \#1 . ) .
+integrate testfunc 0.0 1.0 100 .</pre></div></div><br class="example-break"></div><div class="appendix"><h2 class="title" style="clear: both"><a name="fdl"></a>A. GNU Free Documentation License</h2><p>Version 1.3, 3 November 2008</p><p>
     Copyright © 2000, 2001, 2002, 2007, 2008
     <a class="ulink" href="https://www.fsf.org/" target="_top">Free Software Foundation, Inc.</a>
   </p><p>

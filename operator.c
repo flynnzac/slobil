@@ -2162,6 +2162,56 @@ op_input (registry* reg)
 }
 
 void
+op_shell (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  if (arg1 == NULL)
+    {
+      do_error("`shell` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("Argument to `shell` must be a string.");
+      return;
+    }
+
+  char* cmd = malloc(sizeof(char)*(strlen("sh -c ")+strlen((char*) arg1->data)+1));
+  strcpy(cmd, "sh -c ");
+  strcat(cmd, (char*) arg1->data);
+  FILE* f = popen(cmd, "r");
+  free(cmd);
+  
+  if (f == NULL)
+    {
+      do_error("Command failed.");
+      return;
+    }
+
+  char buffer[1024];
+  data* d = NULL;
+  while (fgets(buffer, sizeof(buffer)-1, f) != NULL)
+    {
+      if (d == NULL)
+        {
+          assign_str(&d, buffer);
+        }
+      else
+        {
+          d->data = realloc(d->data, sizeof(char)*(strlen((char*) d->data)+strlen(buffer)+1));
+          strcat((char*) d->data, buffer);
+        }
+    }
+
+  pclose(f);
+
+  ret_ans(reg,d);
+      
+  
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2376,6 +2426,10 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_input);
   set(reg,d,"input");
+
+  assign_op(&d, op_shell);
+  set(reg,d,"shell");
+
   
 }
   
