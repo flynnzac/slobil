@@ -51,28 +51,32 @@ void
 square_bracket (data** d, const char* buffer, registry* reg)
 {
   char* code = malloc(sizeof(char)*
-		      (strlen(buffer)+1));
+                      (strlen(buffer)+1));
   strcpy(code, buffer);
   struct parser_state sentence_parser = fresh_state(0);
   FILE* sentence_stream = fmemopen(code,
-				   sizeof(char)*
-				   strlen(code),
-				   "r");
+                                   sizeof(char)*
+                                   strlen(code),
+                                   "r");
 
-  registry* sentence_registry = NULL;
+  registry* sentence_registry = new_registry(reg);
+  registry* sentence_arg_registry = NULL;
+  
 
-  if (parse(sentence_stream, reg, &sentence_registry,
-	    &sentence_parser))
+  if (parse(sentence_stream,
+            sentence_registry,
+            &sentence_arg_registry,
+            &sentence_parser))
     {
-      *d = get(reg, "ans",0);
+      *d = get(sentence_registry, "ans",0);
       if (*d == NULL)
-	{
-	  do_error("Statement in []'s does not set $ans register.");
-	}
+        {
+          do_error("Statement in []'s does not set $ans register.");
+        }
       else
-	{
-	  *d = copy_data(*d);
-	}
+        {
+          *d = copy_data(*d);
+        }
     }
   else
     {
@@ -129,15 +133,15 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                     {
                     case '(':
                       assign_instr(&d, state->buffer);
-		      add_argument(d, state, arg_reg);
+                      add_argument(d, state, arg_reg);
                       break;
                     case '{':
                       assign_active(&d, state->buffer);
-		      add_argument(d, state, arg_reg);
+                      add_argument(d, state, arg_reg);
                       break;
                     case '[':
-		      square_bracket(&d, state->buffer, reg);
-		      add_argument(d, state, arg_reg);
+                      square_bracket(&d, state->buffer, reg);
+                      add_argument(d, state, arg_reg);
                       break;
                     }
 
@@ -148,26 +152,26 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                 {
                   state->after_quote = 0;
                   assign_str(&d, state->buffer);
-		  add_argument(d, state, arg_reg);
+                  add_argument(d, state, arg_reg);
                 }
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
                   assign_int(&d, entry);
-		  add_argument(d, state, arg_reg);
+                  add_argument(d, state, arg_reg);
                 }
               else if (is_decimal(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
                   double entry = atof(state->buffer);
                   assign_dec(&d, entry);
-		  add_argument(d, state, arg_reg);
+                  add_argument(d, state, arg_reg);
                 }
               else if (is_register(state->buffer))
                 {
                   str_shift_left(state->buffer);
                   assign_regstr(&d, state->buffer);
-		  add_argument(d, state, arg_reg);
+                  add_argument(d, state, arg_reg);
                 }
               else if (strcmp(state->buffer,".")==0)
                 {
@@ -207,7 +211,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                 {
                   str_shift_left(state->buffer);
                   assign_ref(&d, reg, state->buffer);
-		  add_argument(d, state, arg_reg);
+                  add_argument(d, state, arg_reg);
                 }
               else 
                 {
@@ -215,8 +219,8 @@ parse (FILE* f, registry* reg, registry** arg_reg,
 
                   if (d != NULL)
                     {
-		      d_new = copy_data(d);
-		      add_argument(d_new, state, arg_reg);
+                      d_new = copy_data(d);
+                      add_argument(d_new, state, arg_reg);
                     }
                   else
                     {
@@ -231,12 +235,12 @@ parse (FILE* f, registry* reg, registry** arg_reg,
                       break;
                     }
                 }
-	      clear_state_buffer(state);
+              clear_state_buffer(state);
             }
-	  else if (is_whitespace(c))
-	    {
-	      clear_state_buffer(state);
-	    }
+          else if (is_whitespace(c))
+            {
+              clear_state_buffer(state);
+            }
 
         }
       else if (c == '(')
@@ -247,7 +251,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-	      add_to_state_buffer(state, c);
+              add_to_state_buffer(state, c);
             }
 
           state->in_instr++;
@@ -267,7 +271,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-	      add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c);
             }
         }
       else if (c == '{')
@@ -278,7 +282,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-	      add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c);
             }
           
           state->in_instr++;
@@ -297,7 +301,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-	      add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c);
             }
 
         }
@@ -309,7 +313,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
             }
           else
             {
-	      add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c);
             }
           state->in_instr++;
         }
@@ -345,15 +349,15 @@ parse (FILE* f, registry* reg, registry** arg_reg,
         }
       else
         {
-	  add_to_state_buffer(state,c);
+          add_to_state_buffer(state,c);
           complete = 0;
         }
 
       if (is_error(-1))
-	{
-	  break;
+        {
+          break;
 
-	}
+        }
     }
 
   if (is_error(-1))
