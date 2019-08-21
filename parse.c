@@ -53,22 +53,22 @@ square_bracket (data** d, const char* buffer, registry* reg)
   char* code = malloc(sizeof(char)*
                       (strlen(buffer)+1));
   strcpy(code, buffer);
-  struct parser_state sentence_parser = fresh_state(0);
-  FILE* sentence_stream = fmemopen(code,
-                                   sizeof(char)*
-                                   strlen(code),
-                                   "r");
+  struct parser_state square_parser = fresh_state(0);
+  FILE* square_stream = fmemopen(code,
+                                 sizeof(char)*
+                                 strlen(code),
+                                 "r");
 
-  registry* sentence_registry = new_registry(reg);
-  registry* sentence_arg_registry = NULL;
+  registry* square_registry = new_registry(reg);
+  registry* square_arg_registry = NULL;
   
 
-  if (parse(sentence_stream,
-            sentence_registry,
-            &sentence_arg_registry,
-            &sentence_parser))
+  if (parse(square_stream,
+            square_registry,
+            &square_arg_registry,
+            &square_parser))
     {
-      *d = get(sentence_registry, "ans",0);
+      *d = get(square_registry, "ans",0);
       if (*d == NULL)
         {
           do_error("Statement in []'s does not set $ans register.");
@@ -80,16 +80,20 @@ square_bracket (data** d, const char* buffer, registry* reg)
     }
   else
     {
-      do_error("Incomplete sentence in []'s.  Must complete sentence in square brackets.");
+      do_error("Incomplete statement in []'s.  Must complete statement in square brackets.");
       *d = NULL;
     }
-  fclose(sentence_stream);
+  fclose(square_stream);
   free(code);
 
-  if (sentence_registry != NULL)
+  if (square_registry != NULL)
     {
-      free_registry(sentence_registry);
-      sentence_registry = NULL;
+      free_registry(square_registry);
+    }
+
+  if (square_arg_registry != NULL)
+    {
+      free_registry(square_arg_registry);
     }
 }
 
