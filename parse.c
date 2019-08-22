@@ -373,8 +373,9 @@ interact (FILE* f, parser_state* state, registry* reg)
               printf("OK.\n");
             }
 
-          state->arg_n = 0;
         }
+
+      *state = fresh_state(state->print_out);
     }
 
   
