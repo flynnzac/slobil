@@ -103,11 +103,15 @@ struct parser_state
 
 typedef struct parser_state parser_state;
 
+struct statement;
+
 struct element
 {
   data* data;
   char* name;
+  struct statement* s;
   int literal;
+  int statement;
   struct element* right;
 };
 

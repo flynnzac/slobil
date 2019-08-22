@@ -8,6 +8,7 @@ append_literal_element (element* current, data* d)
   e->data = d;
   e->name = NULL;
   e->literal = 1;
+  e->statement = 0;
   e->right = NULL;
   
   if (current != NULL)
@@ -25,6 +26,7 @@ append_argument_element (element* current, char* name)
   e->data = NULL;
   e->name = name;
   e->literal = 0;
+  e->statement = 0;
   e->right = NULL;
 
   if (current != NULL)
@@ -33,6 +35,25 @@ append_argument_element (element* current, char* name)
     }
   return e;
 }
+
+element*
+append_statement_element (element* current, statement* s)
+{
+  element* e = malloc(sizeof(element));
+  e->data = NULL;
+  e->name = NULL;
+  e->statement = s;
+  e->literal = 0;
+  e->statement = 1;
+  e->right = NULL;
+
+  if (current != NULL)
+    {
+      current->right = e;
+    }
+  return e;
+}
+
 
 statement*
 append_statement (statement* current, element* head)
@@ -52,6 +73,7 @@ void
 execute_statement (statement* s, registry* reg)
 {
   registry* arg_reg = new_registry(reg);
+  registry* st_reg = NULL;
   element* e = s->head;
   char* name = NULL;
   int arg_n = 0;
@@ -62,14 +84,26 @@ execute_statement (statement* s, registry* reg)
       if (e->literal)
         {
           d = copy_data(e->data);
-          set(arg_reg, d, name);
         }
       else
         {
-          d = get(reg, e->name, 1);
-          d = copy_data(d);
-          set(arg_reg, d, name);
+          if (e->statement)
+            {
+              st_reg = new_registry(reg);
+              execute_statement(e->s, st_reg);
+              d = get(st_reg, "ans", 0);
+              /* need to check that the register is set */
+              d = copy_data(d);
+              free_registry(st_reg);
+            }
+          else
+            {
+              d = get(reg, e->name, 1);
+              d = copy_data(d);
+            }
         }
+
+      set(arg_reg, d, name);
 
       free(name);
       arg_n++;

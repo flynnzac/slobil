@@ -101,10 +101,6 @@ int
 parse (FILE* f, registry* reg, registry** arg_reg,
        struct parser_state* state)
 {
-  /* to do:
-     implement [ code ] = greedy evaluation
-     { code } = execute on get
-  */
   char c;
   data* d;
   data* d_new;
