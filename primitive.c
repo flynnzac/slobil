@@ -492,16 +492,8 @@ compute (registry* reg)
 
   if (arg->type == INSTRUCTION)
     {
-      op_list(reg);
-      data* reg_ans = get(reg->up, "ans", 0);
-      registry* reg_instr = new_registry(reg->up);
-      reg_ans = copy_data(reg_ans);
-      set(reg_instr, reg_ans, "#2");
-      reg_ans = copy_data(arg);
-      set(reg_instr, reg_ans, "#1");
-      /* op_call(reg_instr); */
-      free_registry(reg_instr); 
-      return;
+      printf("In compute! Before Statement!\n");
+      execute_code(((instruction*) arg->data)->stmt, reg);
     }
 
   if (is_error(-1))

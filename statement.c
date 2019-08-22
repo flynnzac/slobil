@@ -113,6 +113,7 @@ execute_statement (statement* s, registry* reg)
       arg_n++;
       e = e->right;
     }
+  print_registry(arg_reg);
   compute(arg_reg);
   free_registry(arg_reg);
 }
@@ -123,6 +124,8 @@ execute_code (statement* s, registry* reg)
   while (s != NULL)
     {
       execute_statement(s, reg);
+      /* if (is_error(-1)) */
+      /* 	break; */
       s = s->right;
     }
 }
