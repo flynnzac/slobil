@@ -63,10 +63,10 @@ save_registry (FILE* f, registry* reg)
               fwrite(&size, sizeof(data_type), 1, f);
               break;
             case INSTRUCTION:
-              size = strlen((char*) reg->value->data);
+              size = strlen(((instruction*) reg->value->data)->code);
               fwrite(&size, sizeof(int), 1, f);
-              fwrite(reg->value->data, sizeof(char),
-                     strlen((char*) reg->value->data), f);
+              fwrite(((instruction*) reg->value->data)->code, sizeof(char),
+                     strlen(((instruction*) reg->value->data)->code), f);
               break;
 	    default:
 	      break;

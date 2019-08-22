@@ -414,60 +414,60 @@ op_answer (registry* reg)
     }
 }
 
-void
-op_call (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
-  data* arg2 = lookup(reg, "#2", 0);
+/* void */
+/* op_call (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
+/*   data* arg2 = lookup(reg, "#2", 0); */
 
-  if (arg1==NULL || arg2==NULL)
-    {
-      do_error("`call` requires two arguments.");
-      return;
-    }
+/*   if (arg1==NULL || arg2==NULL) */
+/*     { */
+/*       do_error("`call` requires two arguments."); */
+/*       return; */
+/*     } */
 
-  if ((arg1->type != INSTRUCTION) && (arg1->type != OPERATION))
-    {
-      do_error("The first argument to `call` is not an instruction.");
-      return;
-    }
+/*   if ((arg1->type != INSTRUCTION) && (arg1->type != OPERATION)) */
+/*     { */
+/*       do_error("The first argument to `call` is not an instruction."); */
+/*       return; */
+/*     } */
 
-  if (arg2->type != REGISTRY)
-    {
-      do_error("The second argument to `call` is not a registry.");
-      return;
-    }
+/*   if (arg2->type != REGISTRY) */
+/*     { */
+/*       do_error("The second argument to `call` is not a registry."); */
+/*       return; */
+/*     } */
   
-  registry* env;
-  env = (registry*) arg2->data;
+/*   registry* env; */
+/*   env = (registry*) arg2->data; */
   
-  registry* arg_reg = NULL;
+/*   registry* arg_reg = NULL; */
 
-  char* instr = (char*) arg1->data;
-  FILE* f;
-  f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
-  struct parser_state state = fresh_state(0);
-  int complete = parse(f, env, &arg_reg, &state);
-  if (!complete)
-    {
-      do_error("Not complete instruction.");
-    }
-  else
-    {
-      if (!is_error(-1))
-        {
-          data* ans = get(env, "ans", 0);
-          if (ans != NULL)
-            {
-              data* d = copy_data(ans);
-              ret_ans(reg, d);
-            }
-        }
-    }
+/*   char* instr = (char*) arg1->data; */
+/*   FILE* f; */
+/*   f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
+/*   struct parser_state state = fresh_state(0); */
+/*   int complete = parse(f, env, &arg_reg, &state); */
+/*   if (!complete) */
+/*     { */
+/*       do_error("Not complete instruction."); */
+/*     } */
+/*   else */
+/*     { */
+/*       if (!is_error(-1)) */
+/*         { */
+/*           data* ans = get(env, "ans", 0); */
+/*           if (ans != NULL) */
+/*             { */
+/*               data* d = copy_data(ans); */
+/*               ret_ans(reg, d); */
+/*             } */
+/*         } */
+/*     } */
 
-  if (arg_reg != NULL)
-    free_registry(arg_reg);
-}
+/*   if (arg_reg != NULL) */
+/*     free_registry(arg_reg); */
+/* } */
 
 int
 op_comparison (registry* reg)
@@ -783,43 +783,43 @@ op_compute (registry* reg)
   compute(arg_reg);
 }
 
-void
-op_source (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
-  if (arg1 == NULL)
-    {
-      do_error("`source` requires an argument.");
-      return;
-    }
+/* void */
+/* op_source (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
+/*   if (arg1 == NULL) */
+/*     { */
+/*       do_error("`source` requires an argument."); */
+/*       return; */
+/*     } */
 
-  if (arg1->type != STRING)
-    {
-      do_error("Argument to `source` must be a string.");
-      return;
-    }
+/*   if (arg1->type != STRING) */
+/*     { */
+/*       do_error("Argument to `source` must be a string."); */
+/*       return; */
+/*     } */
 
-  FILE* f = fopen((char*) arg1->data, "r");
-  if (f == NULL)
-    {
-      char* msg = malloc(sizeof(char)*(strlen("File not found.")
-                                       + strlen((char*) arg1->data) +
-                                       6));
-      sprintf(msg, "File `%s` not found.", (char*) arg1->data);
-      do_error(msg);
-      free(msg);
-      return;
-    }
+/*   FILE* f = fopen((char*) arg1->data, "r"); */
+/*   if (f == NULL) */
+/*     { */
+/*       char* msg = malloc(sizeof(char)*(strlen("File not found.") */
+/*                                        + strlen((char*) arg1->data) + */
+/*                                        6)); */
+/*       sprintf(msg, "File `%s` not found.", (char*) arg1->data); */
+/*       do_error(msg); */
+/*       free(msg); */
+/*       return; */
+/*     } */
 
-  struct parser_state state = fresh_state(0);
-  registry* arg_reg = NULL;
-  parse(f, reg->up, &arg_reg, &state);
+/*   struct parser_state state = fresh_state(0); */
+/*   registry* arg_reg = NULL; */
+/*   parse(f, reg->up, &arg_reg, &state); */
 
-  if (arg_reg != NULL)
-    free_registry(arg_reg);
+/*   if (arg_reg != NULL) */
+/*     free_registry(arg_reg); */
 
-  fclose(f);
-}
+/*   fclose(f); */
+/* } */
 
 void
 op_do_to_all (registry* reg)
@@ -982,138 +982,138 @@ op_last (registry* reg)
   
 }
 
-void
-op_in (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
-  data* arg2 = lookup(reg, "#2", 0);
+/* void */
+/* op_in (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
+/*   data* arg2 = lookup(reg, "#2", 0); */
 
-  if (arg1==NULL || arg2==NULL)
-    {
-      do_error("`in` requires two arguments.");
-      return;
-    }
+/*   if (arg1==NULL || arg2==NULL) */
+/*     { */
+/*       do_error("`in` requires two arguments."); */
+/*       return; */
+/*     } */
 
-  if (arg1->type != REGISTRY)
-    {
-      do_error("First argument to `in` should be a registry.");
-      return;
-    }
+/*   if (arg1->type != REGISTRY) */
+/*     { */
+/*       do_error("First argument to `in` should be a registry."); */
+/*       return; */
+/*     } */
 
-  if (arg2->type != INSTRUCTION)
-    {
-      do_error("Second argument to `in` should be a instruction.");
-      return;
-    }
+/*   if (arg2->type != INSTRUCTION) */
+/*     { */
+/*       do_error("Second argument to `in` should be a instruction."); */
+/*       return; */
+/*     } */
 
-  FILE* f;
-  char* instr = (char*) arg2->data;
-  f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
-  struct parser_state state = fresh_state(0);
-  registry* arg_reg = NULL;
-  int complete = parse(f, (registry*) arg1->data, &arg_reg,
-                       &state);
+/*   FILE* f; */
+/*   char* instr = (char*) arg2->data; */
+/*   f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
+/*   struct parser_state state = fresh_state(0); */
+/*   registry* arg_reg = NULL; */
+/*   int complete = parse(f, (registry*) arg1->data, &arg_reg, */
+/*                        &state); */
 
-  if (arg_reg != NULL)
-    free_registry(arg_reg);
+/*   if (arg_reg != NULL) */
+/*     free_registry(arg_reg); */
       
   
-  if (!complete)
-    {
-      do_error("Not complete instruction.");
-      return;
-    }
+/*   if (!complete) */
+/*     { */
+/*       do_error("Not complete instruction."); */
+/*       return; */
+/*     } */
 
-  data* ans = lookup((registry*) arg1->data, "ans", 0);
-  if (ans != NULL)
-    {
-      ans = copy_data(ans);
-      ret_ans(reg, ans);
-    }
+/*   data* ans = lookup((registry*) arg1->data, "ans", 0); */
+/*   if (ans != NULL) */
+/*     { */
+/*       ans = copy_data(ans); */
+/*       ret_ans(reg, ans); */
+/*     } */
   
-}
+/* } */
 
-void
-op_while (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
-  data* arg2 = lookup(reg, "#2", 0);
+/* void */
+/* op_while (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
+/*   data* arg2 = lookup(reg, "#2", 0); */
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("`while` requires two arguments.");
-      return;
-    }
+/*   if (arg1 == NULL || arg2 == NULL) */
+/*     { */
+/*       do_error("`while` requires two arguments."); */
+/*       return; */
+/*     } */
 
-  if (arg1->type != INSTRUCTION || arg2->type != INSTRUCTION)
-    {
-      do_error("Both arguments to `while` should be instructions in ()'s.");
-      return;
-    }
+/*   if (arg1->type != INSTRUCTION || arg2->type != INSTRUCTION) */
+/*     { */
+/*       do_error("Both arguments to `while` should be instructions in ()'s."); */
+/*       return; */
+/*     } */
 
-  FILE* f;
-  char* instr;
-  struct parser_state state;
-  registry* arg_reg = NULL;
-  int complete;
-  data* d;
-  while (1)
-    {
-      instr = (char*) arg1->data;
-      f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
-      state = fresh_state(0);
-      if (arg_reg != NULL)
-        free_registry(arg_reg);
-      arg_reg = NULL;
-      complete = parse(f, reg->up, &arg_reg, &state);
-      fclose(f);
+/*   FILE* f; */
+/*   char* instr; */
+/*   struct parser_state state; */
+/*   registry* arg_reg = NULL; */
+/*   int complete; */
+/*   data* d; */
+/*   while (1) */
+/*     { */
+/*       instr = (char*) arg1->data; */
+/*       f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
+/*       state = fresh_state(0); */
+/*       if (arg_reg != NULL) */
+/*         free_registry(arg_reg); */
+/*       arg_reg = NULL; */
+/*       complete = parse(f, reg->up, &arg_reg, &state); */
+/*       fclose(f); */
       
-      if (!complete)
-        {
-          do_error("First instruction is incomplete.");
-          break;
-        }
-      d = get(reg->up, "ans", 0);
+/*       if (!complete) */
+/*         { */
+/*           do_error("First instruction is incomplete."); */
+/*           break; */
+/*         } */
+/*       d = get(reg->up, "ans", 0); */
 
 
-      if (d == NULL)
-        {
-          do_error("Instruction did not set `ans` to a value.");
-          break;
-        }
+/*       if (d == NULL) */
+/*         { */
+/*           do_error("Instruction did not set `ans` to a value."); */
+/*           break; */
+/*         } */
 
-      if (d->type != INTEGER)
-        {
-          do_error("First instruction should set `ans` to an integer.");
-          break;
-        }
+/*       if (d->type != INTEGER) */
+/*         { */
+/*           do_error("First instruction should set `ans` to an integer."); */
+/*           break; */
+/*         } */
 
-      if ((*(int*) d->data) == 0)
-        {
-          break;
-        }
+/*       if ((*(int*) d->data) == 0) */
+/*         { */
+/*           break; */
+/*         } */
 
-      instr = (char*) arg2->data;
-      f = fmemopen(instr, sizeof(char)*strlen(instr), "r");
-      state = fresh_state(0);
-      if (arg_reg != NULL)
-        free_registry(arg_reg);
+/*       instr = (char*) arg2->data; */
+/*       f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
+/*       state = fresh_state(0); */
+/*       if (arg_reg != NULL) */
+/*         free_registry(arg_reg); */
 
-      arg_reg = NULL;
-      complete = parse(f, reg->up, &arg_reg, &state);
-      fclose(f);
+/*       arg_reg = NULL; */
+/*       complete = parse(f, reg->up, &arg_reg, &state); */
+/*       fclose(f); */
 
-      if (!complete)
-        {
-          do_error("Second instruction is incomplete.");
-          break;
-        }
+/*       if (!complete) */
+/*         { */
+/*           do_error("Second instruction is incomplete."); */
+/*           break; */
+/*         } */
 
-    }
+/*     } */
 
   
   
-}
+/* } */
 
 void
 op_to_register (registry* reg)
@@ -1544,53 +1544,53 @@ op_go_out (registry* reg)
   current_parse_registry = current_parse_registry->up;
 }
 
-void
-op_save (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
+/* void */
+/* op_save (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
 
-  if (arg1 == NULL)
-    {
-      do_error("`save` requires an argument.");
-      return;
-    }
+/*   if (arg1 == NULL) */
+/*     { */
+/*       do_error("`save` requires an argument."); */
+/*       return; */
+/*     } */
 
-  if (arg1->type != STRING)
-    {
-      do_error("The argument to `save` must be a string.");
-      return;
-    }
+/*   if (arg1->type != STRING) */
+/*     { */
+/*       do_error("The argument to `save` must be a string."); */
+/*       return; */
+/*     } */
 
-  char* fname = (char*) arg1->data;
-  FILE* f = fopen(fname, "wb");
-  save_registry(f, (registry*) top_registry->data);
-  fclose(f);
+/*   char* fname = (char*) arg1->data; */
+/*   FILE* f = fopen(fname, "wb"); */
+/*   save_registry(f, (registry*) top_registry->data); */
+/*   fclose(f); */
 
-}
+/* } */
 
-void
-op_load (registry* reg)
-{
-  data* arg1 = lookup(reg, "#1", 0);
+/* void */
+/* op_load (registry* reg) */
+/* { */
+/*   data* arg1 = lookup(reg, "#1", 0); */
 
-  if (arg1 == NULL)
-    {
-      do_error("`load` requires an argument.");
-      return;
-    }
+/*   if (arg1 == NULL) */
+/*     { */
+/*       do_error("`load` requires an argument."); */
+/*       return; */
+/*     } */
 
-  if (arg1->type != STRING)
-    {
-      do_error("The argument to `load` must be a string.");
-      return;
-    }
+/*   if (arg1->type != STRING) */
+/*     { */
+/*       do_error("The argument to `load` must be a string."); */
+/*       return; */
+/*     } */
 
-  char* fname = (char*) arg1->data;
-  FILE* f = fopen(fname, "rb");
-  read_registry(f, (registry*) top_registry->data);
-  fclose(f);
+/*   char* fname = (char*) arg1->data; */
+/*   FILE* f = fopen(fname, "rb"); */
+/*   read_registry(f, (registry*) top_registry->data); */
+/*   fclose(f); */
 
-}
+/* } */
 
 void
 op_to_string (registry* reg)
@@ -2259,8 +2259,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_answer);
   set(reg,d,"answer");
 
-  assign_op(&d, op_call);
-  set(reg,d,"call");
+  /* assign_op(&d, op_call); */
+  /* set(reg,d,"call"); */
 
   assign_op(&d, op_sit);
   set(reg,d,"sit");
@@ -2295,8 +2295,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_concat);
   set(reg,d,"concat");
 
-  assign_op(&d, op_source);
-  set(reg,d,"source");
+  /* assign_op(&d, op_source); */
+  /* set(reg,d,"source"); */
 
   assign_op(&d, op_do_to_all);
   set(reg,d,"do-to-all");
@@ -2307,11 +2307,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_last);
   set(reg,d,"last");
 
-  assign_op(&d, op_in);
-  set(reg,d,"in");
+  /* assign_op(&d, op_in); */
+  /* set(reg,d,"in"); */
 
-  assign_op(&d, op_while);
-  set(reg,d,"while");
+  /* assign_op(&d, op_while); */
+  /* set(reg,d,"while"); */
   
   assign_op(&d, op_list);
   set(reg,d,"list");
@@ -2352,11 +2352,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_go_out);
   set(reg,d,"go-out");
 
-  assign_op(&d, op_save);
-  set(reg,d,"save");
+  /* assign_op(&d, op_save); */
+  /* set(reg,d,"save"); */
 
-  assign_op(&d, op_load);
-  set(reg,d,"load");
+  /* assign_op(&d, op_load); */
+  /* set(reg,d,"load"); */
 
   assign_op(&d, op_to_string);
   set(reg,d,"to-string");

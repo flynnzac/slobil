@@ -1,32 +1,4 @@
-int
-new_parse (FILE* f, registry* reg,
-           parser_state* state, statement** s)
-{
-  char c;
-  data* d;
-  int complete = 0;
-  statement* stmt = NULL;
-  element* head = NULL;
-
-  do
-    {
-      complete = 0;
-      head = parse_stmt(f, state, &complete);
-      if (stmt == NULL)
-        {
-          *s = append_statement(NULL, head);
-          stmt = *s;
-        }
-      else
-        {
-          stmt = append_statement(stmt, head);
-        }
-    }
-  while (complete == 1);
-
-  return complete;
-    
-}
+#include "arbel.h"
 
 void
 clear_state_buffer (struct parser_state* state)
@@ -75,17 +47,34 @@ add_lookup_argument (element** head, element* e, char* d)
 
 }
 
+element*
+add_statement_argument (element** head, element* e, statement* s)
+{
+  if (*head == NULL)
+    {
+      *head = append_statement_element(NULL, s);
+      return *head;
+    }
+  else
+    {
+      e = append_statement_element(e, s);
+      return e;
+    }
+
+}
+
 
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete)
 {
   char c;
   data* d;
-  data* d_new;
-  int complete = 0;
+  int sub_complete = 0;
   element* head = NULL;
   element* e;
-  statement* sub_stmt;
+  statement* sub_stmt = NULL;
+  FILE* f_sub = NULL;
+  parser_state sub_state;
   
 
   while ((((c = fgetc(f)) != EOF) && c != '\0') && !(*complete))
@@ -105,24 +94,39 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               state->buffer[state->i] = '\0';
               if (state->after_instr)
                 {
-                  switch (state->open_paren)
-                    {
-                    case '(':
-                      assign_instr(&d, state->buffer);
-                      add_argument(d, state, arg_reg);
-                      break;
-                    case '{':
-                      assign_active(&d, state->buffer);
-                      add_argument(d, state, arg_reg);
-                      break;
-                    case '[':
-                      int sub_complete = new_parse(,&sub_stmt);
-                      add_argument(d, state, arg_reg);
-                      break;
-                    }
 
-                  state->open_paren = '\0';
-                  state->after_instr = 0;
+		  f_sub = fmemopen(state->buffer,
+				   sizeof(char)*strlen(state->buffer), "r");
+		  sub_state = fresh_state(0);
+		  sub_complete = new_parse(f, &sub_state, &sub_stmt);
+		  if (sub_complete)
+		    {
+		      switch (state->open_paren)
+			{
+			case '(':
+			  assign_instr(&d, sub_stmt, state->buffer);
+			  e = add_argument(&head, e, d);
+			  break;
+			case '{':
+			  assign_active(&d, sub_stmt);
+			  e = add_argument(&head, e, d);
+			  break;
+			case '[':
+			  e = add_statement_argument(&head, e, sub_stmt);
+			  break;
+			}
+		      state->open_paren = '\0';
+		      state->after_instr = 0;
+
+		    }
+		  else
+		    {
+		      do_error("Incomplete instruction in parenthesis.");
+		      state->open_paren = '\0';
+		      state->after_instr = 0;
+		      break;
+		    }
+
                 }
               else if (state->after_quote)
                 {
@@ -162,12 +166,14 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (is_reference(state->buffer))
                 {
                   str_shift_left(state->buffer);
-                  assign_ref(&d, reg, state->buffer);
+                  assign_ref(&d, NULL, state->buffer);
                   e = add_argument(&head, e, d);
                 }
               else 
                 {
+		  printf("state->buffer: %s\n", state->buffer);
                   e = add_lookup_argument(&head, e, state->buffer);
+
                 }
               clear_state_buffer(state);
             }
@@ -284,7 +290,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
       else
         {
           add_to_state_buffer(state,c);
-          complete = 0;
+          *complete = 0;
         }
 
       if (is_error(-1))
@@ -303,13 +309,37 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
       state->after_instr = 0;
       
       is_error(0);
-      complete = 1;
-      if ((*arg_reg) != NULL)
-        {
-          free_registry(*arg_reg);
-          *arg_reg = NULL;
-        }
+      *complete = 1;
     }
 
+  return head;
  
 }
+
+int
+new_parse (FILE* f, parser_state* state, statement** s)
+{
+  int complete = 0;
+  statement* stmt = NULL;
+  element* head = NULL;
+
+  do
+    {
+      complete = 0;
+      head = parse_stmt(f, state, &complete);
+      if (stmt == NULL)
+        {
+          *s = append_statement(NULL, head);
+          stmt = *s;
+        }
+      else
+        {
+          stmt = append_statement(stmt, head);
+        }
+    }
+  while (complete == 1);
+
+  return complete;
+    
+}
+

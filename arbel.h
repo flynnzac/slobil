@@ -125,6 +125,14 @@ struct statement
 
 typedef struct statement statement;
 
+struct instruction
+{
+  statement* stmt;
+  char* code;
+};
+
+typedef struct instruction instruction;
+
 char*
 argument_name (int n);
 
@@ -250,7 +258,7 @@ void
 relabel (registry* reg, const char* name, const char* new_name);
 
 void
-assign_instr (data** d, const char* str);
+assign_instr (data** d, statement* s, const char* code);
 
 struct parser_state
 fresh_state ();
@@ -265,7 +273,7 @@ int
 is_decimal (const char* str);
 
 void
-assign_active (data** d, const char* str);
+assign_active (data** d, statement* s);
 
 data*
 lookup (registry* reg, const char* name, int recursive);
@@ -302,6 +310,18 @@ append_argument_element (element* current, char* name);
 
 element*
 append_literal_element (element* current, data* d);
+
+element*
+append_statement_element (element* current, statement* s);
+
+int
+new_parse (FILE* f, parser_state* state, statement** s);
+
+void
+execute_code (statement* s, registry* reg);
+
+element*
+parse_stmt (FILE* f, parser_state* state, int* complete);
 
 /* global variables */
 data* top_registry;

@@ -24,7 +24,8 @@ append_argument_element (element* current, char* name)
 {
   element* e = malloc(sizeof(element));
   e->data = NULL;
-  e->name = name;
+  e->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(e->name,name);
   e->literal = 0;
   e->statement = 0;
   e->right = NULL;
@@ -42,7 +43,7 @@ append_statement_element (element* current, statement* s)
   element* e = malloc(sizeof(element));
   e->data = NULL;
   e->name = NULL;
-  e->statement = s;
+  e->s = s;
   e->literal = 0;
   e->statement = 1;
   e->right = NULL;

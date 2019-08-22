@@ -106,21 +106,22 @@ assign_str (data** d, const char* str)
 }
 
 void
-assign_instr (data** d, const char* str)
+assign_instr (data** d, statement* s, const char* code)
 {
   *d = malloc(sizeof(data));
   (*d)->type = INSTRUCTION;
-  (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
-  strcpy((char*) (*d)->data, str);
+  (*d)->data = malloc(sizeof(instruction));
+  ((instruction*) (*d)->data)->stmt = s;
+  ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
+  strcpy(((instruction*) (*d)->data)->code, code);
 }
 
 void
-assign_active (data** d, const char* str)
+assign_active (data** d, statement* s)
 {
   *d = malloc(sizeof(data));
   (*d)->type = ACTIVE_INSTRUCTION;
-  (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
-  strcpy((char*) (*d)->data, str);
+  (*d)->data = s;
 }
 
 void
@@ -268,29 +269,8 @@ lookup (registry* reg, const char* name, int recursive)
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
-      registry* arg_reg = NULL;
-      char* code = (char*) d->data;
-      char* code_copy = malloc(sizeof(char)*(strlen(code)+1));
-      strcpy(code_copy, code);
-      FILE* f = fmemopen(code_copy, strlen(code_copy), "r");
-      struct parser_state state = fresh_state(0);
-      int comp = parse(f, reg->up, &arg_reg, &state);
-      if (comp)
-        {
-          d = get(reg, "ans", 0);
-        }
-      else
-        {
-          do_error("Instruction must be complete.");
-          d = NULL;
-        }
-
-      if (arg_reg != NULL)
-        {
-          free_registry(arg_reg);
-        }
-      fclose(f);
-      free(code_copy);
+      execute_code((statement*) d->data, reg);
+      d = get(reg, "ans", 0);
 
     }
   else if (d->type == REFERENCE)
@@ -312,9 +292,18 @@ lookup (registry* reg, const char* name, int recursive)
       else
         {
           data* d_ref;
-          d_ref = get(((ref*) d->data)->reg,
-                      ((ref*) d->data)->key,
-                      1);
+	  if (((ref*) d->data)->reg == NULL)
+	    {
+	      d_ref = get(reg,
+			  ((ref*) d->data)->key,
+			  1);
+	    }
+	  else
+	    {
+	      d_ref = get(((ref*) d->data)->reg,
+			  ((ref*) d->data)->key,
+			  1);
+	    }
 
           if (d_ref == NULL)
             {
@@ -460,10 +449,11 @@ copy_data (data* d_in)
       assign_op(&d, (operation) d_in->data);
       break;
     case INSTRUCTION:
-      assign_instr(&d, (char*) d_in->data);
+      assign_instr(&d, ((instruction*) d_in->data)->stmt,
+		   ((instruction*) d_in->data)->code);
       break;
     case ACTIVE_INSTRUCTION:
-      assign_active(&d, (char*) d_in->data);
+      assign_active(&d, (statement*) d_in->data);
       break;
     case ARBEL_FILE:
       assign_file(&d, (FILE*) d_in->data);
@@ -472,7 +462,7 @@ copy_data (data* d_in)
       assign_nothing(&d);
       break;
     case REFERENCE:
-      assign_ref(&d, ((ref*) d_in->data)->reg,
+      assign_ref(&d,((ref*) d_in->data)->reg,
                  ((ref*) d_in->data)->key);
       break;
     }
@@ -505,7 +495,7 @@ compute (registry* reg)
       set(reg_instr, reg_ans, "#2");
       reg_ans = copy_data(arg);
       set(reg_instr, reg_ans, "#1");
-      op_call(reg_instr);
+      /* op_call(reg_instr); */
       free_registry(reg_instr); 
       return;
     }
