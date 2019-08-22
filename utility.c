@@ -232,7 +232,7 @@ print_data (data* d, int print_cmd)
       print_registry((registry*) d->data);
       break;
     case INSTRUCTION:
-      printf("( %s )\n", (const char*) d->data);
+      printf("( %s )\n", ((instruction*) d->data)->code);
       break;
     case REGISTER:
       printf("$%s\n", (const char*) d->data);

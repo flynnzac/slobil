@@ -75,6 +75,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
   statement* sub_stmt = NULL;
   FILE* f_sub = NULL;
   parser_state sub_state;
+  char* str;
   
 
   while ((((c = fgetc(f)) != EOF) && c != '\0') && !(*complete))
@@ -89,46 +90,47 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
-	  state->buffer[state->i] = '\0';
+          state->buffer[state->i] = '\0';
           if (strlen(state->buffer) != 0 && !state->in_quote)
             {
               if (state->after_instr)
                 {
-		  printf("state->bufffer: %s\n", state->buffer);
-		  f_sub = fmemopen(state->buffer,
-				   sizeof(char)*strlen(state->buffer), "r");
-		  sub_state = fresh_state(0);
-		  sub_stmt = NULL;
-		  sub_complete = new_parse(f_sub, &sub_state, &sub_stmt);
-		  fclose(f_sub);
-		  if (sub_complete)
-		    {
-		      switch (state->open_paren)
-			{
-			case '(':
-			  assign_instr(&d, sub_stmt, state->buffer);
-			  e = add_argument(&head, e, d);
-			  break;
-			case '{':
-			  assign_active(&d, sub_stmt);
-			  e = add_argument(&head, e, d);
-			  break;
-			case '[':
-			  printf("Made it to add!\n");
-			  e = add_statement_argument(&head, e, sub_stmt);
-			  break;
-			}
-		      state->open_paren = '\0';
-		      state->after_instr = 0;
+                  str = malloc(sizeof(char)*(strlen(state->buffer)+1));
+                  strcpy(str, state->buffer);
+                  f_sub = fmemopen(str,
+                                   sizeof(char)*strlen(str), "r");
+                  sub_state = fresh_state(0);
+                  sub_stmt = NULL;
+                  sub_complete = new_parse(f_sub, &sub_state, &sub_stmt);
+                  fclose(f_sub);
+                  free(str);
+                  if (sub_complete)
+                    {
+                      switch (state->open_paren)
+                        {
+                        case '(':
+                          assign_instr(&d, sub_stmt, state->buffer);
+                          e = add_argument(&head, e, d);
+                          break;
+                        case '{':
+                          assign_active(&d, sub_stmt);
+                          e = add_argument(&head, e, d);
+                          break;
+                        case '[':
+                          e = add_statement_argument(&head, e, sub_stmt);
+                          break;
+                        }
+                      state->open_paren = '\0';
+                      state->after_instr = 0;
 
-		    }
-		  else
-		    {
-		      do_error("Incomplete instruction in parenthesis.");
-		      state->open_paren = '\0';
-		      state->after_instr = 0;
-		      break;
-		    }
+                    }
+                  else
+                    {
+                      do_error("Incomplete instruction in parenthesis.");
+                      state->open_paren = '\0';
+                      state->after_instr = 0;
+                      break;
+                    }
 
                 }
               else if (state->after_quote)
@@ -140,7 +142,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
-		  printf("Integer: %d\n", entry);
                   assign_int(&d, entry);
                   e = add_argument(&head, e, d);
                 }
@@ -330,17 +331,17 @@ new_parse (FILE* f, parser_state* state, statement** s)
       complete = 0;
       head = parse_stmt(f, state, &complete);
       if (complete)
-	{
-	  if (stmt == NULL)
-	    {
-	      *s = append_statement(NULL, head);
-	      stmt = *s;
-	    }
-	  else
-	    {
-	      stmt = append_statement(stmt, head);
-	    }
-	}
+        {
+          if (stmt == NULL)
+            {
+              *s = append_statement(NULL, head);
+              stmt = *s;
+            }
+          else
+            {
+              stmt = append_statement(stmt, head);
+            }
+        }
     }
   while (complete == 1);
 

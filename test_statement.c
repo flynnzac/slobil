@@ -17,7 +17,9 @@ main (int argc, char** argv)
   registry* reg = new_registry(NULL);
   add_basic_ops(reg);
   execute_statement(s, reg);
-  print_registry(reg);
+  
+  free(code);
+  code = malloc(sizeof(char)*(strlen("addone 5 . ")+1));
   strcpy(code, "addone 5 . ");
   f = fmemopen(code, sizeof(char)*strlen(code), "r");
   state = fresh_state(0);
@@ -25,11 +27,11 @@ main (int argc, char** argv)
   new_parse(f, &state, &s);
   fclose(f);
   execute_statement(s, reg);
-  
 
+  /*  print_registry(reg);*/
   data* d = get(reg, "ans", 0);
   printf("Value: %d\n", *((int*) d->data));
-  fclose(f);
+
 
   free(code);
   return 0;

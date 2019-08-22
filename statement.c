@@ -82,8 +82,6 @@ execute_statement (statement* s, registry* reg)
   while (e != NULL)
     {
       name = argument_name(arg_n);
-      printf("Statement: %d\n",e->statement);
-      printf("Literal: %d\n",e->literal);
       if (e->literal)
         {
           d = copy_data(e->data);
@@ -92,7 +90,6 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->statement)
             {
-	      printf("Hello!\n");
               st_reg = new_registry(reg);
               execute_code(e->s, st_reg);
               d = get(st_reg, "ans", 0);
@@ -113,7 +110,6 @@ execute_statement (statement* s, registry* reg)
       arg_n++;
       e = e->right;
     }
-  print_registry(arg_reg);
   compute(arg_reg);
   free_registry(arg_reg);
 }

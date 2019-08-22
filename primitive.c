@@ -246,11 +246,6 @@ get (registry* reg, const char* name, int recursive)
     }
   if ((reg->up != NULL) && recursive)
     {
-      if (reg->up->up != NULL)
-        {
-          if (reg->up == reg->up->up)
-            printf("HERE!\n");
-        }
       return get(reg->up, name, recursive);
     }
   else
@@ -265,10 +260,7 @@ lookup (registry* reg, const char* name, int recursive)
   data* d = get(reg, name, recursive);
 
   if (d == NULL)
-    {
-      printf("Actually not found!\n");
-      return NULL;
-    }
+    return NULL;
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
@@ -492,8 +484,11 @@ compute (registry* reg)
 
   if (arg->type == INSTRUCTION)
     {
-      printf("In compute! Before Statement!\n");
       execute_code(((instruction*) arg->data)->stmt, reg);
+      data* d = get(reg, "ans", 0);
+      d = copy_data(d);
+      ret_ans(reg, d);
+      return;
     }
 
   if (is_error(-1))
