@@ -70,7 +70,6 @@ main (int argc, char** argv)
   char* prompt = "~> ";
   FILE* f;
   int complete = 1;
-  registry* arg_reg = NULL;
   struct parser_state state = fresh_state(0);
 
   int k;
@@ -85,7 +84,7 @@ main (int argc, char** argv)
           break;
         case 'l':
           f = fopen(optarg, "r");
-          complete = parse(f, current_parse_registry, &arg_reg, &state);
+          complete = interact(f, &state, current_parse_registry);
           fclose(f);
           break;
         case 's':
@@ -106,7 +105,7 @@ main (int argc, char** argv)
   if (script != NULL)
     {
       f = fopen(script, "r");
-      complete = parse(f, current_parse_registry, &arg_reg, &state);
+      complete = interact(f, &state, current_parse_registry);
       fclose(f);
       free(script);
     }
@@ -127,7 +126,7 @@ main (int argc, char** argv)
       code = append_nl(code);
       source_code = append_to_source_code(source_code, code);
       f = fmemopen(code, sizeof(char)*strlen(code), "r");
-      complete = parse(f, current_parse_registry, &arg_reg, &state);
+      complete = interact(f, &state, current_parse_registry);
       fclose(f);
       free(code);
     }

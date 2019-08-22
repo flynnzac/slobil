@@ -120,8 +120,8 @@ execute_code (statement* s, registry* reg)
   while (s != NULL)
     {
       execute_statement(s, reg);
-      /* if (is_error(-1)) */
-      /* 	break; */
+      if (is_error(-1))
+      	break;
       s = s->right;
     }
 }

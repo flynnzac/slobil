@@ -1,37 +1,4 @@
-/* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
-
-   This file is part of ARBEL.
-
-   ARBEL is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   ARBLE is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
-   
-*/
-
 #include "arbel.h"
-
-void
-add_argument (data* d, struct parser_state* state, registry** arg_reg)
-{
-  if (d != NULL)
-    {
-      char* name = argument_name(state->arg_n);
-      set(*arg_reg, d, name);
-      free(name);
-      state->arg_n++;
-    }
-}
 
 void
 clear_state_buffer (struct parser_state* state)
@@ -47,193 +14,170 @@ add_to_state_buffer (struct parser_state* state, const char c)
   state->i++;
 }
 
-void
-square_bracket (data** d, const char* buffer, registry* reg)
+
+element*
+add_argument (element** head, element* e, data* d)
 {
-  char* code = malloc(sizeof(char)*
-                      (strlen(buffer)+1));
-  strcpy(code, buffer);
-  struct parser_state square_parser = fresh_state(0);
-  FILE* square_stream = fmemopen(code,
-                                 sizeof(char)*
-                                 strlen(code),
-                                 "r");
-
-  registry* square_registry = new_registry(reg);
-  registry* square_arg_registry = NULL;
-  
-
-  if (parse(square_stream,
-            square_registry,
-            &square_arg_registry,
-            &square_parser))
+  if (*head == NULL)
     {
-      *d = get(square_registry, "ans",0);
-      if (*d == NULL)
-        {
-          do_error("Statement in []'s does not set $ans register.");
-        }
-      else
-        {
-          *d = copy_data(*d);
-        }
+      *head = append_literal_element(NULL, d);
+      return *head;
     }
   else
     {
-      do_error("Incomplete statement in []'s.  Must complete statement in square brackets.");
-      *d = NULL;
-    }
-  fclose(square_stream);
-  free(code);
-
-  if (square_registry != NULL)
-    {
-      free_registry(square_registry);
+      e = append_literal_element(e, d);
+      return e;
     }
 
-  if (square_arg_registry != NULL)
-    {
-      free_registry(square_arg_registry);
-    }
 }
 
-int
-parse (FILE* f, registry* reg, registry** arg_reg,
-       struct parser_state* state)
+element*
+add_lookup_argument (element** head, element* e, char* d)
+{
+  if (*head == NULL)
+    {
+      *head = append_argument_element(NULL, d);
+      return *head;
+    }
+  else
+    {
+      e = append_argument_element(e, d);
+      return e;
+    }
+
+}
+
+element*
+add_statement_argument (element** head, element* e, statement* s)
+{
+  if (*head == NULL)
+    {
+      *head = append_statement_element(NULL, s);
+      return *head;
+    }
+  else
+    {
+      e = append_statement_element(e, s);
+      return e;
+    }
+
+}
+
+
+element*
+parse_stmt (FILE* f, parser_state* state, int* complete)
 {
   char c;
-  data* d;
-  data* d_new;
-  int complete = 0;
+  data* d = NULL;
+  int sub_complete = 0;
+  element* head = NULL;
+  element* e = NULL;
+  statement* sub_stmt = NULL;
+  FILE* f_sub = NULL;
+  parser_state sub_state;
+  char* str;
+  
 
-  while (((c = fgetc(f)) != EOF) && c != '\0')
+  while ((((c = fgetc(f)) != EOF) && c != '\0') && !(*complete))
     {
       if (state->in_comment && (c != '\n'))
         continue;
       if (state->in_comment && (c == '\n'))
         {
           state->in_comment = 0;
-          free_registry(*arg_reg);
-          *arg_reg = NULL;
-          complete = 1;
+          *complete = 1;
           continue;
         }
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
+          state->buffer[state->i] = '\0';
           if (strlen(state->buffer) != 0 && !state->in_quote)
             {
-	      
-              if (*arg_reg == NULL)
-                *arg_reg = new_registry(reg);
-              
-              state->buffer[state->i] = '\0';
               if (state->after_instr)
                 {
-                  switch (state->open_paren)
+                  str = malloc(sizeof(char)*(strlen(state->buffer)+1));
+                  strcpy(str, state->buffer);
+                  f_sub = fmemopen(str,
+                                   sizeof(char)*strlen(str), "r");
+                  sub_state = fresh_state(0);
+                  sub_stmt = NULL;
+                  sub_complete = parse(f_sub, &sub_state, &sub_stmt);
+                  fclose(f_sub);
+                  free(str);
+                  if (sub_complete)
                     {
-                    case '(':
-                      assign_instr(&d, state->buffer);
-                      add_argument(d, state, arg_reg);
-                      break;
-                    case '{':
-                      assign_active(&d, state->buffer);
-                      add_argument(d, state, arg_reg);
-                      break;
-                    case '[':
-                      square_bracket(&d, state->buffer, reg);
-                      add_argument(d, state, arg_reg);
+                      switch (state->open_paren)
+                        {
+                        case '(':
+                          assign_instr(&d, sub_stmt, state->buffer);
+                          e = add_argument(&head, e, d);
+                          break;
+                        case '{':
+                          assign_active(&d, sub_stmt);
+                          e = add_argument(&head, e, d);
+                          break;
+                        case '[':
+                          e = add_statement_argument(&head, e, sub_stmt);
+                          break;
+                        }
+                      state->open_paren = '\0';
+                      state->after_instr = 0;
+
+                    }
+                  else
+                    {
+                      do_error("Incomplete instruction in parenthesis.");
+                      state->open_paren = '\0';
+                      state->after_instr = 0;
                       break;
                     }
 
-                  state->open_paren = '\0';
-                  state->after_instr = 0;
                 }
               else if (state->after_quote)
                 {
                   state->after_quote = 0;
                   assign_str(&d, state->buffer);
-                  add_argument(d, state, arg_reg);
+                  e = add_argument(&head, e, d);
                 }
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
                   assign_int(&d, entry);
-                  add_argument(d, state, arg_reg);
+                  e = add_argument(&head, e, d);
                 }
               else if (is_decimal(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
                   double entry = atof(state->buffer);
                   assign_dec(&d, entry);
-                  add_argument(d, state, arg_reg);
+                  e = add_argument(&head, e, d);
                 }
               else if (is_register(state->buffer))
                 {
                   str_shift_left(state->buffer);
                   assign_regstr(&d, state->buffer);
-                  add_argument(d, state, arg_reg);
+                  e = add_argument(&head, e, d);
                 }
               else if (strcmp(state->buffer,".")==0)
                 {
-                  compute (*arg_reg);
-                  if (!is_error(-1))
-                    {
-                      if (reg->up == NULL && is_retval(-1) &&
-                          state->print_out)
-                        {
-                          d = get(reg, "ans", 0);
-                          print_data (d, 0);
-                          is_retval(0);
-                        }
-                      complete = 1;
-                      if (reg->up == NULL && state->print_out)
-                        {
-                          printf("OK.\n");
-                        }
-                      state->arg_n = 0;
-                      free_registry(*arg_reg);
-                      *arg_reg = NULL;
-                    }
-                  else
-                    {
-                      break;
-                    }
-
+                  *complete = 1;
+                  continue;
                 }
               else if (strcmp(state->buffer, "rem")==0)
                 {
                   state->in_comment = 1;
                   state->arg_n = 0;
-                  free_registry(*arg_reg);
-                  *arg_reg = NULL;
                 }
               else if (is_reference(state->buffer))
                 {
                   str_shift_left(state->buffer);
-                  assign_ref(&d, reg, state->buffer);
-                  add_argument(d, state, arg_reg);
+                  assign_ref(&d, NULL, state->buffer);
+                  e = add_argument(&head, e, d);
                 }
               else 
                 {
-                  d = get(reg, state->buffer, 1);
+                  e = add_lookup_argument(&head, e, state->buffer);
 
-                  if (d != NULL)
-                    {
-                      d_new = copy_data(d);
-                      add_argument(d_new, state, arg_reg);
-                    }
-                  else
-                    {
-                      char* msg = malloc(sizeof(char)*
-                                         strlen("Value not found.") +
-                                         strlen(state->buffer)+
-                                         strlen(" ``") +1);
-                      sprintf(msg, "Value `%s` not found.",
-                              state->buffer);
-                      do_error(msg);
-                      free(msg);
-                      break;
-                    }
                 }
               clear_state_buffer(state);
             }
@@ -350,7 +294,7 @@ parse (FILE* f, registry* reg, registry** arg_reg,
       else
         {
           add_to_state_buffer(state,c);
-          complete = 0;
+          *complete = 0;
         }
 
       if (is_error(-1))
@@ -369,14 +313,73 @@ parse (FILE* f, registry* reg, registry** arg_reg,
       state->after_instr = 0;
       
       is_error(0);
-      complete = 1;
-      if ((*arg_reg) != NULL)
+      *complete = 1;
+    }
+
+  return head;
+ 
+}
+
+int
+parse (FILE* f, parser_state* state, statement** s)
+{
+  int complete = 0;
+  statement* stmt = NULL;
+  element* head = NULL;
+  do
+    {
+      complete = 0;
+      head = parse_stmt(f, state, &complete);
+      if (complete)
         {
-          free_registry(*arg_reg);
-          *arg_reg = NULL;
+          if (stmt == NULL)
+            {
+              *s = append_statement(NULL, head);
+              stmt = *s;
+            }
+          else
+            {
+              stmt = append_statement(stmt, head);
+            }
+        }
+    }
+  while (complete == 1);
+
+  return (head == NULL);
+    
+}
+
+int
+interact (FILE* f, parser_state* state, registry* reg)
+{
+  statement* s = NULL;
+  int complete = parse(f, state, &s);
+  data* d;
+  if (complete)
+    {
+      execute_code(s, reg);
+      if (!is_error(-1))
+        {
+          if (reg->up == NULL && is_retval(-1) &&
+              state->print_out)
+            {
+              d = get(reg, "ans", 0);
+              print_data(d,0);
+              is_retval(0);
+            }
+
+          if (reg->up == NULL && state->print_out)
+            {
+              printf("OK.\n");
+            }
+
+          state->arg_n = 0;
         }
     }
 
+  
+
+  /* Clean up statement */
+  
   return complete;
 }
-

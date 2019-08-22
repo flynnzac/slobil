@@ -202,10 +202,6 @@ do_error (const char* msg);
 void
 null_ans (registry* reg);
 
-int
-parse (FILE* f, registry* reg, registry** arg_reg,
-       struct parser_state* state);
-
 void
 print_data (data* d, int print_cmd);
 
@@ -315,13 +311,16 @@ element*
 append_statement_element (element* current, statement* s);
 
 int
-new_parse (FILE* f, parser_state* state, statement** s);
+parse (FILE* f, parser_state* state, statement** s);
 
 void
 execute_code (statement* s, registry* reg);
 
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete);
+
+int
+interact (FILE* f, parser_state* state, registry* reg);
 
 /* global variables */
 data* top_registry;
