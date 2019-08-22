@@ -68,10 +68,10 @@ element*
 parse_stmt (FILE* f, parser_state* state, int* complete)
 {
   char c;
-  data* d;
+  data* d = NULL;
   int sub_complete = 0;
   element* head = NULL;
-  element* e;
+  element* e = NULL;
   statement* sub_stmt = NULL;
   FILE* f_sub = NULL;
   parser_state sub_state;
@@ -89,16 +89,18 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
+	  state->buffer[state->i] = '\0';
           if (strlen(state->buffer) != 0 && !state->in_quote)
             {
-              state->buffer[state->i] = '\0';
               if (state->after_instr)
                 {
-
+		  printf("state->bufffer: %s\n", state->buffer);
 		  f_sub = fmemopen(state->buffer,
 				   sizeof(char)*strlen(state->buffer), "r");
 		  sub_state = fresh_state(0);
-		  sub_complete = new_parse(f, &sub_state, &sub_stmt);
+		  sub_stmt = NULL;
+		  sub_complete = new_parse(f_sub, &sub_state, &sub_stmt);
+		  fclose(f_sub);
 		  if (sub_complete)
 		    {
 		      switch (state->open_paren)
@@ -112,6 +114,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
 			  e = add_argument(&head, e, d);
 			  break;
 			case '[':
+			  printf("Made it to add!\n");
 			  e = add_statement_argument(&head, e, sub_stmt);
 			  break;
 			}
@@ -137,6 +140,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
+		  printf("Integer: %d\n", entry);
                   assign_int(&d, entry);
                   e = add_argument(&head, e, d);
                 }
@@ -321,24 +325,26 @@ new_parse (FILE* f, parser_state* state, statement** s)
   int complete = 0;
   statement* stmt = NULL;
   element* head = NULL;
-
   do
     {
       complete = 0;
       head = parse_stmt(f, state, &complete);
-      if (stmt == NULL)
-        {
-          *s = append_statement(NULL, head);
-          stmt = *s;
-        }
-      else
-        {
-          stmt = append_statement(stmt, head);
-        }
+      if (complete)
+	{
+	  if (stmt == NULL)
+	    {
+	      *s = append_statement(NULL, head);
+	      stmt = *s;
+	    }
+	  else
+	    {
+	      stmt = append_statement(stmt, head);
+	    }
+	}
     }
   while (complete == 1);
 
-  return complete;
+  return (head == NULL);
     
 }
 
@@ -349,7 +355,9 @@ interact (FILE* f, parser_state* state, registry* reg)
   int complete = new_parse(f, state, &s);
 
   if (complete)
-    execute_code(s, reg);    
+    execute_code(s, reg);
+
+  /* Clean up statement */
   
   return complete;
 }

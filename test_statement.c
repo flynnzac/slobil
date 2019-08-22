@@ -3,8 +3,8 @@
 int
 main (int argc, char** argv)
 {
-  char* code = malloc(sizeof(char)*(strlen("add 1 2 . ")+1));
-  strcpy(code, "add 1 2 . ");
+  char* code = malloc(sizeof(char)*(strlen("add [ subtract 1 10 . ] 2 . ")+1));
+  strcpy(code, "add [ add 1 10 . ] 2 . ");
 
   FILE* f = fmemopen(code, sizeof(char)*strlen(code), "r");
   parser_state state = fresh_state(0);

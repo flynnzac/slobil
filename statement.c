@@ -82,6 +82,8 @@ execute_statement (statement* s, registry* reg)
   while (e != NULL)
     {
       name = argument_name(arg_n);
+      printf("Statement: %d\n",e->statement);
+      printf("Literal: %d\n",e->literal);
       if (e->literal)
         {
           d = copy_data(e->data);
@@ -90,8 +92,9 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->statement)
             {
+	      printf("Hello!\n");
               st_reg = new_registry(reg);
-              execute_statement(e->s, st_reg);
+              execute_code(e->s, st_reg);
               d = get(st_reg, "ans", 0);
               /* need to check that the register is set */
               d = copy_data(d);
