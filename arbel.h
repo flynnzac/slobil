@@ -101,6 +101,26 @@ struct parser_state
   int print_out;
 };
 
+typedef struct parser_state parser_state;
+
+struct element
+{
+  data* data;
+  char* name;
+  int literal;
+  struct element* right;
+};
+
+typedef struct element element;
+
+struct statement
+{
+  element* head;
+  struct statement* right;
+};
+
+typedef struct statement statement;
+
 char*
 argument_name (int n);
 
@@ -261,8 +281,23 @@ op_list (registry* reg);
 void
 op_call (registry* reg);
 
+void
+op_add (registry* reg);
+
 char*
 vector_name (const char* lead, int n);
+
+void
+execute_statement (statement* s, registry* reg);
+
+statement*
+append_statement (statement* current, element* head);
+
+element*
+append_argument_element (element* current, char* name);
+
+element*
+append_literal_element (element* current, data* d);
 
 /* global variables */
 data* top_registry;

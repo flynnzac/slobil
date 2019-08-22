@@ -92,3 +92,54 @@ parse "1" . => 2
 
 
 
+* TODO Handle () code better
+
+( CODE ) should not just be re-interpreted repeatedly
+
+It seems like the obvious series of things to execute is:
+
+INSTRUCTION ARG1 ARG2 ... ARGN .
+
+Becomes:
+
+new registry. ans =
+#0 = INSTRUCTION 
+#1 = ARG1
+#2 = ARG2
+...
+#N = ARGN
+up = current-context
+
+Then call compute on that registry.
+
+So we should have a function that does this from a statement.
+
+set $addone ( add #1 1 . print ans . )
+
+Should have the following pass:
+
+addone = Array of Statements
+
+Statement 1: 
+add
+lookup(#1)
+literal(1)
+
+Statement 2:
+print
+lookup(ans)
+
+Then when: addone 2 .
+
+Create registry:
+Set: #0 addone
+Set: #1 2
+Execute Statement 1 in this registry.
+Execute Statement 2 in this registry.
+
+
+
+If we had used references
+
+
+
