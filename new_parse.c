@@ -171,7 +171,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else 
                 {
-		  printf("state->buffer: %s\n", state->buffer);
                   e = add_lookup_argument(&head, e, state->buffer);
 
                 }
@@ -343,3 +342,14 @@ new_parse (FILE* f, parser_state* state, statement** s)
     
 }
 
+int
+interact (FILE* f, parser_state* state, registry* reg)
+{
+  statement* s = NULL;
+  int complete = new_parse(f, state, &s);
+
+  if (complete)
+    execute_code(s, reg);    
+  
+  return complete;
+}

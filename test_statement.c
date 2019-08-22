@@ -16,8 +16,9 @@ main (int argc, char** argv)
 
   registry* reg = new_registry(NULL);
   add_basic_ops(reg);
-  execute_code(s, reg);
-
+  execute_statement(s, reg);
+  data* d = get(reg, "ans", 0);
+  printf("Value: %d\n", *((int*) d->data));
   fclose(f);
 
   free(code);

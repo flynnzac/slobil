@@ -54,7 +54,7 @@ main (int argc, char** argv)
   source_code = NULL;
   rl_event_hook = dummy_event;
   registry* reg = new_registry(NULL);
-  add_basic_ops (reg);
+  add_basic_ops(reg);
   is_exit(0);
   current_parse_registry = reg;
 

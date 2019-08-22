@@ -232,7 +232,7 @@ get (registry* reg, const char* name, int recursive)
           return NULL;
         }
     }
-  
+
   reg = tail(reg);
   registry* cur = reg;
 
@@ -265,7 +265,10 @@ lookup (registry* reg, const char* name, int recursive)
   data* d = get(reg, name, recursive);
 
   if (d == NULL)
-    return NULL;
+    {
+      printf("Actually not found!\n");
+      return NULL;
+    }
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
@@ -480,6 +483,7 @@ compute (registry* reg)
     }
   else if (arg->type != OPERATION && arg->type != INSTRUCTION)
     {
+
       do_error("Cannot compute a registry without an instruction at #0.");
     }
 
