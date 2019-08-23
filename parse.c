@@ -329,10 +329,9 @@ parse (FILE* f, parser_state* state, statement** s)
     {
       complete = 0;
       head = parse_stmt(f, state, &complete);
-      *state = fresh_state(state->print_out);
       if (complete)
         {
-
+          *state = fresh_state(state->print_out);
           if (stmt == NULL)
             {
               *s = append_statement(NULL, head);
@@ -355,6 +354,7 @@ interact (FILE* f, parser_state* state, registry* reg)
 {
   statement* s = NULL;
   int complete = parse(f, state, &s);
+  printf("Complete: %d\n", complete);
   data* d;
   if (complete)
     {
