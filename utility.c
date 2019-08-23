@@ -91,6 +91,49 @@ is_whitespace (const char c)
 
 
 void
+free_statement (statement* s)
+{
+  element* e;
+  element* e_tmp;
+  statement* s_tmp;
+  while (s != NULL)
+    {
+      e = s->head;
+      while (e != NULL)
+        {
+          if (e->data != NULL)
+            free_data(e->data);
+
+          if (e->name != NULL)
+            free(e->name);
+
+          if (e->s != NULL)
+            free_statement(e->s);
+
+          e_tmp = e;
+          e = e->right;
+          free(e_tmp);
+        }
+      s_tmp = s;
+      s = s->right;
+      free(s_tmp);
+    }
+}
+
+void
+free_instruction (instruction* inst)
+{
+  if (inst->code != NULL)
+    free(inst->code);
+
+  if (inst->stmt != NULL)
+    free_statement(inst->stmt);
+
+  free(inst);
+      
+}
+
+void
 free_data (data* d)
 {
   if (d->type == REGISTRY)
@@ -110,6 +153,16 @@ free_data (data* d)
     }
   else if (d->type == ARBEL_FILE)
     {
+      free(d);
+    }
+  else if (d->type == INSTRUCTION)
+    {
+      free_instruction((instruction*) d->data);
+      free(d);
+    }
+  else if (d->type == ACTIVE_INSTRUCTION)
+    {
+      free_statement((statement*) d->data);
       free(d);
     }
   else
@@ -371,6 +424,8 @@ fresh_state (int print)
   state.open_paren = '\0';
   state.print_out = print;
   state.in_comment = 0;
+  state.cur_elem = NULL;
+  state.cur_stmt = NULL;
 
   return state;
 }

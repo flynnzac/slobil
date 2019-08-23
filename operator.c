@@ -816,6 +816,7 @@ op_source (registry* reg)
   parse(f, &state, &s);
   fclose(f);
   execute_code(s, reg->up);
+  free_statement(s);
 
 }
 

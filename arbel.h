@@ -87,6 +87,8 @@ struct command
 
 typedef struct command command;
 
+struct statement;
+struct element;
 struct parser_state
 {
   char buffer[1024];
@@ -99,11 +101,14 @@ struct parser_state
   int in_comment;
   char open_paren;
   int print_out;
+  struct element* cur_elem;
+  struct statement* cur_stmt;
+  
 };
 
 typedef struct parser_state parser_state;
 
-struct statement;
+
 
 struct element
 {
@@ -321,6 +326,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete);
 
 int
 interact (FILE* f, parser_state* state, registry* reg);
+
+element*
+copy_elements (element* e);
+
+statement*
+copy_statement (statement* s);
+
+void
+free_statement (statement* s);
 
 /* global variables */
 data* top_registry;

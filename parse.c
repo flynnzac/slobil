@@ -70,13 +70,18 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
   char c;
   data* d = NULL;
   int sub_complete = 0;
-  element* head = NULL;
-  element* e = NULL;
+  element* head = state->cur_elem;
+  element* e = head;
   statement* sub_stmt = NULL;
   FILE* f_sub = NULL;
   parser_state sub_state;
   char* str;
-  
+
+  while (e != NULL)
+    {
+      if (e->right == NULL) break;
+      e = e->right;
+    }
 
   while (!(*complete) && (((c = fgetc(f)) != EOF) && c != '\0'))
     {
@@ -324,27 +329,22 @@ parse (FILE* f, parser_state* state, statement** s)
 {
   int complete = 0;
   statement* stmt = NULL;
-  element* head = NULL;
   int stop_reading = 1;
   do
     {
       complete = 0;
-      head = parse_stmt(f, state, &complete);
+      state->cur_elem = parse_stmt(f, state, &complete);
+
       if (complete)
         {
+          stmt = append_statement(stmt, state->cur_elem);
           *state = fresh_state(state->print_out);
-          if (stmt == NULL)
+          if (*s == NULL)
             {
-              *s = append_statement(NULL, head);
-              stmt = *s;
+              *s = stmt;
             }
-          else
-            {
-              stmt = append_statement(stmt, head);
-            }
-          head = NULL;
         }
-      else if (head != NULL)
+      else if (state->cur_elem != NULL)
         {
           stop_reading = 0;
         }
@@ -360,7 +360,6 @@ interact (FILE* f, parser_state* state, registry* reg)
 {
   statement* s = NULL;
   int complete = parse(f, state, &s);
-  printf("Complete: %d\n", complete);
   data* d;
   if (complete)
     {
@@ -383,11 +382,12 @@ interact (FILE* f, parser_state* state, registry* reg)
         }
 
       *state = fresh_state(state->print_out);
+      
     }
 
-  
+  if (s != NULL)
+    free_statement(s);
 
-  /* Clean up statement */
-  
+
   return complete;
 }

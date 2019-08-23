@@ -10,6 +10,7 @@ append_literal_element (element* current, data* d)
   e->literal = 1;
   e->statement = 0;
   e->right = NULL;
+  e->s = NULL;
   
   if (current != NULL)
     {
@@ -29,6 +30,7 @@ append_argument_element (element* current, char* name)
   e->literal = 0;
   e->statement = 0;
   e->right = NULL;
+  e->s = NULL;
 
   if (current != NULL)
     {

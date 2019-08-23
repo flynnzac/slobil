@@ -105,13 +105,73 @@ assign_str (data** d, const char* str)
   
 }
 
+element*
+copy_elements (element* e)
+{
+  element* new_first = NULL;
+  element* el = NULL;
+  data* d;
+  statement* s;
+
+  while (e != NULL)
+    {
+      if (e->literal)
+        {
+          d = copy_data(e->data);
+          el = append_literal_element(el, d);
+        }
+      else
+        {
+          if (e->statement)
+            {
+              s = copy_statement(e->s);
+              el = append_statement_element(el, s);
+            }
+          else
+            {
+              el = append_argument_element(el, e->name);
+            }
+        }
+      if (new_first == NULL)
+        {
+          new_first = el;
+        }
+      e = e->right;
+    }
+
+  return new_first;
+}
+
+statement*
+copy_statement (statement* s)
+{
+  statement* stmt = NULL;
+  statement* new_first = NULL;
+  element* head;
+  while (s != NULL)
+    {
+      head = copy_elements(s->head);
+      if (new_first == NULL)
+        {
+          new_first = append_statement(NULL, head);
+          stmt = new_first;
+        }
+      else
+        {
+          stmt = append_statement(stmt, head);
+        }
+      s = s->right;
+    }
+  return new_first;
+}
+
 void
 assign_instr (data** d, statement* s, const char* code)
 {
   *d = malloc(sizeof(data));
   (*d)->type = INSTRUCTION;
   (*d)->data = malloc(sizeof(instruction));
-  ((instruction*) (*d)->data)->stmt = s;
+  ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
   strcpy(((instruction*) (*d)->data)->code, code);
 }
@@ -121,7 +181,7 @@ assign_active (data** d, statement* s)
 {
   *d = malloc(sizeof(data));
   (*d)->type = ACTIVE_INSTRUCTION;
-  (*d)->data = s;
+  (*d)->data = copy_statement(s);
 }
 
 void
@@ -264,7 +324,7 @@ lookup (registry* reg, const char* name, int recursive)
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
-      execute_code((statement*) d->data, reg);
+      execute_code((statement*) d->data, reg->up);
       d = get(reg, "ans", 0);
 
     }
