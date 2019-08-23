@@ -325,6 +325,7 @@ parse (FILE* f, parser_state* state, statement** s)
   int complete = 0;
   statement* stmt = NULL;
   element* head = NULL;
+  int stop_reading = 1;
   do
     {
       complete = 0;
@@ -341,11 +342,16 @@ parse (FILE* f, parser_state* state, statement** s)
             {
               stmt = append_statement(stmt, head);
             }
+          head = NULL;
+        }
+      else if (head != NULL)
+        {
+          stop_reading = 0;
         }
     }
-  while (complete == 1);
+  while (complete==1);
 
-  return (head == NULL);
+  return (stop_reading);
     
 }
 

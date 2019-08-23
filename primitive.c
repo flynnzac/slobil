@@ -287,18 +287,18 @@ lookup (registry* reg, const char* name, int recursive)
       else
         {
           data* d_ref;
-	  if (((ref*) d->data)->reg == NULL)
-	    {
-	      d_ref = get(reg,
-			  ((ref*) d->data)->key,
-			  1);
-	    }
-	  else
-	    {
-	      d_ref = get(((ref*) d->data)->reg,
-			  ((ref*) d->data)->key,
-			  1);
-	    }
+          if (((ref*) d->data)->reg == NULL)
+            {
+              d_ref = get(reg->up,
+                          ((ref*) d->data)->key,
+                          1);
+            }
+          else
+            {
+              d_ref = get(((ref*) d->data)->reg,
+                          ((ref*) d->data)->key,
+                          1);
+            }
 
           if (d_ref == NULL)
             {
@@ -445,7 +445,7 @@ copy_data (data* d_in)
       break;
     case INSTRUCTION:
       assign_instr(&d, ((instruction*) d_in->data)->stmt,
-		   ((instruction*) d_in->data)->code);
+                   ((instruction*) d_in->data)->code);
       break;
     case ACTIVE_INSTRUCTION:
       assign_active(&d, (statement*) d_in->data);
@@ -486,8 +486,11 @@ compute (registry* reg)
     {
       execute_code(((instruction*) arg->data)->stmt, reg);
       data* d = get(reg, "ans", 0);
-      d = copy_data(d);
-      ret_ans(reg, d);
+      if (d != NULL)
+        {
+          d = copy_data(d);
+          ret_ans(reg, d);
+        }
       return;
     }
 
