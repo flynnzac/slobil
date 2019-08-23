@@ -78,7 +78,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
   char* str;
   
 
-  while ((((c = fgetc(f)) != EOF) && c != '\0') && !(*complete))
+  while (!(*complete) && (((c = fgetc(f)) != EOF) && c != '\0'))
     {
       if (state->in_comment && (c != '\n'))
         continue;
@@ -177,7 +177,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else 
                 {
                   e = add_lookup_argument(&head, e, state->buffer);
-
                 }
               clear_state_buffer(state);
             }
@@ -330,8 +329,10 @@ parse (FILE* f, parser_state* state, statement** s)
     {
       complete = 0;
       head = parse_stmt(f, state, &complete);
+      *state = fresh_state(state->print_out);
       if (complete)
         {
+
           if (stmt == NULL)
             {
               *s = append_statement(NULL, head);
