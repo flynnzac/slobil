@@ -783,43 +783,41 @@ op_compute (registry* reg)
   compute(arg_reg);
 }
 
-/* void */
-/* op_source (registry* reg) */
-/* { */
-/*   data* arg1 = lookup(reg, "#1", 0); */
-/*   if (arg1 == NULL) */
-/*     { */
-/*       do_error("`source` requires an argument."); */
-/*       return; */
-/*     } */
+void
+op_source (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  if (arg1 == NULL)
+    {
+      do_error("`source` requires an argument.");
+      return;
+    }
 
-/*   if (arg1->type != STRING) */
-/*     { */
-/*       do_error("Argument to `source` must be a string."); */
-/*       return; */
-/*     } */
+  if (arg1->type != STRING)
+    {
+      do_error("Argument to `source` must be a string.");
+      return;
+    }
 
-/*   FILE* f = fopen((char*) arg1->data, "r"); */
-/*   if (f == NULL) */
-/*     { */
-/*       char* msg = malloc(sizeof(char)*(strlen("File not found.") */
-/*                                        + strlen((char*) arg1->data) + */
-/*                                        6)); */
-/*       sprintf(msg, "File `%s` not found.", (char*) arg1->data); */
-/*       do_error(msg); */
-/*       free(msg); */
-/*       return; */
-/*     } */
+  FILE* f = fopen((char*) arg1->data, "r");
+  if (f == NULL)
+    {
+      char* msg = malloc(sizeof(char)*(strlen("File not found.")
+                                       + strlen((char*) arg1->data) +
+                                       6));
+      sprintf(msg, "File `%s` not found.", (char*) arg1->data);
+      do_error(msg);
+      free(msg);
+      return;
+    }
 
-/*   struct parser_state state = fresh_state(0); */
-/*   registry* arg_reg = NULL; */
-/*   parse(f, reg->up, &arg_reg, &state); */
+  struct parser_state state = fresh_state(0);
+  statement* s = NULL;
+  parse(f, &state, &s);
+  fclose(f);
+  execute_code(s, reg);
 
-/*   if (arg_reg != NULL) */
-/*     free_registry(arg_reg); */
-
-/*   fclose(f); */
-/* } */
+}
 
 void
 op_do_to_all (registry* reg)
@@ -2295,8 +2293,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_concat);
   set(reg,d,"concat");
 
-  /* assign_op(&d, op_source); */
-  /* set(reg,d,"source"); */
+  assign_op(&d, op_source);
+  set(reg,d,"source");
 
   assign_op(&d, op_do_to_all);
   set(reg,d,"do-to-all");
