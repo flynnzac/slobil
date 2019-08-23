@@ -50,6 +50,7 @@ add_lookup_argument (element** head, element* e, char* d)
 element*
 add_statement_argument (element** head, element* e, statement* s)
 {
+  s = copy_statement(s);
   if (*head == NULL)
     {
       *head = append_statement_element(NULL, s);
@@ -127,13 +128,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                         }
                       state->open_paren = '\0';
                       state->after_instr = 0;
-
+                      free_statement(sub_stmt);
                     }
                   else
                     {
                       do_error("Incomplete instruction in parenthesis.");
                       state->open_paren = '\0';
                       state->after_instr = 0;
+                      if (sub_stmt != NULL)
+                        free_statement(sub_stmt);
                       break;
                     }
 
