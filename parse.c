@@ -144,6 +144,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (state->after_quote)
                 {
                   state->after_quote = 0;
+
+
                   assign_str(&d, state->buffer);
                   e = add_argument(&head, e, d);
                 }
@@ -178,8 +180,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (is_reference(state->buffer))
                 {
-                  str_shift_left(state->buffer);
-                  assign_ref(&d, NULL, state->buffer);
+                  int i;
+                  str = malloc(sizeof(char)*(strlen(state->buffer)));
+                  for (i=0; i < (strlen(state->buffer)-1); i++)
+                    {
+                      str[i] = state->buffer[i+1];
+                    }
+                  str[strlen(state->buffer)-1] = '\0';
+                  assign_ref(&d, NULL, str);
+                  free(str);
                   e = add_argument(&head, e, d);
                 }
               else 
@@ -391,6 +400,11 @@ interact (FILE* f, parser_state* state, registry* reg)
   if (s != NULL)
     free_statement(s);
 
+  if (is_error(-1))
+    {
+      is_error(0);
+      complete = 1;
+    }
 
   return complete;
 }

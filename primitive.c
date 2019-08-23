@@ -349,9 +349,9 @@ lookup (registry* reg, const char* name, int recursive)
           data* d_ref;
           if (((ref*) d->data)->reg == NULL)
             {
-              d_ref = get(reg->up,
-                          ((ref*) d->data)->key,
-                          1);
+              d_ref = lookup(reg->up,
+                             ((ref*) d->data)->key,
+                             1);
             }
           else
             {

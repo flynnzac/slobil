@@ -92,7 +92,7 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->statement)
             {
-              st_reg = new_registry(reg);
+              st_reg = new_registry(arg_reg);
 
               execute_code(e->s, st_reg);
               d = get(st_reg, "ans", 0);
