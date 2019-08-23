@@ -815,7 +815,7 @@ op_source (registry* reg)
   statement* s = NULL;
   parse(f, &state, &s);
   fclose(f);
-  execute_code(s, reg);
+  execute_code(s, reg->up);
 
 }
 

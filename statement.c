@@ -91,26 +91,50 @@ execute_statement (statement* s, registry* reg)
           if (e->statement)
             {
               st_reg = new_registry(reg);
+
               execute_code(e->s, st_reg);
               d = get(st_reg, "ans", 0);
-              /* need to check that the register is set */
-              d = copy_data(d);
+              if (d == NULL)
+                {
+                  do_error("Instruction in [] did not set $ans register.");
+                }
+              else
+                {
+                  d = copy_data(d);
+                }
               free_registry(st_reg);
             }
           else
             {
               d = get(reg, e->name, 1);
-              d = copy_data(d);
+              if (d == NULL)
+                {
+                  char* msg = malloc(sizeof(char)*
+                                     (strlen("Value `` not found.")
+                                      + strlen(e->name) + 1));
+                  sprintf(msg, "Value `%s` not found.", e->name);
+                  do_error(msg);
+                  free(msg);
+                }
+              else
+                {
+                  d = copy_data(d);
+                }
             }
         }
 
-      set(arg_reg, d, name);
-
+      if (!is_error(-1))
+        set(arg_reg, d, name);
+      
       free(name);
       arg_n++;
       e = e->right;
+      if (is_error(-1)) break;
     }
-  compute(arg_reg);
+
+  if (!is_error(-1))
+    compute(arg_reg);
+  
   free_registry(arg_reg);
 }
 
@@ -121,7 +145,10 @@ execute_code (statement* s, registry* reg)
     {
       execute_statement(s, reg);
       if (is_error(-1))
-      	break;
+        {
+          is_error(0);
+          break;
+        }
       s = s->right;
     }
 }
