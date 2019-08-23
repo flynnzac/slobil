@@ -1032,87 +1032,59 @@ op_last (registry* reg)
   
 /* } */
 
-/* void */
-/* op_while (registry* reg) */
-/* { */
-/*   data* arg1 = lookup(reg, "#1", 0); */
-/*   data* arg2 = lookup(reg, "#2", 0); */
+void
+op_while (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
 
-/*   if (arg1 == NULL || arg2 == NULL) */
-/*     { */
-/*       do_error("`while` requires two arguments."); */
-/*       return; */
-/*     } */
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`while` requires two arguments.");
+      return;
+    }
 
-/*   if (arg1->type != INSTRUCTION || arg2->type != INSTRUCTION) */
-/*     { */
-/*       do_error("Both arguments to `while` should be instructions in ()'s."); */
-/*       return; */
-/*     } */
+  if (arg1->type != INSTRUCTION || arg2->type != INSTRUCTION)
+    {
+      do_error("Both arguments to `while` should be instructions in ()'s.");
+      return;
+    }
 
-/*   FILE* f; */
-/*   char* instr; */
-/*   struct parser_state state; */
-/*   registry* arg_reg = NULL; */
-/*   int complete; */
-/*   data* d; */
-/*   while (1) */
-/*     { */
-/*       instr = (char*) arg1->data; */
-/*       f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
-/*       state = fresh_state(0); */
-/*       if (arg_reg != NULL) */
-/*         free_registry(arg_reg); */
-/*       arg_reg = NULL; */
-/*       complete = parse(f, reg->up, &arg_reg, &state); */
-/*       fclose(f); */
+  data* d;
+  while (1)
+    {
+      execute_code(((instruction*) arg1->data)->stmt, reg->up);
+      if (is_error(-1))
+        break;
+          
+      d = get(reg->up, "ans", 0);
+
+      if (d == NULL)
+        {
+          do_error("Instruction did not set `ans` to a value.");
+          break;
+        }
+
+      if (d->type != INTEGER)
+        {
+          do_error("First instruction should set `ans` to an integer.");
+          break;
+        }
+
+      if ((*(int*) d->data) == 0)
+        {
+          break;
+        }
       
-/*       if (!complete) */
-/*         { */
-/*           do_error("First instruction is incomplete."); */
-/*           break; */
-/*         } */
-/*       d = get(reg->up, "ans", 0); */
+      execute_code(((instruction*) arg2->data)->stmt, reg->up);
+      if (is_error(-1))
+        break;
 
-
-/*       if (d == NULL) */
-/*         { */
-/*           do_error("Instruction did not set `ans` to a value."); */
-/*           break; */
-/*         } */
-
-/*       if (d->type != INTEGER) */
-/*         { */
-/*           do_error("First instruction should set `ans` to an integer."); */
-/*           break; */
-/*         } */
-
-/*       if ((*(int*) d->data) == 0) */
-/*         { */
-/*           break; */
-/*         } */
-
-/*       instr = (char*) arg2->data; */
-/*       f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
-/*       state = fresh_state(0); */
-/*       if (arg_reg != NULL) */
-/*         free_registry(arg_reg); */
-
-/*       arg_reg = NULL; */
-/*       complete = parse(f, reg->up, &arg_reg, &state); */
-/*       fclose(f); */
-
-/*       if (!complete) */
-/*         { */
-/*           do_error("Second instruction is incomplete."); */
-/*           break; */
-/*         } */
-
-/*     } */
+    }
 
   
   
-/* } */
+}
 
 void
 op_to_register (registry* reg)
@@ -2309,8 +2281,8 @@ add_basic_ops (registry* reg)
   /* assign_op(&d, op_in); */
   /* set(reg,d,"in"); */
 
-  /* assign_op(&d, op_while); */
-  /* set(reg,d,"while"); */
+  assign_op(&d, op_while);
+  set(reg,d,"while");
   
   assign_op(&d, op_list);
   set(reg,d,"list");

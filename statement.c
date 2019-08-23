@@ -148,7 +148,6 @@ execute_code (statement* s, registry* reg)
       execute_statement(s, reg);
       if (is_error(-1))
         {
-          is_error(0);
           break;
         }
       s = s->right;
