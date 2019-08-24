@@ -93,6 +93,9 @@ read_registry (FILE* f, registry* reg)
   data* d;
   registry* r;
   int size;
+  statement* stmt = NULL;
+  parser_state state;
+  FILE* f_sub;
   while (fread(type_cache, sizeof(data_type), 1, f)
          && (*type_cache != NOTHING))
     {
@@ -146,8 +149,14 @@ read_registry (FILE* f, registry* reg)
           cache = malloc(sizeof(char)*(size+1));
           fread(cache, sizeof(char), size, f);
           *((char*) (cache+size)) = '\0';
-          assign_instr(&d, (char*) cache);
-          free(cache);           
+          f_sub = fmemopen(cache, strlen(cache), "r");
+          state = fresh_state(0);
+          parse(f_sub, &state, &stmt);
+          assign_instr(&d, stmt, (char*) cache);
+          free_statement(stmt);
+          stmt = NULL;
+          free(cache);
+          fclose(f_sub);
           break;
 	default:
 	  break;

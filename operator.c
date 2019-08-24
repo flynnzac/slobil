@@ -1501,53 +1501,53 @@ op_go_out (registry* reg)
   current_parse_registry = current_parse_registry->up;
 }
 
-/* void */
-/* op_save (registry* reg) */
-/* { */
-/*   data* arg1 = lookup(reg, "#1", 0); */
+void
+op_save (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
 
-/*   if (arg1 == NULL) */
-/*     { */
-/*       do_error("`save` requires an argument."); */
-/*       return; */
-/*     } */
+  if (arg1 == NULL)
+    {
+      do_error("`save` requires an argument.");
+      return;
+    }
 
-/*   if (arg1->type != STRING) */
-/*     { */
-/*       do_error("The argument to `save` must be a string."); */
-/*       return; */
-/*     } */
+  if (arg1->type != STRING)
+    {
+      do_error("The argument to `save` must be a string.");
+      return;
+    }
 
-/*   char* fname = (char*) arg1->data; */
-/*   FILE* f = fopen(fname, "wb"); */
-/*   save_registry(f, (registry*) top_registry->data); */
-/*   fclose(f); */
+  char* fname = (char*) arg1->data;
+  FILE* f = fopen(fname, "wb");
+  save_registry(f, (registry*) top_registry->data);
+  fclose(f);
 
-/* } */
+}
 
-/* void */
-/* op_load (registry* reg) */
-/* { */
-/*   data* arg1 = lookup(reg, "#1", 0); */
+void
+op_load (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
 
-/*   if (arg1 == NULL) */
-/*     { */
-/*       do_error("`load` requires an argument."); */
-/*       return; */
-/*     } */
+  if (arg1 == NULL)
+    {
+      do_error("`load` requires an argument.");
+      return;
+    }
 
-/*   if (arg1->type != STRING) */
-/*     { */
-/*       do_error("The argument to `load` must be a string."); */
-/*       return; */
-/*     } */
+  if (arg1->type != STRING)
+    {
+      do_error("The argument to `load` must be a string.");
+      return;
+    }
 
-/*   char* fname = (char*) arg1->data; */
-/*   FILE* f = fopen(fname, "rb"); */
-/*   read_registry(f, (registry*) top_registry->data); */
-/*   fclose(f); */
+  char* fname = (char*) arg1->data;
+  FILE* f = fopen(fname, "rb");
+  read_registry(f, (registry*) top_registry->data);
+  fclose(f);
 
-/* } */
+}
 
 void
 op_to_string (registry* reg)
@@ -2310,11 +2310,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_go_out);
   set(reg,d,"go-out");
 
-  /* assign_op(&d, op_save); */
-  /* set(reg,d,"save"); */
+  assign_op(&d, op_save);
+  set(reg,d,"save");
 
-  /* assign_op(&d, op_load); */
-  /* set(reg,d,"load"); */
+  assign_op(&d, op_load);
+  set(reg,d,"load");
 
   assign_op(&d, op_to_string);
   set(reg,d,"to-string");
