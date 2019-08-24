@@ -86,6 +86,7 @@ execute_statement (statement* s, registry* reg)
       name = argument_name(arg_n);
       if (e->literal)
         {
+          printf("HERE!\n");
           d = copy_data(e->data);
         }
       else
@@ -110,20 +111,20 @@ execute_statement (statement* s, registry* reg)
           else
             {
               d = get(reg, e->name, 1);
-              d = copy_data(d);
-              /* if (d == NULL) */
-              /*   { */
-              /*     char* msg = malloc(sizeof(char)* */
-              /*                        (strlen("Value `` not found.") */
-              /*                         + strlen(e->name) + 1)); */
-              /*     sprintf(msg, "Value `%s` not found.", e->name); */
-              /*     do_error(msg); */
-              /*     free(msg); */
-              /*   } */
-              /* else */
-              /*   { */
-              /*     d = copy_data(d); */
-              /*   } */
+
+              if (d == NULL)
+                {
+                  char* msg = malloc(sizeof(char)*
+                                     (strlen("Value `` not found.")
+                                      + strlen(e->name) + 1));
+                  sprintf(msg, "Value `%s` not found.", e->name);
+                  do_error(msg);
+                  free(msg);
+                }
+              else
+                {
+                  d = copy_data(d);
+                }
             }
         }
 
