@@ -779,8 +779,11 @@ op_compute (registry* reg)
     }
 
   registry* arg_reg = (registry*) d->data;
+  arg_reg->up = reg->up;
 
   compute(arg_reg);
+
+  
 }
 
 void

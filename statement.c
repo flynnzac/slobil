@@ -86,7 +86,14 @@ execute_statement (statement* s, registry* reg)
       name = argument_name(arg_n);
       if (e->literal)
         {
-          d = copy_data(e->data);
+          if (e->data == NULL)
+            {
+              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .");
+            }
+          else
+            {
+              d = copy_data(e->data);
+            }
         }
       else
         {

@@ -298,8 +298,7 @@ get (registry* reg, const char* name, int recursive)
         }
     }
 
-  reg = tail(reg);
-  registry* cur = reg;
+  registry* cur = reg->right;
 
   while (cur != NULL)
     {
@@ -381,6 +380,10 @@ lookup (registry* reg, const char* name, int recursive)
             }
           else
             {
+              if (d_ref->type == REGISTRY)
+                {
+                  ((registry*) d_ref->data)->up = reg->up;
+                }
               d = d_ref;
             }
         }

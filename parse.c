@@ -16,7 +16,7 @@ add_to_state_buffer (struct parser_state* state, const char c)
 
 
 element*
-add_argument (element** head, element* e, data* d)
+add_literal_argument (element** head, element* e, data* d)
 {
   if (*head == NULL)
     {
@@ -115,11 +115,11 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                         {
                         case '(':
                           assign_instr(&d, sub_stmt, state->buffer);
-                          e = add_argument(&head, e, d);
+                          e = add_literal_argument(&head, e, d);
                           break;
                         case '{':
                           assign_active(&d, sub_stmt);
-                          e = add_argument(&head, e, d);
+                          e = add_literal_argument(&head, e, d);
                           break;
                         case '[':
                           e = add_statement_argument(&head, e, sub_stmt);
@@ -146,26 +146,26 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
 
 
                   assign_str(&d, state->buffer);
-                  e = add_argument(&head, e, d);
+                  e = add_literal_argument(&head, e, d);
                 }
               else if (is_integer(state->buffer))
                 {
                   int entry = atoi(state->buffer);
                   assign_int(&d, entry);
-                  e = add_argument(&head, e, d);
+                  e = add_literal_argument(&head, e, d);
                 }
               else if (is_decimal(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
                   double entry = atof(state->buffer);
                   assign_dec(&d, entry);
-                  e = add_argument(&head, e, d);
+                  e = add_literal_argument(&head, e, d);
                 }
               else if (is_register(state->buffer))
                 {
                   str_shift_left(state->buffer);
                   assign_regstr(&d, state->buffer);
-                  e = add_argument(&head, e, d);
+                  e = add_literal_argument(&head, e, d);
                 }
               else if (strcmp(state->buffer,".")==0)
                 {
@@ -188,7 +188,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   str[strlen(state->buffer)-1] = '\0';
                   assign_ref(&d, NULL, str);
                   free(str);
-                  e = add_argument(&head, e, d);
+                  e = add_literal_argument(&head, e, d);
                 }
               else 
                 {
