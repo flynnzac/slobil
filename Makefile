@@ -5,7 +5,5 @@ doc: docs/arbel.dbk docs/arbel.css
 	xsltproc  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
 	cat docs/mysite.mro docs/index.mro.html | mro > docs/index.html
 
-test: test_statement.c operator.c primitive.c utility.c new_parse.c  statement.c
-		cc -o state test_statement.c operator.c primitive.c utility.c new_parse.c statement.c -lreadline -g -lm -Wall
 
 
