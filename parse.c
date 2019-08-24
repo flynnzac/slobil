@@ -90,7 +90,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         continue;
       if (state->in_comment && (c == '\n'))
         {
-          state->in_comment = 0;
           *complete = 1;
           continue;
         }
@@ -347,7 +346,7 @@ parse (FILE* f, parser_state* state, statement** s)
       complete = 0;
       state->cur_elem = parse_stmt(f, state, &complete);
 
-      if (complete)
+      if (complete && !state->in_comment)
         {
           stmt = append_statement(stmt, state->cur_elem);
           *state = fresh_state(state->print_out);
@@ -355,6 +354,10 @@ parse (FILE* f, parser_state* state, statement** s)
             {
               *s = stmt;
             }
+        }
+      else if (state->in_comment)
+        {
+          *state = fresh_state(state->print_out);
         }
       else if (state->cur_elem != NULL)
         {

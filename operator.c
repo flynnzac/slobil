@@ -981,56 +981,42 @@ op_last (registry* reg)
   
 }
 
-/* void */
-/* op_in (registry* reg) */
-/* { */
-/*   data* arg1 = lookup(reg, "#1", 0); */
-/*   data* arg2 = lookup(reg, "#2", 0); */
+void
+op_in (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
 
-/*   if (arg1==NULL || arg2==NULL) */
-/*     { */
-/*       do_error("`in` requires two arguments."); */
-/*       return; */
-/*     } */
+  if (arg1==NULL || arg2==NULL)
+    {
+      do_error("`in` requires two arguments.");
+      return;
+    }
 
-/*   if (arg1->type != REGISTRY) */
-/*     { */
-/*       do_error("First argument to `in` should be a registry."); */
-/*       return; */
-/*     } */
+  if (arg1->type != REGISTRY)
+    {
+      do_error("First argument to `in` should be a registry.");
+      return;
+    }
 
-/*   if (arg2->type != INSTRUCTION) */
-/*     { */
-/*       do_error("Second argument to `in` should be a instruction."); */
-/*       return; */
-/*     } */
+  if (arg2->type != INSTRUCTION)
+    {
+      do_error("Second argument to `in` should be a instruction.");
+      return;
+    }
 
-/*   FILE* f; */
-/*   char* instr = (char*) arg2->data; */
-/*   f = fmemopen(instr, sizeof(char)*strlen(instr), "r"); */
-/*   struct parser_state state = fresh_state(0); */
-/*   registry* arg_reg = NULL; */
-/*   int complete = parse(f, (registry*) arg1->data, &arg_reg, */
-/*                        &state); */
 
-/*   if (arg_reg != NULL) */
-/*     free_registry(arg_reg); */
-      
+  execute_code(((instruction*) arg2->data)->stmt,
+               (registry*) arg1->data);
+
+  data* ans = lookup((registry*) arg1->data, "ans", 0);
+  if (ans != NULL)
+    {
+      ans = copy_data(ans);
+      ret_ans(reg, ans);
+    }
   
-/*   if (!complete) */
-/*     { */
-/*       do_error("Not complete instruction."); */
-/*       return; */
-/*     } */
-
-/*   data* ans = lookup((registry*) arg1->data, "ans", 0); */
-/*   if (ans != NULL) */
-/*     { */
-/*       ans = copy_data(ans); */
-/*       ret_ans(reg, ans); */
-/*     } */
-  
-/* } */
+}
 
 void
 op_while (registry* reg)
@@ -2278,8 +2264,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_last);
   set(reg,d,"last");
 
-  /* assign_op(&d, op_in); */
-  /* set(reg,d,"in"); */
+  assign_op(&d, op_in);
+  set(reg,d,"in");
 
   assign_op(&d, op_while);
   set(reg,d,"while");
