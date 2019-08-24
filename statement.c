@@ -86,7 +86,6 @@ execute_statement (statement* s, registry* reg)
       name = argument_name(arg_n);
       if (e->literal)
         {
-          printf("HERE!\n");
           d = copy_data(e->data);
         }
       else
