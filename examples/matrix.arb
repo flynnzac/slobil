@@ -1,0 +1,43 @@
+rem Computes v^T v for a vector .
+set $dotproduct
+(
+  join \#1 \#2 multiply .
+  collapse \ans add "#" .
+) .
+
+
+rem product A B computes A^T B .
+set $product
+(
+  set $i $#1 .
+  set $out [ list . ] .
+  while ( exist-in i \#2 . )
+  (
+    set $one [ get i \#2 . ] .
+    set $dotone ( dotproduct \#1 one . ) .
+    do-to-all dotone \#1 .
+    set $res ans .
+    in \out ( set i res . ) .
+    next i .
+    set $i ans .
+  ) .
+  answer \out .
+) .
+
+
+rem Computes A^T .
+set $transpose
+(
+  set $i $#1 .
+  set $out [ list . ] .
+  print out .
+  while ( exist-in i [ get $#1 \#1 . ] . )
+  (
+    do-to-all ( get i \#1 . ) \#1 .
+    set $res ans .
+    in \out ( set i res . ) .
+    next i .
+    set $i ans .
+  ) .
+  answer \out .
+) .
