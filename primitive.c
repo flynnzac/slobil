@@ -270,6 +270,11 @@ set (registry* reg, data* d, const char* name)
   new_reg->value = d;
   reg->right = new_reg;
 
+  if (d != NULL && d->type == REGISTRY)
+    {
+      ((registry*) d->data)->up = reg;
+    }
+
   new_reg->key = malloc(sizeof(char)*(strlen(name)+1));
   strcpy(new_reg->key, name);
 

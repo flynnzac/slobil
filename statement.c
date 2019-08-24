@@ -104,24 +104,26 @@ execute_statement (statement* s, registry* reg)
                 {
                   d = copy_data(d);
                 }
+
               free_registry(st_reg);
             }
           else
             {
               d = get(reg, e->name, 1);
-              if (d == NULL)
-                {
-                  char* msg = malloc(sizeof(char)*
-                                     (strlen("Value `` not found.")
-                                      + strlen(e->name) + 1));
-                  sprintf(msg, "Value `%s` not found.", e->name);
-                  do_error(msg);
-                  free(msg);
-                }
-              else
-                {
-                  d = copy_data(d);
-                }
+              d = copy_data(d);
+              /* if (d == NULL) */
+              /*   { */
+              /*     char* msg = malloc(sizeof(char)* */
+              /*                        (strlen("Value `` not found.") */
+              /*                         + strlen(e->name) + 1)); */
+              /*     sprintf(msg, "Value `%s` not found.", e->name); */
+              /*     do_error(msg); */
+              /*     free(msg); */
+              /*   } */
+              /* else */
+              /*   { */
+              /*     d = copy_data(d); */
+              /*   } */
             }
         }
 
@@ -143,13 +145,14 @@ execute_statement (statement* s, registry* reg)
 void
 execute_code (statement* s, registry* reg)
 {
-  while (s != NULL)
+  statement* stmt = s;
+  while (stmt != NULL)
     {
-      execute_statement(s, reg);
+      execute_statement(stmt, reg);
       if (is_error(-1))
         {
           break;
         }
-      s = s->right;
+      stmt = stmt->right;
     }
 }

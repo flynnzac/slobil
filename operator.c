@@ -47,7 +47,7 @@ op_list (registry* reg)
   d->type = REGISTRY;
   d->data = r_new;
   ret_ans(reg, d);
-  
+
 }
 
 void
@@ -2050,6 +2050,7 @@ op_read_line (registry* reg)
   char* line  = NULL;
   size_t len = 0;
   ssize_t ret = getline(&line, &len, (FILE*) arg1->data);
+  line[strlen(line)-1] = '\0';
   data* d;
   if (ret >= 0)
     {
