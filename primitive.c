@@ -304,6 +304,8 @@ get (registry* reg, const char* name, int recursive)
         }
       cur = cur->right;
     }
+
+  if (reg == NULL) return NULL;
   if ((reg->up != NULL) && recursive)
     {
       return get(reg->up, name, recursive);
