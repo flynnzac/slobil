@@ -49,7 +49,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. 
+        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. ARBEL's "metaphor" for computing is that the user is giving instructions or commands about what the computer should do.
       </listitem>
 
       <listitem>
@@ -58,6 +58,10 @@
 
       <listitem>
         ARBEL is about modifying data.  There is a top-level set of data in memory and we want to modify it in some way. This dataset can be saved to disk and restored later.
+      </listitem>
+
+      <listitem>
+        ARBEL's syntax is highly regular.  It never deviates from the form <code>INSTRUCTION ARG1 ... ARGN . </code>
       </listitem>
 
     </orderedlist>
@@ -75,7 +79,7 @@
     </para>
 
     <para>
-      The current goal of the interpreter is correctness.  So speed has not been optimized.  It is probably the case that some things that don't need to be copied are (if you find one, send me a pull request, and I'll accept!).  The way user-written instructions are currently implemented is literally interpreting the code when it is called in a new registry.  This obviously leaves lots of room for improvement!
+      The current goal of the interpreter is correctness.  So speed has not been overly optimized.  It is probably the case that some things that don't need to be copied are (if you find one, send me a pull request, and I'll accept!).  
     </para>
       
 
