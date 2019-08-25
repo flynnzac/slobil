@@ -67,7 +67,7 @@ main (int argc, char** argv)
   up_registry->data = NULL;
   
   char* code = NULL;
-  char* prompt = "~> ";
+  char* prompt = ". ";
   FILE* f;
   int complete = 1;
   struct parser_state state = fresh_state(0);
