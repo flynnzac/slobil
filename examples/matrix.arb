@@ -16,10 +16,10 @@ set $product
     set $one [ get i \#2 . ] .
     set $dotone ( dotproduct \#1 one . ) .
     do-to-all dotone \#1 .
-    set $res ans .
+    mov $ans $res .
     in \out ( set i res . ) .
     next i .
-    set $i ans .
+    mov $ans $i .
   ) .
   answer \out .
 ) .
@@ -34,10 +34,10 @@ set $transpose
   while ( exist-in i [ get $#1 \#1 . ] . )
   (
     do-to-all ( get i \#1 . ) \#1 .
-    set $res ans .
+    mov $ans $res .
     in \out ( set i res . ) .
     next i .
-    set $i ans .
+    mov $ans $i .
   ) .
   answer \out .
 ) .
