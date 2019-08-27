@@ -1,11 +1,11 @@
 set $factorial
-(
-  set $i 2 .
-  set $prod 1 .
-  while ( lteq i #1 . )
-  (
-    set $prod [ multiply i prod . ] .
-    set $i [ add i 1 . ] .
-  ) .
-  answer prod .
-) .
+    (
+      set $i 2 .
+      set $prod 1 .
+      while ( lteq i #1 . )
+            (
+              set $prod [ multiply i prod . ] .
+              set $i [ add i 1 . ] .
+            ) .
+      answer prod .
+    ) .
