@@ -344,4 +344,7 @@ data* up_registry;
 registry* current_parse_registry;
 char* source_code;
 
+void** arbel_ll;
+int arbel_ll_cnt;
+
 #endif

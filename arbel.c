@@ -66,6 +66,9 @@ main (int argc, char** argv)
   up_registry->type = REGISTRY;
   up_registry->data = NULL;
 
+  arbel_ll = NULL;
+  arbel_ll_cnt = 0;
+
   char* code = NULL;
   char* prompt = "... ";
   FILE* f;
@@ -135,6 +138,17 @@ main (int argc, char** argv)
   free(top_registry);
   free(up_registry);
   free_registry(reg);
+
+  if (arbel_ll != NULL)
+    {
+      int i;
+      for (i=0; i < arbel_ll_cnt; i++)
+        {
+          dlclose(arbel_ll[i]);
+        }
+
+      free(arbel_ll);
+    }
 
   return 0;
   

@@ -2177,15 +2177,17 @@ op_link (registry* reg)
 {
   data* arg1 = lookup(reg, "#1", 0);
   data* arg2 = lookup(reg, "#2", 0);
-  if (arg1 == NULL || arg2 == NULL)
+  data* arg3 = lookup(reg, "#3", 0);
+  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
-      do_error("`link` requires two arguments.");
+      do_error("`link` requires three arguments.");
       return;
     }
 
-  if (arg1->type != STRING || arg2->type != STRING)
+  if (arg1->type != STRING || arg2->type != STRING ||
+      arg3->type != STRING)
     {
-      do_error("Both arguments to `link` must be strings.");
+      do_error("All arguments to `link` must be strings.");
       return;
     }
 
@@ -2208,8 +2210,20 @@ op_link (registry* reg)
 
   data* d;
   assign_op(&d, new_op);
-  set((registry*) top_registry->data, d, (char*) arg2->data);
-  
+  set((registry*) top_registry->data, d, (char*) arg3->data);
+
+  if (arbel_ll == NULL)
+    {
+      
+      arbel_ll = malloc(sizeof(void*));
+    }
+  else
+    {
+      arbel_ll = realloc(arbel_ll,
+                         sizeof(void*)*(arbel_ll_cnt+1));
+    }
+  arbel_ll[arbel_ll_cnt] = lib;
+  arbel_ll_cnt++;
 
 }
 
