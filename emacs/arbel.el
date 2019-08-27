@@ -12,7 +12,6 @@
 
 (setq arbel-mode-syntax-table
       (let ((synTable (make-syntax-table)))
-        ;; python style comment: “# …”
         (modify-syntax-entry ?# "<" synTable)
         (modify-syntax-entry ?\n ">" synTable)
         synTable))
