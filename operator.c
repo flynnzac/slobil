@@ -2173,6 +2173,47 @@ op_shell (registry* reg)
 }
 
 void
+op_link (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`link` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING || arg2->type != STRING)
+    {
+      do_error("Both arguments to `link` must be strings.");
+      return;
+    }
+
+  void* lib = dlopen((char*) arg1->data, RTLD_LAZY);
+
+  if (lib == NULL)
+    {
+      printf("%s\n", dlerror());
+      do_error("Library failed to open.");
+      return;
+    }
+
+  operation new_op = dlsym(lib, (char*) arg2->data);
+  if (new_op == NULL)
+    {
+      do_error("Error loading function.");
+      dlclose(lib);
+      return;
+    }
+
+  data* d;
+  assign_op(&d, new_op);
+  set((registry*) top_registry->data, d, (char*) arg2->data);
+  
+
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2390,6 +2431,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_shell);
   set(reg,d,"shell");
+
+  assign_op(&d, op_link);
+  set(reg,d,"link");
 
   
 }

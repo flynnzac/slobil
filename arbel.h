@@ -30,6 +30,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <math.h>
+#include <dlfcn.h>
 
 enum data_type
   {
@@ -137,6 +138,7 @@ struct instruction
 };
 
 typedef struct instruction instruction;
+
 
 char*
 argument_name (int n);
