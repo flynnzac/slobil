@@ -65,7 +65,7 @@ main (int argc, char** argv)
   up_registry = malloc(sizeof(data));
   up_registry->type = REGISTRY;
   up_registry->data = NULL;
-  
+
   char* code = NULL;
   char* prompt = "... ";
   FILE* f;
