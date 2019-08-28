@@ -24,12 +24,20 @@
 ;; Author:  Zach Flynn <zlflynn@gmail.com>
 ;; Keywords: languages
 
-
+(require 'smie)
+(require 'isend-mode)
 (defvar arbel-mode-syntax-table nil "Syntax table for `arbel-mode'.")
 
 (defvar arbel-indent 2)
 
-(require 'smie)
+(defvar arbel-mode-map nil "Keymap for `arbel-mode'")
+
+(progn
+  (setq arbel-mode-map (make-sparse-keymap))
+  (define-key arbel-mode-map (kbd "C-c C-s") 'arbel-start)
+  (define-key arbel-mode-map (kbd "C-c C-a") 'arbel-associate)
+  (define-key arbel-mode-map (kbd "C-c C-r") 'isend-send))
+
 (defvar arbel-grammar
   (smie-prec2->grammar
    (smie-bnf->prec2
@@ -132,7 +140,7 @@
                 "input"
                 "shell"
                 "link"
-
+                "match"
 			          ))
 	           (x-functions-regexp (regexp-opt x-functions 'words))
              (register-regexp "\\(\$[^\s]*\\)\s*")
@@ -150,7 +158,27 @@
   (smie-setup arbel-grammar #'ignore)
   (setq-local smie-indent-basic arbel-indent)
   (setq-local comment-start "c ")
+  (use-local-map arbel-mode-map)
   )
+
+(defvar arbel-path "/usr/local/bin/arbel")
+
+(defun arbel-start (b)
+  "starts an arbel process in a certain buffer"
+  (interactive "sBuffer: ")
+  (let ((text-buffer (current-buffer))
+        (starred-name (concat "*" b "*")))
+    (ansi-term arbel-path b)
+    (with-current-buffer text-buffer
+      (isend-associate starred-name))))
+
+(defun arbel-associate (b)
+  "associates an arbel code buffer with a certain arbel process buffer"
+  (interactive "bBuffer: ")
+  (let ((text-buffer (current-buffer)))
+    (isend-associate b)))
+
+
 
 (provide 'arbel)
 
