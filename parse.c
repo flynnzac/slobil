@@ -172,7 +172,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   *complete = 1;
                   continue;
                 }
-              else if (strcmp(state->buffer, "!")==0)
+              else if (strcmp(state->buffer, "c")==0)
                 {
                   state->in_comment = 1;
                   state->arg_n = 0;

@@ -1,3 +1,5 @@
+c parses a comma-separated file into a registry
+
 source "examples/tokenize.arb" .
 
 set $parse-csv
@@ -5,7 +7,7 @@ set $parse-csv
       open-text-file \#1 .
       set $file ans .
       set $parsed [ list . ] .
-      set $cur-reg $#1 .
+      set $cur-reg $#1 . 
 
       while ( set $cur-line [ read-line file . ] . is-string cur-line . )
             (

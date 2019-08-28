@@ -1,12 +1,12 @@
-! Computes v^T v for a vector .
+c Computes v^T v for a vector 
 set $dotproduct
     (
       join \#1 \#2 multiply .
-      collapse \ans add "#" .
+collapse \ans add "#" .
     ) .
 
 
-! product A B computes A^T B .
+c product A B computes A^T B 
 set $product
     (
       set $i $#1 .
@@ -24,7 +24,7 @@ set $product
       answer \out .
     ) .
 
-! Computes A^T .
+c Computes A^T 
 set $transpose
     (
       set $i $#1 .

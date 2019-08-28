@@ -1,6 +1,6 @@
 /* 
    ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   Copyright 2019 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
 
