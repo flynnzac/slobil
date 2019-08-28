@@ -31,6 +31,7 @@
 #include <readline/history.h>
 #include <math.h>
 #include <dlfcn.h>
+#include <regex.h>
 
 enum data_type
   {

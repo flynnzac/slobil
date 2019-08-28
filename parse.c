@@ -102,6 +102,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 {
                   str = malloc(sizeof(char)*(strlen(state->buffer)+1));
                   strcpy(str, state->buffer);
+		  printf("Substatement: %s\n", str);
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
                   sub_state = fresh_state(0);
@@ -202,7 +203,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
 
         }
-      else if (c == '(')
+      else if (c == '(' && !state->in_quote)
         {
           if (state->in_instr == 0)
             {
@@ -216,7 +217,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
           state->in_instr++;
 
         }
-      else if (c == ')')
+      else if (c == ')' && !state->in_quote)
         {
           state->in_instr--;
           if (state->in_instr == 0)
@@ -233,7 +234,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               add_to_state_buffer(state,c);
             }
         }
-      else if (c == '{')
+      else if (c == '{' && !state->in_quote)
         {
           if (state->in_instr == 0)
             {
@@ -246,7 +247,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
           
           state->in_instr++;
         }
-      else if (c == '}')
+      else if (c == '}' && !state->in_quote)
         {
           state->in_instr--;
           if (state->in_instr == 0)
@@ -264,7 +265,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
 
         }
-      else if (c == '[')
+      else if (c == '[' && !state->in_quote)
         {
           if (state->in_instr == 0)
             {
@@ -276,7 +277,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           state->in_instr++;
         }
-      else if (c == ']')
+      else if (c == ']' && !state->in_quote)
         {
           state->in_instr--;
           if (state->in_instr == 0)

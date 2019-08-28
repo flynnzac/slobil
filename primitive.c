@@ -214,7 +214,14 @@ assign_registry (data** d, registry* r)
 {
   *d = malloc(sizeof(data));
   (*d)->type = REGISTRY;
-  (*d)->data = copy_registry(r);
+  if (r == NULL)
+    {
+      (*d)->data = new_registry(NULL);
+    }
+  else
+    {
+      (*d)->data = copy_registry(r);
+    }
 }
 
 void
