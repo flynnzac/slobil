@@ -102,7 +102,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 {
                   str = malloc(sizeof(char)*(strlen(state->buffer)+1));
                   strcpy(str, state->buffer);
-		  printf("Substatement: %s\n", str);
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
                   sub_state = fresh_state(0);
