@@ -143,7 +143,7 @@
           (,reference-regexp . (1 font-lock-constant-face))
 	        )))
 
-(define-derived-mode arbel-mode prog-mode "arbel mode"
+(define-derived-mode arbel-mode prog-mode "arbel"
   "Major mode for editing code in the ARBEL language"
   (setq-local font-lock-defaults '((arbel-font-lock-keywords)))
   (set-syntax-table arbel-mode-syntax-table)
