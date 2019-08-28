@@ -2228,20 +2228,20 @@ op_link (registry* reg)
 }
 
 void
-op_regex (registry* reg)
+op_match (registry* reg)
 {
   data* arg1 = lookup(reg, "#1", 0);
   data* arg2 = lookup(reg, "#2", 0);
 
   if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`regex` requires two arguments.");
+      do_error("`match` requires two arguments.");
       return;
     }
 
   if (arg1->type != STRING || arg2->type != STRING)
     {
-      do_error("Both arguments to `regex` should be strings.");
+      do_error("Both arguments to `match` should be strings.");
       return;
     }
 
@@ -2253,53 +2253,68 @@ op_regex (registry* reg)
       return;
     }
 
-  size_t n_paren = regex.re_nsub+1;
-  regmatch_t* matches = malloc(sizeof(regmatch_t)*n_paren);
-  error = regexec(&regex, (char*) arg2->data, n_paren, matches, 0);
+  size_t n_groups = 10*(regex.re_nsub+1);
+  regmatch_t* matches;
+
 
   data* d;
   assign_registry(&d, NULL);
-
-  if (!error)
+  int i;
+  int j;
+  char* to_add;
+  char* name;
+  data* d_str;
+  data* d_reg;
+  int n_matches = 1;
+  char* cursor = (char*) arg2->data;
+  size_t offset;
+  while (1)
     {
-
-      int i;
-      int j;
-      char* to_add;
-      char* name;
-      data* d_str;
-      for (i=0; i < n_paren; i++)
+      matches = malloc(sizeof(regmatch_t)*n_groups);
+      error = regexec(&regex, cursor, n_groups, matches, 0);
+      if (!error)
 	{
-	  if (matches[i].rm_so < 0)
+	  assign_registry(&d_reg, NULL);
+	  offset = 0;
+	  for (i=0; i < n_groups; i++)
 	    {
-	      break;
-	    }
-	  else
-	    {
-	      to_add = malloc(sizeof(char)*(matches[i].rm_eo-
-					    matches[i].rm_so+2));
-	      for (j=matches[i].rm_so; j < matches[i].rm_eo; j++)
+	      if (matches[i].rm_so < 0)
 		{
-		  to_add[j-matches[i].rm_so] = ((char*) arg2->data)[j];
+		  break;
 		}
-	      to_add[j-matches[i].rm_so] = '\0';
-	      printf("to_add: %s\n", to_add);
-	      assign_str(&d_str, to_add);
-	      name = argument_name(i);
-	      set((registry*) d->data, d_str, name);
-	      free(name);
-	      free(to_add);
+	      else
+		{
+		  if (i==0) offset = matches[0].rm_eo;
+
+		  to_add = malloc(sizeof(char)*(matches[i].rm_eo-
+						matches[i].rm_so+2));
+		  for (j=matches[i].rm_so; j < matches[i].rm_eo; j++)
+		    {
+		      to_add[j-matches[i].rm_so] = cursor[j];
+		    }
+		  to_add[j-matches[i].rm_so] = '\0';
+		  printf("to_add: %s\n", to_add);
+		  assign_str(&d_str, to_add);
+		  name = argument_name(i);
+		  set((registry*) d_reg->data, d_str, name);
+		  free(name);
+		  free(to_add);
+		}
 	    }
+	  name = argument_name(n_matches);
+	  set((registry*) d->data, d_reg, name);
+	  free(name);
+	  n_matches++;
+	  free(matches);
+	  cursor += offset;
+	}
+      else
+	{
+	  free(matches);
+	  break;
 	}
     }
-  else
-    {
-      char err_buff[4096];
-      
-      regerror(error, &regex, err_buff, 4096);
-      printf("Regex Error: %s\n", err_buff);
-      
-    }
+
   ret_ans(reg, d);
   
 }
@@ -2526,8 +2541,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_link);
   set(reg,d,"link");
 
-  assign_op(&d, op_regex);
-  set(reg,d,"regex");
+  assign_op(&d, op_match);
+  set(reg,d,"match");
   
 }
   
