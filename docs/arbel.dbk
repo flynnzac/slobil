@@ -1,4 +1,4 @@
-<article xmlns='http://docbook.org/ns/docbook'>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude">
   <info>
     <title>ARBEL</title>
     <titleabbrev>ARBEL</titleabbrev>
@@ -945,106 +945,19 @@ link STRING1 STRING2 STRING3 .</programlisting>
       <para>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code>list [ list 1 3 . ] [ list 2 4 . ] .</code>
       </para>
-      <programlisting>
-c Computes v^T v for a vector 
-set $dotproduct
-(
-  join \#1 \#2 multiply .
-  collapse \ans add "#" .
-) .
-
-
-c product A B computes A^T B 
-set $product
-(
-  set $i $#1 .
-  set $out [ list . ] .
-  while ( exist-in i \#2 . )
-  (
-    set $one [ get i \#2 . ] .
-    set $dotone ( dotproduct \#1 one . ) .
-    do-to-all dotone \#1 .
-    set $res ans .
-    in \out ( set i res . ) .
-    next i .
-    set $i ans .
-  ) .
-  answer \out .
-) .
-
-
-c Computes A^T 
-set $transpose
-(
-  set $i $#1 .
-  set $out [ list . ] .
-  print out .
-  while ( exist-in i [ get $#1 \#1 . ] . )
-  (
-    do-to-all ( get i \#1 . ) \#1 .
-    set $res ans .
-    in \out ( set i res . ) .
-    next i .
-    set $i ans .
-  ) .
-  answer \out .
-) .</programlisting>
+      <programlisting><xi:include href="../examples/matrix.arb" parse="text" /></programlisting>
     </example>
 
     <example>
       <title>Tokenize a string</title>
-      <programlisting>
-c Tokenize a string $#1 by splitting on string $#2
-set $tokenize
-(
-  set $i 1 .
-  set $len [ count-characters \#1 . ] .
-  set $cur-reg $#1 .
-  set $tokened [ list . ] .
-  set $init 1 .
-  while ( lteq i len . )
-  (
-    set $c [ character \#1 i . ] .
-    if [ string-eq c \#2 . ]
-    {
-      in \tokened ( set cur-reg buffer . ) .
-      set $cur-reg [ next cur-reg . ] .
-      set $init 1 .
-    }
-    {
-      if [ eq init 1 . ] { set $buffer c . set $init 0 . }
-         { set $buffer [ concat buffer c . ] . } .
-    } .
-    set $i [ add i 1 . ] .
-  ) .
-
-  in \tokened ( set cur-reg buffer . ) .
-
-  answer \tokened .
-)  .
-tokenize "hello,world" "," .</programlisting>
+      <programlisting><xi:include href="../examples/tokenize.arb" parse="text" /></programlisting>
     </example>
     <example>
       <title>Parse a Comma-Separated File</title>
       <para>
 	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
       </para>
-      <programlisting>
-set $parse-csv
-(
-  open-text-file \#1 .
-  set $file ans .
-  set $parsed [ list . ] .
-  set $cur-reg $#1 .
-  while ( set $cur-line [ read-line file . ] . is-string cur-line . )
-  (
-    tokenize cur-line "," .
-    in \parsed ( set cur-reg ans . ) .
-    set $cur-reg [ next cur-reg . ] .
-  ) .
-  close $file .
-  answer \parsed .
-) .</programlisting>    
+      <programlisting><xi:include href="../examples/parse_csv.arb" parse="text" /></programlisting>
     </example>
 
     <example>
@@ -1053,69 +966,13 @@ set $parse-csv
       <para>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code>n</code> and <code>p</code>, insert text with <code>i</code>, and print a line out with <code>o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code>go-in</code> the registry to use the text editing environment.
       </para>
-      <programlisting>
-c a simple text editor to demonstrate a convenient way to make applications in the ARBEL environment 
-
-set $arbed [ reg . ] .
-
-in \arbed
-(
-  set $buffer [ list . ] . 
-  set $cur-line 1 . 
-  set $n ( set $cur-line [ add cur-line 1 . ] \up . ) .
-  set $p ( set $cur-line [ subtract cur-line 1 . ] \up . ) .
-  set $i
-  (
-    set $arbed-str \#1 \buffer .
-    in \buffer
-    (
-		  to-register [ concat "#" [ to-string cur-line . ] . ] .
-      set ans arbed-str .
-    ) .
-  ) .
-  set $o
-  (
-    to-register [ concat "#" [ to-string cur-line . ] . ] .
-    print [ get ans \buffer . ] .
-  ) .
-) .
-
-
-go-in \arbed .
-i "Hello, world!" .
-o .
-n .
-i "Goodbye!" .
-o .
-p .
-o .</programlisting>
-		     
+      <programlisting><xi:include href="../examples/arbed.arb" parse="text" /></programlisting>
     </example>
 
     <example>
       <title>Numerical Integration</title>
       Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code>ans</code> register to something numeric.
-      <programlisting>
-set $integrate
-(
-  mov $#1 $f .
-  mov $#2 $lb .
-  mov $#3 $ub .
-  mov $#4 $n .
-
-  set $delta [ divide [ subtract \ub \lb . ] n . ] .
-  set $x \lb .
-  set $int 0.0 .
-  while ( lt x ub . )
-  (
-    f x .
-    set $int [ add \int [ multiply ans delta . ] . ] .
-    set $x [ add \x delta . ] .
-  ) .
-  answer int .
-) .
-set $testfunc ( answer \#1 . ) .
-integrate testfunc 0.0 1.0 100 .</programlisting>
+      <programlisting><xi:include href="../examples/integrate.arb" parse="text" /></programlisting>
     </example>
   </section>
 <appendix id="fdl">
