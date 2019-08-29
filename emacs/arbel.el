@@ -142,6 +142,7 @@
                 "shell"
                 "link"
                 "match"
+                "replace"
 			          ))
 	           (x-functions-regexp (regexp-opt x-functions 'words))
              (register-regexp "\\(\$[^\s]*\\)\s*")
