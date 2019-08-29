@@ -2273,50 +2273,160 @@ op_match (registry* reg)
       matches = malloc(sizeof(regmatch_t)*n_groups);
       error = regexec(&regex, cursor, n_groups, matches, 0);
       if (!error)
-	{
-	  assign_registry(&d_reg, NULL);
-	  offset = 0;
-	  for (i=0; i < n_groups; i++)
-	    {
-	      if (matches[i].rm_so < 0)
-		{
-		  break;
-		}
-	      else
-		{
-		  if (i==0) offset = matches[0].rm_eo;
+        {
+          assign_registry(&d_reg, NULL);
+          offset = 0;
+          for (i=0; i < n_groups; i++)
+            {
+              if (matches[i].rm_so < 0)
+                {
+                  break;
+                }
+              else
+                {
+                  if (i==0) offset = matches[0].rm_eo;
 
-		  to_add = malloc(sizeof(char)*(matches[i].rm_eo-
-						matches[i].rm_so+2));
-		  for (j=matches[i].rm_so; j < matches[i].rm_eo; j++)
-		    {
-		      to_add[j-matches[i].rm_so] = cursor[j];
-		    }
-		  to_add[j-matches[i].rm_so] = '\0';
-		  printf("to_add: %s\n", to_add);
-		  assign_str(&d_str, to_add);
-		  name = argument_name(i);
-		  set((registry*) d_reg->data, d_str, name);
-		  free(name);
-		  free(to_add);
-		}
-	    }
-	  name = argument_name(n_matches);
-	  set((registry*) d->data, d_reg, name);
-	  free(name);
-	  n_matches++;
-	  free(matches);
-	  cursor += offset;
-	}
+                  to_add = malloc(sizeof(char)*(matches[i].rm_eo-
+                                                matches[i].rm_so+2));
+                  for (j=matches[i].rm_so; j < matches[i].rm_eo; j++)
+                    {
+                      to_add[j-matches[i].rm_so] = cursor[j];
+                    }
+                  to_add[j-matches[i].rm_so] = '\0';
+                  assign_str(&d_str, to_add);
+                  name = argument_name(i);
+                  set((registry*) d_reg->data, d_str, name);
+                  free(name);
+                  free(to_add);
+                }
+            }
+          name = argument_name(n_matches);
+          set((registry*) d->data, d_reg, name);
+          free(name);
+          n_matches++;
+          free(matches);
+          cursor += offset;
+        }
       else
-	{
-	  free(matches);
-	  break;
-	}
+        {
+          free(matches);
+          break;
+        }
     }
 
   ret_ans(reg, d);
   
+}
+
+void
+op_replace (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+  data* arg3 = lookup(reg, "#3", 0);
+
+  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
+    {
+      do_error("`replace` requires three arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING || arg2->type != STRING
+      || arg3->type != STRING)
+    {
+      do_error("All arguments to `replace` must be strings.");
+      return;
+    }
+
+  regex_t regex;
+  int error = regcomp(&regex, (char*) arg1->data, REG_EXTENDED);
+  if (error)
+    {
+      do_error("Error compiling regular expression.");
+      return;
+    }
+
+  regmatch_t* matches = malloc(sizeof(regmatch_t));
+
+  data* d;
+  assign_registry(&d, NULL);
+
+
+  char* cursor = (char*) arg3->data;
+
+  /* contains pairs of integers denoting ranges to copy from arg3->data.  After each pair insert string. */
+  size_t offset;
+  size_t n_ranges = 1;
+  while (1)
+    {
+      error = regexec(&regex, cursor, 1, &matches[n_ranges-1], 0);
+      if (!error)
+        {
+          offset = 0;
+          if (matches[n_ranges].rm_so < 0)
+            {
+              break;
+            }
+          else
+            {
+              offset = matches[n_ranges-1].rm_eo;
+              n_ranges++;
+              matches = realloc(matches, n_ranges*sizeof(regmatch_t));
+              cursor += offset;
+            }
+        }
+      else
+        {
+          break;
+        }
+    }
+  n_ranges--;
+
+  size_t last = 0;
+  int i;
+  int j;
+  char* final;
+  cursor = (char*) arg3->data;
+  /* calculate size of final string */
+  size_t final_sz = 0;
+  size_t last_range = 0;
+  for (i = 0; i < n_ranges; i++)
+    {
+      final_sz += matches[i].rm_so;
+      final_sz += strlen((char*) arg2->data);
+      last_range += matches[i].rm_eo;
+    }
+  final_sz += strlen((char*) arg3->data) - last_range;
+
+  final = malloc(sizeof(char)*(final_sz+1));
+  for (i = 0; i < n_ranges; i++)
+    {
+      for (j = 0; j < matches[i].rm_so; j++)
+        {
+          final[last+j] = cursor[j];
+        }
+
+      last += matches[i].rm_so;
+
+      for (j = 0; j < strlen((char*)arg2->data); j++)
+        {
+          final[last+j] = ((char*) arg2->data)[j];
+        }
+
+      last += strlen((char*)arg2->data);
+      
+      cursor += matches[i].rm_eo;
+    }
+
+  for (j = 0; j < (final_sz-last); j++)
+    {
+      final[last+j] = cursor[j];
+    }
+  final[final_sz] = '\0';
+
+  assign_str(&d, final);
+  ret_ans(reg,d);
+
 }
 
 void
@@ -2543,6 +2653,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_match);
   set(reg,d,"match");
+
+  assign_op(&d, op_replace);
+  set(reg,d,"replace");
+
   
 }
   
