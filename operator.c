@@ -2232,6 +2232,7 @@ op_match (registry* reg)
 {
   data* arg1 = lookup(reg, "#1", 0);
   data* arg2 = lookup(reg, "#2", 0);
+  data* arg3 = lookup(reg, "#3", 0);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2241,8 +2242,19 @@ op_match (registry* reg)
 
   if (arg1->type != STRING || arg2->type != STRING)
     {
-      do_error("Both arguments to `match` should be strings.");
+      do_error("The first two arguments to `match` should be strings.");
       return;
+    }
+
+  int max_matches = 0;
+  if (arg3 != NULL && arg3->type != INTEGER)
+    {
+      do_error("The third argument to `match` must be an integer.");
+      return;
+    }
+  else if (arg3 != NULL)
+    {
+      max_matches = *((int*) arg3->data);
     }
 
   regex_t regex;
@@ -2265,10 +2277,10 @@ op_match (registry* reg)
   char* name;
   data* d_str;
   data* d_reg;
-  int n_matches = 1;
+  int n_matches = 0;
   char* cursor = (char*) arg2->data;
   size_t offset;
-  while (1)
+  while (max_matches <= 0 || n_matches < max_matches)
     {
       matches = malloc(sizeof(regmatch_t)*n_groups);
       error = regexec(&regex, cursor, n_groups, matches, 0);
@@ -2300,10 +2312,11 @@ op_match (registry* reg)
                   free(to_add);
                 }
             }
+          n_matches++;
           name = argument_name(n_matches);
           set((registry*) d->data, d_reg, name);
           free(name);
-          n_matches++;
+
           free(matches);
           cursor += offset;
         }
