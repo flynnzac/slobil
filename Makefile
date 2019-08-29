@@ -20,3 +20,6 @@ examples: examples/link.c libarbel.$(SUFFIX)
 	cc -shared -fPIC -o link.$(SUFFIX) -L. -I. link.o -larbel
 
 
+install: arbel libarbel.$(SUFFIX)
+	cp arbel /usr/local/bin/
+	cp libarbel.$(SUFFIX) /usr/local/lib/

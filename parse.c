@@ -138,14 +138,12 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                         free_statement(sub_stmt);
                       break;
                     }
-
                 }
               else if (state->after_quote)
                 {
                   state->after_quote = 0;
-
-
-                  assign_str(&d, state->buffer);
+		  str = escape_str(state->buffer);
+                  assign_str(&d, str,1);
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_integer(state->buffer))

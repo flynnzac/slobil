@@ -154,7 +154,7 @@ void
 assign_int (data** d, const int num);
 
 void
-assign_str (data** d, const char* str);
+assign_str (data** d, const char* str, int copy);
 
 void
 assign_op (data** d, const operation op);
@@ -338,6 +338,9 @@ copy_statement (statement* s);
 
 void
 free_statement (statement* s);
+
+char*
+escape_str(char* str);
 
 /* global variables */
 data* top_registry;

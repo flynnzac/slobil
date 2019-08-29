@@ -697,12 +697,12 @@ op_character (registry* reg)
       return;
     }
 
-  char res[2];
+  char* res = malloc(sizeof(char)*2);
   res[0] = str[loc-1];
   res[1] = '\0';
 
   data* d;
-  assign_str (&d, res);
+  assign_str (&d, res, 0);
 
   ret_ans(reg, d);
   
@@ -1632,9 +1632,8 @@ op_to_string (registry* reg)
     }
 
   data* d;
-  assign_str(&d, result);
+  assign_str(&d, result, 0);
   ret_ans(reg, d);
-  free(result);
   
 }
 
@@ -1885,7 +1884,7 @@ op_read (registry* reg)
     }
 
   char c = fgetc((FILE*) arg1->data);
-  char ret[2];
+  char* ret;
   data* d;
   if (c == EOF || c == '\0')
     {
@@ -1893,9 +1892,10 @@ op_read (registry* reg)
     }
   else
     {
+      ret = malloc(sizeof(char)*2);
       ret[0] = c;
       ret[1] = '\0';
-      assign_str(&d, ret);
+      assign_str(&d, ret, 0);
     }
   ret_ans(reg,d);
 }
@@ -2057,13 +2057,14 @@ op_read_line (registry* reg)
   data* d;
   if (ret >= 0)
     {
-      assign_str(&d, line);
+      assign_str(&d, line, 0);
       ret_ans(reg,d);
     }
   else
     {
       assign_nothing(&d);
       ret_ans(reg,d);
+      free(line);
     }
 }
 
@@ -2115,10 +2116,9 @@ op_input (registry* reg)
 
   char* input = readline("");
   data* d;
-  assign_str(&d, input);
+  assign_str(&d, input, 0);
   
   set(reg->up, d, (regstr) arg1->data);
-  free(input);
   
 }
 
@@ -2156,7 +2156,7 @@ op_shell (registry* reg)
     {
       if (d == NULL)
         {
-          assign_str(&d, buffer);
+          assign_str(&d, buffer, 1);
         }
       else
         {
@@ -2305,11 +2305,10 @@ op_match (registry* reg)
                       to_add[j-matches[i].rm_so] = cursor[j];
                     }
                   to_add[j-matches[i].rm_so] = '\0';
-                  assign_str(&d_str, to_add);
+                  assign_str(&d_str, to_add, 0);
                   name = argument_name(i);
                   set((registry*) d_reg->data, d_str, name);
                   free(name);
-                  free(to_add);
                 }
             }
           n_matches++;
@@ -2449,10 +2448,9 @@ op_replace (registry* reg)
     }
   final[final_sz] = '\0';
 
-  assign_str(&d, final);
+  assign_str(&d, final, 0);
   ret_ans(reg,d);
 
-  free(final);
   free(matches);
 
 }

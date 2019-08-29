@@ -39,13 +39,10 @@ assign_int (data** d, const int num)
   *((int*) (*d)->data) = num;
 }
 
-void
-assign_str (data** d, const char* str)
+char*
+escape_str (char* str)
 {
-  *d = malloc(sizeof(data));
-  (*d)->type = STRING;
-  (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
-
+  char* dest = str;
   int escape = 0;
   int i;
   int j = 0;
@@ -61,48 +58,66 @@ assign_str (data** d, const char* str)
           switch (str[i])
             {
             case '\\':
-              ((char*) ((*d)->data))[j] = '\\';
+              dest[j] = '\\';
               j++;
               break;
             case '\'':
-              ((char*) ((*d)->data))[j] = '\'';
+              dest[j] = '\'';
               j++;
               break;
             case 't':
-              ((char*) ((*d)->data))[j] = '\t';
+              dest[j] = '\t';
               j++;
               break;
             case 'n':
-              ((char*) ((*d)->data))[j] = '\n';
+              dest[j] = '\n';
               j++;
               break;
             case 'r':
-              ((char*) ((*d)->data))[j] = '\r';
+              dest[j] = '\r';
               j++;
               break;
             default:
-              ((char*) ((*d)->data))[j] = '\\';
+              dest[j] = '\\';
               j++;
-              ((char*) ((*d)->data))[j] = str[i];
+              dest[j] = str[i];
               j++;
               break;
             }
         }
       else if (str[i] == '\'')
         {
-          ((char*) ((*d)->data))[j] = '"';
+          dest[j] = '"';
           j++;
         }
       else
         {
-          ((char*) ((*d)->data))[j] = str[i];
+          dest[j] = str[i];
           j++;
         }
     }
 
-  ((char*) ((*d)->data))[j] = '\0';
+  dest[j] = '\0';
+
+  return dest;
+
+}
+
+void
+assign_str (data** d, const char* str, int copy)
+{
+  *d = malloc(sizeof(data));
+  (*d)->type = STRING;
   
-  
+  if (copy)
+    {
+      (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
+      strcpy((char*) (*d)->data, str);
+    }
+  else
+    {
+      (*d)->data = (char*) str;
+    }
 }
 
 element*
@@ -509,7 +524,7 @@ copy_data (data* d_in)
       assign_dec(&d, *((double*) d_in->data));
       break;
     case STRING:
-      assign_str(&d, (const char*) d_in->data);
+      assign_str(&d, (const char*) d_in->data, 1);
       break;
     case REGISTER:
       assign_regstr(&d, (regstr) d_in->data);
