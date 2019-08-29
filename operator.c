@@ -2439,6 +2439,9 @@ op_replace (registry* reg)
   assign_str(&d, final);
   ret_ans(reg,d);
 
+  free(final);
+  free(matches);
+
 }
 
 void
