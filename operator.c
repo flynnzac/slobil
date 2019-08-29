@@ -2324,6 +2324,7 @@ op_replace (registry* reg)
   data* arg1 = lookup(reg, "#1", 0);
   data* arg2 = lookup(reg, "#2", 0);
   data* arg3 = lookup(reg, "#3", 0);
+  data* arg4 = lookup(reg, "#4", 0);
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2336,6 +2337,17 @@ op_replace (registry* reg)
     {
       do_error("All arguments to `replace` must be strings.");
       return;
+    }
+
+  int max_replace = 0;
+  if (arg4 != NULL && arg4->type != INTEGER)
+    {
+      do_error("The fourth argument to `replace` must be an integer.");
+      return;
+    }
+  else if (arg4 != NULL)
+    {
+      max_replace = *((int*) arg4->data);
     }
 
   regex_t regex;
@@ -2357,7 +2369,7 @@ op_replace (registry* reg)
   /* contains pairs of integers denoting ranges to copy from arg3->data.  After each pair insert string. */
   size_t offset;
   size_t n_ranges = 1;
-  while (1)
+  while (max_replace <= 0 || n_ranges <= max_replace)
     {
       error = regexec(&regex, cursor, 1, &matches[n_ranges-1], 0);
       if (!error)
