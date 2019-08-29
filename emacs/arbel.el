@@ -36,7 +36,8 @@
   (setq arbel-mode-map (make-sparse-keymap))
   (define-key arbel-mode-map (kbd "C-c C-s") 'arbel-start)
   (define-key arbel-mode-map (kbd "C-c C-a") 'arbel-associate)
-  (define-key arbel-mode-map (kbd "C-c C-r") 'isend-send))
+  (define-key arbel-mode-map (kbd "C-c C-r") 'isend-send)
+  (define-key arbel-mode-map (kbd "C-c C-b") 'arbel-send-buffer))
 
 (defvar arbel-grammar
   (smie-prec2->grammar
@@ -164,8 +165,9 @@
 (defvar arbel-path "/usr/local/bin/arbel")
 
 (defun arbel-start (b)
-  "starts an arbel process in a certain buffer"
-  (interactive "sBuffer: ")
+  "Starts an arbel process in a certain buffer."
+  (interactive "sBuffer (default: arbel): ")
+  (if (string= b "") (setq b "arbel"))
   (let ((text-buffer (current-buffer))
         (starred-name (concat "*" b "*")))
     (ansi-term arbel-path b)
@@ -173,11 +175,16 @@
       (isend-associate starred-name))))
 
 (defun arbel-associate (b)
-  "associates an arbel code buffer with a certain arbel process buffer"
+  "Associates an arbel code buffer with a certain arbel process buffer."
   (interactive "bBuffer: ")
   (let ((text-buffer (current-buffer)))
     (isend-associate b)))
 
+(defun arbel-send-buffer ()
+  "Sends whole buffer to current process associated with the buffer."
+  (interactive)
+  (mark-whole-buffer)
+  (isend-send))
 
 
 (provide 'arbel)

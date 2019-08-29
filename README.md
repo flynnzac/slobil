@@ -4,6 +4,8 @@ ARBEL is a programming language based on a named-list data type called a registr
 
 For a manual see: http://www.zflynn.com/arbel/arbel.html
 
+ARBEL has an Emacs mode! It has syntax highlighting, indentation, and you can spawn ARBEL sessions and send code from the buffer to the interpreter. The emacs mode is in the `emacs` folder. It requires `isend-mode` which you can get from MELPA.
+
 # Installation
 
 I have tested that the interpreter works on GNU/Linux and under MSYS on Windows. GNU Readline is a required depedency. Other than the standard GNU C Library, nothing else is required to build.
