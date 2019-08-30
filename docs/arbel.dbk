@@ -865,6 +865,26 @@ link STRING1 STRING2 STRING3 .</programlisting>
   Links an instruction from the shared library located at STRING1 defined by the C function STRING2 into the instruction named STRING3.
 </para>
       </listitem>
+
+      <listitem>
+        <para>
+          The <code>match</code> instruction:
+        </para>
+        <programlisting>match STRING1 STRING2 INTEGER .</programlisting>
+        <para>
+          Finds matches for regular expression STRING1 in STRING2.  The maximum number of matches returned is controlled by the INTEGER argument.  If INTEGER is less than or equal to 0, then all matches are returned.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+          The <code>replace</code> instruction:
+        </para>
+        <programlisting>replace STRING1 STRING2 STRING3 INTEGER .</programlisting>
+        <para>
+          Replace INTEGER matches of regular expression STRING1 in STRING3 with STRING2.  If INTEGER is less than or equal to 0, replace all matches.
+        </para>
+      </listitem>
       
     </itemizedlist>
 

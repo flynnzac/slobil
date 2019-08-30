@@ -20,8 +20,8 @@
 */
 
 
-#ifndef REGULAR_H
-#define REGULAR_H
+#ifndef ARBEL_H
+#define ARBEL_H
 
 #include <stdio.h>
 #include <stdlib.h>

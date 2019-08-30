@@ -1,9 +1,13 @@
+ifndef PREFIX
+	PREFIX=/usr/local/
+endif
+
 ifeq ($(OS),Windows_NT)
 	SUFFIX=dll
 	DOC=xsltproc  --xinclude --output docs/arbel.html --stringparam html.stylesheet arbel.css ~/docbook/docbook-xsl-1.79.1/html/docbook.xsl docs/arbel.dbk
 else
 	SUFFIX=so
-	DOC=xsltproc  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
+	DOC=xsltproc --xinclude  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
 endif
 
 arbel: arbel.c operator.c primitive.c utility.c parse.c statement.c save.c
@@ -21,5 +25,5 @@ examples: examples/link.c libarbel.$(SUFFIX)
 
 
 install: arbel libarbel.$(SUFFIX)
-	cp arbel /usr/local/bin/
-	cp libarbel.$(SUFFIX) /usr/local/lib/
+	cp arbel $(PREFIX)/bin/
+	cp libarbel.$(SUFFIX) $(PREFIX)/lib/
