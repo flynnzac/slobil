@@ -143,6 +143,9 @@
                 "link"
                 "match"
                 "replace"
+                "log"
+                "exp"
+                "to-power"
 			          ))
 	           (x-functions-regexp (regexp-opt x-functions 'words))
              (register-regexp "\\(\$[^\s]*\\)\s*")

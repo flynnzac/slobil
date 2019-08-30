@@ -1,0 +1,10 @@
+c Compute the numerical derivative of a function
+set $deriv
+    (
+      mov $#1 $x .
+      mov $#2 $f .
+      mov $#3 $h .
+      divide [ subtract [ f [ add x h . ] . ]
+                        [ f [ subtract x h . ] . ] . ]
+             [ multiply 2 h . ] .
+    ) .

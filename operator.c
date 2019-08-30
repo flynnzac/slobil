@@ -2456,6 +2456,114 @@ op_replace (registry* reg)
 }
 
 void
+op_log (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`log` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+    {
+      do_error("`log` requires a numeric argument.");
+      return;
+    }
+
+  data* d;
+  if (arg1->type == INTEGER)
+    {
+      assign_dec(&d, log((double) (*((int*) arg1->data))));
+    }
+  else
+    {
+      assign_dec(&d, log(*((double*) arg1->data)));
+    }
+
+  ret_ans(reg,d);
+}
+
+
+void
+op_exp (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`exp` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+    {
+      do_error("`exp` requires a numeric argument.");
+      return;
+    }
+
+  data* d;
+  if (arg1->type == INTEGER)
+    {
+      assign_dec(&d, exp((double) (*((int*) arg1->data))));
+    }
+  else
+    {
+      assign_dec(&d, exp(*((double*) arg1->data)));
+    }
+
+  ret_ans(reg,d);
+}
+
+void
+op_to_power (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+  
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`to-power` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != INTEGER && arg1->type != DECIMAL
+      && arg2->type != INTEGER && arg2->type != DECIMAL)
+    {
+      do_error("`to-power` requires two numeric argument.");
+      return;
+    }
+
+  double base;
+  double power;
+  data* d;
+  if (arg1->type == INTEGER)
+    {
+      base = (double) (*((int*) arg1->data));
+    }
+  else
+    {
+      base = *((double*) arg1->data);
+    }
+
+  if (arg2->type == INTEGER)
+    {
+      power = (double) (*((int*) arg2->data));
+    }
+  else
+    {
+      power = *((double*) arg2->data);
+    }
+
+  assign_dec(&d, pow(base,power));
+
+  ret_ans(reg,d);
+}
+
+
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -2682,6 +2790,16 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_replace);
   set(reg,d,"replace");
+
+  assign_op(&d, op_log);
+  set(reg,d,"log");
+
+  assign_op(&d, op_exp);
+  set(reg,d,"exp");
+
+  assign_op(&d, op_to_power);
+  set(reg,d,"to-power");
+
 
   
 }
