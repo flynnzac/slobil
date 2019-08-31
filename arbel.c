@@ -50,7 +50,6 @@ append_to_source_code (char* source_code, const char* new)
 int
 main (int argc, char** argv)
 {
-
   source_code = NULL;
   rl_event_hook = dummy_event;
   registry* reg = new_registry(NULL);

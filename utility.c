@@ -194,9 +194,10 @@ free_registry (registry* reg)
 
   while (cur != NULL)
     {
-      free_data(cur->value);
+      if (!cur->do_not_free_data)
+        free_data(cur->value);
 
-      free(cur->key);
+      free(cur->name);
       tmp = cur->right;
       free(cur);
       cur = tmp;
@@ -307,7 +308,7 @@ print_data (data* d, int print_cmd)
 const char*
 str_type (data_type type)
 {
-  const char* s;
+  const char* s = "";
 
   switch (type)
     {
@@ -349,16 +350,15 @@ str_type (data_type type)
 }
         
     
-
 void
 print_registry (registry* reg)
 {
   registry* cur = tail(reg);
-  const char* s;
+  const char* s = "";
   while (cur != NULL)
     {
       s = str_type(cur->value->type);
-      printf("%s of type %s", (const char*) cur->key, s);
+      printf("%s of type %s", (const char*) cur->name, s);
       printf(", value: ");
       print_data(cur->value,1);
       cur = cur->right;
@@ -398,8 +398,9 @@ new_registry (registry* parent)
   r->left = NULL;
   r->up = parent;
   r->value = NULL;
-  r->key = NULL;
-
+  r->name = NULL;
+  r->key = 0;
+  r->do_not_free_data = 0;
   return r;
 }
 
@@ -407,7 +408,7 @@ int
 is_init_reg (registry* r)
 {
   return (r->right == NULL) && (r->left==NULL) && (r->value == NULL) &&
-    (r->key == NULL);
+    (r->key == 0) && (r->name == NULL);
 }
 
 struct parser_state
@@ -483,3 +484,14 @@ vector_name (const char* lead, int n)
   return name;
 }
 
+unsigned long
+hash_str(const char *str)
+{
+  unsigned long hash = 5381;
+  int c;
+
+  while ((c = *str++))
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+  return hash;
+}

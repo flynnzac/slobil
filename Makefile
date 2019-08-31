@@ -13,7 +13,7 @@ endif
 arbel: arbel.c operator.c primitive.c utility.c parse.c statement.c save.c
 	cc -c -fPIC primitive.c utility.c save.c statement.c parse.c -g -lm -Wall -ldl -lreadline
 	cc -o libarbel.$(SUFFIX) -fPIC -shared primitive.o utility.o save.o statement.o parse.o
-	cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -g -lm -Wall -ldl 
+	cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -O3 -lm -Wall -ldl 
 
 doc: docs/arbel.dbk docs/arbel.css
 	$(DOC)

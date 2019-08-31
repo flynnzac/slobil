@@ -61,10 +61,12 @@ typedef struct data data;
 struct registry
 {
   data* value;
-  char* key;
+  unsigned long key;
+  char* name;
   struct registry* right;
   struct registry* left;
   struct registry* up;
+  int do_not_free_data;
 };
 
 typedef struct registry registry;
@@ -342,6 +344,12 @@ free_statement (statement* s);
 
 char*
 escape_str(char* str);
+
+void
+mark_do_not_free (registry* reg, const char* name);
+
+unsigned long
+hash_str(const char *str);
 
 /* global variables */
 data* top_registry;

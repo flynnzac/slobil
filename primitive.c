@@ -216,13 +216,12 @@ copy_registry(registry* r0)
   while (cur != NULL)
     {
       d = copy_data(cur->value);
-      set(r1, d, cur->key);
+      set(r1, d, cur->name);
       cur = cur->right;
     }
 
   return r1;
 }
-  
 
 void
 assign_registry (data** d, registry* r)
@@ -291,14 +290,17 @@ set (registry* reg, data* d, const char* name)
   new_reg->up = reg->up;
   new_reg->value = d;
   reg->right = new_reg;
+  new_reg->do_not_free_data = 0;
 
   if (d != NULL && d->type == REGISTRY)
     {
       ((registry*) d->data)->up = reg;
     }
 
-  new_reg->key = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(new_reg->key, name);
+  new_reg->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(new_reg->name, name);
+
+  new_reg->key = hash_str(name);
 
 }
 
@@ -307,6 +309,8 @@ get (registry* reg, const char* name, int recursive)
 {
   if (reg == NULL)
     return NULL;
+
+  unsigned long hash_name = hash_str(name);
 
   if (is_init_reg(reg))
     {
@@ -324,7 +328,7 @@ get (registry* reg, const char* name, int recursive)
 
   while (cur != NULL)
     {
-      if (strcmp(cur->key, name)==0)
+      if (cur->key == hash_name)
         {
           return cur->value;
         }
@@ -418,14 +422,15 @@ void
 relabel (registry* reg, const char* name, const char* new_name)
 {
   registry* cur = tail(reg);
-
+  unsigned long hash_name = hash_str(name);
   while (cur != NULL)
     {
-      if (strcmp(cur->key, name)==0)
+      if (cur->key == hash_name)
         {
-          free(cur->key);
-          cur->key = malloc(sizeof(char)*(strlen(new_name)+1));
-          strcpy(cur->key, new_name);
+          free(cur->name);
+          cur->name = malloc(sizeof(char)*(strlen(new_name)+1));
+          strcpy(cur->name, new_name);
+          cur->key = hash_str(new_name);
           return;
         }
       cur = cur->right;
@@ -436,14 +441,16 @@ void
 mov (registry* reg, const char* name, const char* new_name)
 {
   registry* cur = tail(reg);
+  unsigned long hash_name = hash_str(name);
   while (cur != NULL)
     {
-      if (strcmp(cur->key,name)==0)
+      if (cur->key == hash_name)
         {
           del(reg,new_name,1);
-          free(cur->key);
-          cur->key = malloc(sizeof(char)*(strlen(new_name)+1));
-          strcpy(cur->key, new_name);
+          free(cur->name);
+          cur->name = malloc(sizeof(char)*(strlen(new_name)+1));
+          strcpy(cur->name, new_name);
+          cur->key = hash_str(new_name);
           return;
         }
       cur = cur->right;
@@ -456,12 +463,12 @@ void
 del (registry* reg, const char* name, int del_data)
 {
   registry* cur;
-
+  unsigned long hash_name = hash_str(name);
   cur = tail(reg);
 
   while (cur != NULL)
     {
-      if (strcmp(name,cur->key)==0)
+      if (cur->key == hash_name)
         {
           if (cur->right != NULL)
             {
@@ -475,7 +482,7 @@ del (registry* reg, const char* name, int del_data)
           if (del_data)
             free_data(cur->value);
           
-          free(cur->key);
+          free(cur->name);
           free(cur);
           return;
         }
@@ -516,7 +523,7 @@ ret_ans (registry* reg, data* d)
 data*
 copy_data (data* d_in)
 {
-  data* d;
+  data* d = NULL;
 
   switch (d_in->type)
     {
@@ -596,4 +603,24 @@ compute (registry* reg)
 
   ((operation) arg->data)(reg);
   
+}
+
+void
+mark_do_not_free (registry* reg, const char* name)
+{
+  if (reg==NULL || is_init_reg(reg))
+    return;
+
+  registry* cur = reg->right;
+  unsigned long hash_name = hash_str(name);
+  while (cur != NULL)
+    {
+      if (cur->key == hash_name)
+        {
+          cur->do_not_free_data = 1;
+          return;
+        }
+      cur = cur->right;
+    }
+
 }

@@ -80,7 +80,7 @@ execute_statement (statement* s, registry* reg)
   element* e = s->head;
   char* name = NULL;
   int arg_n = 0;
-  data* d;
+  data* d = NULL;
   while (e != NULL)
     {
       name = argument_name(arg_n);
@@ -92,7 +92,7 @@ execute_statement (statement* s, registry* reg)
             }
           else
             {
-              d = copy_data(e->data);
+              d = e->data;
             }
         }
       else
@@ -109,7 +109,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else
                 {
-                  d = copy_data(d);
+                  mark_do_not_free(st_reg, "ans");
+                  /* d = copy_data(d); */
                 }
 
               free_registry(st_reg);
@@ -135,7 +136,13 @@ execute_statement (statement* s, registry* reg)
         }
 
       if (!is_error(-1))
-        set(arg_reg, d, name);
+        {
+          set(arg_reg, d, name);
+          if (e->literal)
+            {
+              mark_do_not_free(arg_reg, name);
+            }
+        }
       
       free(name);
       arg_n++;

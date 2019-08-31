@@ -72,9 +72,9 @@ save_registry (FILE* f, registry* reg)
 	      break;
             }
 
-          size = strlen(reg->key);
+          size = strlen(reg->name);
           fwrite(&size, sizeof(int), 1, f);
-          fwrite(reg->key, sizeof(char), strlen(reg->key), f);
+          fwrite(reg->name, sizeof(char), strlen(reg->name), f);
 
         }
       

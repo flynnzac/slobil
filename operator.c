@@ -851,7 +851,8 @@ op_do_to_all (registry* reg)
   tmp_reg.right = NULL;
   tmp_reg.left = NULL;
   tmp_reg.value = NULL;
-  tmp_reg.key = NULL;
+  tmp_reg.name = NULL;
+  tmp_reg.key = 0;
   tmp_reg.up = reg;
 
   set(&tmp_reg, arg1, "#0");
@@ -869,7 +870,7 @@ op_do_to_all (registry* reg)
       compute(&tmp_reg);
       d = lookup(reg, "ans", 0);
       d = copy_data(d);
-      set(ret_reg, d, arg_reg->key);
+      set(ret_reg, d, arg_reg->name);
       del(&tmp_reg, "#1", 0);
       arg_reg = arg_reg->right;
     }
@@ -1217,17 +1218,17 @@ op_join (registry* reg)
   
   while (cur != NULL)
     {
-      d = get(reg2, cur->key, 0);
+      d = get(reg2, cur->name, 0);
       if (d != NULL)
         {
-          assign_ref(&ref1, reg1, cur->key);
-          assign_ref(&ref2, reg2, cur->key);
+          assign_ref(&ref1, reg1, cur->name);
+          assign_ref(&ref2, reg2, cur->name);
           set(instr_reg, ref1, "#1");
           set(instr_reg, ref2, "#2");
           compute(instr_reg);
           d = get(reg1, "ans", 0);
           d = copy_data(d);
-          set(out_reg, d, cur->key);
+          set(out_reg, d, cur->name);
         }
       cur = cur->right;
     }
@@ -2587,6 +2588,42 @@ op_chdir (registry* reg)
 }
 
 void
+op_copy_file (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  data* arg2 = lookup(reg, "#2", 0);
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`copy-file` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != STRING || arg2->type != STRING)
+    {
+      do_error("Both arguments to `copy-file` must be a string.");
+      return;
+    }
+
+  FILE* f_in = fopen((char*) arg1->data, "rb");
+  FILE* f_out = fopen((char*) arg2->data, "wb");
+  int c;
+  while ((c = fgetc(f_in)) != EOF)
+    {
+      c = fputc(c, f_out);
+      if (c == EOF)
+        {
+          do_error("Error writing to file.");
+          break;
+        }
+    }
+
+  fclose(f_in);
+  fclose(f_out);
+
+}
+
+
+void
 op_curdir (registry* reg)
 {
   char* dir = get_current_dir_name();
@@ -2843,6 +2880,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_curdir);
   set(reg,d,"curdir");
+
+  assign_op(&d, op_copy_file);
+  set(reg,d,"copy-file");
+
   
 }
   
