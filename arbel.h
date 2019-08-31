@@ -22,7 +22,7 @@
 
 #ifndef ARBEL_H
 #define ARBEL_H
-
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,6 +32,7 @@
 #include <math.h>
 #include <dlfcn.h>
 #include <regex.h>
+#include <unistd.h>
 
 enum data_type
   {

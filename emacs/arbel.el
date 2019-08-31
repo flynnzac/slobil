@@ -146,6 +146,8 @@
                 "log"
                 "exp"
                 "to-power"
+                "chdir"
+                "curdir"
 			          ))
 	           (x-functions-regexp (regexp-opt x-functions 'words))
              (register-regexp "\\(\$[^\s]*\\)\s*")

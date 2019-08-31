@@ -2561,7 +2561,45 @@ op_to_power (registry* reg)
   ret_ans(reg,d);
 }
 
+void
+op_chdir (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+  if (arg1 == NULL)
+    {
+      do_error("`chdir` requires an argument.");
+      return;
+    }
 
+  if (arg1->type != STRING)
+    {
+      do_error("The argument to `chdir` must be a string.");
+      return;
+    }
+
+  int error = chdir((char*) arg1->data);
+  if (error)
+    {
+      do_error("Could not change directory.");
+      return;
+    }
+
+}
+
+void
+op_curdir (registry* reg)
+{
+  char* dir = get_current_dir_name();
+  if (dir == NULL)
+    {
+      do_error("Error getting current directory.");
+      return;
+    }
+  data* d;
+  assign_str(&d, dir, 0);
+  ret_ans(reg,d);
+}
+  
 
 void
 add_basic_ops (registry* reg)
@@ -2800,7 +2838,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_power);
   set(reg,d,"to-power");
 
+  assign_op(&d, op_chdir);
+  set(reg,d,"chdir");
 
+  assign_op(&d, op_curdir);
+  set(reg,d,"curdir");
   
 }
   
