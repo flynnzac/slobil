@@ -501,6 +501,9 @@ ret (registry* reg, data* d, const char* name)
 void
 ret_ans (registry* reg, data* d)
 {
+  if (d == NULL)
+    return;
+  
   ret(reg, d, "ans");
   if (!is_error(-1) && reg->up != NULL)
     {

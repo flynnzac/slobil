@@ -56,6 +56,7 @@ main (int argc, char** argv)
   registry* reg = new_registry(NULL);
   add_basic_ops(reg);
   is_exit(0);
+  is_retval(0);
   current_parse_registry = reg;
 
   top_registry = malloc(sizeof(data));
