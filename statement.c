@@ -57,6 +57,30 @@ append_statement_element (element* current, statement* s)
   return e;
 }
 
+registry*
+gen_arg_reg (element* e)
+{
+  int n = 0;
+  char* name;
+  registry* arg_reg = new_registry(NULL);
+  registry* reg = arg_reg;
+  while (e != NULL)
+    {
+      name = argument_name(n);
+      reg = head(reg);
+      reg->right = new_registry(NULL);
+      reg->right->left = reg;
+      reg->right->name = name;
+      reg->right->key = hash_str(name);
+      reg->right->value = NULL;
+      e = e->right;
+      n++;
+    }
+
+  return arg_reg;
+  
+}
+
 
 statement*
 append_statement (statement* current, element* head)
@@ -64,6 +88,7 @@ append_statement (statement* current, element* head)
   statement* s = malloc(sizeof(statement));
   s->right = NULL;
   s->head = head;
+  s->arg_reg = gen_arg_reg(head);
   if (current != NULL)
     {
       current->right = s;
@@ -75,7 +100,8 @@ append_statement (statement* current, element* head)
 void
 execute_statement (statement* s, registry* reg)
 {
-  registry* arg_reg = new_registry(reg);
+  registry* arg_reg = s->arg_reg;
+  arg_reg->up = reg;
   registry* st_reg = NULL;
   element* e = s->head;
   char* name = NULL;
@@ -153,7 +179,6 @@ execute_statement (statement* s, registry* reg)
   if (!is_error(-1))
     compute(arg_reg);
   
-  free_registry(arg_reg);
 }
 
 void

@@ -479,14 +479,15 @@ del (registry* reg, const char* name, int del_data)
               cur->left->right = cur->right;
             }
 
-          if (del_data)
+          if (del_data && cur->value != NULL)
             free_data(cur->value);
+
+          if (cur->name != NULL)
+            free(cur->name);
           
-          free(cur->name);
           free(cur);
           return;
         }
-
       cur = cur->right;
     }
 }

@@ -64,7 +64,6 @@ add_statement_argument (element** head, element* e, statement* s)
 
 }
 
-
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete)
 {

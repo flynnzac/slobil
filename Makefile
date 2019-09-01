@@ -10,10 +10,17 @@ else
 	DOC=xsltproc --xinclude  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
 endif
 
+ifdef DEBUG
+	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -g -pg -lm -Wall -ldl
+else
+	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -O3 -lm -Wall -ldl
+endif
+
+
 arbel: arbel.c operator.c primitive.c utility.c parse.c statement.c save.c
 	cc -c -fPIC primitive.c utility.c save.c statement.c parse.c -g -lm -Wall -ldl -lreadline
 	cc -o libarbel.$(SUFFIX) -fPIC -shared primitive.o utility.o save.o statement.o parse.o
-	cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -O3 -lm -Wall -ldl 
+	$(COMPILE)
 
 doc: docs/arbel.dbk docs/arbel.css
 	$(DOC)

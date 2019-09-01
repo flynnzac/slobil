@@ -484,6 +484,8 @@ op_comparison (registry* reg)
 
   if (!is_numeric(arg1) || !is_numeric(arg2))
     {
+      printf("arg1 type: %d\n", arg1->type);
+      printf("arg2 type: %d %d\n", arg2->type, *((int*) arg2->data));
       do_error("Both arguments to comparison much be numeric.");
       return -2;
     }

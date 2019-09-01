@@ -113,8 +113,6 @@ struct parser_state
 
 typedef struct parser_state parser_state;
 
-
-
 struct element
 {
   data* data;
@@ -131,6 +129,7 @@ struct statement
 {
   element* head;
   struct statement* right;
+  registry* arg_reg;
 };
 
 typedef struct statement statement;

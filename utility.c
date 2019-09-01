@@ -116,7 +116,9 @@ free_statement (statement* s)
         }
       s_tmp = s;
       s = s->right;
+      free_registry(s_tmp->arg_reg);
       free(s_tmp);
+
     }
 }
 
