@@ -2622,6 +2622,39 @@ op_copy_file (registry* reg)
 
 }
 
+void
+op_import (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`import` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != REGISTRY)
+    {
+      do_error("The argument to `import` must be a registry.");
+      return;
+    }
+
+  registry* r1 = (registry*) arg1->data;
+  r1 = tail(r1);
+  
+  data* d = NULL;
+  while (r1 != NULL)
+    {
+      d = r1->value;
+      if (d != NULL)
+	{
+	  d = copy_data(d);
+	  set(reg->up, d, (char*) r1->name);
+	}
+      r1 = r1->right;
+    }
+}
+
 
 void
 op_curdir (registry* reg)
@@ -2884,6 +2917,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_copy_file);
   set(reg,d,"copy-file");
 
+  assign_op(&d, op_import);
+  set(reg,d,"import");
+  
   
 }
   
