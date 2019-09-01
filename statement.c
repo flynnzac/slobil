@@ -102,14 +102,13 @@ execute_statement (statement* s, registry* reg)
 {
   registry* arg_reg = s->arg_reg;
   arg_reg->up = reg;
+  registry* cur_set = arg_reg->right;
   registry* st_reg = NULL;
   element* e = s->head;
-  char* name = NULL;
   int arg_n = 0;
   data* d = NULL;
   while (e != NULL)
     {
-      name = argument_name(arg_n);
       if (e->literal)
         {
           if (e->data == NULL)
@@ -163,14 +162,16 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          set(arg_reg, d, name);
+          cur_set->value = d;
+          /* set(arg_reg, d, name); */
           if (e->literal)
             {
-              mark_do_not_free(arg_reg, name);
+              cur_set->do_not_free_data = 1;
             }
+
+          cur_set = cur_set->right;
         }
       
-      free(name);
       arg_n++;
       e = e->right;
       if (is_error(-1)) break;
