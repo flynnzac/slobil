@@ -345,7 +345,7 @@ char*
 escape_str(char* str);
 
 void
-mark_do_not_free (registry* reg, const char* name);
+mark_do_not_free (registry* reg, unsigned long hash_name);
 
 unsigned long
 hash_str(const char *str);
@@ -358,5 +358,7 @@ char* source_code;
 
 void** arbel_ll;
 int arbel_ll_cnt;
+
+unsigned long arbel_hash_ans;
 
 #endif

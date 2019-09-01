@@ -134,7 +134,7 @@ execute_statement (statement* s, registry* reg)
                 }
               else
                 {
-                  mark_do_not_free(st_reg, "ans");
+                  mark_do_not_free(st_reg, arbel_hash_ans);
                 }
 
               free_registry(st_reg);

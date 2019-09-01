@@ -591,7 +591,7 @@ compute (registry* reg)
       data* d = get(reg, "ans", 0);
       if (d != NULL)
         {
-          mark_do_not_free(reg, "ans");
+          mark_do_not_free(reg, arbel_hash_ans);
           ret_ans(reg, d);
         }
       return;
@@ -607,13 +607,12 @@ compute (registry* reg)
 }
 
 void
-mark_do_not_free (registry* reg, const char* name)
+mark_do_not_free (registry* reg, unsigned long hash_name)
 {
   if (reg==NULL || is_init_reg(reg))
     return;
 
   registry* cur = reg->right;
-  unsigned long hash_name = hash_str(name);
   while (cur != NULL)
     {
       if (cur->key == hash_name)
