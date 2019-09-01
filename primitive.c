@@ -479,7 +479,7 @@ del (registry* reg, const char* name, int del_data)
               cur->left->right = cur->right;
             }
 
-          if (del_data && cur->value != NULL)
+          if (del_data && cur->value != NULL && !cur->do_not_free_data)
             free_data(cur->value);
 
           if (cur->name != NULL)
@@ -591,7 +591,7 @@ compute (registry* reg)
       data* d = get(reg, "ans", 0);
       if (d != NULL)
         {
-          d = copy_data(d);
+          mark_do_not_free(reg, "ans");
           ret_ans(reg, d);
         }
       return;

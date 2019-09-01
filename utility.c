@@ -138,6 +138,8 @@ free_instruction (instruction* inst)
 void
 free_data (data* d)
 {
+  if (d==NULL)
+    return;
   if (d->type == REGISTRY)
     {
       free_registry((registry*) d->data);
