@@ -135,7 +135,6 @@ execute_statement (statement* s, registry* reg)
               else
                 {
                   mark_do_not_free(st_reg, "ans");
-                  /* d = copy_data(d); */
                 }
 
               free_registry(st_reg);
