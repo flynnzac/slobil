@@ -127,7 +127,7 @@ execute_statement (statement* s, registry* reg)
               st_reg = new_registry(arg_reg);
 
               execute_code(e->s, st_reg);
-              d = get(st_reg, "ans", 0);
+              d = get(st_reg, arbel_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set $ans register.");
@@ -141,7 +141,7 @@ execute_statement (statement* s, registry* reg)
             }
           else
             {
-              d = get(reg, e->name, 1);
+              d = get(reg, hash_str(e->name), 1);
 
               if (d == NULL)
                 {

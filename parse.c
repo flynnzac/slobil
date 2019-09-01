@@ -381,7 +381,7 @@ interact (FILE* f, parser_state* state, registry* reg)
           if (reg->up == NULL && is_retval(-1) &&
               state->print_out)
             {
-              d = get(reg, "ans", 0);
+              d = get(reg, arbel_hash_ans, 0);
               print_data(d,0);
               is_retval(0);
             }

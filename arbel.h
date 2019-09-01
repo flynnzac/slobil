@@ -77,8 +77,9 @@ typedef char* regstr;
 
 struct ref
 {
-  char* key;
+  char* name;
   registry* reg;
+  unsigned long key;
 };
 
 typedef struct ref ref;
@@ -195,7 +196,7 @@ void
 set (registry* reg, data* d, const char* name);
 
 data*
-get (registry* reg, const char* name, int recursive);
+get (registry* reg, unsigned long hash_name, int recursive);
 
 void
 mov (registry* reg, const char* name, const char* new_name);
@@ -282,7 +283,7 @@ void
 assign_active (data** d, statement* s);
 
 data*
-lookup (registry* reg, const char* name, int recursive);
+lookup (registry* reg, unsigned long hash_name, int recursive);
 
 void
 compute (registry* reg);
@@ -360,5 +361,10 @@ void** arbel_ll;
 int arbel_ll_cnt;
 
 unsigned long arbel_hash_ans;
+unsigned long arbel_hash_0;
+unsigned long arbel_hash_1;
+unsigned long arbel_hash_2;
+unsigned long arbel_hash_3;
+unsigned long arbel_hash_4;
 
 #endif

@@ -254,9 +254,10 @@ assign_ref (data** d, registry* reg, const char* name)
   *d = malloc(sizeof(data));
   (*d)->type = REFERENCE;
   (*d)->data = malloc(sizeof(ref));
-  ((ref*) (*d)->data)->key = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(((ref*) (*d)->data)->key, name);
+  ((ref*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(((ref*) (*d)->data)->name, name);
   ((ref*) (*d)->data)->reg = reg;
+  ((ref*) (*d)->data)->key = hash_str(name);
   
 }
 
@@ -305,18 +306,17 @@ set (registry* reg, data* d, const char* name)
 }
 
 data*
-get (registry* reg, const char* name, int recursive)
+get (registry* reg, unsigned long hash_name, int recursive)
 {
   if (reg == NULL)
     return NULL;
 
-  unsigned long hash_name = hash_str(name);
 
   if (is_init_reg(reg))
     {
       if (recursive)
         {
-          return get(reg->up, name, recursive);
+          return get(reg->up, hash_name, recursive);
         }
       else
         {
@@ -338,7 +338,7 @@ get (registry* reg, const char* name, int recursive)
   if (reg == NULL) return NULL;
   if ((reg->up != NULL) && recursive)
     {
-      return get(reg->up, name, recursive);
+      return get(reg->up, hash_name, recursive);
     }
   else
     {
@@ -347,9 +347,9 @@ get (registry* reg, const char* name, int recursive)
 }
 
 data*
-lookup (registry* reg, const char* name, int recursive)
+lookup (registry* reg, unsigned long hash_name, int recursive)
 {
-  data* d = get(reg, name, recursive);
+  data* d = get(reg, hash_name, recursive);
 
   if (d == NULL)
     return NULL;
@@ -357,16 +357,16 @@ lookup (registry* reg, const char* name, int recursive)
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
       execute_code((statement*) d->data, reg->up);
-      d = get(reg, "ans", 0);
+      d = get(reg, arbel_hash_ans, 0);
 
     }
   else if (d->type == REFERENCE)
     {
-      if (strcmp(((ref*) d->data)->key, "data")==0)
+      if (((ref*) d->data)->key == hash_str("data"))
         {
           d = top_registry;
         }
-      else if (strcmp(((ref*) d->data)->key, "up")==0)
+      else if (((ref*) d->data)->key == hash_str("up"))
         {
           d = up_registry;
           d->data = reg->up->up;
@@ -396,10 +396,10 @@ lookup (registry* reg, const char* name, int recursive)
             {
               char* msg = malloc(sizeof(char)*
                                  (strlen("Reference not found.") +
-                                  strlen(((ref*) d->data)->key) +
+                                  strlen(((ref*) d->data)->name) +
                                   5));
               sprintf(msg, "Reference `%s` not found.",
-                      ((ref*) d->data)->key);
+                      ((ref*) d->data)->name);
               do_error(msg);
               free(msg);
               d = NULL;
@@ -561,7 +561,7 @@ copy_data (data* d_in)
       break;
     case REFERENCE:
       assign_ref(&d,((ref*) d_in->data)->reg,
-                 ((ref*) d_in->data)->key);
+                 ((ref*) d_in->data)->name);
       break;
     }
 
@@ -571,7 +571,7 @@ copy_data (data* d_in)
 void
 compute (registry* reg)
 {
-  data* arg = lookup(reg,"#0",0);
+  data* arg = lookup(reg,arbel_hash_0,0);
   if (arg == NULL)
     {
       do_error("Cannot compute a registry without an instruction at #0.");
@@ -588,7 +588,7 @@ compute (registry* reg)
   if (arg->type == INSTRUCTION)
     {
       execute_code(((instruction*) arg->data)->stmt, reg);
-      data* d = get(reg, "ans", 0);
+      data* d = get(reg, arbel_hash_ans, 0);
       if (d != NULL)
         {
           mark_do_not_free(reg, arbel_hash_ans);

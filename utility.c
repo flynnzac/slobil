@@ -147,7 +147,7 @@ free_data (data* d)
     }
   else if (d->type == REFERENCE)
     {
-      free(((ref*) d->data)->key);
+      free(((ref*) d->data)->name);
       free(d->data);
       free(d);
     }
@@ -299,7 +299,7 @@ print_data (data* d, int print_cmd)
       printf("Built-in instruction.\n");
       break;
     case REFERENCE:
-      printf("Reference to: $%s\n", ((ref*) d->data)->key);
+      printf("Reference to: $%s\n", ((ref*) d->data)->name);
       break;
     case ARBEL_FILE:
       printf("A file.\n");
