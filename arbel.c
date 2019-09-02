@@ -57,6 +57,7 @@ main (int argc, char** argv)
   is_exit(0);
   is_retval(0);
   current_parse_registry = reg;
+  
   arbel_hash_ans = hash_str("ans");
   arbel_hash_0 = hash_str("#0");
   arbel_hash_1 = hash_str("#1");
