@@ -65,7 +65,7 @@ op_reg (registry* reg)
   unsigned long hash_r = 0;
 
   r = argument_name(i);
-  hash_str(r);
+  hash_r = hash_str(r);
 
   while ((d = lookup(reg, hash_r, 0)) != NULL)
     {
