@@ -9,13 +9,15 @@ collapse \ans add "#" .
 c product A B computes A^T B 
 set $product
     (
+      mov $#1 $A .
+      mov $#2 $B .
       set $i $#1 .
       set $out [ list . ] .
-      while ( exist-in i \#2 . )
+      while ( exist-in i \B . )
             (
-              set $one [ get i \#2 . ] .
+              set $one [ get i \B . ] .
               set $dotone ( dotproduct \#1 one . ) .
-              do-to-all dotone \#1 .
+              do-to-all dotone \A .
               mov $ans $res .
               in \out ( set i res . ) .
               next i .
@@ -40,3 +42,8 @@ set $transpose
             ) .
       answer \out .
     ) .
+
+set $A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+set $B [ list [ list -2 3 . ] [ list -10 3 . ] . ] .
+
+product A B .

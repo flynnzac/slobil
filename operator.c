@@ -1185,8 +1185,11 @@ op_join (registry* reg)
           set(instr_reg, ref2, "#2");
           compute(instr_reg);
           d = get(reg1, arbel_hash_ans, 0);
-          d = copy_data(d);
-          set(out_reg, d, cur->name);
+          if (d != NULL)
+            {
+              d = copy_data(d);
+              set(out_reg, d, cur->name);
+            }
         }
       cur = cur->right;
     }
