@@ -106,7 +106,7 @@ execute_statement (statement* s, registry* reg)
   registry* arg_reg = s->arg_reg;
   arg_reg->up = reg;
   registry* cur_set = arg_reg->right;
-  registry* st_reg = NULL;
+  /* registry* st_reg = NULL; */
   element* e = s->head;
   int arg_n = 0;
   data* d = NULL;
@@ -127,25 +127,23 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->statement)
             {
-              st_reg = new_registry(arg_reg);
-
-              execute_code(e->s, st_reg);
-              d = get(st_reg, arbel_hash_ans, 0);
+              execute_code(e->s, reg);
+              d = get(reg, arbel_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set $ans register.");
                 }
               else
                 {
-                  mark_do_not_free(st_reg, arbel_hash_ans);
+                  /* d = copy_data(d); */
+                  mark_do_not_free(reg, arbel_hash_ans);
                 }
-
-              free_registry(st_reg);
+              /* free_registry(st_reg); */
             }
           else
             {
               d = get(reg, e->hash_name, 1);
-
+              
               if (d == NULL)
                 {
                   char* msg = malloc(sizeof(char)*
@@ -165,10 +163,16 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
+          if (cur_set->value != NULL && !cur_set->do_not_free_data)
+            free_data(cur_set->value);
           cur_set->value = d;
           if (e->literal || cur_set->key == arbel_hash_0)
             {
               cur_set->do_not_free_data = 1;
+            }
+          else
+            {
+              cur_set->do_not_free_data = 0;
             }
 
           cur_set = cur_set->right;
@@ -181,7 +185,7 @@ execute_statement (statement* s, registry* reg)
 
   if (!is_error(-1))
     compute(arg_reg);
-  
+
 }
 
 void

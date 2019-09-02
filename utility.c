@@ -151,6 +151,12 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
+  else if (d->type == REGISTER)
+    {
+      free(((regstr*) d->data)->name);
+      free(d->data);
+      free(d);
+    }
   else if (d->type == OPERATION)
     {
       free(d);

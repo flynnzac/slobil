@@ -238,6 +238,8 @@ op_set (registry* reg)
 
   set(to_set, d, name);
 
+  is_retval(0);
+
 }
 
 void
