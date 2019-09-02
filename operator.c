@@ -81,7 +81,7 @@ op_reg (registry* reg)
       hash_r = hash_str(r);
       d_data = lookup(reg,hash_r,0);
       d_new = copy_data(d_data);
-      set(r_new, d_new, (char*) d->data);
+      set(r_new, d_new, ((regstr*) d->data)->name);
       i = i + 2;
       free(r);
       r = argument_name(i);
@@ -1323,8 +1323,7 @@ op_exist_in (registry* reg)
       return;
     }
 
-  unsigned long hash_name = hash_str((char*) arg1->data);
-  data* chk = get((registry*) arg2->data, hash_name, 0);
+  data* chk = get((registry*) arg2->data, ((regstr*) arg1->data)->key, 0);
   
   if (chk != NULL)
     {
@@ -1356,7 +1355,7 @@ op_reg_cmp (registry* reg)
       return -2;
     }
 
-  return strcmp((char*) arg1->data, (char*) arg2->data);
+  return strcmp(((regstr*) arg1->data)->name, ((regstr*) arg2->data)->name);
 }
 
 void
@@ -1660,7 +1659,7 @@ op_ref (registry* reg)
     }
 
   data* d;
-  assign_ref(&d, (registry*) arg2->data, (char*) arg1->data);
+  assign_ref(&d, (registry*) arg2->data, ((regstr*) arg1->data)->name);
   ret_ans(reg, d);
 }
 
