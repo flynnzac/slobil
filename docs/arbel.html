@@ -487,10 +487,6 @@ set $transpose
       answer \out .
     ) .
 
-set $A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-set $B [ list [ list -2 3 . ] [ list -10 3 . ] . ] .
-
-product A B .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm519"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">c Tokenize a string $#1 by splitting on string $#2
 set $tokenize
     (
@@ -503,16 +499,16 @@ set $tokenize
       set $init 1 .
       while ( lteq i len . )
             (
-              set $c [ character \word i . ] .
-              if [ string-eq c \sep . ]
+              set $d [ character \word i . ] .
+              if [ string-eq d \sep . ]
                  {
                    in \tokened ( set cur-reg buffer . ) .
                    set $cur-reg [ next cur-reg . ] .
                    set $init 1 .
                  }
                  {
-                   if [ eq init 1 . ] { set $buffer c . set $init 0 . }
-                      { set $buffer [ concat buffer c . ] . } .
+                   if [ eq init 1 . ] { set $buffer d . set $init 0 . }
+                      { set $buffer [ concat buffer d . ] . } .
                  } .
               set $i [ add i 1 . ] .
             ) .
@@ -527,7 +523,8 @@ source "examples/tokenize.arb" .
 
 set $parse-csv
     (
-      open-text-file \#1 .
+      mov $#1 $tfile .
+      open-text-file \tfile .
       set $file ans .
       set $parsed [ list . ] .
       set $cur-reg $#1 . 

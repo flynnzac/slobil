@@ -4,7 +4,8 @@ source "examples/tokenize.arb" .
 
 set $parse-csv
     (
-      open-text-file \#1 .
+      mov $#1 $tfile .
+      open-text-file \tfile .
       set $file ans .
       set $parsed [ list . ] .
       set $cur-reg $#1 . 

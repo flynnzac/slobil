@@ -293,7 +293,7 @@ print_data (data* d, int print_cmd)
       printf("( %s )\n", ((instruction*) d->data)->code);
       break;
     case REGISTER:
-      printf("$%s\n", (const char*) d->data);
+      printf("$%s\n", ((regstr*) d->data)->name);
       break;
     case OPERATION:
       printf("Built-in instruction.\n");

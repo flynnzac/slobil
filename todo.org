@@ -201,6 +201,11 @@ replace-one REGEX STRING . (replace first occurence in string)
 * TODO Performance improvements
 ** DONE Registers/References can be hashed at allocation and copied without calling hash_str again
    CLOSED: [2019-09-02 Mon 02:09]
-** TODO Hash element names before calling statements
-** TODO Instructions at #0 should not be copied to new registry
-** TODO If register already exists, do not delete it.  Just replace its data.
+** DONE Hash element names before calling statements
+   CLOSED: [2019-09-02 Mon 03:39]
+** DONE Instructions at #0 should not be copied to new registry
+   CLOSED: [2019-09-02 Mon 03:39]
+** DONE If register already exists, do not delete it.  Just replace its data.
+   CLOSED: [2019-09-02 Mon 03:39]
+** TODO do-to-all, join, collapse all look really inefficient compared to what they could be
+* TODO After performance improvements, looks like some difficulty retrieving references to \#1 etc throughout an instruction.
