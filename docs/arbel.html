@@ -370,9 +370,9 @@ to-number STRING .</pre><p>
         </p><pre class="programlisting">clear-code .</pre><p>
           Clears the current code in memory to reset what would be output by <code class="code">output-code</code>.
         </p></li><li class="listitem"><p>
-          The <code class="code">c</code> instruction:
-        </p><pre class="programlisting">c ANYTHING </pre><p>
-          Ignore all the text following the <code class="code">c</code> instruction until the end of the line. This is the comment instruction.  c must be followed by a space.  This is one of the only "instructions" that is not first class.  For example, you can do <code class="code">set $x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set $mycomment c .</code> and then use <code class="code">mycomment</code> as a comment. 
+          The <code class="code">!</code> instruction:
+        </p><pre class="programlisting">! ANYTHING </pre><p>
+          Ignore all the text following the <code class="code">!</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code class="code">set $x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set $mycomment ! .</code> and then use <code class="code">mycomment</code> as a comment. 
         </p></li><li class="listitem"><p>
           The <code class="code">error</code> instruction:
         </p><pre class="programlisting">error STRING .</pre><p>
@@ -442,15 +442,15 @@ link STRING1 STRING2 STRING3 .</pre><p>
       The purpose of this section is to give some more "full-fledged" examples of ARBEL in action to get a feel for the language.
     </p><div class="example"><a name="idm514"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
-      </p><pre class="programlisting">c Computes v^T v for a vector 
+      </p><pre class="programlisting">! Computes v^T v for a vector 
 set $dotproduct
     (
       join \#1 \#2 multiply .
-collapse \ans add "#" .
+      collapse \ans add "#" .
     ) .
 
 
-c product A B computes A^T B 
+! product A B computes A^T B 
 set $product
     (
       mov $#1 $A .
@@ -470,7 +470,7 @@ set $product
       answer \out .
     ) .
 
-c Computes A^T 
+! Computes A^T 
 set $transpose
     (
       set $i $#1 .
@@ -487,7 +487,7 @@ set $transpose
       answer \out .
     ) .
 
-</pre></div></div><br class="example-break"><div class="example"><a name="idm519"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">c Tokenize a string $#1 by splitting on string $#2
+</pre></div></div><br class="example-break"><div class="example"><a name="idm519"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">! Tokenize a string $#1 by splitting on string $#2
 set $tokenize
     (
       mov $#1 $word .
@@ -517,14 +517,13 @@ set $tokenize
     )  .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm522"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
 	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
-      </p><pre class="programlisting">c parses a comma-separated file into a registry
+      </p><pre class="programlisting">! parses a comma-separated file into a registry
 
 source "examples/tokenize.arb" .
 
 set $parse-csv
     (
-      mov $#1 $tfile .
-      open-text-file \tfile .
+      open-text-file \#1 .
       set $file ans .
       set $parsed [ list . ] .
       set $cur-reg $#1 . 
@@ -535,13 +534,14 @@ set $parse-csv
               in \parsed ( set cur-reg ans . ) .
               set $cur-reg [ next cur-reg . ] .
             ) .
+
       
       close $file .
       answer \parsed .
     ) .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm526"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code class="code">n</code> and <code class="code">p</code>, insert text with <code class="code">i</code>, and print a line out with <code class="code">o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code class="code">go-in</code> the registry to use the text editing environment.
-      </p><pre class="programlisting">c Simple line-oriented text editor 
+      </p><pre class="programlisting">! Simple line-oriented text editor 
 set $arbed [ reg . ] .
 in \arbed
    (
@@ -566,8 +566,8 @@ in \arbed
    ) .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm535"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents">
       Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
-      <pre class="programlisting">c takes a function as an argument and return left hand
-c riemmann sum over range
+      <pre class="programlisting">! takes a function as an argument and return left hand
+! riemmann sum over range
 
 set $integrate 
     ( 

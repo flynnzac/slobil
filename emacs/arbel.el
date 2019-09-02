@@ -63,8 +63,7 @@
         (modify-syntax-entry ?$ "_" st)
         (modify-syntax-entry ?\\ "_" st)
         (modify-syntax-entry ?. "." st)
-        (modify-syntax-entry ?c "w 1b" st)
-        (modify-syntax-entry ?\s "- 2b" st)
+        (modify-syntax-entry ?! "< b" st)
         (modify-syntax-entry ?\n "> b" st)
         st))
 
@@ -166,7 +165,7 @@
   (set-syntax-table arbel-mode-syntax-table)
   (smie-setup arbel-grammar #'ignore)
   (setq-local smie-indent-basic arbel-indent)
-  (setq-local comment-start "c ")
+  (setq-local comment-start "!")
   (use-local-map arbel-mode-map)
   )
 

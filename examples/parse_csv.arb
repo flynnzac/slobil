@@ -1,11 +1,10 @@
-c parses a comma-separated file into a registry
+! parses a comma-separated file into a registry
 
 source "examples/tokenize.arb" .
 
 set $parse-csv
     (
-      mov $#1 $tfile .
-      open-text-file \tfile .
+      open-text-file \#1 .
       set $file ans .
       set $parsed [ list . ] .
       set $cur-reg $#1 . 
@@ -16,6 +15,7 @@ set $parse-csv
               in \parsed ( set cur-reg ans . ) .
               set $cur-reg [ next cur-reg . ] .
             ) .
+
       
       close $file .
       answer \parsed .

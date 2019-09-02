@@ -784,11 +784,11 @@ to-number STRING .</programlisting>
 
       <listitem>
         <para>
-          The <code>c</code> instruction:
+          The <code>!</code> instruction:
         </para>
-        <programlisting>c ANYTHING </programlisting>
+        <programlisting>! ANYTHING </programlisting>
         <para>
-          Ignore all the text following the <code>c</code> instruction until the end of the line. This is the comment instruction.  c must be followed by a space.  This is one of the only "instructions" that is not first class.  For example, you can do <code>set $x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set $mycomment c .</code> and then use <code>mycomment</code> as a comment. 
+          Ignore all the text following the <code>!</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set $x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set $mycomment ! .</code> and then use <code>mycomment</code> as a comment. 
         </para>
       </listitem>
 
