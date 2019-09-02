@@ -339,7 +339,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
 
   while (cur != NULL)
     {
-      if (cur->key == hash_name)
+      if (cur->key == hash_name && cur->value != NULL)
         {
           return cur->value;
         }
@@ -398,9 +398,9 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
             }
           else
             {
-              d_ref = get(((ref*) d->data)->reg,
-                          ((ref*) d->data)->key,
-                          1);
+              d_ref = lookup(((ref*) d->data)->reg,
+                             ((ref*) d->data)->key,
+                             1);
             }
 
           if (d_ref == NULL)

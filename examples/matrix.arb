@@ -9,13 +9,14 @@ set $dotproduct
 ! product A B computes A^T B 
 set $product
     (
-      mov $#1 $A .
-      mov $#2 $B .
+      set $A \#1 .
+      set $B \#2 .
       set $i $#1 .
       set $out [ list . ] .
-      while ( exist-in i \B . )
+      while ( exist-in i \#2 . )
             (
-              set $one [ get i \B . ] .
+              get i \#2 .
+              mov $ans $one .
               set $dotone ( dotproduct \#1 one . ) .
               do-to-all dotone \A .
               mov $ans $res .
@@ -29,12 +30,12 @@ set $product
 ! Computes A^T 
 set $transpose
     (
+      mov $#1 $A .
       set $i $#1 .
       set $out [ list . ] .
-      print out .
-      while ( exist-in i [ get $#1 \#1 . ] . )
+      while ( exist-in i [ get $#1 \A . ] . )
             (
-              do-to-all ( get i \#1 . ) \#1 .
+              do-to-all ( get i \#1 . ) \A .
               mov $ans $res .
               in \out ( set i res . ) .
               next i .
@@ -43,3 +44,6 @@ set $transpose
       answer \out .
     ) .
 
+
+set $A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+set $B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
