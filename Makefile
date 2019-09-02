@@ -11,7 +11,7 @@ else
 endif
 
 ifdef DEBUG
-	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -g -lm -Wall -ldl
+	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -g -pg -lm -Wall -ldl
 else
 	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -O3 -lm -Wall -ldl
 endif

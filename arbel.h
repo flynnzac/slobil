@@ -128,6 +128,7 @@ struct element
   struct statement* s;
   int literal;
   int statement;
+  unsigned long hash_name;
   struct element* right;
 };
 

@@ -143,7 +143,7 @@ main (int argc, char** argv)
       free(code);
     }
 
-
+  
   free(source_code);
   free(top_registry);
   free(up_registry);

@@ -11,6 +11,7 @@ append_literal_element (element* current, data* d)
   e->statement = 0;
   e->right = NULL;
   e->s = NULL;
+  e->hash_name = 0;
   
   if (current != NULL)
     {
@@ -31,6 +32,7 @@ append_argument_element (element* current, char* name)
   e->statement = 0;
   e->right = NULL;
   e->s = NULL;
+  e->hash_name = hash_str(name);
 
   if (current != NULL)
     {
@@ -49,6 +51,7 @@ append_statement_element (element* current, statement* s)
   e->literal = 0;
   e->statement = 1;
   e->right = NULL;
+  e->hash_name = 0;
 
   if (current != NULL)
     {
@@ -141,7 +144,7 @@ execute_statement (statement* s, registry* reg)
             }
           else
             {
-              d = get(reg, hash_str(e->name), 1);
+              d = get(reg, e->hash_name, 1);
 
               if (d == NULL)
                 {
@@ -163,7 +166,6 @@ execute_statement (statement* s, registry* reg)
       if (!is_error(-1))
         {
           cur_set->value = d;
-          /* set(arg_reg, d, name); */
           if (e->literal || cur_set->key == arbel_hash_0)
             {
               cur_set->do_not_free_data = 1;

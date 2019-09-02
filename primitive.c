@@ -422,25 +422,6 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
 }
 
 void
-relabel (registry* reg, const char* name, const char* new_name)
-{
-  registry* cur = tail(reg);
-  unsigned long hash_name = hash_str(name);
-  while (cur != NULL)
-    {
-      if (cur->key == hash_name)
-        {
-          free(cur->name);
-          cur->name = malloc(sizeof(char)*(strlen(new_name)+1));
-          strcpy(cur->name, new_name);
-          cur->key = hash_str(new_name);
-          return;
-        }
-      cur = cur->right;
-    }
-}
-
-void
 mov (registry* reg, regstr* old, regstr* new)
 {
   registry* cur = tail(reg);
