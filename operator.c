@@ -233,7 +233,7 @@ op_set (registry* reg)
     }
   
 
-  char* name = (regstr) arg1->data;
+  char* name = ((regstr*) arg1->data)->name;
   data* d = copy_data(arg2);
 
   set(to_set, d, name);
@@ -271,8 +271,7 @@ op_get (registry* reg)
       to_look = (registry*) arg2->data;
     }
 
-  unsigned long hash_regstr = hash_str((regstr) arg1->data);
-  data* ans = lookup(to_look, hash_regstr, 0);
+  data* ans = lookup(to_look, ((regstr*) arg1->data)->key, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -340,8 +339,8 @@ op_mov (registry* reg)
 
   if (!is_error(-1) && reg->up != NULL)
     mov(reg->up,
-        (regstr) arg1->data,
-        (regstr) arg2->data);
+        (regstr*) arg1->data,
+        (regstr*) arg2->data);
   
 }
 
@@ -362,7 +361,7 @@ op_del (registry* reg)
 
   if (!is_error(-1) && reg->up != NULL)
     {
-      del(reg->up, (regstr) arg1->data, 1);
+      del(reg->up, ((regstr*) arg1->data)->key, 1);
     }
 
 }
@@ -391,8 +390,7 @@ op_exist (registry* reg)
   if (is_error(-1))
     return;
 
-  unsigned long hash_reg = hash_str((regstr) arg1->data);
-  data* obj = get(reg->up, hash_reg, 0);
+  data* obj = get(reg->up, ((regstr*) arg1->data)->key, 0);
   data* d;
   if (obj == NULL)
     {
@@ -825,11 +823,11 @@ op_do_to_all (registry* reg)
       d = lookup(reg, arbel_hash_ans, 0);
       d = copy_data(d);
       set(ret_reg, d, arg_reg->name);
-      del(&tmp_reg, "#1", 0);
+      del(&tmp_reg, arbel_hash_1, 0);
       arg_reg = arg_reg->right;
     }
 
-  del(&tmp_reg, "#0", 0);
+  del(&tmp_reg, arbel_hash_0, 0);
 
   d = malloc(sizeof(data));
   d->type = REGISTRY;
@@ -856,8 +854,9 @@ op_next (registry* reg)
       return;
     }
 
-  char* cur_name = malloc(sizeof(char)*(strlen((regstr) arg1->data)+1));
-  strcpy(cur_name, (regstr) arg1->data);
+  char* cur_name = malloc(sizeof(char)*
+                          (strlen(((regstr*) arg1->data)->name)+1));
+  strcpy(cur_name, ((regstr*) arg1->data)->name);
 
   int i = strlen(cur_name)-1;
   int j;
@@ -887,7 +886,7 @@ op_next (registry* reg)
   sprintf(new_name, "%s%d", cur_name, num);
 
   data* d;
-  assign_regstr(&d, new_name);
+  assign_regstr(&d, new_name, hash_str(new_name));
   free(cur_name);
   free(new_name);
 
@@ -934,7 +933,7 @@ op_last (registry* reg)
     }
   free(name);
   name = vector_name((char*) arg2->data, i-1);
-  assign_regstr(&d, name);
+  assign_regstr(&d, name, hash_str(name));
   free(name);
 
   ret_ans(reg, d);
@@ -1048,7 +1047,7 @@ op_to_register (registry* reg)
     }
 
   data* d;
-  assign_regstr(&d, (char*) arg1->data);
+  assign_regstr(&d, (char*) arg1->data, hash_str((char*) arg1->data));
   ret_ans(reg,d);
 
 }
@@ -1198,7 +1197,7 @@ op_join (registry* reg)
   
   free_registry(instr_reg);
   ret_ans(reg, d);
-  
+
 }
 
 void
@@ -1878,8 +1877,7 @@ op_close (registry* reg)
       return;
     }
 
-  unsigned long hash_regstr = hash_str((regstr) arg1->data);
-  data* f = lookup(reg->up, hash_regstr, 0);
+  data* f = lookup(reg->up, ((regstr*) arg1->data)->key, 0);
 
   if (f == NULL)
     {
@@ -1898,7 +1896,7 @@ op_close (registry* reg)
       fclose((FILE*) f->data);
     }
 
-  del(reg->up, (regstr) arg1->data, 1);
+  del(reg->up, ((regstr*) arg1->data)->key, 1);
   
 }
 
@@ -2080,7 +2078,7 @@ op_input (registry* reg)
   data* d;
   assign_str(&d, input, 0);
   
-  set(reg->up, d, (regstr) arg1->data);
+  set(reg->up, d, ((regstr*) arg1->data)->name);
   
 }
 

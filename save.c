@@ -131,7 +131,7 @@ read_registry (FILE* f, registry* reg)
           cache = malloc(sizeof(char)*(size+1));
           fread(cache, sizeof(char), size, f);
           *((char*) (cache+size)) = '\0';
-          assign_regstr(&d, (char*) cache);
+          assign_regstr(&d, (char*) cache, hash_str((char*) cache));
           free(cache);          
           break;
         case REGISTRY:

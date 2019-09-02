@@ -64,6 +64,8 @@ main (int argc, char** argv)
   arbel_hash_2 = hash_str("#2");
   arbel_hash_3 = hash_str("#3");
   arbel_hash_4 = hash_str("#4");
+  arbel_hash_up = hash_str("up");
+  arbel_hash_data = hash_str("data");
 
   top_registry = malloc(sizeof(data));
   top_registry->data = reg;
@@ -140,6 +142,7 @@ main (int argc, char** argv)
       fclose(f);
       free(code);
     }
+
 
   free(source_code);
   free(top_registry);

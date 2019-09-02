@@ -33,6 +33,7 @@
 #include <dlfcn.h>
 #include <regex.h>
 #include <unistd.h>
+#include <time.h>
 
 enum data_type
   {
@@ -73,7 +74,13 @@ typedef struct registry registry;
 
 typedef void (*operation)(registry*);
 
-typedef char* regstr;
+struct regstr
+{
+  char* name;
+  unsigned long key;
+};
+
+typedef struct regstr regstr;
 
 struct ref
 {
@@ -166,7 +173,7 @@ void
 assign_registry (data** d, registry* r);
 
 void
-assign_regstr (data** d, const char* name);
+assign_regstr (data** d, const char* name, unsigned long key);
 
 void
 assign_ref (data** d, registry* reg, const char* name);
@@ -199,10 +206,10 @@ data*
 get (registry* reg, unsigned long hash_name, int recursive);
 
 void
-mov (registry* reg, const char* name, const char* new_name);
+mov (registry* reg, regstr* old, regstr* new);
 
 void
-del (registry* reg, const char* name, int del_data);
+del (registry* reg, unsigned long hash_name, int del_data);
 
 data*
 get_data_in_registry (registry* reg, const regstr name);
@@ -366,5 +373,7 @@ unsigned long arbel_hash_1;
 unsigned long arbel_hash_2;
 unsigned long arbel_hash_3;
 unsigned long arbel_hash_4;
+unsigned long arbel_hash_data;
+unsigned long arbel_hash_up;
 
 #endif

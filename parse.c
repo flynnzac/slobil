@@ -161,7 +161,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (is_register(state->buffer))
                 {
                   str_shift_left(state->buffer);
-                  assign_regstr(&d, state->buffer);
+                  assign_regstr(&d, state->buffer,
+                                hash_str(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (strcmp(state->buffer,".")==0)

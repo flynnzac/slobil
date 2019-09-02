@@ -239,12 +239,14 @@ assign_registry (data** d, registry* r)
 }
 
 void
-assign_regstr (data** d, const char* name)
+assign_regstr (data** d, const char* name, unsigned long key)
 {
   *d = malloc(sizeof(data));
   (*d)->type = REGISTER;
-  (*d)->data = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy((regstr) (*d)->data, name);
+  (*d)->data = malloc(sizeof(regstr));
+  ((regstr*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(((regstr*) (*d)->data)->name, name);
+  ((regstr*) (*d)->data)->key = key;
   
 }
 
@@ -283,7 +285,8 @@ assign_nothing (data** d)
 void
 set (registry* reg, data* d, const char* name)
 {
-  del(reg,name,1);
+  unsigned long hash_name = hash_str(name);
+  del(reg,hash_name,1);
   reg = head(reg);
   registry* new_reg = malloc(sizeof(registry));
   new_reg->left = reg;
@@ -301,7 +304,7 @@ set (registry* reg, data* d, const char* name)
   new_reg->name = malloc(sizeof(char)*(strlen(name)+1));
   strcpy(new_reg->name, name);
 
-  new_reg->key = hash_str(name);
+  new_reg->key = hash_name;
 
 }
 
@@ -362,11 +365,11 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
     }
   else if (d->type == REFERENCE)
     {
-      if (((ref*) d->data)->key == hash_str("data"))
+      if (((ref*) d->data)->key == arbel_hash_data)
         {
           d = top_registry;
         }
-      else if (((ref*) d->data)->key == hash_str("up"))
+      else if (((ref*) d->data)->key == arbel_hash_up)
         {
           d = up_registry;
           d->data = reg->up->up;
@@ -438,19 +441,18 @@ relabel (registry* reg, const char* name, const char* new_name)
 }
 
 void
-mov (registry* reg, const char* name, const char* new_name)
+mov (registry* reg, regstr* old, regstr* new)
 {
   registry* cur = tail(reg);
-  unsigned long hash_name = hash_str(name);
   while (cur != NULL)
     {
-      if (cur->key == hash_name)
+      if (cur->key == old->key)
         {
-          del(reg,new_name,1);
+          del(reg, new->key,1);
           free(cur->name);
-          cur->name = malloc(sizeof(char)*(strlen(new_name)+1));
-          strcpy(cur->name, new_name);
-          cur->key = hash_str(new_name);
+          cur->name = malloc(sizeof(char)*(strlen(new->name)+1));
+          strcpy(cur->name, new->name);
+          cur->key = new->key;
           return;
         }
       cur = cur->right;
@@ -460,10 +462,9 @@ mov (registry* reg, const char* name, const char* new_name)
                                  
 
 void
-del (registry* reg, const char* name, int del_data)
+del (registry* reg, unsigned long hash_name, int del_data)
 {
   registry* cur;
-  unsigned long hash_name = hash_str(name);
   cur = tail(reg);
 
   while (cur != NULL)
@@ -538,7 +539,8 @@ copy_data (data* d_in)
       assign_str(&d, (const char*) d_in->data, 1);
       break;
     case REGISTER:
-      assign_regstr(&d, (regstr) d_in->data);
+      assign_regstr(&d, ((regstr*) d_in->data)->name,
+                    ((regstr*) d_in->data)->key);
       break;
     case REGISTRY:
       assign_registry(&d, (registry*) d_in->data);

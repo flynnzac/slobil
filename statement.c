@@ -154,7 +154,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else
                 {
-                  d = copy_data(d);
+                  if (cur_set->key != arbel_hash_0)
+                    d = copy_data(d);
                 }
             }
         }
@@ -163,14 +164,14 @@ execute_statement (statement* s, registry* reg)
         {
           cur_set->value = d;
           /* set(arg_reg, d, name); */
-          if (e->literal)
+          if (e->literal || cur_set->key == arbel_hash_0)
             {
               cur_set->do_not_free_data = 1;
             }
 
           cur_set = cur_set->right;
         }
-      
+
       arg_n++;
       e = e->right;
       if (is_error(-1)) break;
