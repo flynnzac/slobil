@@ -286,25 +286,33 @@ void
 set (registry* reg, data* d, const char* name)
 {
   unsigned long hash_name = hash_str(name);
-  del(reg,hash_name,1);
-  reg = head(reg);
-  registry* new_reg = malloc(sizeof(registry));
-  new_reg->left = reg;
-  new_reg->right = NULL;
-  new_reg->up = reg->up;
-  new_reg->value = d;
-  reg->right = new_reg;
-  new_reg->do_not_free_data = 0;
+  registry* new_reg = del(reg,hash_name,-1);
+
+  if (new_reg == NULL)
+    {
+      reg = head(reg);
+      new_reg = malloc(sizeof(registry));
+      new_reg->left = reg;
+      new_reg->right = NULL;
+      new_reg->up = reg->up;
+      new_reg->value = d;
+      reg->right = new_reg;
+      new_reg->do_not_free_data = 0;
+      new_reg->name = malloc(sizeof(char)*(strlen(name)+1));
+      strcpy(new_reg->name, name);
+      new_reg->key = hash_name;
+    }
+  else
+    {
+      new_reg->do_not_free_data = 0;
+      new_reg->value = d;
+    }
 
   if (d != NULL && d->type == REGISTRY)
     {
       ((registry*) d->data)->up = reg;
     }
 
-  new_reg->name = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(new_reg->name, name);
-
-  new_reg->key = hash_name;
 
 }
 
@@ -442,7 +450,7 @@ mov (registry* reg, regstr* old, regstr* new)
 
                                  
 
-void
+registry*
 del (registry* reg, unsigned long hash_name, int del_data)
 {
   registry* cur;
@@ -452,26 +460,42 @@ del (registry* reg, unsigned long hash_name, int del_data)
     {
       if (cur->key == hash_name)
         {
-          if (cur->right != NULL)
+          if (cur->right != NULL && del_data >= 0)
             {
               cur->right->left = cur->left;
             }
-          if (cur->left != NULL)
+          if (cur->left != NULL && del_data >= 0)
             {
               cur->left->right = cur->right;
             }
 
           if (del_data && cur->value != NULL && !cur->do_not_free_data)
-            free_data(cur->value);
+            {
+              free_data(cur->value);
+              cur->value = NULL;
+            }
 
-          if (cur->name != NULL)
-            free(cur->name);
-          
-          free(cur);
-          return;
+          if (cur->name != NULL && del_data >= 0)
+            {
+              free(cur->name);
+              cur->name = NULL;
+            }
+                
+          if (del_data < 0)
+            {
+              return cur;
+            }
+          else
+            {
+              free(cur);
+              return NULL;
+            }
+
         }
       cur = cur->right;
     }
+
+  return NULL;
 }
 
 void

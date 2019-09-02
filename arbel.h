@@ -209,7 +209,7 @@ get (registry* reg, unsigned long hash_name, int recursive);
 void
 mov (registry* reg, regstr* old, regstr* new);
 
-void
+registry*
 del (registry* reg, unsigned long hash_name, int del_data);
 
 data*
