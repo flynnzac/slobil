@@ -33,7 +33,7 @@
     </para>
 
     <para>
-      ARBEL is easy to use interactively because it is not block-based.  Many "complicated" instructions are naturally single-line because entering sub-statements is straightforward.  ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
+      ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
     </para>
 
     <para>
@@ -71,23 +71,14 @@
     </para>
 
     <para>
-      The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects, but there is currently no "API" for doing so.  You can check out <code>operator.c</code> in the distribution for the implementation of the built-in functions to see how to do so.  Currently, the API would be adding the function to that file and add the new C function to the <code>add_basic_ops</code> function.
+      The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects.  You can check out <code>operator.c</code> in the distribution for the implementation of the built-in functions for some examples of how to write such a function.  You can compile as a shared library (linking against libarbel.so) and link the newly added C code into the ARBEL environment with the <code>link</code> instruction.
     </para>
-
-    <para>
-      The other item on the road map is compiling to a bytecode.  The structure of the language makes the mapping to a registry-based virtual machine, well, very similar to the registry based syntax of the language.  The two paths forward are either to write its own VM or else choose a target VM that is already available to compile to.
-    </para>
-
-    <para>
-      The current goal of the interpreter is correctness.  So speed has not been overly optimized.  It is probably the case that some things that don't need to be copied are (if you find one, send me a pull request, and I'll accept!).  
-    </para>
-      
 
     <section>
       <title>Categorizing ARBEL</title>
 
       <para>
-        ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and values have a certain type and the type does not change without explicit instruction.
+        ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and values have a certain type and the type does not change without explicit instruction (excepting a couple arithmetic commands which convert integers to floating point values if necessary).
       </para>
 
       <para>
