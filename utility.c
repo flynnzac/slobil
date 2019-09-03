@@ -505,3 +505,46 @@ hash_str(const char *str)
 
   return hash;
 }
+
+char**
+split_slash (const char* name, int* cnt)
+{
+  int i;
+  char** result = malloc(sizeof(char*));
+  char* buffer = malloc(sizeof(char)*(strlen(name)+1));
+  *cnt = 0;
+  int j = 0;
+  for (i=0; i < strlen(name); i++)
+    {
+      if (name[i] == '/')
+        {
+          buffer[j] = '\0';
+          result[*cnt] = malloc(sizeof(char)*(strlen(buffer)+1));
+          strcpy(result[*cnt], buffer);
+          *cnt += 1;
+          result = realloc(result, sizeof(char*)*(*cnt+1));
+          j = 0;
+        }
+      else
+        {
+          buffer[j] = name[i];
+          j++;
+        }
+    }
+
+  buffer[j] = '\0';
+
+  if (strlen(buffer) != 0)
+    {
+      result[*cnt] = malloc(sizeof(char)*(strlen(buffer)+1));
+      strcpy(result[*cnt], buffer);
+      *cnt += 1;
+      result = realloc(result, sizeof(char*)*(*cnt+1));
+    }
+
+  result[*cnt] = NULL;
+
+
+  return result;
+  
+}

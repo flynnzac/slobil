@@ -29,15 +29,15 @@
     <title>Introducing ARBEL</title>
 
     <para>
-      ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+      ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </para>
 
     <para>
-      ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
+      ARBEL's basic syntax is similar to running programs from a UNIX shell.  All instructions have the form <code>INSTRUCTION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. It uses different parenthesis types to control when different sub-statements provided in the place of arguments are executed.  It has either lazy or greedy evaluation of arguments depending on which parenthesis are used to enclose substatements. This removes the need for many common special forms found in other languages.
     </para>
 
     <para>
-      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing.  It provides a convenient system for data modification because that is the main task of such computing. The vision is a modern form of BASIC and LISP machines.  It also has an intuitive "command" syntax that is similar to typing in commands at a shell.
+      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of BASIC and LISP machines.  
     </para>
 
     <para>

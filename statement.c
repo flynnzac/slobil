@@ -25,14 +25,20 @@ element*
 append_argument_element (element* current, char* name)
 {
   element* e = malloc(sizeof(element));
+  int count;
   e->data = NULL;
-  e->name = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(e->name,name);
+  e->name = split_slash(name, &count);
   e->literal = 0;
   e->statement = 0;
   e->right = NULL;
   e->s = NULL;
-  e->hash_name = hash_str(name);
+
+  e->hash_name = malloc(sizeof(unsigned long)*(count));
+  int i;
+  for (i=0; e->name[i] != NULL; i++)
+    {
+      e->hash_name[i] = hash_str(e->name[i]);
+    }
 
   if (current != NULL)
     {
@@ -142,21 +148,42 @@ execute_statement (statement* s, registry* reg)
             }
           else
             {
-              d = get(reg, e->hash_name, 1);
-              
+              d = get(reg, e->hash_name[0], 1);
+
               if (d == NULL)
                 {
                   char* msg = malloc(sizeof(char)*
                                      (strlen("Value `` not found.")
-                                      + strlen(e->name) + 1));
-                  sprintf(msg, "Value `%s` not found.", e->name);
+                                      + strlen(e->name[0]) + 1));
+                  sprintf(msg, "Value `%s` not found.", e->name[0]);
                   do_error(msg);
                   free(msg);
                 }
+              else if (d->type != REGISTRY && e->name[1] != NULL)
+                {
+                  do_error("Cannot get registers in non-registry.");
+                }
               else
                 {
+                  for (int i=1; e->name[i] != NULL; i++)
+                    {
+                      if (d == NULL)
+                        {
+                          do_error("Register not found in registry.");
+                          break;
+                        }
+
+                      if (d->type != REGISTRY)
+                        {
+                          do_error("Cannot get registers in non-registry.");
+                          break;
+                        }
+                          
+                      d = get((registry*) d->data, e->hash_name[i], 0);
+                    }
                   if (cur_set->key != arbel_hash_0)
                     d = copy_data(d);
+                  
                 }
             }
         }

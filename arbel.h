@@ -124,11 +124,11 @@ typedef struct parser_state parser_state;
 struct element
 {
   data* data;
-  char* name;
+  char** name;
   struct statement* s;
   int literal;
   int statement;
-  unsigned long hash_name;
+  unsigned long* hash_name;
   struct element* right;
 };
 
@@ -359,6 +359,9 @@ mark_do_not_free (registry* reg, unsigned long hash_name);
 unsigned long
 hash_str(const char *str);
 
+char**
+split_slash (const char* name, int* cnt);
+
 /* global variables */
 data* top_registry;
 data* up_registry;
@@ -376,5 +379,7 @@ unsigned long arbel_hash_3;
 unsigned long arbel_hash_4;
 unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
+
+
 
 #endif
