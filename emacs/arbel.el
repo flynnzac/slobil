@@ -70,11 +70,11 @@
 
 (setq arbel-font-lock-keywords
       (let* (
-	     (functions
+	           (functions
               '("set"
-		"add"
-		"multiply"
-		"subtract"
+		            "add"
+		            "multiply"
+		            "subtract"
                 "divide"
                 "if"
                 "compute"
@@ -148,17 +148,17 @@
                 "to-power"
                 "chdir"
                 "curdir"
-		"copy-file"
-		"import"
-		))
-	     (functions-regexp (regexp-opt functions 'words))
+		            "copy-file"
+		            "import"
+		            ))
+	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\$[^\s]*\\)\s*")
              (reference-regexp "\\(\\\\[^\s]*\\)\s*"))
-	`(
-	  (,functions-regexp . font-lock-builtin-face)
-	  (,register-regexp . (1 font-lock-function-name-face))
+	      `(
+	        (,functions-regexp . font-lock-builtin-face)
+	        (,register-regexp . (1 font-lock-function-name-face))
           (,reference-regexp . (1 font-lock-constant-face))
-	  )))
+	        )))
 
 (define-derived-mode arbel-mode prog-mode "arbel"
   "Major mode for editing code in the ARBEL language"
