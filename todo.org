@@ -198,7 +198,8 @@ replace-one REGEX STRING . (replace first occurence in string)
   CLOSED: [2019-08-30 Fri 16:52]
 * DONE Should be able to pre-allocate and hash names for registries of statements.  There are a fixed number of arguments, no reason it couldn't be done ahead of time.  Would make functions/loops faster.
   CLOSED: [2019-09-01 Sun 15:34]
-* TODO Performance improvements
+* DONE Performance improvements
+  CLOSED: [2019-09-02 Mon 21:59]
 ** DONE Registers/References can be hashed at allocation and copied without calling hash_str again
    CLOSED: [2019-09-02 Mon 02:09]
 ** DONE Hash element names before calling statements
@@ -208,4 +209,10 @@ replace-one REGEX STRING . (replace first occurence in string)
 ** DONE If register already exists, do not delete it.  Just replace its data.
    CLOSED: [2019-09-02 Mon 03:39]
 ** TODO do-to-all, join, collapse all look really inefficient compared to what they could be
-* TODO After performance improvements, looks like some difficulty retrieving references to \#1 etc throughout an instruction.
+* DONE After performance improvements, looks like some difficulty retrieving references to \#1 etc throughout an instruction.
+  CLOSED: [2019-09-02 Mon 21:59]
+* DONE Comment settled as *, switch from ! because might be useful for "modification syntax"
+  CLOSED: [2019-09-02 Mon 22:00]
+* DONE Switched to ' for comment because might want to use * for some sort of globbing thing.  
+  CLOSED: [2019-09-02 Mon 22:16]
+

@@ -1,6 +1,6 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ARBEL</title><link rel="stylesheet" type="text/css" href="arbel.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idm1"></a>ARBEL</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Zach</span> <span class="surname">Flynn</span></h3></div></div><div><p class="copyright">Copyright © 2019 Zach Flynn</p></div><div><div class="legalnotice"><a name="idm17"></a>
       Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 by the Free Software Foundation. A copy of the license is included in the section entitled "GNU Free Documentation License".
-    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dd><dl><dt><span class="section"><a href="#idm35">Categorizing ARBEL</a></span></dt></dl></dd><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm44">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm128">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm480">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm482">Global Variables</a></span></dt><dt><span class="section"><a href="#idm493">String Escape Sequences</a></span></dt></dl></dd><dt><span class="section"><a href="#idm509">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
+    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">August 14, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dd><dl><dt><span class="section"><a href="#idm35">Categorizing ARBEL</a></span></dt></dl></dd><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm44">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm128">Using Registries and References</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm483">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm485">Global Variables</a></span></dt><dt><span class="section"><a href="#idm496">String Escape Sequences</a></span></dt></dl></dd><dt><span class="section"><a href="#idm512">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
       ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </p><p>
       ARBEL uses different parenthesis types to control when different sub-statements are executed.  This removes the need for many common special forms.
@@ -366,9 +366,9 @@ to-number STRING .</pre><p>
         </p><pre class="programlisting">clear-code .</pre><p>
           Clears the current code in memory to reset what would be output by <code class="code">output-code</code>.
         </p></li><li class="listitem"><p>
-          The <code class="code">!</code> instruction:
-        </p><pre class="programlisting">! ANYTHING </pre><p>
-          Ignore all the text following the <code class="code">!</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code class="code">set $x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set $mycomment ! .</code> and then use <code class="code">mycomment</code> as a comment. 
+          The <code class="code">'</code> instruction:
+        </p><pre class="programlisting">' ANYTHING </pre><p>
+          Ignore all the text following the <code class="code">'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code class="code">set $x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set $mycomment ' .</code> and then use <code class="code">mycomment</code> as a comment. <code class="code">'</code> must be followed by a space character to be a comment.  You could name a register <code class="code">'re'g</code>, but you can't name it <code class="code">reg'</code>.  You probably shouldn't do either.
         </p></li><li class="listitem"><p>
           The <code class="code">error</code> instruction:
         </p><pre class="programlisting">error STRING .</pre><p>
@@ -414,13 +414,13 @@ link STRING1 STRING2 STRING3 .</pre><p>
           The <code class="code">replace</code> instruction:
         </p><pre class="programlisting">replace STRING1 STRING2 STRING3 INTEGER .</pre><p>
           Replace INTEGER matches of regular expression STRING1 in STRING3 with STRING2.  If INTEGER is less than or equal to 0, replace all matches.
-        </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm480"></a>Miscellaneous Tidbits</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm482"></a>Global Variables</h3></div></div></div><p>
+        </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm483"></a>Miscellaneous Tidbits</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm485"></a>Global Variables</h3></div></div></div><p>
         There are currently two special references in ARBEL.
       </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
             <code class="code">\up</code> refers to the registry that contains the current registry.  Recall that the arguments to an instruction are entered into a new registry that is below the current registry.  So <code class="code">\up</code> as an argument refers to the registry executing the instruction.
           </p></li><li class="listitem"><p>
             <code class="code">\data</code> refers to the top-level registry.
-          </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm493"></a>String Escape Sequences</h3></div></div></div><p>
+          </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm496"></a>String Escape Sequences</h3></div></div></div><p>
         Here are the escape sequences to enter special characters in strings in ARBEL.  Escape characters start with a backslash.  If no pattern matches, the literal sequence will be entered.  For example, "\w" will insert "\w" while "\n" will insert a newline character.
       </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
             \\ inserts a backslash character (\).
@@ -434,11 +434,11 @@ link STRING1 STRING2 STRING3 .</pre><p>
             \r inserts a carriage return.
           </p></li><li class="listitem"><p>
             An unescaped single quote character (') inserts a double quote character (").
-          </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm509"></a>Examples</h2></div></div></div><p>
+          </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm512"></a>Examples</h2></div></div></div><p>
       The purpose of this section is to give some more "full-fledged" examples of ARBEL in action to get a feel for the language.
-    </p><div class="example"><a name="idm512"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
+    </p><div class="example"><a name="idm515"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
-      </p><pre class="programlisting">! Computes v^T v for a vector 
+      </p><pre class="programlisting">' Computes v^T v for a vector 
 set $dotproduct
     (
       join \#1 \#2 multiply .
@@ -446,8 +446,8 @@ set $dotproduct
     ) .
 
 
-! product A B computes A^T B 
-set $product
+' matrix-multiply A B computes A^T B 
+set $matrix-multiply
     (
       set $A \#1 .
       set $B \#2 .
@@ -467,7 +467,7 @@ set $product
       answer \out .
     ) .
 
-! Computes A^T 
+' Computes A^T 
 set $transpose
     (
       mov $#1 $A .
@@ -487,7 +487,7 @@ set $transpose
 
 set $A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
 set $B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm517"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">! Tokenize a string $#1 by splitting on string $#2
+</pre></div></div><br class="example-break"><div class="example"><a name="idm520"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">' Tokenize a string $#1 by splitting on string $#2
 set $tokenize
     (
       mov $#1 $word .
@@ -515,9 +515,9 @@ set $tokenize
       in \tokened ( set cur-reg buffer . ) .
       answer \tokened .
     )  .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm520"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm523"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
 	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
-      </p><pre class="programlisting">! parses a comma-separated file into a registry
+      </p><pre class="programlisting">' parses a comma-separated file into a registry
 
 source "examples/tokenize.arb" .
 
@@ -539,9 +539,9 @@ set $parse-csv
       close $file .
       answer \parsed .
     ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm524"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm527"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code class="code">n</code> and <code class="code">p</code>, insert text with <code class="code">i</code>, and print a line out with <code class="code">o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code class="code">go-in</code> the registry to use the text editing environment.
-      </p><pre class="programlisting">! Simple line-oriented text editor 
+      </p><pre class="programlisting">' Simple line-oriented text editor 
 set $arbed [ reg . ] .
 in \arbed
    (
@@ -564,10 +564,10 @@ in \arbed
            print [ get ans \buffer . ] .
          ) .
    ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm533"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents">
+</pre></div></div><br class="example-break"><div class="example"><a name="idm536"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents">
       Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
-      <pre class="programlisting">! takes a function as an argument and return left hand
-! riemmann sum over range
+      <pre class="programlisting">' takes a function as an argument and return left hand
+' riemmann sum over range
 
 set $integrate 
     ( 

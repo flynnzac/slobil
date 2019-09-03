@@ -1,4 +1,4 @@
-! Computes v^T v for a vector 
+' Computes v^T v for a vector 
 set $dotproduct
     (
       join \#1 \#2 multiply .
@@ -6,8 +6,8 @@ set $dotproduct
     ) .
 
 
-! product A B computes A^T B 
-set $product
+' matrix-multiply A B computes A^T B 
+set $matrix-multiply
     (
       set $A \#1 .
       set $B \#2 .
@@ -27,7 +27,7 @@ set $product
       answer \out .
     ) .
 
-! Computes A^T 
+' Computes A^T 
 set $transpose
     (
       mov $#1 $A .

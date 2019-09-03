@@ -775,11 +775,11 @@ to-number STRING .</programlisting>
 
       <listitem>
         <para>
-          The <code>!</code> instruction:
+          The <code>'</code> instruction:
         </para>
-        <programlisting>! ANYTHING </programlisting>
+        <programlisting>' ANYTHING </programlisting>
         <para>
-          Ignore all the text following the <code>!</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set $x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set $mycomment ! .</code> and then use <code>mycomment</code> as a comment. 
+          Ignore all the text following the <code>'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set $x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set $mycomment ' .</code> and then use <code>mycomment</code> as a comment. <code>'</code> must be followed by a space character to be a comment.  You could name a register <code>'re'g</code>, but you can't name it <code>reg'</code>.  You probably shouldn't do either.
         </para>
       </listitem>
 
