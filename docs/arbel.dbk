@@ -982,9 +982,35 @@ link STRING1 STRING2 STRING3 .</programlisting>
 
     <example>
       <title>Numerical Integration</title>
-      Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code>ans</code> register to something numeric.
+      <para>
+        Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code>ans</code> register to something numeric.
+      </para>
       <programlisting><xi:include href="../examples/integrate.arb" parse="text" /></programlisting>
     </example>
+
+    <example>
+      <title>Linking C code</title>
+      <para>
+        Here is an example of linking in C code to add an instruction to the language. 
+      </para>
+
+      <para>
+        The C code:
+      </para>
+      
+      <programlisting><xi:include href="../examples/link.c" parse="text" /></programlisting>
+
+      <para>
+        The ARBEL code:
+      </para>
+
+      <programlisting><xi:include href="../examples/link.arb" parse="text" /></programlisting>
+
+    </example>
+
+      
+      
+    
   </section>
 <appendix id="fdl">
   <title>GNU Free Documentation License</title>

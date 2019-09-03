@@ -564,9 +564,9 @@ in \arbed
            print [ get ans \buffer . ] .
          ) .
    ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm536"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents">
-      Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
-      <pre class="programlisting">' takes a function as an argument and return left hand
+</pre></div></div><br class="example-break"><div class="example"><a name="idm536"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents"><p>
+        Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
+      </p><pre class="programlisting">' takes a function as an argument and return left hand
 ' riemmann sum over range
 
 set $integrate 
@@ -586,6 +586,59 @@ set $integrate
             ) .
       answer int .
     ) .
+</pre></div></div><br class="example-break"><div class="example"><a name="idm541"></a><p class="title"><b>Example 6. Linking C code</b></p><div class="example-contents"><p>
+        Here is an example of linking in C code to add an instruction to the language. 
+      </p><p>
+        The C code:
+      </p><pre class="programlisting">/* example of linking C code in.  
+
+   Here is a log+1 function in C that can be called from ARBEL.  See
+   the link.arb code for how to load it from ARBEL.
+*/
+
+#include "arbel.h"
+#include &lt;math.h&gt;
+void
+log_plus_one (registry* reg)
+{
+  data* arg1 = lookup(reg, "#1", 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`log1` requires an argument.");
+      return;
+    }
+
+  if (arg1-&gt;type != INTEGER &amp;&amp; arg1-&gt;type != DECIMAL)
+    {
+      do_error("Argument to `log1` must be numeric.");
+      return;
+    }
+
+  double ans;
+  if (arg1-&gt;type == INTEGER)
+    {
+      ans = log(*((int*) arg1-&gt;data) + 1.0);
+    }
+  else
+    {
+      ans = log(*((double*) arg1-&gt;data) + 1.0);
+    }
+
+  data* d;
+  assign_dec(&amp;d, ans);
+  ret_ans(reg,d);
+}
+
+</pre><p>
+        The ARBEL code:
+      </p><pre class="programlisting">' Demonstrates linking C code in
+link "link.so" "log_plus_one" "log1" .
+print [ log1 2 . ] .
+print [ log1 2.3241 . ] .
+print [ log1 0.5 . ] .
+print [ log1 0 . ] .
+
 </pre></div></div><br class="example-break"></div><div class="appendix"><h2 class="title" style="clear: both"><a name="fdl"></a>A. GNU Free Documentation License</h2><p>Version 1.3, 3 November 2008</p><p>
     Copyright © 2000, 2001, 2002, 2007, 2008
     <a class="ulink" href="https://www.fsf.org/" target="_top">Free Software Foundation, Inc.</a>

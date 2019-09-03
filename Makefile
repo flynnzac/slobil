@@ -18,7 +18,7 @@ endif
 
 
 arbel: arbel.c operator.c primitive.c utility.c parse.c statement.c save.c
-	cc -c -fPIC primitive.c utility.c save.c statement.c parse.c -g -lm -Wall -ldl -lreadline
+	cc -c -fPIC primitive.c utility.c save.c statement.c parse.c -O3 -lm -Wall -ldl -lreadline
 	cc -o libarbel.$(SUFFIX) -fPIC -shared primitive.o utility.o save.o statement.o parse.o
 	$(COMPILE)
 
