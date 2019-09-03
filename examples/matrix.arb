@@ -17,7 +17,7 @@ set @matrix-multiply
             (
               get i \#2 .
               mov @ans @one .
-              set @dotone ( dotproduct \#1 one . ) .
+              set @dotone ( dotproduct \#1 \one . ) .
               do-to-all dotone \A .
               mov @ans @res .
               in \out ( set i res . ) .
@@ -33,7 +33,7 @@ set @transpose
       mov @#1 @A .
       set @i @#1 .
       set @out [ list . ] .
-      while ( exist-in i [ get @#1 \A . ] . )
+      while ( exist-in i A/#1 . )
             (
               do-to-all ( get i \#1 . ) \A .
               mov @ans @res .

@@ -60,7 +60,7 @@
         (modify-syntax-entry ?\} "){" st)
         (modify-syntax-entry ?- "w" st)
         (modify-syntax-entry ?# "w" st)
-        (modify-syntax-entry ?$ "_" st)
+        (modify-syntax-entry ?@ "_" st)
         (modify-syntax-entry ?\\ "_" st)
         (modify-syntax-entry ?. "." st)
         (modify-syntax-entry ?' "w 1b" st)
@@ -152,7 +152,7 @@
 		            "import"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
-             (register-regexp "\\(\$[^\s]*\\)\s*")
+             (register-regexp "\\(\@[^\s]*\\)\s*")
              (reference-regexp "\\(\\\\[^\s]*\\)\s*"))
 	      `(
 	        (,functions-regexp . font-lock-builtin-face)

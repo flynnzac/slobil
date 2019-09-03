@@ -394,6 +394,7 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
         }
       else
         {
+	  /* TODO: let references to elements inside registries */
           data* d_ref;
           if (((ref*) d->data)->reg == NULL)
             {
