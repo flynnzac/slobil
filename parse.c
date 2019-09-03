@@ -34,14 +34,23 @@ add_literal_argument (element** head, element* e, data* d)
 element*
 add_lookup_argument (element** head, element* e, char* d)
 {
+  int count = 0;
+  char** name = split_slash(d, &count);
+  unsigned long* hash_name = malloc(sizeof(unsigned long)*(count));
+  int i;
+  for (i=0; i < count; i++)
+    {
+      hash_name[i] = hash_str(name[i]);
+    }
+    
   if (*head == NULL)
     {
-      *head = append_argument_element(NULL, d);
+      *head = append_argument_element(NULL, name, hash_name, count);
       return *head;
     }
   else
     {
-      e = append_argument_element(e, d);
+      e = append_argument_element(e, name, hash_name, count);
       return e;
     }
 

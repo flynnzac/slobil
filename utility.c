@@ -71,7 +71,7 @@ is_numeric (data* d)
 int
 is_register (const char* str)
 {
-  return (str[0] == '$');
+  return (str[0] == '@');
 }
 
 int
@@ -96,6 +96,7 @@ free_statement (statement* s)
   element* e;
   element* e_tmp;
   statement* s_tmp;
+  int i;
   while (s != NULL)
     {
       e = s->head;
@@ -105,7 +106,18 @@ free_statement (statement* s)
             free_data(e->data);
 
           if (e->name != NULL)
-            free(e->name);
+	    {
+	      for (i=0; i < e->levels; i++)
+		{
+		  free(e->name[i]);
+		}
+	      free(e->name);
+	    }
+
+	  if (e->hash_name != NULL)
+	    {
+	      free(e->hash_name);
+	    }
 
           if (e->s != NULL)
             free_statement(e->s);
@@ -539,12 +551,35 @@ split_slash (const char* name, int* cnt)
       result[*cnt] = malloc(sizeof(char)*(strlen(buffer)+1));
       strcpy(result[*cnt], buffer);
       *cnt += 1;
-      result = realloc(result, sizeof(char*)*(*cnt+1));
     }
-
-  result[*cnt] = NULL;
-
 
   return result;
   
 }
+
+char**
+copy_names (char** name, int levels)
+{
+  char** copy = malloc(sizeof(char*)*levels);
+  int i;
+  for (i=0; i < levels; i++)
+    {
+      copy[i] = malloc(sizeof(char)*(strlen(name[i])+1));
+      strcpy(copy[i], name[i]);
+    }
+  return copy;
+}
+  
+
+unsigned long*
+copy_hashes (unsigned long* hashes, int levels)
+{
+  unsigned long* copy = malloc(sizeof(unsigned long)*levels);
+  int i;
+  for (i=0; i < levels; i++)
+    {
+      copy[i] = hashes[i];
+    }
+  return copy;
+}
+

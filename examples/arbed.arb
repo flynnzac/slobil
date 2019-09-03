@@ -1,21 +1,21 @@
 ' Simple line-oriented text editor 
-set $arbed [ reg . ] .
+set @arbed [ reg . ] .
 in \arbed
    (
-     set $buffer [ list . ] . 
-     set $cur-line 1 . 
-     set $n ( set $cur-line [ add cur-line 1 . ] \up . ) .
-     set $p ( set $cur-line [ subtract cur-line 1 . ] \up . ) .
-     set $i
+     set @buffer [ list . ] . 
+     set @cur-line 1 . 
+     set @n ( set @cur-line [ add cur-line 1 . ] \up . ) .
+     set @p ( set @cur-line [ subtract cur-line 1 . ] \up . ) .
+     set @i
          (
-           set $arbed-str \#1 \buffer .
+           set @arbed-str \#1 \buffer .
            in \buffer
               (
                 to-register [ concat "#" [ to-string cur-line . ] . ] .
                 set ans arbed-str .
               ) .
          ) .
-     set $o
+     set @o
          (
            to-register [ concat "#" [ to-string cur-line . ] . ] .
            print [ get ans \buffer . ] .

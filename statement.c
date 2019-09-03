@@ -11,7 +11,8 @@ append_literal_element (element* current, data* d)
   e->statement = 0;
   e->right = NULL;
   e->s = NULL;
-  e->hash_name = 0;
+  e->hash_name = NULL;
+  e->levels = 0;
   
   if (current != NULL)
     {
@@ -22,24 +23,19 @@ append_literal_element (element* current, data* d)
 }
 
 element*
-append_argument_element (element* current, char* name)
+append_argument_element (element* current, char** name,
+			 unsigned long* hash_name,
+			 const int levels)
 {
   element* e = malloc(sizeof(element));
-  int count;
   e->data = NULL;
-  e->name = split_slash(name, &count);
+  e->name = name;
   e->literal = 0;
   e->statement = 0;
   e->right = NULL;
   e->s = NULL;
-
-  e->hash_name = malloc(sizeof(unsigned long)*(count));
-  int i;
-  for (i=0; e->name[i] != NULL; i++)
-    {
-      e->hash_name[i] = hash_str(e->name[i]);
-    }
-
+  e->hash_name = hash_name;
+  e->levels = levels;
   if (current != NULL)
     {
       current->right = e;
@@ -57,7 +53,8 @@ append_statement_element (element* current, statement* s)
   e->literal = 0;
   e->statement = 1;
   e->right = NULL;
-  e->hash_name = 0;
+  e->hash_name = NULL;
+  e->levels = 0;
 
   if (current != NULL)
     {
@@ -159,13 +156,13 @@ execute_statement (statement* s, registry* reg)
                   do_error(msg);
                   free(msg);
                 }
-              else if (d->type != REGISTRY && e->name[1] != NULL)
+              else if (d->type != REGISTRY && e->levels > 1)
                 {
                   do_error("Cannot get registers in non-registry.");
                 }
               else
                 {
-                  for (int i=1; e->name[i] != NULL; i++)
+                  for (int i=1; i < e->levels; i++)
                     {
                       if (d == NULL)
                         {
@@ -181,7 +178,14 @@ execute_statement (statement* s, registry* reg)
                           
                       d = get((registry*) d->data, e->hash_name[i], 0);
                     }
-                  if (cur_set->key != arbel_hash_0)
+
+		  if (d == NULL)
+		    {
+		      do_error("Register not found in registry.");
+		      break;
+		    }
+		  
+                  if (cur_set->key != arbel_hash_0 && d != NULL)
                     d = copy_data(d);
                   
                 }

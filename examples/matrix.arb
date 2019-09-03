@@ -1,5 +1,5 @@
 ' Computes v^T v for a vector 
-set $dotproduct
+set @dotproduct
     (
       join \#1 \#2 multiply .
       collapse \ans add "#" .
@@ -7,43 +7,43 @@ set $dotproduct
 
 
 ' matrix-multiply A B computes A^T B 
-set $matrix-multiply
+set @matrix-multiply
     (
-      set $A \#1 .
-      set $B \#2 .
-      set $i $#1 .
-      set $out [ list . ] .
+      set @A \#1 .
+      set @B \#2 .
+      set @i @#1 .
+      set @out [ list . ] .
       while ( exist-in i \#2 . )
             (
               get i \#2 .
-              mov $ans $one .
-              set $dotone ( dotproduct \#1 one . ) .
+              mov @ans @one .
+              set @dotone ( dotproduct \#1 one . ) .
               do-to-all dotone \A .
-              mov $ans $res .
+              mov @ans @res .
               in \out ( set i res . ) .
               next i .
-              mov $ans $i .
+              mov @ans @i .
             ) .
       answer \out .
     ) .
 
 ' Computes A^T 
-set $transpose
+set @transpose
     (
-      mov $#1 $A .
-      set $i $#1 .
-      set $out [ list . ] .
-      while ( exist-in i [ get $#1 \A . ] . )
+      mov @#1 @A .
+      set @i @#1 .
+      set @out [ list . ] .
+      while ( exist-in i [ get @#1 \A . ] . )
             (
               do-to-all ( get i \#1 . ) \A .
-              mov $ans $res .
+              mov @ans @res .
               in \out ( set i res . ) .
               next i .
-              mov $ans $i .
+              mov @ans @i .
             ) .
       answer \out .
     ) .
 
 
-set $A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-set $B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+set @A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+set @B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
