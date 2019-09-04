@@ -785,19 +785,19 @@ op_do_to_all (registry* reg)
 
   if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`apply` requires two arguments.");
+      do_error("`do-to-all` requires two arguments.");
       return;
     }
 
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
     {
-      do_error("First argument to `apply` must be an instruction.");
+      do_error("First argument to `do-to-all` must be an instruction.");
       return;
     }
 
   if (arg2->type != REGISTRY)
     {
-      do_error("Second argument to `apply` must be a registry.");
+      do_error("Second argument to `do-to-all` must be a registry.");
       return;
     }
 
@@ -816,21 +816,27 @@ op_do_to_all (registry* reg)
       set(tmp_reg, d, "#1");
       compute(tmp_reg);
       d = lookup(reg, arbel_hash_ans, 0);
+      if (d == NULL)
+        {
+          do_error("Instruction in `do-to-all` did not set `ans` register.");
+          break;
+        }
+        
       d = copy_data(d);
       set(ret_reg, d, arg_reg->name);
       del(tmp_reg, arbel_hash_1, 0);
       arg_reg = arg_reg->right;
     }
 
-  del(tmp_reg, arbel_hash_0, 0);
-
-  d = malloc(sizeof(data));
-  d->type = REGISTRY;
-  d->data = ret_reg;
-
   free_registry(tmp_reg);
+  if (!is_error(-1))
+    {
+      d = malloc(sizeof(data));
+      d->type = REGISTRY;
+      d->data = ret_reg;
 
-  ret_ans(reg, d);
+      ret_ans(reg, d);
+    }
   
 }
 
@@ -1086,6 +1092,7 @@ op_collapse (registry* reg)
   registry* to_walk = (registry*) arg1->data;
 
   first_name = vector_name((char*) arg3->data, 1);
+  unsigned long first_hash = hash_str(first_name);
   second_name = vector_name((char*) arg3->data, i);
 
   unsigned long second_hash = hash_str(second_name);
@@ -1097,10 +1104,11 @@ op_collapse (registry* reg)
   data* ref2;
   
   data* ans = NULL;
+  int is_regstr = 1;
   while ((d = lookup(to_walk, second_hash, 0)) != NULL)
     {
-      assign_ref(&ref1, to_walk, first_name);
-      assign_ref(&ref2, to_walk, second_name);
+      assign_ref(&ref1, to_walk, &first_name, &first_hash, 1, &is_regstr);
+      assign_ref(&ref2, to_walk, &second_name, &second_hash, 1, &is_regstr);
       set(r, ref1, "#1");
       set(r, ref2, "#2");
       compute(r);
@@ -1111,6 +1119,7 @@ op_collapse (registry* reg)
           free(first_name);
           first_name = malloc(sizeof(char)*(strlen("ans")+1));
           strcpy(first_name, "ans");
+          first_hash = arbel_hash_ans;
         }
       i++;
       free(second_name);
@@ -1170,14 +1179,15 @@ op_join (registry* reg)
 
   arg3 = copy_data(arg3);
   set(instr_reg, arg3, "#0");
+  int is_regstr = 1;
   
   while (cur != NULL)
     {
       d = get(reg2, cur->key, 0);
       if (d != NULL)
         {
-          assign_ref(&ref1, reg1, cur->name);
-          assign_ref(&ref2, reg2, cur->name);
+          assign_ref(&ref1, reg1, &cur->name, &cur->key, 1, &is_regstr);
+          assign_ref(&ref2, reg2, &cur->name, &cur->key, 1, &is_regstr);
           set(instr_reg, ref1, "#1");
           set(instr_reg, ref2, "#2");
           compute(instr_reg);
@@ -1659,7 +1669,12 @@ op_ref (registry* reg)
     }
 
   data* d;
-  assign_ref(&d, (registry*) arg2->data, ((regstr*) arg1->data)->name);
+  int is_regstr = 1;
+  assign_ref(&d, (registry*) arg2->data,
+             &((regstr*) arg1->data)->name,
+             &((regstr*) arg1->data)->key,
+             1,
+             &is_regstr);
   ret_ans(reg, d);
 }
 

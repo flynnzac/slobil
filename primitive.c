@@ -666,7 +666,7 @@ mark_do_not_free (registry* reg, unsigned long hash_name)
 data*
 get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
 {
-  data* d = get(reg, hash_name[0], 1);
+  data* d = lookup(reg, hash_name[0], 1);
   if (d == NULL)
     {
       char* msg = malloc(sizeof(char)*

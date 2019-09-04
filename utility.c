@@ -164,7 +164,14 @@ free_data (data* d)
     }
   else if (d->type == REFERENCE)
     {
+      int i;
+      for (i = 0; i < ((ref*) d->data)->levels; i++)
+        {
+          free(((ref*) d->data)->name[i]);
+        }
       free(((ref*) d->data)->name);
+      free(((ref*) d->data)->key);
+      free(((ref*) d->data)->is_regstr);
       free(d->data);
       free(d);
     }

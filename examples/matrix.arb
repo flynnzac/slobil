@@ -16,7 +16,8 @@ set @matrix-multiply
       set @out [ list . ] .
       while ( exist-in i \B . )
             (
-              set @one A/i .
+              set @one \A/i .
+              print one .
               do-to-all ( dotproduct \#1 \one . ) \A .
               mov @ans @res .
               in \out ( set i res . ) .
@@ -32,9 +33,9 @@ set @transpose
       mov @#1 @A .
       set @i @#1 .
       set @out [ list . ] .
-      while ( exist-in i A/@#1 . )
+      while ( exist-in i \A/@#1 . )
             (
-              do-to-all ( answer #1/i . ) \A .
+              do-to-all ( answer \#1/i . ) \A .
               mov @ans @res .
               in \out ( set i res . ) .
               next i .
