@@ -322,7 +322,13 @@ print_data (data* d, int print_cmd)
       printf("Built-in instruction.\n");
       break;
     case REFERENCE:
-      printf("Reference to: $%s\n", ((ref*) d->data)->name);
+      printf("Reference to: @");
+      for (int i=0; i < (((ref*) d->data)->levels-1); i++)
+        {
+          printf("%s/", ((ref*) d->data)->name[i]);
+        }
+      printf("%s\n",
+             ((ref*) d->data)->name[(((ref*) d->data)->levels-1)]);
       break;
     case ARBEL_FILE:
       printf("A file.\n");

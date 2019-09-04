@@ -147,68 +147,12 @@ execute_statement (statement* s, registry* reg)
             }
           else
             {
-              d = get(reg, e->hash_name[0], 1);
-
-              if (d == NULL)
-                {
-                  char* msg = malloc(sizeof(char)*
-                                     (strlen("Value `` not found.")
-                                      + strlen(e->name[0]) + 1));
-                  sprintf(msg, "Value `%s` not found.", e->name[0]);
-                  do_error(msg);
-                  free(msg);
-                }
-              else if (d->type != REGISTRY && e->levels > 1)
-                {
-                  do_error("Cannot get registers in non-registry.");
-                }
-              else
-                {
-                  for (int i=1; i < e->levels; i++)
-                    {
-                      if (d == NULL)
-                        {
-                          do_error("Register not found in registry.");
-                          break;
-                        }
-
-                      if (d->type != REGISTRY)
-                        {
-                          do_error("Cannot get registers in non-registry.");
-                          break;
-                        }
-
-                      if (e->is_regstr[i])
-                        {
-                          d = get((registry*) d->data, e->hash_name[i], 0);
-                        }
-                      else
-                        {
-                          data* d1 = lookup(reg, e->hash_name[i], 1);
-                          if (d1 == NULL || d1->type != REGISTER)
-                            {
-                              do_error("Cannot use `/` with non-register.");
-                              break;
-                            }
-                          else
-                            {
-                              d = get((registry*) d->data,
-                                      ((regstr*) d1->data)->key,
-                                      0);
-                            }
-                        }
-                    }
-
-                  if (d == NULL)
-                    {
-                      do_error("Register not found in registry.");
-                      break;
-                    }
-		  
-                  if (cur_set->key != arbel_hash_0 && d != NULL)
-                    d = copy_data(d);
+              d = get_by_levels(reg,
+                                e->hash_name, e->levels, e->is_regstr,
+                                e->name);
+              if (cur_set->key != arbel_hash_0 && d != NULL)
+                d = copy_data(d);
                   
-                }
             }
         }
 

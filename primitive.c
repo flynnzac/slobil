@@ -258,15 +258,30 @@ assign_regstr (data** d, const char* name, unsigned long key)
 }
 
 void
-assign_ref (data** d, registry* reg, const char* name)
+assign_ref (data** d, registry* reg,
+            char** names,
+            const unsigned long* keys,
+            const int levels,
+            const int* is_regstr)
 {
   *d = malloc(sizeof(data));
   (*d)->type = REFERENCE;
   (*d)->data = malloc(sizeof(ref));
-  ((ref*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(((ref*) (*d)->data)->name, name);
   ((ref*) (*d)->data)->reg = reg;
-  ((ref*) (*d)->data)->key = hash_str(name);
+  ((ref*) (*d)->data)->name = malloc(sizeof(char*)*levels);
+  ((ref*) (*d)->data)->key = malloc(sizeof(unsigned long)*levels);
+  ((ref*) (*d)->data)->is_regstr = malloc(sizeof(int)*levels);
+  ((ref*) (*d)->data)->levels = levels;
+
+  int i;
+  for (i=0; i < levels; i++)
+    {
+      ((ref*) (*d)->data)->name[i] = malloc(sizeof(char)*
+                                            (strlen(names[i])+1));
+      strcpy(((ref*) (*d)->data)->name[i], names[i]);
+      ((ref*) (*d)->data)->key[i] = keys[i];
+      ((ref*) (*d)->data)->is_regstr[i] = is_regstr[i];
+    }
   
 }
 
@@ -380,11 +395,13 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
     }
   else if (d->type == REFERENCE)
     {
-      if (((ref*) d->data)->key == arbel_hash_data)
+      
+      
+      if (((ref*) d->data)->key[0] == arbel_hash_data)
         {
           d = top_registry;
         }
-      else if (((ref*) d->data)->key == arbel_hash_up)
+      else if (((ref*) d->data)->key[0] == arbel_hash_up)
         {
           d = up_registry;
           d->data = reg->up->up;
@@ -396,29 +413,32 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
         }
       else
         {
-	  /* TODO: let references to elements inside registries */
           data* d_ref;
           if (((ref*) d->data)->reg == NULL)
             {
-              d_ref = lookup(reg->up,
-                             ((ref*) d->data)->key,
-                             1);
+              d_ref = get_by_levels(reg->up,
+                                    ((ref*) d->data)->key,
+                                    ((ref*) d->data)->levels,
+                                    ((ref*) d->data)->is_regstr,
+                                    ((ref*) d->data)->name);
             }
           else
             {
-              d_ref = lookup(((ref*) d->data)->reg,
-                             ((ref*) d->data)->key,
-                             1);
+              d_ref = get_by_levels(((ref*) d->data)->reg,
+                                    ((ref*) d->data)->key,
+                                    ((ref*) d->data)->levels,
+                                    ((ref*) d->data)->is_regstr,
+                                    ((ref*) d->data)->name);
             }
 
           if (d_ref == NULL)
             {
               char* msg = malloc(sizeof(char)*
                                  (strlen("Reference not found.") +
-                                  strlen(((ref*) d->data)->name) +
+                                  strlen(((ref*) d->data)->name[0]) +
                                   5));
               sprintf(msg, "Reference `%s` not found.",
-                      ((ref*) d->data)->name);
+                      ((ref*) d->data)->name[0]);
               do_error(msg);
               free(msg);
               d = NULL;
@@ -576,7 +596,10 @@ copy_data (data* d_in)
       break;
     case REFERENCE:
       assign_ref(&d,((ref*) d_in->data)->reg,
-                 ((ref*) d_in->data)->name);
+                 ((ref*) d_in->data)->name,
+                 ((ref*) d_in->data)->key,
+                 ((ref*) d_in->data)->levels,
+                 ((ref*) d_in->data)->is_regstr);
       break;
     }
 
@@ -639,3 +662,69 @@ mark_do_not_free (registry* reg, unsigned long hash_name)
     }
 
 }
+
+data*
+get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
+{
+  data* d = get(reg, hash_name[0], 1);
+  if (d == NULL)
+    {
+      char* msg = malloc(sizeof(char)*
+                         (strlen("Value `` not found.")
+                          + strlen(name[0]) + 1));
+      sprintf(msg, "Value `%s` not found.", name[0]);
+      do_error(msg);
+      free(msg);
+    }
+  else if (d->type != REGISTRY && levels > 1)
+    {
+      do_error("Cannot get registers in non-registry.");
+    }
+  else
+    {
+      for (int i=1; i < levels; i++)
+        {
+          if (d == NULL)
+            {
+              do_error("Register not found in registry.");
+              return NULL;
+            }
+
+          if (d->type != REGISTRY)
+            {
+              do_error("Cannot get registers in non-registry.");
+              return NULL;
+            }
+
+          if (is_regstr[i])
+            {
+              d = get((registry*) d->data, hash_name[i], 0);
+            }
+          else
+            {
+              data* d1 = get(reg, hash_name[i], 1);
+              if (d1 == NULL || d1->type != REGISTER)
+                {
+                  do_error("Cannot use `/` with non-register.");
+                  return NULL;
+                }
+              else
+                {
+                  d = get((registry*) d->data,
+                          ((regstr*) d1->data)->key,
+                          0);
+                }
+            }
+        }
+
+      if (d == NULL)
+        {
+          do_error("Register not found in registry.");
+          return NULL;
+        }
+		  
+    }
+
+  return d;
+}
+

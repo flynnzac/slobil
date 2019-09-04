@@ -84,9 +84,11 @@ typedef struct regstr regstr;
 
 struct ref
 {
-  char* name;
+  char** name;
   registry* reg;
-  unsigned long key;
+  unsigned long* key;
+  int levels;
+  int* is_regstr;
 };
 
 typedef struct ref ref;
@@ -179,7 +181,11 @@ void
 assign_regstr (data** d, const char* name, unsigned long key);
 
 void
-assign_ref (data** d, registry* reg, const char* name);
+assign_ref (data** d, registry* reg,
+            char** names,
+            const unsigned long* keys,
+            const int levels,
+            const int* is_regstr);
 
 void
 assign_nothing (data** d);
@@ -374,6 +380,9 @@ copy_hashes (unsigned long* hashes, int levels);
 
 int*
 copy_isregstr (int* is_regstr, int levels);
+
+data*
+get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
 
 /* global variables */
 data* top_registry;

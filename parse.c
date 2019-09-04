@@ -152,7 +152,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (state->after_quote)
                 {
                   state->after_quote = 0;
-		  str = escape_str(state->buffer);
+                  str = escape_str(state->buffer);
                   assign_str(&d, str,1);
                   e = add_literal_argument(&head, e, d);
                 }
@@ -188,15 +188,24 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (is_reference(state->buffer))
                 {
-                  int i;
-                  str = malloc(sizeof(char)*(strlen(state->buffer)));
-                  for (i=0; i < (strlen(state->buffer)-1); i++)
+                  int i, levels;
+                  char** str_array;
+                  int* is_regstr;
+                  str_array = split_slash(state->buffer+1, &levels,
+                                          &is_regstr);
+                  d = malloc(sizeof(data));
+                  d->type = REFERENCE;
+                  d->data = malloc(sizeof(ref));
+                  ((ref*) d->data)->reg = NULL;
+                  ((ref*) d->data)->name = str_array;
+                  ((ref*) d->data)->is_regstr = is_regstr;
+                  ((ref*) d->data)->levels = levels;
+                  ((ref*) d->data)->key = malloc(sizeof(unsigned long)*
+                                                  levels);
+                  for (i=0; i < levels; i++)
                     {
-                      str[i] = state->buffer[i+1];
+                      ((ref*) d->data)->key[i] = hash_str(str_array[i]);
                     }
-                  str[strlen(state->buffer)-1] = '\0';
-                  assign_ref(&d, NULL, str);
-                  free(str);
                   e = add_literal_argument(&head, e, d);
                 }
               else 
