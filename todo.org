@@ -236,11 +236,45 @@ REGISTRY:REGISTER
 for aesthetic reasons
 
 
-* TODO Write the access notation for registries so that it is more "programmatic".
+* DONE Write the access notation for registries so that it is more "programmatic".
+  CLOSED: [2019-09-03 Tue 21:59]
 
 i.e. expect registers as values.  Some will be literal registers and others will not lookup values that (presumably) return registers.  We should keep this part "syntax" rather than language so don't allow substatemets or anything crazy but:
 
 set @i @#1 .
 add A:i 1 .
 
-Sho
+
+* DONE I actually like / so keep it
+  CLOSED: [2019-09-03 Tue 21:59]
+
+* TODO Make references work with slash notation
+* TODO Decision not to make registers "work" with slash notation
+
+I considered beig able to reference registers in the following way,
+
+set @A/@#1/@#2 5 .
+
+Instead, I decided to keep it like this:
+
+set @#2 5 \A/@#1 .
+
+Much simpler to understand (a register literal has no inherent context).
+* TODO Document slash notation
+** TODO Important to note how this allows for "namespaces"
+
+Like so,
+
+set @namespace [ reg . ] .
+set @func1 ( ... ) \namespace .
+* TODO Decide whether to use #1 or _1 or similar
+@#1 #1
+@_1 _1
+@:1 :1
+@1- 1-
+@=1 =1
+@$1 $1
+@*1 *1
+@,1 ,1
+@~1 ~1
+
