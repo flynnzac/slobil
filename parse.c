@@ -35,7 +35,8 @@ element*
 add_lookup_argument (element** head, element* e, char* d)
 {
   int count = 0;
-  char** name = split_slash(d, &count);
+  int* is_regstr;
+  char** name = split_slash(d, &count, &is_regstr);
   unsigned long* hash_name = malloc(sizeof(unsigned long)*(count));
   int i;
   for (i=0; i < count; i++)
@@ -45,12 +46,13 @@ add_lookup_argument (element** head, element* e, char* d)
     
   if (*head == NULL)
     {
-      *head = append_argument_element(NULL, name, hash_name, count);
+      *head = append_argument_element(NULL, name, hash_name, count,
+                                      is_regstr);
       return *head;
     }
   else
     {
-      e = append_argument_element(e, name, hash_name, count);
+      e = append_argument_element(e, name, hash_name, count, is_regstr);
       return e;
     }
 

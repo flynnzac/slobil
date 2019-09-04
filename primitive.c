@@ -145,11 +145,13 @@ copy_elements (element* e)
           else
             {
               el = append_argument_element(el,
-					   copy_names(e->name,
-						      e->levels),
-					   copy_hashes(e->hash_name,
-						       e->levels),
-					   e->levels);
+                                           copy_names(e->name,
+                                                      e->levels),
+                                           copy_hashes(e->hash_name,
+                                                       e->levels),
+                                           e->levels,
+                                           copy_isregstr(e->is_regstr,
+                                                         e->levels));
             }
         }
       if (new_first == NULL)

@@ -13,6 +13,7 @@ append_literal_element (element* current, data* d)
   e->s = NULL;
   e->hash_name = NULL;
   e->levels = 0;
+  e->is_regstr = NULL;
   
   if (current != NULL)
     {
@@ -24,8 +25,9 @@ append_literal_element (element* current, data* d)
 
 element*
 append_argument_element (element* current, char** name,
-			 unsigned long* hash_name,
-			 const int levels)
+                         unsigned long* hash_name,
+                         const int levels,
+                         int* is_regstr)
 {
   element* e = malloc(sizeof(element));
   e->data = NULL;
@@ -36,6 +38,7 @@ append_argument_element (element* current, char** name,
   e->s = NULL;
   e->hash_name = hash_name;
   e->levels = levels;
+  e->is_regstr = is_regstr;
   if (current != NULL)
     {
       current->right = e;
@@ -55,6 +58,7 @@ append_statement_element (element* current, statement* s)
   e->right = NULL;
   e->hash_name = NULL;
   e->levels = 0;
+  e->is_regstr = NULL;
 
   if (current != NULL)
     {
@@ -175,8 +179,26 @@ execute_statement (statement* s, registry* reg)
                           do_error("Cannot get registers in non-registry.");
                           break;
                         }
-                          
-                      d = get((registry*) d->data, e->hash_name[i], 0);
+
+                      if (e->is_regstr[i])
+                        {
+                          d = get((registry*) d->data, e->hash_name[i], 0);
+                        }
+                      else
+                        {
+                          data* d1 = lookup(reg, e->hash_name[i], 1);
+                          if (d1 == NULL || d1->type != REGISTER)
+                            {
+                              do_error("Cannot use `/` with non-register.");
+                              break;
+                            }
+                          else
+                            {
+                              d = get((registry*) d->data,
+                                      ((regstr*) d1->data)->key,
+                                      0);
+                            }
+                        }
                     }
 
 		  if (d == NULL)

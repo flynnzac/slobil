@@ -131,6 +131,7 @@ struct element
   unsigned long* hash_name;
   struct element* right;
   int levels;
+  int* is_regstr;
 };
 
 typedef struct element element;
@@ -323,7 +324,8 @@ append_statement (statement* current, element* head);
 
 element*
 append_argument_element (element* current, char** name,
-			 unsigned long* hash_name, const int levels);
+                         unsigned long* hash_name, const int levels,
+                         int* is_regstr);
 
 element*
 append_literal_element (element* current, data* d);
@@ -362,13 +364,16 @@ unsigned long
 hash_str(const char *str);
 
 char**
-split_slash (const char* name, int* cnt);
+split_slash (const char* name, int* cnt, int** is_regstr);
 
 char**
 copy_names (char** name, int levels);
 
 unsigned long*
 copy_hashes (unsigned long* hashes, int levels);
+
+int*
+copy_isregstr (int* is_regstr, int levels);
 
 /* global variables */
 data* top_registry;

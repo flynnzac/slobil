@@ -106,18 +106,23 @@ free_statement (statement* s)
             free_data(e->data);
 
           if (e->name != NULL)
-	    {
-	      for (i=0; i < e->levels; i++)
-		{
-		  free(e->name[i]);
-		}
-	      free(e->name);
-	    }
+            {
+              for (i=0; i < e->levels; i++)
+                {
+                  free(e->name[i]);
+                }
+              free(e->name);
+            }
 
-	  if (e->hash_name != NULL)
-	    {
-	      free(e->hash_name);
-	    }
+          if (e->hash_name != NULL)
+            {
+              free(e->hash_name);
+            }
+
+          if (e->is_regstr != NULL)
+            {
+              free(e->is_regstr);
+            }
 
           if (e->s != NULL)
             free_statement(e->s);
@@ -311,7 +316,7 @@ print_data (data* d, int print_cmd)
       printf("( %s )\n", ((instruction*) d->data)->code);
       break;
     case REGISTER:
-      printf("$%s\n", ((regstr*) d->data)->name);
+      printf("@%s\n", ((regstr*) d->data)->name);
       break;
     case OPERATION:
       printf("Built-in instruction.\n");
@@ -519,22 +524,43 @@ hash_str(const char *str)
 }
 
 char**
-split_slash (const char* name, int* cnt)
+split_slash (const char* name, int* cnt, int** is_regstr)
 {
   int i;
-  char** result = malloc(sizeof(char*));
-  char* buffer = malloc(sizeof(char)*(strlen(name)+1));
-  *cnt = 0;
+  *cnt = 1;
   int j = 0;
+
+  for (i=0; i < strlen(name); i++)
+    {
+      if (name[i] == '/')
+        {
+          (*cnt) += 1;
+        }
+    }
+  
+  char** result = malloc((*cnt)*sizeof(char*));
+  char* buffer = malloc(sizeof(char)*(strlen(name)+1));
+  *is_regstr = malloc(sizeof(int)*(*cnt));
+  int k = 0;
   for (i=0; i < strlen(name); i++)
     {
       if (name[i] == '/')
         {
           buffer[j] = '\0';
-          result[*cnt] = malloc(sizeof(char)*(strlen(buffer)+1));
-          strcpy(result[*cnt], buffer);
-          *cnt += 1;
-          result = realloc(result, sizeof(char*)*(*cnt+1));
+          result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
+          if (buffer[0] == '@')
+            {
+              (*is_regstr)[k] = 1;
+              buffer++;
+              strcpy(result[k], buffer);
+              buffer--;
+            }
+          else
+            {
+              (*is_regstr)[k] = 0;
+              strcpy(result[k], buffer);
+            }
+          k++;
           j = 0;
         }
       else
@@ -548,9 +574,20 @@ split_slash (const char* name, int* cnt)
 
   if (strlen(buffer) != 0)
     {
-      result[*cnt] = malloc(sizeof(char)*(strlen(buffer)+1));
-      strcpy(result[*cnt], buffer);
-      *cnt += 1;
+      result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
+      if (buffer[0] == '@')
+        {
+          (*is_regstr)[k] = 1;
+          buffer++;
+          strcpy(result[k], buffer);
+          buffer--;
+        }
+      else
+        {
+          (*is_regstr)[k] = 0;
+          strcpy(result[k], buffer);
+        }
+
     }
 
   return result;
@@ -579,6 +616,18 @@ copy_hashes (unsigned long* hashes, int levels)
   for (i=0; i < levels; i++)
     {
       copy[i] = hashes[i];
+    }
+  return copy;
+}
+
+int*
+copy_isregstr (int* is_regstr, int levels)
+{
+  int* copy = malloc(sizeof(int)*levels);
+  int i;
+  for (i=0; i < levels; i++)
+    {
+      copy[i] = is_regstr[i];
     }
   return copy;
 }

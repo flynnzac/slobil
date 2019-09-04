@@ -9,16 +9,15 @@ set @dotproduct
 ' matrix-multiply A B computes A^T B 
 set @matrix-multiply
     (
-      set @A \#1 .
-      set @B \#2 .
+      mov @#1 @A .
+      mov @#2 @B .
+
       set @i @#1 .
       set @out [ list . ] .
-      while ( exist-in i \#2 . )
+      while ( exist-in i \B . )
             (
-              get i \#2 .
-              mov @ans @one .
-              set @dotone ( dotproduct \#1 \one . ) .
-              do-to-all dotone \A .
+              set @one A/i .
+              do-to-all ( dotproduct \#1 \one . ) \A .
               mov @ans @res .
               in \out ( set i res . ) .
               next i .
@@ -33,9 +32,9 @@ set @transpose
       mov @#1 @A .
       set @i @#1 .
       set @out [ list . ] .
-      while ( exist-in i A/#1 . )
+      while ( exist-in i A/@#1 . )
             (
-              do-to-all ( get i \#1 . ) \A .
+              do-to-all ( answer #1/i . ) \A .
               mov @ans @res .
               in \out ( set i res . ) .
               next i .
