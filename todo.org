@@ -193,7 +193,7 @@ replace-one REGEX STRING . (replace first occurence in string)
   CLOSED: [2019-08-28 Wed 13:23]
 
 
-* TODO Add equivalent versions of assign which do not but simply assume the memory has been allocated.  Will make many basic ops more efficient
+* TODO Add equivalent versions of assign which do not allocate but simply assume the memory has been allocated.  Will make many basic ops more efficient
 * DONE Split out escaping strings from assigning strings.  Just an argument to copy.
   CLOSED: [2019-08-30 Fri 16:52]
 * DONE Should be able to pre-allocate and hash names for registries of statements.  There are a fixed number of arguments, no reason it couldn't be done ahead of time.  Would make functions/loops faster.
@@ -277,4 +277,4 @@ set @func1 ( ... ) \namespace .
 @*1 *1
 @,1 ,1
 @~1 ~1
-
+* TODO Really need to clean up do-to-all, join, and collapse code.  It's bad.
