@@ -142,10 +142,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else
                 {
-                  /* d = copy_data(d); */
                   mark_do_not_free(reg, arbel_hash_ans);
                 }
-              /* free_registry(st_reg); */
             }
           else
             {
@@ -201,11 +199,11 @@ execute_statement (statement* s, registry* reg)
                         }
                     }
 
-		  if (d == NULL)
-		    {
-		      do_error("Register not found in registry.");
-		      break;
-		    }
+                  if (d == NULL)
+                    {
+                      do_error("Register not found in registry.");
+                      break;
+                    }
 		  
                   if (cur_set->key != arbel_hash_0 && d != NULL)
                     d = copy_data(d);

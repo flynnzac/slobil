@@ -801,15 +801,8 @@ op_do_to_all (registry* reg)
       return;
     }
 
-  registry tmp_reg;
-  tmp_reg.right = NULL;
-  tmp_reg.left = NULL;
-  tmp_reg.value = NULL;
-  tmp_reg.name = NULL;
-  tmp_reg.key = 0;
-  tmp_reg.up = reg;
-
-  set(&tmp_reg, arg1, "#0");
+  registry* tmp_reg = new_registry(reg);
+  set(tmp_reg, arg1, "#0");
 
   registry* arg_reg = (registry*) arg2->data;
   arg_reg = tail(arg_reg);
@@ -820,20 +813,22 @@ op_do_to_all (registry* reg)
   while (arg_reg != NULL)
     {
       d = arg_reg->value;
-      set(&tmp_reg, d, "#1");
-      compute(&tmp_reg);
+      set(tmp_reg, d, "#1");
+      compute(tmp_reg);
       d = lookup(reg, arbel_hash_ans, 0);
       d = copy_data(d);
       set(ret_reg, d, arg_reg->name);
-      del(&tmp_reg, arbel_hash_1, 0);
+      del(tmp_reg, arbel_hash_1, 0);
       arg_reg = arg_reg->right;
     }
 
-  del(&tmp_reg, arbel_hash_0, 0);
+  del(tmp_reg, arbel_hash_0, 0);
 
   d = malloc(sizeof(data));
   d->type = REGISTRY;
   d->data = ret_reg;
+
+  free_registry(tmp_reg);
 
   ret_ans(reg, d);
   

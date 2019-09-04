@@ -590,6 +590,7 @@ split_slash (const char* name, int* cnt, int** is_regstr)
 
     }
 
+  free(buffer);
   return result;
   
 }
