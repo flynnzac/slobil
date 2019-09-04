@@ -698,11 +698,11 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 
           if (is_regstr[i])
             {
-              d = get((registry*) d->data, hash_name[i], 0);
+              d = lookup((registry*) d->data, hash_name[i], 0);
             }
           else
             {
-              data* d1 = get(reg, hash_name[i], 1);
+              data* d1 = lookup(reg, hash_name[i], 1);
               if (d1 == NULL || d1->type != REGISTER)
                 {
                   do_error("Cannot use `/` with non-register.");
@@ -710,9 +710,9 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
                 }
               else
                 {
-                  d = get((registry*) d->data,
-                          ((regstr*) d1->data)->key,
-                          0);
+                  d = lookup((registry*) d->data,
+                             ((regstr*) d1->data)->key,
+                             0);
                 }
             }
         }

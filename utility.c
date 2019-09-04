@@ -71,7 +71,7 @@ is_numeric (data* d)
 int
 is_register (const char* str)
 {
-  return (str[0] == '@');
+  return (str[0] == ':');
 }
 
 int
@@ -323,13 +323,13 @@ print_data (data* d, int print_cmd)
       printf("( %s )\n", ((instruction*) d->data)->code);
       break;
     case REGISTER:
-      printf("@%s\n", ((regstr*) d->data)->name);
+      printf(":%s\n", ((regstr*) d->data)->name);
       break;
     case OPERATION:
       printf("Built-in instruction.\n");
       break;
     case REFERENCE:
-      printf("Reference to: @");
+      printf("Reference to: :");
       for (int i=0; i < (((ref*) d->data)->levels-1); i++)
         {
           printf("%s/", ((ref*) d->data)->name[i]);
@@ -561,7 +561,7 @@ split_slash (const char* name, int* cnt, int** is_regstr)
         {
           buffer[j] = '\0';
           result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-          if (buffer[0] == '@')
+          if (buffer[0] == ':')
             {
               (*is_regstr)[k] = 1;
               buffer++;
@@ -588,7 +588,7 @@ split_slash (const char* name, int* cnt, int** is_regstr)
   if (strlen(buffer) != 0)
     {
       result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-      if (buffer[0] == '@')
+      if (buffer[0] == ':')
         {
           (*is_regstr)[k] = 1;
           buffer++;

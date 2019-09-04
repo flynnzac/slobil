@@ -86,7 +86,7 @@
       </para>
 
       <para>
-        ARBEL does not have any special object-oriented constructs.  I personally don't program using those methods very often so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code>@class</code> register.  Instructions could then do different things based on the value in the <code>@class</code> register.  Similar to what R does with S3 classes.
+        ARBEL does not have any special object-oriented constructs.  I personally don't program using those methods very often so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code>:class</code> register.  Instructions could then do different things based on the value in the <code>:class</code> register.  Similar to what R does with S3 classes.
       </para>
 
     </section>
@@ -107,41 +107,41 @@
         A statement consists of an <emphasis>instruction</emphasis> followed by several arguments.  Each element of a statement must be separated from the others by whitespace (space, tab, or a new line), including the statement terminator ("."). For example, the statement,
       </para>
 
-    <programlisting>. set @hello "Hello, world!" .</programlisting>
+    <programlisting>. set :hello "Hello, world!" .</programlisting>
     
     <para>
-      Pushes the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>@</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
+      Pushes the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>:</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
     </para>
     <programlisting>
-... set @hello "Hello, world!" .
+... set :hello "Hello, world!" .
 ... print hello .
 Hello, world!
-... set @x @hello .
+... set :x :hello .
 ... set x "Howdy!" .
 ... print hello .
 Howdy!
 ... print x .
-@hello</programlisting>
+:hello</programlisting>
     
     <para>
-      Using the name of a register without the <code>@</code> sign indicates that you want to refer to the value located at the register and the <code>@</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code>x</code> refers to the register <code>hello</code> in the above example.
+      Using the name of a register without the <code>:</code> sign indicates that you want to refer to the value located at the register and the <code>:</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code>x</code> refers to the register <code>hello</code> in the above example.
     </para>
 
     <para>
-      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code>@hello</code> and <code>@x</code> in the above example.  The instruction <code>reg</code> creates a registry.  For example,
+      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code>:hello</code> and <code>:x</code> in the above example.  The instruction <code>reg</code> creates a registry.  For example,
     </para>
 
-    <programlisting>... reg @one 1 @two 2 @sum add @product multiply .</programlisting>
+    <programlisting>... reg :one 1 :two 2 :sum add :product multiply .</programlisting>
     
     <para>
       Creates a registry containing the values <code>1</code> (located at register <code>one</code>) and <code>2</code> (located at register <code>two</code>) and the instructions <code>add</code> and <code>multiply</code> located at the <code>sum</code> and <code>product</code> registries respectively.  Any piece of data, including instructions, can be put in a registry.
     </para>
 
     <para>
-      The command <code>set @hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set @hello "Hello, world!" .</code> in the following way:
+      The command <code>set :hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set :hello "Hello, world!" .</code> in the following way:
     </para>
     <programlisting>
-... compute [ reg @#0 set @#1 @hello @#2 "Hello, world!" . ] .
+... compute [ reg :#0 set :#1 :hello :#2 "Hello, world!" . ] .
 ... print hello .
 Hello, world!</programlisting>
 
@@ -170,19 +170,19 @@ Hello, world!</programlisting>
       The open parenthesis ("()") save the statements as an instruction to be executed later. The statements they contain are not executed immediately, but are saved to be executed in other contexts. They can be used to create new instructions.  For example,
     </para>
     <programlisting>
-... set @addone ( add #1 1 . ) .
+... set :addone ( add #1 1 . ) .
 ... addone 2 .
     ans = 3</programlisting>
 
     <para>
-      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code>compute</code> as described above.  The arguments always have the names <code>@#1,...,@#N</code>.  The <code>@#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code>mov @#1 @my-register-name .</code> instruction.  The <code>mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
+      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code>compute</code> as described above.  The arguments always have the names <code>:#1,...,:#N</code>.  The <code>:#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code>mov :#1 :my-register-name .</code> instruction.  The <code>mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
     </para>
 
     <para>
       You can write more extensive instructions in this way as well.  For example, to compute a factorial,
     </para>
     <programlisting>
-... set @factorial
+... set :factorial
 (
   if [ eq #1 1 . ] 1
      { multiply #1 [ factorial [ subtract #1 1 . ] . ] . } .
@@ -194,14 +194,14 @@ ans = 120</programlisting>
   This example also illustrates that recursion is possible using instructions in ARBEL.  As a technical note, the ARBEL interpreter does not currently optimize tail recursion.  So a large number of recursions will use up stack space.  The language is primarily an imperative language and so the more idiomatic way to do this is to use a loop, like so:
 </para>
     <programlisting>
-... set @factorial
+... set :factorial
 (
-  set @i 2 .
-  set @prod 1 .
+  set :i 2 .
+  set :prod 1 .
   while ( lteq i #1 . )
   (
-    set @prod [ multiply i prod . ] .
-    set @i [ add i 1 . ] .
+    set :prod [ multiply i prod . ] .
+    set :i [ add i 1 . ] .
   ) .
   answer prod .
 ) .
@@ -226,9 +226,9 @@ ans = 120 </programlisting>
       The basic data type of ARBEL is a registry.  When the interpreter is started, you are working in the default registry. To switch which registry you are currently working in, you can use the instruction <code>go-in</code> and <code>go-out</code>, like so:
     </para>
     <programlisting>
-... set @newreg [ reg . ] .
+... set :newreg [ reg . ] .
 ... go-in \newreg .
-... set @hello "Hello, world!" .
+... set :hello "Hello, world!" .
 ... print hello .
 Hello, world!
 ... go-out .
@@ -247,8 +247,8 @@ Error: Value `hello` not found.</programlisting>
       <code>in</code> is another instruction that is useful for modifying registries.  <code>in</code> takes a registry and an instruction as arguments and executes the instruction in the context of the registry.  For example, the above code could have been written as,
     </para>
     <programlisting>
-... set @newreg [ reg . ] .
-... in \newreg ( set @hello "Hello, world!" . print hello . ) .
+... set :newreg [ reg . ] .
+... in \newreg ( set :hello "Hello, world!" . print hello . ) .
 Hello, world!</programlisting>
 
     <para>
@@ -256,12 +256,12 @@ Hello, world!</programlisting>
     </para>
     
     <programlisting>
-... set @newreg [ reg @hello "Howdy!" . ] .
-... in newreg ( set @hello "Hello, world!" . print hello . ) .
+... set :newreg [ reg :hello "Howdy!" . ] .
+... in newreg ( set :hello "Hello, world!" . print hello . ) .
 Hello, world!
 ... in newreg ( print hello . ) .
 Howdy!
-... in \newreg ( set @hello "Hello, world!" . ) .
+... in \newreg ( set :hello "Hello, world!" . ) .
 ... in newreg ( print hello . ) .
 Hello, world!</programlisting>
 
@@ -269,13 +269,13 @@ Hello, world!</programlisting>
       There are convenient instructions for combining registries or applying instructions to each element of a registry.  The primary instructions to do so are <code>do-to-all</code> and <code>join</code>. <code>do-to-all</code> applies an instruction to each element of a registry and returns a new registry with the result of applying the instruction in the same register as in the original registry.  <code>join</code> joins two registries by applying any instruction that takes two arguments to the values located in the corresponding registers of the registries.  For example,
     </para>
     <programlisting>
-... set @x [ reg @one 1 @two 2 @three 3 . ] .
+... set :x [ reg :one 1 :two 2 :three 3 . ] .
 ... do-to-all ( multiply #1 3 . ) \x .
 ans = registry with:
    one of type Integer, value: 3
    two of type Integer, value: 6
    three of type Integer, value: 9
-... set @y ans .
+... set :y ans .
 ... join y x subtract .
 ans = registry with:
    one of type Integer, value: 2
@@ -295,8 +295,8 @@ ans = registry with:
       The <code>list</code> instruction creates a registry where each of the arguments to <code>list</code> are located at <code>#1,#2,..</code> in the resulting registry based on the order of the arguments.  For example,
     </para>
     <programlisting>
-... set @vec [ list 1 2 3 4 . ] .
-... print [ get @#2 \vec . ] .
+... set :vec [ list 1 2 3 4 . ] .
+... print [ get :#2 \vec . ] .
 2</programlisting>
 
     <para>
@@ -308,16 +308,16 @@ ans = registry with:
     </para>
 
     <programlisting>
-... next @#1 .
-ans = @#2
-... next @a1 .
-ans = @a2</programlisting>
+... next :#1 .
+ans = :#2
+... next :a1 .
+ans = :a2</programlisting>
 
     This instruction can be used to loop over ordered elements of a registry, like so:
     <programlisting>
-... set @vec [ list 1 2 3 4 . ] .
-... set @i @#1 .
-... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set @i ans . ) .
+... set :vec [ list 1 2 3 4 . ] .
+... set :i :#1 .
+... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set :i ans . ) .
 1
 2
 3
@@ -331,7 +331,7 @@ ans = @a2</programlisting>
       The <code>collapse</code> instruction can apply instructions to all elements of a registry with this form.  For example, to add up all numbers in a registry,
     </para>
     <programlisting>
-... set @vec [ list 1 2 3 4 . ] .
+... set :vec [ list 1 2 3 4 . ] .
 ... collapse \vec add "#" .
 ans = 10
 ... collapse \vec multiply "#" .
@@ -339,7 +339,7 @@ ans = 24</programlisting>
 
     The last argument to collapse gives the prefix to collapse.  So, for example,
     <programlisting>
-... set @vec [ reg @c1 1 @c2 2 @c3 3 @c4 4 . ] .
+... set :vec [ reg :c1 1 :c2 2 :c3 3 :c4 4 . ] .
 ... collapse \vec add "c" .
 ans = 10</programlisting>
     
@@ -654,7 +654,7 @@ input REGISTER .</programlisting>
   </para>
   <programlisting>collapse REGISTRY INSTRUCTION STRING .</programlisting>
   <para>
-    Applies the instruction to the register <code>@STRING1</code> and <code>@STRING2</code> and then applies the instruction to what the instruction set the <code>ans</code> register to and <code>@STRING3</code> and so on.  It sets the <code>ans</code> register to the result.
+    Applies the instruction to the register <code>:STRING1</code> and <code>:STRING2</code> and then applies the instruction to what the instruction set the <code>ans</code> register to and <code>:STRING3</code> and so on.  It sets the <code>ans</code> register to the result.
   </para>
       </listitem>
 
@@ -779,7 +779,7 @@ to-number STRING .</programlisting>
         </para>
         <programlisting>' ANYTHING </programlisting>
         <para>
-          Ignore all the text following the <code>'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set @x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set @mycomment ' .</code> and then use <code>mycomment</code> as a comment. <code>'</code> must be followed by a space character to be a comment.  You could name a register <code>'re'g</code>, but you can't name it <code>reg'</code>.  You probably shouldn't do either.
+          Ignore all the text following the <code>'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set :x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set :mycomment ' .</code> and then use <code>mycomment</code> as a comment. <code>'</code> must be followed by a space character to be a comment.  You could name a register <code>'re'g</code>, but you can't name it <code>reg'</code>.  You probably shouldn't do either.
         </para>
       </listitem>
 

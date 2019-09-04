@@ -789,6 +789,7 @@ op_do_to_all (registry* reg)
       return;
     }
 
+  printf("Type arg1: %d\n", arg1->type);
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
     {
       do_error("First argument to `do-to-all` must be an instruction.");
@@ -828,6 +829,7 @@ op_do_to_all (registry* reg)
       arg_reg = arg_reg->right;
     }
 
+  del(tmp_reg, arbel_hash_0, 0);
   free_registry(tmp_reg);
   if (!is_error(-1))
     {

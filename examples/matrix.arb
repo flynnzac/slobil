@@ -1,5 +1,5 @@
 ' Computes v^T v for a vector 
-set @dotproduct
+set :dotproduct
     (
       join \#1 \#2 multiply .
       collapse \ans add "#" .
@@ -7,43 +7,42 @@ set @dotproduct
 
 
 ' matrix-multiply A B computes A^T B 
-set @matrix-multiply
+set :matrix-multiply
     (
-      mov @#1 @A .
-      mov @#2 @B .
+      mov :#1 :A .
+      mov :#2 :B .
 
-      set @i @#1 .
-      set @out [ list . ] .
+      set :i :#1 .
+      set :out [ list . ] .
       while ( exist-in i \B . )
             (
-              set @one \A/i .
-              print one .
+              set :one \A/i .
               do-to-all ( dotproduct \#1 \one . ) \A .
-              mov @ans @res .
+              mov :ans :res .
               in \out ( set i res . ) .
               next i .
-              mov @ans @i .
+              mov :ans :i .
             ) .
       answer \out .
     ) .
 
 ' Computes A^T 
-set @transpose
+set :transpose
     (
-      mov @#1 @A .
-      set @i @#1 .
-      set @out [ list . ] .
-      while ( exist-in i \A/@#1 . )
+      mov :#1 :A .
+      set :i :#1 .
+      set :out [ list . ] .
+      while ( exist-in i \A/:#1 . )
             (
               do-to-all ( answer \#1/i . ) \A .
-              mov @ans @res .
+              mov :ans :res .
               in \out ( set i res . ) .
               next i .
-              mov @ans @i .
+              mov :ans :i .
             ) .
       answer \out .
     ) .
 
 
-set @A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-set @B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+set :A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+set :B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .

@@ -26,32 +26,32 @@
       </p><p>
         Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
       </p><p>
-        ARBEL does not have any special object-oriented constructs.  I personally don't program using those methods very often so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code class="code">@class</code> register.  Instructions could then do different things based on the value in the <code class="code">@class</code> register.  Similar to what R does with S3 classes.
+        ARBEL does not have any special object-oriented constructs.  I personally don't program using those methods very often so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code class="code">:class</code> register.  Instructions could then do different things based on the value in the <code class="code">:class</code> register.  Similar to what R does with S3 classes.
       </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="syntax"></a>Grammar: ARBEL Syntax</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm45"></a>Basic Syntax</h3></div></div></div><p>
         This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instructions and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
       </p><p>
         A statement consists of an <span class="emphasis"><em>instruction</em></span> followed by several arguments.  Each element of a statement must be separated from the others by whitespace (space, tab, or a new line), including the statement terminator ("."). For example, the statement,
-      </p><pre class="programlisting">. set @hello "Hello, world!" .</pre><p>
-      Pushes the string value <code class="code">"Hello, world!"</code> to the <span class="emphasis"><em>register</em></span> <code class="code">hello</code>.  You can think of the statement as setting the variable <code class="code">hello</code>.  The <code class="code">@</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code class="code">hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
+      </p><pre class="programlisting">. set :hello "Hello, world!" .</pre><p>
+      Pushes the string value <code class="code">"Hello, world!"</code> to the <span class="emphasis"><em>register</em></span> <code class="code">hello</code>.  You can think of the statement as setting the variable <code class="code">hello</code>.  The <code class="code">:</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code class="code">hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
     </p><pre class="programlisting">
-... set @hello "Hello, world!" .
+... set :hello "Hello, world!" .
 ... print hello .
 Hello, world!
-... set @x @hello .
+... set :x :hello .
 ... set x "Howdy!" .
 ... print hello .
 Howdy!
 ... print x .
-@hello</pre><p>
-      Using the name of a register without the <code class="code">@</code> sign indicates that you want to refer to the value located at the register and the <code class="code">@</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code class="code">x</code> refers to the register <code class="code">hello</code> in the above example.
+:hello</pre><p>
+      Using the name of a register without the <code class="code">:</code> sign indicates that you want to refer to the value located at the register and the <code class="code">:</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code class="code">x</code> refers to the register <code class="code">hello</code> in the above example.
     </p><p>
-      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code class="code">@hello</code> and <code class="code">@x</code> in the above example.  The instruction <code class="code">reg</code> creates a registry.  For example,
-    </p><pre class="programlisting">... reg @one 1 @two 2 @sum add @product multiply .</pre><p>
+      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code class="code">:hello</code> and <code class="code">:x</code> in the above example.  The instruction <code class="code">reg</code> creates a registry.  For example,
+    </p><pre class="programlisting">... reg :one 1 :two 2 :sum add :product multiply .</pre><p>
       Creates a registry containing the values <code class="code">1</code> (located at register <code class="code">one</code>) and <code class="code">2</code> (located at register <code class="code">two</code>) and the instructions <code class="code">add</code> and <code class="code">multiply</code> located at the <code class="code">sum</code> and <code class="code">product</code> registries respectively.  Any piece of data, including instructions, can be put in a registry.
     </p><p>
-      The command <code class="code">set @hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code class="code">set</code> to register <code class="code">#0</code>, the register <code class="code">hello</code> to register <code class="code">#1</code>, and the string value <code class="code">"Hello, world!"</code> to register <code class="code">#2</code>.  It then calls the instruction <code class="code">compute</code> with this new registry as the argument.  <code class="code">compute</code> executes the instruction located at <code class="code">#0</code> inside the temporary registry.  The instruction can then refer to the values at <code class="code">#1</code> and <code class="code">#2</code>.  To see this in action, we could have executed <code class="code">set @hello "Hello, world!" .</code> in the following way:
+      The command <code class="code">set :hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code class="code">set</code> to register <code class="code">#0</code>, the register <code class="code">hello</code> to register <code class="code">#1</code>, and the string value <code class="code">"Hello, world!"</code> to register <code class="code">#2</code>.  It then calls the instruction <code class="code">compute</code> with this new registry as the argument.  <code class="code">compute</code> executes the instruction located at <code class="code">#0</code> inside the temporary registry.  The instruction can then refer to the values at <code class="code">#1</code> and <code class="code">#2</code>.  To see this in action, we could have executed <code class="code">set :hello "Hello, world!" .</code> in the following way:
     </p><pre class="programlisting">
-... compute [ reg @#0 set @#1 @hello @#2 "Hello, world!" . ] .
+... compute [ reg :#0 set :#1 :hello :#2 "Hello, world!" . ] .
 ... print hello .
 Hello, world!</pre><p>
       This illustrates what the syntax <code class="code">.</code> (a period) means.  It can be viewed as the statement terminator of ARBEL, but what it actually does is create a registry of the elements proceeding it and then call <code class="code">compute</code> with that registry as an argument.  In fact, this is the only kind of statement in ARBEL: the <code class="code">compute</code> instruction called on a registry.
@@ -66,14 +66,14 @@ Hello, world!</pre><p>
     </p><p>
       The open parenthesis ("()") save the statements as an instruction to be executed later. The statements they contain are not executed immediately, but are saved to be executed in other contexts. They can be used to create new instructions.  For example,
     </p><pre class="programlisting">
-... set @addone ( add #1 1 . ) .
+... set :addone ( add #1 1 . ) .
 ... addone 2 .
     ans = 3</pre><p>
-      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code class="code">compute</code> as described above.  The arguments always have the names <code class="code">@#1,...,@#N</code>.  The <code class="code">@#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code class="code">mov @#1 @my-register-name .</code> instruction.  The <code class="code">mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
+      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code class="code">compute</code> as described above.  The arguments always have the names <code class="code">:#1,...,:#N</code>.  The <code class="code">:#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code class="code">mov :#1 :my-register-name .</code> instruction.  The <code class="code">mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
     </p><p>
       You can write more extensive instructions in this way as well.  For example, to compute a factorial,
     </p><pre class="programlisting">
-... set @factorial
+... set :factorial
 (
   if [ eq #1 1 . ] 1
      { multiply #1 [ factorial [ subtract #1 1 . ] . ] . } .
@@ -82,14 +82,14 @@ Hello, world!</pre><p>
 ans = 120</pre><p>
   This example also illustrates that recursion is possible using instructions in ARBEL.  As a technical note, the ARBEL interpreter does not currently optimize tail recursion.  So a large number of recursions will use up stack space.  The language is primarily an imperative language and so the more idiomatic way to do this is to use a loop, like so:
 </p><pre class="programlisting">
-... set @factorial
+... set :factorial
 (
-  set @i 2 .
-  set @prod 1 .
+  set :i 2 .
+  set :prod 1 .
   while ( lteq i #1 . )
   (
-    set @prod [ multiply i prod . ] .
-    set @i [ add i 1 . ] .
+    set :prod [ multiply i prod . ] .
+    set :i [ add i 1 . ] .
   ) .
   answer prod .
 ) .
@@ -105,9 +105,9 @@ ans = 120 </pre><p>
 61.5</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm129"></a>Using Registries and References</h3></div></div></div><p>
       The basic data type of ARBEL is a registry.  When the interpreter is started, you are working in the default registry. To switch which registry you are currently working in, you can use the instruction <code class="code">go-in</code> and <code class="code">go-out</code>, like so:
     </p><pre class="programlisting">
-... set @newreg [ reg . ] .
+... set :newreg [ reg . ] .
 ... go-in \newreg .
-... set @hello "Hello, world!" .
+... set :hello "Hello, world!" .
 ... print hello .
 Hello, world!
 ... go-out .
@@ -119,28 +119,28 @@ Error: Value `hello` not found.</pre><p>
     </p><p>
       <code class="code">in</code> is another instruction that is useful for modifying registries.  <code class="code">in</code> takes a registry and an instruction as arguments and executes the instruction in the context of the registry.  For example, the above code could have been written as,
     </p><pre class="programlisting">
-... set @newreg [ reg . ] .
-... in \newreg ( set @hello "Hello, world!" . print hello . ) .
+... set :newreg [ reg . ] .
+... in \newreg ( set :hello "Hello, world!" . print hello . ) .
 Hello, world!</pre><p>
       If we do not want to actually modify the contents of <code class="code">newreg</code> but temporarily use its values we could not use a reference,
     </p><pre class="programlisting">
-... set @newreg [ reg @hello "Howdy!" . ] .
-... in newreg ( set @hello "Hello, world!" . print hello . ) .
+... set :newreg [ reg :hello "Howdy!" . ] .
+... in newreg ( set :hello "Hello, world!" . print hello . ) .
 Hello, world!
 ... in newreg ( print hello . ) .
 Howdy!
-... in \newreg ( set @hello "Hello, world!" . ) .
+... in \newreg ( set :hello "Hello, world!" . ) .
 ... in newreg ( print hello . ) .
 Hello, world!</pre><p>
       There are convenient instructions for combining registries or applying instructions to each element of a registry.  The primary instructions to do so are <code class="code">do-to-all</code> and <code class="code">join</code>. <code class="code">do-to-all</code> applies an instruction to each element of a registry and returns a new registry with the result of applying the instruction in the same register as in the original registry.  <code class="code">join</code> joins two registries by applying any instruction that takes two arguments to the values located in the corresponding registers of the registries.  For example,
     </p><pre class="programlisting">
-... set @x [ reg @one 1 @two 2 @three 3 . ] .
+... set :x [ reg :one 1 :two 2 :three 3 . ] .
 ... do-to-all ( multiply #1 3 . ) \x .
 ans = registry with:
    one of type Integer, value: 3
    two of type Integer, value: 6
    three of type Integer, value: 9
-... set @y ans .
+... set :y ans .
 ... join y x subtract .
 ans = registry with:
    one of type Integer, value: 2
@@ -155,23 +155,23 @@ ans = registry with:
     </p><p>
       The <code class="code">list</code> instruction creates a registry where each of the arguments to <code class="code">list</code> are located at <code class="code">#1,#2,..</code> in the resulting registry based on the order of the arguments.  For example,
     </p><pre class="programlisting">
-... set @vec [ list 1 2 3 4 . ] .
-... print [ get @#2 \vec . ] .
+... set :vec [ list 1 2 3 4 . ] .
+... print [ get :#2 \vec . ] .
 2</pre><p>
       The <code class="code">get</code> instruction returns the value located at a register in a registry.
     </p><p>
       The instruction <code class="code">next</code> takes a register as an argument and returns the <span class="emphasis"><em>next</em></span> register.  The next register is the register you get by adding 1 to the ending number of the register.  For example,
     </p><pre class="programlisting">
-... next @#1 .
-ans = @#2
-... next @a1 .
-ans = @a2</pre>
+... next :#1 .
+ans = :#2
+... next :a1 .
+ans = :a2</pre>
 
     This instruction can be used to loop over ordered elements of a registry, like so:
     <pre class="programlisting">
-... set @vec [ list 1 2 3 4 . ] .
-... set @i @#1 .
-... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set @i ans . ) .
+... set :vec [ list 1 2 3 4 . ] .
+... set :i :#1 .
+... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set :i ans . ) .
 1
 2
 3
@@ -180,7 +180,7 @@ ans = @a2</pre>
     </p><p>
       The <code class="code">collapse</code> instruction can apply instructions to all elements of a registry with this form.  For example, to add up all numbers in a registry,
     </p><pre class="programlisting">
-... set @vec [ list 1 2 3 4 . ] .
+... set :vec [ list 1 2 3 4 . ] .
 ... collapse \vec add "#" .
 ans = 10
 ... collapse \vec multiply "#" .
@@ -188,7 +188,7 @@ ans = 24</pre>
 
     The last argument to collapse gives the prefix to collapse.  So, for example,
     <pre class="programlisting">
-... set @vec [ reg @c1 1 @c2 2 @c3 3 @c4 4 . ] .
+... set :vec [ reg :c1 1 :c2 2 :c3 3 :c4 4 . ] .
 ... collapse \vec add "c" .
 ans = 10</pre></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="built-in"></a>Vocabulary: Built-In Instructions</h2></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
           The <code class="code">set</code> instruction:
@@ -312,7 +312,7 @@ input REGISTER .</pre><p>
   </p></li><li class="listitem"><p>
     The <code class="code">collapse</code> instruction:
   </p><pre class="programlisting">collapse REGISTRY INSTRUCTION STRING .</pre><p>
-    Applies the instruction to the register <code class="code">@STRING1</code> and <code class="code">@STRING2</code> and then applies the instruction to what the instruction set the <code class="code">ans</code> register to and <code class="code">@STRING3</code> and so on.  It sets the <code class="code">ans</code> register to the result.
+    Applies the instruction to the register <code class="code">:STRING1</code> and <code class="code">:STRING2</code> and then applies the instruction to what the instruction set the <code class="code">ans</code> register to and <code class="code">:STRING3</code> and so on.  It sets the <code class="code">ans</code> register to the result.
   </p></li><li class="listitem"><p>
     The <code class="code">join</code> instruction:
   </p><pre class="programlisting">join REGISTRY1 REGISTRY2 INSTRUCTION .</pre><p>
@@ -368,7 +368,7 @@ to-number STRING .</pre><p>
         </p></li><li class="listitem"><p>
           The <code class="code">'</code> instruction:
         </p><pre class="programlisting">' ANYTHING </pre><p>
-          Ignore all the text following the <code class="code">'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code class="code">set @x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set @mycomment ' .</code> and then use <code class="code">mycomment</code> as a comment. <code class="code">'</code> must be followed by a space character to be a comment.  You could name a register <code class="code">'re'g</code>, but you can't name it <code class="code">reg'</code>.  You probably shouldn't do either.
+          Ignore all the text following the <code class="code">'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code class="code">set :x print .</code> and then do <code class="code">x "hello" .</code> to print text.  But you cannot do <code class="code">set :mycomment ' .</code> and then use <code class="code">mycomment</code> as a comment. <code class="code">'</code> must be followed by a space character to be a comment.  You could name a register <code class="code">'re'g</code>, but you can't name it <code class="code">reg'</code>.  You probably shouldn't do either.
         </p></li><li class="listitem"><p>
           The <code class="code">error</code> instruction:
         </p><pre class="programlisting">error STRING .</pre><p>
@@ -439,7 +439,7 @@ link STRING1 STRING2 STRING3 .</pre><p>
     </p><div class="example"><a name="idm516"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
       </p><pre class="programlisting">' Computes v^T v for a vector 
-set @dotproduct
+set :dotproduct
     (
       join \#1 \#2 multiply .
       collapse \ans add "#" .
@@ -447,69 +447,69 @@ set @dotproduct
 
 
 ' matrix-multiply A B computes A^T B 
-set @matrix-multiply
+set :matrix-multiply
     (
-      mov @#1 @A .
-      mov @#2 @B .
+      mov :#1 :A .
+      mov :#2 :B .
 
-      set @i @#1 .
-      set @out [ list . ] .
+      set :i :#1 .
+      set :out [ list . ] .
       while ( exist-in i \B . )
             (
-              set @one A/i .
+              set :one \A/i .
               do-to-all ( dotproduct \#1 \one . ) \A .
-              mov @ans @res .
+              mov :ans :res .
               in \out ( set i res . ) .
               next i .
-              mov @ans @i .
+              mov :ans :i .
             ) .
       answer \out .
     ) .
 
 ' Computes A^T 
-set @transpose
+set :transpose
     (
-      mov @#1 @A .
-      set @i @#1 .
-      set @out [ list . ] .
-      while ( exist-in i A/@#1 . )
+      mov :#1 :A .
+      set :i :#1 .
+      set :out [ list . ] .
+      while ( exist-in i \A/:#1 . )
             (
-              do-to-all ( answer #1/i . ) \A .
-              mov @ans @res .
+              do-to-all ( answer \#1/i . ) \A .
+              mov :ans :res .
               in \out ( set i res . ) .
               next i .
-              mov @ans @i .
+              mov :ans :i .
             ) .
       answer \out .
     ) .
 
 
-set @A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-set @B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm521"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">' Tokenize a string @#1 by splitting on string @#2
-set @tokenize
+set :A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+set :B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+</pre></div></div><br class="example-break"><div class="example"><a name="idm521"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">' Tokenize a string :#1 by splitting on string :#2
+set :tokenize
     (
-      mov @#1 @word .
-      mov @#2 @sep .
-      set @i 1 .
-      set @len [ count-characters \word . ] .
-      set @cur-reg @#1 .
-      set @tokened [ list . ] .
-      set @init 1 .
+      mov :#1 :word .
+      mov :#2 :sep .
+      set :i 1 .
+      set :len [ count-characters \word . ] .
+      set :cur-reg :#1 .
+      set :tokened [ list . ] .
+      set :init 1 .
       while ( lteq i len . )
             (
-              set @d [ character \word i . ] .
+              set :d [ character \word i . ] .
               if [ string-eq d \sep . ]
                  {
                    in \tokened ( set cur-reg buffer . ) .
-                   set @cur-reg [ next cur-reg . ] .
-                   set @init 1 .
+                   set :cur-reg [ next cur-reg . ] .
+                   set :init 1 .
                  }
                  {
-                   if [ eq init 1 . ] { set @buffer d . set @init 0 . }
-                      { set @buffer [ concat buffer d . ] . } .
+                   if [ eq init 1 . ] { set :buffer d . set :init 0 . }
+                      { set :buffer [ concat buffer d . ] . } .
                  } .
-              set @i [ add i 1 . ] .
+              set :i [ add i 1 . ] .
             ) .
       in \tokened ( set cur-reg buffer . ) .
       answer \tokened .
@@ -520,44 +520,44 @@ set @tokenize
 
 source "examples/tokenize.arb" .
 
-set @parse-csv
+set :parse-csv
     (
       open-text-file \#1 .
-      set @file ans .
-      set @parsed [ list . ] .
-      set @cur-reg @#1 . 
+      set :file ans .
+      set :parsed [ list . ] .
+      set :cur-reg :#1 . 
 
-      while ( set @cur-line [ read-line file . ] . is-string cur-line . )
+      while ( set :cur-line [ read-line file . ] . is-string cur-line . )
             (
               tokenize cur-line "," .
               in \parsed ( set cur-reg ans . ) .
-              set @cur-reg [ next cur-reg . ] .
+              set :cur-reg [ next cur-reg . ] .
             ) .
 
       
-      close @file .
+      close :file .
       answer \parsed .
     ) .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm528"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code class="code">n</code> and <code class="code">p</code>, insert text with <code class="code">i</code>, and print a line out with <code class="code">o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code class="code">go-in</code> the registry to use the text editing environment.
       </p><pre class="programlisting">' Simple line-oriented text editor 
-set @arbed [ reg . ] .
+set :arbed [ reg . ] .
 in \arbed
    (
-     set @buffer [ list . ] . 
-     set @cur-line 1 . 
-     set @n ( set @cur-line [ add cur-line 1 . ] \up . ) .
-     set @p ( set @cur-line [ subtract cur-line 1 . ] \up . ) .
-     set @i
+     set :buffer [ list . ] . 
+     set :cur-line 1 . 
+     set :n ( set :cur-line [ add cur-line 1 . ] \up . ) .
+     set :p ( set :cur-line [ subtract cur-line 1 . ] \up . ) .
+     set :i
          (
-           set @arbed-str \#1 \buffer .
+           set :arbed-str \#1 \buffer .
            in \buffer
               (
                 to-register [ concat "#" [ to-string cur-line . ] . ] .
                 set ans arbed-str .
               ) .
          ) .
-     set @o
+     set :o
          (
            to-register [ concat "#" [ to-string cur-line . ] . ] .
            print [ get ans \buffer . ] .
@@ -568,20 +568,20 @@ in \arbed
       </p><pre class="programlisting">' takes a function as an argument and return left hand
 ' riemmann sum over range
 
-set @integrate 
+set :integrate 
     ( 
-      mov @#1 @f .
-      mov @#2 @lb .
-      mov @#3 @ub .
-      mov @#4 @n .
-      set @delta [ divide [ subtract \ub \lb . ] \n . ] .
-      set @x \lb .
-      set @int 0.0 .
+      mov :#1 :f .
+      mov :#2 :lb .
+      mov :#3 :ub .
+      mov :#4 :n .
+      set :delta [ divide [ subtract \ub \lb . ] \n . ] .
+      set :x \lb .
+      set :int 0.0 .
       while ( lt \x \ub . )
             (
               f \x .
-              set @int [ add \int [ multiply \ans \delta . ] . ] .
-              set @x [ add \x \delta . ] .
+              set :int [ add \int [ multiply \ans \delta . ] . ] .
+              set :x [ add \x \delta . ] .
             ) .
       answer int .
     ) .
