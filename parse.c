@@ -61,7 +61,6 @@ add_lookup_argument (element** head, element* e, char* d)
 element*
 add_statement_argument (element** head, element* e, statement* s)
 {
-  s = copy_statement(s);
   if (*head == NULL)
     {
       *head = append_statement_element(NULL, s);
@@ -110,7 +109,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             {
               if (state->after_instr)
                 {
-                  str = malloc(sizeof(char)*(strlen(state->buffer)+1));
+                  str = malloc(sizeof(char)*(strlen(state->buffer)+2));
                   strcpy(str, state->buffer);
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
@@ -124,11 +123,13 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                       switch (state->open_paren)
                         {
                         case '(':
-                          assign_instr(&d, sub_stmt, state->buffer);
+                          assign_instr(&d, NULL, state->buffer);
+                          ((instruction*) d->data)->stmt = sub_stmt;
                           e = add_literal_argument(&head, e, d);
                           break;
                         case '{':
-                          assign_active(&d, sub_stmt);
+                          assign_active(&d, NULL);
+                          ((instruction*) d->data)->stmt = sub_stmt;
                           e = add_literal_argument(&head, e, d);
                           break;
                         case '[':
@@ -137,7 +138,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                         }
                       state->open_paren = '\0';
                       state->after_instr = 0;
-                      free_statement(sub_stmt);
                     }
                   else
                     {
@@ -158,22 +158,19 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (is_integer(state->buffer))
                 {
-                  int entry = atoi(state->buffer);
-                  assign_int(&d, entry);
+                  assign_int(&d, atoi(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_decimal(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
-                  double entry = atof(state->buffer);
-                  assign_dec(&d, entry);
+                  assign_dec(&d, atof(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_register(state->buffer))
                 {
-                  str_shift_left(state->buffer);
-                  assign_regstr(&d, state->buffer,
-                                hash_str(state->buffer));
+                  assign_regstr(&d, state->buffer+1,
+                                hash_str(state->buffer+1));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (strcmp(state->buffer,".")==0)

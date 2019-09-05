@@ -68,8 +68,8 @@ save_registry (FILE* f, registry* reg)
               fwrite(((instruction*) reg->value->data)->code, sizeof(char),
                      strlen(((instruction*) reg->value->data)->code), f);
               break;
-	    default:
-	      break;
+            default:
+              break;
             }
 
           size = strlen(reg->name);
@@ -145,20 +145,29 @@ read_registry (FILE* f, registry* reg)
           fread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
           free(cache);
+          
           cache = malloc(sizeof(char)*(size+1));
           fread(cache, sizeof(char), size, f);
-          *((char*) (cache+size)) = '\0';
-          f_sub = fmemopen(cache, strlen(cache), "r");
+          ((char*) cache)[size] = '\0';
+          char* code = malloc(sizeof(char)*(size+1));
+          strcpy(code, (char*) cache);
+          
+          f_sub = fmemopen(cache, sizeof(char)*size, "r");
           state = fresh_state(0);
+          stmt = NULL;
           parse(f_sub, &state, &stmt);
-          assign_instr(&d, stmt, (char*) cache);
-          free_statement(stmt);
+          fclose(f_sub);
+
+          d = malloc(sizeof(data));
+          d->type = INSTRUCTION;
+          d->data = malloc(sizeof(instruction));
+          ((instruction*) d->data)->stmt = stmt;
+          ((instruction*) d->data)->code = code;
           stmt = NULL;
           free(cache);
-          fclose(f_sub);
           break;
-	default:
-	  break;
+        default:
+          break;
         }
       cache = malloc(sizeof(int));
       fread(cache, sizeof(int), 1, f);
@@ -168,13 +177,14 @@ read_registry (FILE* f, registry* reg)
       fread(cache, sizeof(char), size, f);
       *((char*) (cache+size)) = '\0';
 
-      set(reg, d, (char*) cache);
-      free(cache);
-
-    }
+      if (d != NULL)
+        set(reg, d, (char*) cache);
       
-  reg = reg->right;
+      free(cache);
+    }
 
+  free(type_cache);
+      
   return 0;
   
 }

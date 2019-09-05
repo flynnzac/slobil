@@ -167,6 +167,8 @@ copy_elements (element* e)
 statement*
 copy_statement (statement* s)
 {
+  if (s == NULL) return NULL;
+  
   statement* stmt = NULL;
   statement* new_first = NULL;
   element* head;
@@ -196,6 +198,8 @@ assign_instr (data** d, statement* s, const char* code)
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
   strcpy(((instruction*) (*d)->data)->code, code);
+
+
 }
 
 void
@@ -312,6 +316,7 @@ set (registry* reg, data* d, const char* name)
 
   if (new_reg == NULL)
     {
+
       reg = head(reg);
       new_reg = malloc(sizeof(registry));
       new_reg->left = reg;

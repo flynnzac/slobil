@@ -9,7 +9,7 @@ else
 	SUFFIX=so
 	DOC=xsltproc --xinclude  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
 endif
-
+DEBUG=1
 ifdef DEBUG
 	COMPILE=cc -o arbel arbel.c primitive.c utility.c save.c parse.c statement.c operator.c -lreadline -g -lm -Wall -ldl
 else

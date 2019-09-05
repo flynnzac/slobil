@@ -12,8 +12,7 @@ set :integrate
       set :int 0.0 .
       while ( lt \x \ub . )
             (
-              f \x .
-              set :int [ add \int [ multiply \ans \delta . ] . ] .
+              set :int [ add \int [ multiply [ f \x . ] \delta . ] . ] .
               set :x [ add \x \delta . ] .
             ) .
       answer int .

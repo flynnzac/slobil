@@ -789,7 +789,6 @@ op_do_to_all (registry* reg)
       return;
     }
 
-  printf("Type arg1: %d\n", arg1->type);
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
     {
       do_error("First argument to `do-to-all` must be an instruction.");
@@ -890,11 +889,13 @@ op_next (registry* reg)
   char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
   sprintf(new_name, "%s%d", cur_name, num);
 
-  data* d;
-  assign_regstr(&d, new_name, hash_str(new_name));
+  data* d = malloc(sizeof(data));
+  d->type = REGISTER;
+  d->data = malloc(sizeof(regstr));
+  ((regstr*) d->data)->name = new_name;
+  ((regstr*) d->data)->key = hash_str(new_name);
+  
   free(cur_name);
-  free(new_name);
-
   ret_ans(reg,d);
 
   
@@ -938,8 +939,12 @@ op_last (registry* reg)
     }
   free(name);
   name = vector_name((char*) arg2->data, i-1);
-  assign_regstr(&d, name, hash_str(name));
-  free(name);
+
+  d = malloc(sizeof(data));
+  d->type = REGISTER;
+  d->data = malloc(sizeof(regstr));
+  ((regstr*) d->data)->name = name;
+  ((regstr*) d->data)->key = hash_str(name);
 
   ret_ans(reg, d);
   
@@ -1495,6 +1500,8 @@ op_save (registry* reg)
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
   save_registry(f, (registry*) top_registry->data);
+  data_type end = NOTHING;
+  fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
 
 }
@@ -1520,6 +1527,7 @@ op_load (registry* reg)
   FILE* f = fopen(fname, "rb");
   read_registry(f, (registry*) top_registry->data);
   fclose(f);
+  is_retval(0);
 
 }
 
