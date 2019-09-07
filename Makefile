@@ -34,3 +34,5 @@ examples: examples/link.c libarbel.$(SUFFIX)
 install: arbel libarbel.$(SUFFIX)
 	cp arbel $(PREFIX)/bin/
 	cp libarbel.$(SUFFIX) $(PREFIX)/lib/
+	cp arbel.h $(PREFIX)/include/
+
