@@ -107,10 +107,10 @@
         A statement consists of an <emphasis>instruction</emphasis> followed by several arguments.  Each element of a statement must be separated from the others by whitespace (space, tab, or a new line), including the statement terminator ("."). For example, the statement,
       </para>
 
-    <programlisting>. set :hello "Hello, world!" .</programlisting>
+    <programlisting>... set :hello "Hello, world!" .</programlisting>
     
     <para>
-      Pushes the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>:</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
+      Sets the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>:</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
     </para>
     <programlisting>
 ... set :hello "Hello, world!" .
@@ -344,7 +344,39 @@ ans = 24</programlisting>
 ans = 10</programlisting>
     
     
-    </section>
+</section>
+
+<section>
+  <title>Scoping Rules and Encapsulation</title>
+
+  <para>
+    Registers can be referenced in ARBEL in any registry that is "above" the current registry.  The register accessed is the register in the lowest registry that has data at the registry.  For example,
+  </para>
+  <programlisting>
+... set :x 2 .
+... set :f ( add x #1 . ) .
+... set :g ( set :x 1 . f 1 . ) .
+... g .
+ans = 2
+... f 1 .
+ans = 3</programlisting>
+
+<para>
+  Scoping rules are virtually identical to R, if you are familiar with that language.
+</para>
+
+  <para>
+    Encapsulation in ARBEL is achieved through the use of registries.  For example, consider a mathematical library that wants to compute the natural logarithm of a number plus one.
+  </para>
+  <programlisting>
+... set :math [ reg . ] .
+... set :log1 ( log [ add \#1 1 . ] 1 . ) \math .</programlisting>
+
+You can then call the function using the slash notation.
+<programlisting>
+... math/:log1 2 .  
+ans = 1.098612</programlisting>
+</section>
   </section>
 
   <section id="built-in">

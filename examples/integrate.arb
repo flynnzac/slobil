@@ -10,10 +10,10 @@ set :integrate
       set :delta [ divide [ subtract \ub \lb . ] \n . ] .
       set :x \lb .
       set :int 0.0 .
-      while ( lt \x \ub . )
+      repeat \n
             (
-              set :int [ add \int [ multiply [ f \x . ] \delta . ] . ] .
+              set :int [ add \int [ f \x . ] . ] .
               set :x [ add \x \delta . ] .
             ) .
-      answer int .
+      multiply \int \delta .
     ) .

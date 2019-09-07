@@ -150,6 +150,7 @@
                 "curdir"
 		            "copy-file"
 		            "import"
+                "repeat"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\:[^\s]*\\)\s*")

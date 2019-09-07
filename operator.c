@@ -235,7 +235,6 @@ op_set (registry* reg)
 
   char* name = ((regstr*) arg1->data)->name;
   data* d = copy_data(arg2);
-
   set(to_set, d, name);
 
   is_retval(0);
@@ -1037,8 +1036,40 @@ op_while (registry* reg)
 
     }
 
-  
-  
+}
+
+void
+op_repeat (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1,0);
+  data* arg2 = lookup(reg, arbel_hash_2,0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`repeat` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != INTEGER)
+    {
+      do_error("The first argument to `repeat` must be an integer.");
+      return;
+    }
+
+  if (arg2->type != INSTRUCTION)
+    {
+      do_error("The second argument to `repeat` must be an instruction.");
+      return;
+    }
+
+  int i;
+
+  for (i = 0; i < *((int*) arg1->data); i++)
+    {
+      execute_code(((instruction*) arg2->data)->stmt, reg->up);
+      if (is_error(-1)) break;
+    }
+  is_retval(0);
 }
 
 void
@@ -2900,6 +2931,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_import);
   set(reg,d,"import");
   
+  assign_op(&d, op_repeat);
+  set(reg,d,"repeat");
   
 }
   
