@@ -87,6 +87,7 @@ main (int argc, char** argv)
   int k;
   int echo = 1;
   char* script = NULL;
+  int save_code = 1;
   while ((k = getopt(argc, argv, "l:s:nm")) != -1)
     {
       switch (k)
@@ -103,9 +104,13 @@ main (int argc, char** argv)
           is_exit(1);
           script = malloc(sizeof(char)*(strlen(optarg)+1));
           strcpy(script, optarg);
+          save_code = 0;
           break;
         case 'm':
           echo = 0;
+          break;
+        case 'd':
+          save_code = 0;
           break;
         default:
           fprintf(stderr, "Option not recognized.");
@@ -136,7 +141,12 @@ main (int argc, char** argv)
         }
       add_history(code);
       code = append_nl(code);
-      source_code = append_to_source_code(source_code, code);
+
+      if (save_code)
+        {
+          source_code = append_to_source_code(source_code, code);
+        }
+      
       f = fmemopen(code, sizeof(char)*strlen(code), "r");
       complete = interact(f, &state, current_parse_registry);
       fclose(f);
