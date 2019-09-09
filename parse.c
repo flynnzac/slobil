@@ -105,7 +105,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
           state->buffer[state->i] = '\0';
-          if (strlen(state->buffer) != 0 && !state->in_quote)
+          if ((strlen(state->buffer) != 0 || state->after_quote) && !state->in_quote)
             {
               if (state->after_instr)
                 {
@@ -118,6 +118,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   sub_complete = parse(f_sub, &sub_state, &sub_stmt);
                   fclose(f_sub);
                   free(str);
+                  
                   if (sub_complete)
                     {
                       switch (state->open_paren)
@@ -152,8 +153,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (state->after_quote)
                 {
                   state->after_quote = 0;
-                  str = escape_str(state->buffer);
-                  assign_str(&d, str,1);
+                  if (strlen(state->buffer)==0)
+                    {
+                      assign_str(&d, "", 1);
+                    }
+                  else
+                    {
+                      str = escape_str(state->buffer);
+                      assign_str(&d, str,1);
+                    }
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_integer(state->buffer))

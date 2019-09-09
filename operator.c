@@ -286,13 +286,16 @@ op_if (registry* reg)
   data* arg1 = lookup(reg, arbel_hash_1,0);
 
   if (arg1 == NULL)
-    do_error("If needs an argument.");
+    {
+      do_error("If needs an argument.");
+      return;
+    }
 
   if (arg1->type != INTEGER)
-    do_error("First argument to if must be an integer.");
-
-  if (is_error(-1))
-    return;
+    {
+      do_error("First argument to if must be an integer.");
+      return;
+    }
 
   if (*((int*) arg1->data))
     {

@@ -186,6 +186,7 @@ copy_statement (statement* s)
         }
       s = s->right;
     }
+
   return new_first;
 }
 
@@ -207,7 +208,8 @@ assign_active (data** d, statement* s)
 {
   *d = malloc(sizeof(data));
   (*d)->type = ACTIVE_INSTRUCTION;
-  (*d)->data = copy_statement(s);
+  (*d)->data = malloc(sizeof(instruction));
+  ((instruction*) (*d)->data)->stmt = copy_statement(s);
 }
 
 void
@@ -394,7 +396,7 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
-      execute_code((statement*) d->data, reg->up);
+      execute_code(((instruction*) d->data)->stmt, reg->up);
       d = get(reg, arbel_hash_ans, 0);
 
     }
@@ -591,7 +593,7 @@ copy_data (data* d_in)
                    ((instruction*) d_in->data)->code);
       break;
     case ACTIVE_INSTRUCTION:
-      assign_active(&d, (statement*) d_in->data);
+      assign_active(&d, ((instruction*) d_in->data)->stmt);
       break;
     case ARBEL_FILE:
       assign_file(&d, (FILE*) d_in->data);
@@ -634,7 +636,8 @@ compute (registry* reg)
       data* d = get(reg, arbel_hash_ans, 0);
       if (d != NULL)
         {
-          mark_do_not_free(reg, arbel_hash_ans);
+          d = copy_data(d);
+          /* mark_do_not_free(reg, arbel_hash_ans); */
           ret_ans(reg, d);
         }
       return;

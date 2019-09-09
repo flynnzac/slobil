@@ -196,7 +196,8 @@ free_data (data* d)
     }
   else if (d->type == ACTIVE_INSTRUCTION)
     {
-      free_statement((statement*) d->data);
+      free_statement(((instruction*) d->data)->stmt);
+      free(d->data);
       free(d);
     }
   else

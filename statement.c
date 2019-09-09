@@ -99,6 +99,7 @@ append_statement (statement* current, element* head)
   s->right = NULL;
   s->head = head;
   s->arg_reg = gen_arg_reg(head);
+        
   if (current != NULL)
     {
       current->right = s;
