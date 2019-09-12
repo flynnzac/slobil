@@ -107,41 +107,41 @@
         A statement consists of an <emphasis>instruction</emphasis> followed by several arguments.  Each element of a statement must be separated from the others by whitespace (space, tab, or a new line), including the statement terminator ("."). For example, the statement,
       </para>
 
-    <programlisting>... set :hello "Hello, world!" .</programlisting>
+    <programlisting>... set /hello "Hello, world!" .</programlisting>
     
     <para>
-      Sets the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>:</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
+      Sets the string value <code>"Hello, world!"</code> to the <emphasis>register</emphasis> <code>hello</code>.  You can think of the statement as setting the variable <code>hello</code>.  The <code>/</code> sign indicates that you want to treat the following characters as the name of a register instead of to the value of whatever is currently contained in the <code>hello</code> register.  The following examples demonstrate both referring to the value in a register and the register itself.
     </para>
     <programlisting>
-... set :hello "Hello, world!" .
+... set /hello "Hello, world!" .
 ... print hello .
 Hello, world!
-... set :x :hello .
+... set /x /hello .
 ... set x "Howdy!" .
 ... print hello .
 Howdy!
 ... print x .
-:hello</programlisting>
+/hello</programlisting>
     
     <para>
-      Using the name of a register without the <code>:</code> sign indicates that you want to refer to the value located at the register and the <code>:</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code>x</code> refers to the register <code>hello</code> in the above example.
+      Using the name of a register without the <code>/</code> sign indicates that you want to refer to the value located at the register and the <code>/</code> sign indicates you want to refer to the register itself.  Registers can contain another register as their value, as <code>x</code> refers to the register <code>hello</code> in the above example.
     </para>
 
     <para>
-      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code>:hello</code> and <code>:x</code> in the above example.  The instruction <code>reg</code> creates a registry.  For example,
+      Statements are nothing more than a certain form of ARBEL's basic data type: the registry.  A registry is a named list containing data located at different registers like the registers <code>/hello</code> and <code>/x</code> in the above example.  The instruction <code>reg</code> creates a registry.  For example,
     </para>
 
-    <programlisting>... reg :one 1 :two 2 :sum add :product multiply .</programlisting>
+    <programlisting>... reg /one 1 /two 2 /sum add /product multiply .</programlisting>
     
     <para>
       Creates a registry containing the values <code>1</code> (located at register <code>one</code>) and <code>2</code> (located at register <code>two</code>) and the instructions <code>add</code> and <code>multiply</code> located at the <code>sum</code> and <code>product</code> registries respectively.  Any piece of data, including instructions, can be put in a registry.
     </para>
 
     <para>
-      The command <code>set :hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set :hello "Hello, world!" .</code> in the following way:
+      The command <code>set /hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set /hello "Hello, world!" .</code> in the following way:
     </para>
     <programlisting>
-... compute [ reg :#0 set :#1 :hello :#2 "Hello, world!" . ] .
+... compute [ reg /#0 set /#1 /hello /#2 "Hello, world!" . ] .
 ... print hello .
 Hello, world!</programlisting>
 
@@ -170,19 +170,19 @@ Hello, world!</programlisting>
       The open parenthesis ("()") save the statements as an instruction to be executed later. The statements they contain are not executed immediately, but are saved to be executed in other contexts. They can be used to create new instructions.  For example,
     </para>
     <programlisting>
-... set :addone ( add #1 1 . ) .
+... set /addone ( add #1 1 . ) .
 ... addone 2 .
     ans = 3</programlisting>
 
     <para>
-      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code>compute</code> as described above.  The arguments always have the names <code>:#1,...,:#N</code>.  The <code>:#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code>mov :#1 :my-register-name .</code> instruction.  The <code>mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
+      This is ARBEL's way of writing what other languages would call "procedures" or "functions".  ARBEL calls these "instructions". Unlike other languages, these instructions always give the same name to their arguments and they naturally take a variable number of arguments. There is no special programming or notation required to make an instruction take a variable number of arguments.  The reason this works is because all instructions are computed in the same way using <code>compute</code> as described above.  The arguments always have the names <code>/#1,...,/#N</code>.  The <code>/#0</code> register is the instruction itself. You can move the data contained at these registers to different registers with a <code>mov /#1 /my-register-name .</code> instruction.  The <code>mov</code> instruction is useful because it simply changes the registry referring to a value without copying the value itself.
     </para>
 
     <para>
       You can write more extensive instructions in this way as well.  For example, to compute a factorial,
     </para>
     <programlisting>
-... set :factorial
+... set /factorial
 (
   if [ eq #1 1 . ] 1
      { multiply #1 [ factorial [ subtract #1 1 . ] . ] . } .

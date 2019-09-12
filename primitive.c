@@ -696,7 +696,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
               data* d1 = lookup(reg, hash_name[i], 1);
               if (d1 == NULL || d1->type != REGISTER)
                 {
-                  do_error("Cannot use `/` with non-register.");
+                  do_error("Cannot use `:` with non-register.");
                   return NULL;
                 }
               else
