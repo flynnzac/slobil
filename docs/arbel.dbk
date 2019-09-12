@@ -940,6 +940,25 @@ copy-file STRING1 STRING2 .</programlisting>
   <code>chdir</code> changes the current directory to STRING. <code>curdir</code> sets the <code>ans</code> register to the name of the current registry. <code>copy-file</code> copies the file with name STRING1 to STRING2.
 </para>
       </listitem>
+      <listitem>
+	<para>
+	  The <code>import</code> instruction,
+	</para>
+	<programlisting>import REGISTRY .</programlisting>
+	<para>
+	  Copy all the values from REGISTRY to current registry. All the values located in REGISTRY will be located at the same registers they were in REGISTRY. but in the current registry.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  The <code>repeat</code> instruction,
+	</para>
+	<programlisting>repeat INTEGER INSTRUCTION .</programlisting>
+	<para>
+	  Execute INSTRUCTION in the current registry INTEGER times.
+	</para>
+      </listitem>
     </itemizedlist>
   </section>
 
