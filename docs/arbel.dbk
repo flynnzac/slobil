@@ -342,7 +342,12 @@ ans = 24</programlisting>
 ... set :vec [ reg :c1 1 :c2 2 :c3 3 :c4 4 . ] .
 ... collapse \vec add "c" .
 ans = 10</programlisting>
-    
+
+The last important syntax element of registries is the "slash notation".  Slash notation lets you access registers in registries in a convenient way. You can access register values by REGISTRY/REGISTER.  This can be nested with REGISTRY/REGISTER/REGISTER if the value stored at REGISTRY/REGISTER is a registry. For example,
+<programlisting>
+... set :x [ reg :h "hello" . ] .
+... print x/:h .
+hello</programlisting>
     
 </section>
 
@@ -377,9 +382,6 @@ You can then call the function using the slash notation.
 ... math/:log1 2 .  
 ans = 1.098612</programlisting>
 </section>
-	<section>
-	<title>Post-sigil notation: method for annotating types</title>
-	</section>
   </section>
 
   <section id="built-in">
@@ -918,25 +920,6 @@ link STRING1 STRING2 STRING3 .</programlisting>
 
   <section>
     <title>Miscellaneous Tidbits</title>
-
-    <section>
-      <title>Global Variables</title>
-      <para>
-        There are currently two special references in ARBEL.
-      </para>
-      <itemizedlist>
-        <listitem>
-          <para>
-            <code>\up</code> refers to the registry that contains the current registry.  Recall that the arguments to an instruction are entered into a new registry that is below the current registry.  So <code>\up</code> as an argument refers to the registry executing the instruction.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <code>\data</code> refers to the top-level registry.
-          </para>
-        </listitem>
-      </itemizedlist>
-    </section>
 
     <section>
       <title>String Escape Sequences</title>

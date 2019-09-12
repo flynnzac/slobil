@@ -643,8 +643,7 @@ op_character (registry* reg)
 
   if (loc <= 0)
     {
-      int length = strlen(str);
-      loc += length;
+      loc += strlen(str);
     }
 
   if ((loc > strlen(str)) || (loc <= 0))
@@ -1138,24 +1137,21 @@ op_collapse (registry* reg)
 
   unsigned long second_hash = hash_str(second_name);
   registry* r = new_registry(to_walk);
-  arg2 = copy_data(arg2);
   set(r, arg2, "#0");
 
-  data* ref1;
-  data* ref2;
+  data* d1;
+  data* d2;
   
-  data* ans = NULL;
-  int is_regstr = 1;
   while ((d = lookup(to_walk, second_hash, 0)) != NULL)
     {
-      assign_ref(&ref1, to_walk, &first_name, &first_hash, 1, &is_regstr);
-      assign_ref(&ref2, to_walk, &second_name, &second_hash, 1, &is_regstr);
-      set(r, ref1, "#1");
-      set(r, ref2, "#2");
+
+      d1 = lookup(to_walk, first_hash, 0);
+      d2 = lookup(to_walk, second_hash, 0);
+      set(r, d1, "#1");
+      set(r, d2, "#2");
       compute(r);
-
-
-      if (strlen(first_name) != strlen("ans"))
+      
+      if (first_hash != arbel_hash_ans)
         {
           free(first_name);
           first_name = malloc(sizeof(char)*(strlen("ans")+1));
@@ -1166,14 +1162,16 @@ op_collapse (registry* reg)
       free(second_name);
       second_name = vector_name((char*) arg3->data, i);
       second_hash = hash_str(second_name);
+      del(r, arbel_hash_1, 0);
+      del(r, arbel_hash_2, 0);
     }
   d = lookup(to_walk, arbel_hash_ans, 0);
-
   if (d != NULL)
     {
-      ans = copy_data(d);
-      ret_ans(reg, ans);
+      ret_ans(reg, copy_data(d));
     }
+
+  del(r, arbel_hash_0, 0);
 
   free_registry(r);
   free(second_name);
@@ -1214,33 +1212,38 @@ op_join (registry* reg)
   registry* instr_reg = new_registry(reg1);
 
   registry* cur = tail(reg1);
-  data* ref1 = NULL;
-  data* ref2 = NULL;
+  data* d1 = NULL;
+  data* d2 = NULL;
   data* d;
 
-  arg3 = copy_data(arg3);
   set(instr_reg, arg3, "#0");
-  int is_regstr = 1;
   
   while (cur != NULL)
     {
       d = get(reg2, cur->key, 0);
       if (d != NULL)
         {
-          assign_ref(&ref1, reg1, &cur->name, &cur->key, 1, &is_regstr);
-          assign_ref(&ref2, reg2, &cur->name, &cur->key, 1, &is_regstr);
-          set(instr_reg, ref1, "#1");
-          set(instr_reg, ref2, "#2");
+          d1 = lookup(reg1, cur->key, 0);
+          d2 = lookup(reg2, cur->key, 0);
+          set(instr_reg, d1, "#1");
+          set(instr_reg, d2, "#2");
+          
           compute(instr_reg);
-          d = get(reg1, arbel_hash_ans, 0);
+
+          del(instr_reg, arbel_hash_1, 0);
+          del(instr_reg, arbel_hash_2, 0);
+          
+          d = lookup(reg1, arbel_hash_ans, 0);
+          del(reg1, arbel_hash_ans, 0);
           if (d != NULL)
             {
-              d = copy_data(d);
               set(out_reg, d, cur->name);
             }
         }
       cur = cur->right;
     }
+
+  del(instr_reg, arbel_hash_0, 0);
 
   d = malloc(sizeof(data));
   d->type = REGISTRY;
@@ -1533,7 +1536,7 @@ op_save (registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
-  save_registry(f, (registry*) top_registry->data);
+  save_registry(f, reg->up);
   data_type end = NOTHING;
   fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
@@ -1559,7 +1562,7 @@ op_load (registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
-  read_registry(f, (registry*) top_registry->data);
+  read_registry(f, reg->up);
   fclose(f);
   is_retval(0);
 
@@ -2228,7 +2231,7 @@ op_link (registry* reg)
 
   data* d;
   assign_op(&d, new_op);
-  set((registry*) top_registry->data, d, (char*) arg3->data);
+  set(reg->up, d, (char*) arg3->data);
 
   if (arbel_ll == NULL)
     {
@@ -2686,7 +2689,131 @@ op_curdir (registry* reg)
   assign_str(&d, dir, 0);
   ret_ans(reg,d);
 }
+
+void
+op_substring (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg3 = lookup(reg, arbel_hash_3, 0);
+
+  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
+    {
+      do_error("`substring` requires three arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("First argument to `substring` must be a string.");
+      return;
+    }
+
+  if (arg2->type != INTEGER || arg3->type != INTEGER)
+    {
+      do_error("The second and third arguments of `substring` must be integers.");
+      return;
+    }
+
+  char* str = (char*) arg1->data;
+  int start = *((int*) arg2->data);
+  int end = *((int*) arg3->data);
+
+  if (start <= 0)
+    {
+      start += strlen(str);
+    }
+
+  if (end <= 0)
+    {
+      end += strlen(str);
+    }
+
+  if ((start > strlen(str)) || (start <= 0))
+    {
+      do_error("Index out of range.");
+      return;
+    }
+
+
+  if ((end > strlen(str)) || (end <= 0))
+    {
+      do_error("Index out of range.");
+      return;
+    }
+
+  if (start > end)
+    {
+      do_error("The starting position of the substring is greater than the ending position.");
+      return;
+    }
+
+  char* result = malloc(sizeof(char)*(end-start + 1 + 1));
+  int i;
+
+  for (i=(start-1); i < end; i++)
+    {
+      result[i+1-start] = str[i];
+    }
+
+  result[end-start+1] = '\0';
+
+  data* d;
+  assign_str(&d, result, 0);
+  ret_ans(reg, d);
   
+}
+
+void
+op_up (registry* reg)
+{
+  if (reg->up == NULL)
+    {
+      do_error("Cannot use `up` instruction at top-level registry.");
+      return;
+    }
+  if (reg->up->up == NULL)
+    {
+      do_error("Cannot use `up` instruction at top-level registry.");
+      return;
+    }
+
+  reg = copy_registry(reg);
+  int num = 0;
+  regstr old;
+  regstr new;
+
+  old.name = NULL;
+  new.name = NULL;
+
+  del(reg, arbel_hash_0, 0);
+  
+  do
+    {
+      num++;
+      
+      if (old.name == NULL)
+        free(old.name);
+
+      if (new.name == NULL)
+        free(new.name);
+
+      old.name = argument_name(num);
+      new.name = argument_name(num-1);
+      old.key = hash_str(old.name);
+      new.key = hash_str(new.name);
+
+    }
+  while (mov(reg, &old, &new) != NULL);
+
+  free(old.name);
+  free(new.name);
+
+  reg->up = reg->up->up;
+  compute(reg);
+  free_registry(reg);
+}
+
 
 void
 add_basic_ops (registry* reg)
@@ -2936,6 +3063,13 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_repeat);
   set(reg,d,"repeat");
+
+  assign_op(&d, op_substring);
+  set(reg,d,"substring");
+
+  assign_op(&d, op_up);
+  set(reg,d,"up");
+  
   
 }
   

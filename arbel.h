@@ -93,7 +93,6 @@ struct ref
 
 typedef struct ref ref;
 
-
 struct command
 {
   char* code;
@@ -155,7 +154,6 @@ struct instruction
 
 typedef struct instruction instruction;
 
-
 char*
 argument_name (int n);
 
@@ -214,7 +212,7 @@ set (registry* reg, data* d, const char* name);
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
 
-void
+registry*
 mov (registry* reg, regstr* old, regstr* new);
 
 registry*
@@ -385,8 +383,6 @@ data*
 get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
 
 /* global variables */
-data* top_registry;
-data* up_registry;
 registry* current_parse_registry;
 char* source_code;
 
@@ -402,6 +398,6 @@ unsigned long arbel_hash_4;
 unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
 
-
+int arbel_error;
 
 #endif

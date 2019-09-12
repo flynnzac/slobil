@@ -151,6 +151,8 @@
 		            "copy-file"
 		            "import"
                 "repeat"
+                "substring"
+                "up"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\:[^\s]*\\)\s*")

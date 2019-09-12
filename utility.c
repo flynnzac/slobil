@@ -271,13 +271,11 @@ tail (registry* reg)
 int
 is_error (int e)
 {
-  static int error = 0;
-
   if (e >= 0)
     {
-      error = e;
+      arbel_error = e;
     }
-  return error;
+  return arbel_error;
 }
 
 

@@ -351,7 +351,6 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-
   if (is_init_reg(reg))
     {
       if (recursive)
@@ -403,68 +402,50 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
   else if (d->type == REFERENCE)
     {
       
-      
-      if (((ref*) d->data)->key[0] == arbel_hash_data)
+      data* d_ref;
+      if (((ref*) d->data)->reg == NULL)
         {
-          d = top_registry;
-        }
-      else if (((ref*) d->data)->key[0] == arbel_hash_up)
-        {
-          d = up_registry;
-          d->data = reg->up->up;
-          if (d->data == NULL)
-            {
-              do_error("Reference `up` not found.");
-              d = NULL;
-            }
+          d_ref = get_by_levels(reg->up,
+                                ((ref*) d->data)->key,
+                                ((ref*) d->data)->levels,
+                                ((ref*) d->data)->is_regstr,
+                                ((ref*) d->data)->name);
         }
       else
         {
-          data* d_ref;
-          if (((ref*) d->data)->reg == NULL)
-            {
-              d_ref = get_by_levels(reg->up,
-                                    ((ref*) d->data)->key,
-                                    ((ref*) d->data)->levels,
-                                    ((ref*) d->data)->is_regstr,
-                                    ((ref*) d->data)->name);
-            }
-          else
-            {
-              d_ref = get_by_levels(((ref*) d->data)->reg,
-                                    ((ref*) d->data)->key,
-                                    ((ref*) d->data)->levels,
-                                    ((ref*) d->data)->is_regstr,
-                                    ((ref*) d->data)->name);
-            }
+          d_ref = get_by_levels(((ref*) d->data)->reg,
+                                ((ref*) d->data)->key,
+                                ((ref*) d->data)->levels,
+                                ((ref*) d->data)->is_regstr,
+                                ((ref*) d->data)->name);
+        }
 
-          if (d_ref == NULL)
+      if (d_ref == NULL)
+        {
+          char* msg = malloc(sizeof(char)*
+                             (strlen("Reference not found.") +
+                              strlen(((ref*) d->data)->name[0]) +
+                              5));
+          sprintf(msg, "Reference `%s` not found.",
+                  ((ref*) d->data)->name[0]);
+          do_error(msg);
+          free(msg);
+          d = NULL;
+        }
+      else
+        {
+          if (d_ref->type == REGISTRY)
             {
-              char* msg = malloc(sizeof(char)*
-                                 (strlen("Reference not found.") +
-                                  strlen(((ref*) d->data)->name[0]) +
-                                  5));
-              sprintf(msg, "Reference `%s` not found.",
-                      ((ref*) d->data)->name[0]);
-              do_error(msg);
-              free(msg);
-              d = NULL;
+              ((registry*) d_ref->data)->up = reg->up;
             }
-          else
-            {
-              if (d_ref->type == REGISTRY)
-                {
-                  ((registry*) d_ref->data)->up = reg->up;
-                }
-              d = d_ref;
-            }
+          d = d_ref;
         }
     }
 
   return d;
 }
 
-void
+registry*
 mov (registry* reg, regstr* old, regstr* new)
 {
   registry* cur = tail(reg);
@@ -473,17 +454,19 @@ mov (registry* reg, regstr* old, regstr* new)
       if (cur->key == old->key)
         {
           del(reg, new->key,1);
-          free(cur->name);
+          if (cur->name != NULL)
+            free(cur->name);
+          
           cur->name = malloc(sizeof(char)*(strlen(new->name)+1));
           strcpy(cur->name, new->name);
           cur->key = new->key;
-          return;
+          return cur;
         }
       cur = cur->right;
     }
+  return NULL;
 }
 
-                                 
 
 registry*
 del (registry* reg, unsigned long hash_name, int del_data)

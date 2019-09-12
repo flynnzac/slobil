@@ -1,11 +1,11 @@
-' Simple line-oriented text editor 
+' Simple line-oriented text editor
 set :arbed [ reg . ] .
 in \arbed
    (
      set :buffer [ list . ] . 
      set :cur-line 1 . 
-     set :n ( set :cur-line [ add cur-line 1 . ] \up . ) .
-     set :p ( set :cur-line [ subtract cur-line 1 . ] \up . ) .
+     set :n ( up set :cur-line [ add cur-line 1 . ] . ) .
+     set :p ( up set :cur-line [ subtract cur-line 1 . ] . ) .
      set :i
          (
            set :arbed-str \#1 \buffer .

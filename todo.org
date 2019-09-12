@@ -37,8 +37,13 @@ as an option
 
 Implemented
 
-* TODO Have a for loop.  It's basically just some sugar for the while statement, but do it because very common.
+* CANCELLED Have a for loop.  It's basically just some sugar for the while statement, but do it because very common.
+  CLOSED: [2019-09-11 Wed 08:18]
 
+
+
+  - State "CANCELLED"  from "TODO"       [2019-09-11 Wed 08:18] \\
+    Purpose accomplished by the repeat instruction
 Idea would be:
 
 for REGISTER VALUE INSTRUCTION1 INSTRUCTION2 INSTRUCTION3
@@ -172,9 +177,11 @@ factorial 4 .
 * DONE Clean up error-handling with new parsing strategy
   CLOSED: [2019-08-25 Sun 02:46]
 
-* TODO Add more basic math functions (log, exp, to-power)
+* DONE Add more basic math functions (log, exp, to-power)
+  CLOSED: [2019-09-11 Wed 08:17]
 
-* TODO Reduce unnecessary copying (thinking first for literals because that is mostly a change in basic memory management) 
+* DONE Reduce unnecessary copying (thinking first for literals because that is mostly a change in basic memory management) 
+  CLOSED: [2019-09-11 Wed 08:17]
 
 * DONE Add c for new comment notation to doc
   CLOSED: [2019-08-27 Tue 23:51]
@@ -193,7 +200,8 @@ replace-one REGEX STRING . (replace first occurence in string)
   CLOSED: [2019-08-28 Wed 13:23]
 
 
-* TODO Add equivalent versions of assign which do not allocate but simply assume the memory has been allocated.  Will make many basic ops more efficient
+* DONE Add equivalent versions of assign which do not allocate but simply assume the memory has been allocated.  Will make many basic ops more efficient
+  CLOSED: [2019-09-11 Wed 08:19]
 * DONE Split out escaping strings from assigning strings.  Just an argument to copy.
   CLOSED: [2019-08-30 Fri 16:52]
 * DONE Should be able to pre-allocate and hash names for registries of statements.  There are a fixed number of arguments, no reason it couldn't be done ahead of time.  Would make functions/loops faster.
@@ -262,8 +270,10 @@ Instead, I decided to keep it like this:
 set @#2 5 \A/@#1 .
 
 Much simpler to understand (a register literal has no inherent context).
-* TODO Document slash notation
-** TODO Important to note how this allows for "namespaces"
+* DONE Document slash notation
+  CLOSED: [2019-09-10 Tue 23:58]
+** DONE Important to note how this allows for "namespaces"
+   CLOSED: [2019-09-10 Tue 23:59]
 
 Like so,
 
@@ -280,5 +290,57 @@ set @func1 ( ... ) \namespace .
 @*1 *1
 @,1 ,1
 @~1 ~1
-* TODO Really need to clean up do-to-all, join, collapse, next code.  It's bad.
+* DONE Really need to clean up do-to-all, join, collapse, next code.  It's bad.
+  CLOSED: [2019-09-11 Wed 08:17]
 * TODO Do another efficiency pass
+* TODO An "of" and "isof" typing system?
+* TODO Consider whether we want to reserve register type with post-sigils
+
+Like so:
+
+a string = :string$
+a registry = :registry@
+an integer = :integer#
+a decimal - :decimal%
+an instruction = :instruction
+a file = :file_
+a register = :register:
+* DONE Remove data and up registers.  Think of a better way to get that feature.
+  CLOSED: [2019-09-11 Wed 23:49]
+
+Main use of "data" is to print out what is currently stored.  So maybe just have a built-in, "show-registers" say, that does this.
+
+up's main use is to execute a statement inline.  Rather than executing
+
+set :cur [ add :cur 1 . ] .
+
+before, could do,
+
+set :n ( set :cur [ add :cur 1 . ] \up . ) .
+
+Now, let's just use a syntax for executing inline.
+
+n ,
+i ,
+
+
+basically, we want macros.  We want to use macros.
+
+set :n < set :cur [ add :cur 1 . ] . > .
+
+To start, these should be textual macros.
+
+Like ,
+
+set :concat_all < collapse #1 concat #2 . > .
+concat_all \strlst "#" .
+expands to 
+	collapse \strlst concat "#" .
+
+as if it was typed exactly like that.
+
+Decided on just using a built-in "up" instruction
+* TODO Make `up` more efficient.  Currently it is copying its arguments twice.
+
+
+
