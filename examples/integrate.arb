@@ -1,19 +1,19 @@
 ' takes a function as an argument and return left hand
 ' riemmann sum over range
 
-set :integrate 
+set /integrate 
     ( 
-      mov :#1 :f .
-      mov :#2 :lb .
-      mov :#3 :ub .
-      mov :#4 :n .
-      set :delta [ divide [ subtract \ub \lb . ] \n . ] .
-      set :x \lb .
-      set :int 0.0 .
+      mov /#1 /f .
+      mov /#2 /lb .
+      mov /#3 /ub .
+      mov /#4 /n .
+      set /delta [ divide [ subtract \ub \lb . ] \n . ] .
+      set /x \lb .
+      set /int 0.0 .
       repeat \n
             (
-              set :int [ add \int [ f \x . ] . ] .
-              set :x [ add \x \delta . ] .
+              set /int [ add \int [ f \x . ] . ] .
+              set /x [ add \x \delta . ] .
             ) .
       multiply \int \delta .
     ) .

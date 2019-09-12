@@ -2783,19 +2783,21 @@ op_up (registry* reg)
   regstr old;
   regstr new;
 
+
+
+  del(reg, arbel_hash_0, 1);
+
   old.name = NULL;
   new.name = NULL;
-
-  del(reg, arbel_hash_0, 0);
   
   do
     {
       num++;
       
-      if (old.name == NULL)
+      if (old.name != NULL)
         free(old.name);
 
-      if (new.name == NULL)
+      if (new.name != NULL)
         free(new.name);
 
       old.name = argument_name(num);
@@ -2806,12 +2808,13 @@ op_up (registry* reg)
     }
   while (mov(reg, &old, &new) != NULL);
 
-  free(old.name);
   free(new.name);
+  free(old.name);
 
   reg->up = reg->up->up;
   compute(reg);
   free_registry(reg);
+
 }
 
 

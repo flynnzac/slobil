@@ -194,14 +194,14 @@ ans = 120</programlisting>
   This example also illustrates that recursion is possible using instructions in ARBEL.  As a technical note, the ARBEL interpreter does not currently optimize tail recursion.  So a large number of recursions will use up stack space.  The language is primarily an imperative language and so the more idiomatic way to do this is to use a loop, like so:
 </para>
     <programlisting>
-... set :factorial
+... set /factorial
 (
-  set :i 2 .
-  set :prod 1 .
+  set /i 2 .
+  set /prod 1 .
   while ( lteq i #1 . )
   (
-    set :prod [ multiply i prod . ] .
-    set :i [ add i 1 . ] .
+    set /prod [ multiply i prod . ] .
+    set /i [ add i 1 . ] .
   ) .
   answer prod .
 ) .
@@ -226,9 +226,9 @@ ans = 120 </programlisting>
       The basic data type of ARBEL is a registry.  When the interpreter is started, you are working in the default registry. To switch which registry you are currently working in, you can use the instruction <code>go-in</code> and <code>go-out</code>, like so:
     </para>
     <programlisting>
-... set :newreg [ reg . ] .
+... set /newreg [ reg . ] .
 ... go-in \newreg .
-... set :hello "Hello, world!" .
+... set /hello "Hello, world!" .
 ... print hello .
 Hello, world!
 ... go-out .
@@ -247,8 +247,8 @@ Error: Value `hello` not found.</programlisting>
       <code>in</code> is another instruction that is useful for modifying registries.  <code>in</code> takes a registry and an instruction as arguments and executes the instruction in the context of the registry.  For example, the above code could have been written as,
     </para>
     <programlisting>
-... set :newreg [ reg . ] .
-... in \newreg ( set :hello "Hello, world!" . print hello . ) .
+... set /newreg [ reg . ] .
+... in \newreg ( set /hello "Hello, world!" . print hello . ) .
 Hello, world!</programlisting>
 
     <para>
@@ -256,12 +256,12 @@ Hello, world!</programlisting>
     </para>
     
     <programlisting>
-... set :newreg [ reg :hello "Howdy!" . ] .
-... in newreg ( set :hello "Hello, world!" . print hello . ) .
+... set /newreg [ reg /hello "Howdy!" . ] .
+... in newreg ( set /hello "Hello, world!" . print hello . ) .
 Hello, world!
 ... in newreg ( print hello . ) .
 Howdy!
-... in \newreg ( set :hello "Hello, world!" . ) .
+... in \newreg ( set /hello "Hello, world!" . ) .
 ... in newreg ( print hello . ) .
 Hello, world!</programlisting>
 
@@ -269,13 +269,13 @@ Hello, world!</programlisting>
       There are convenient instructions for combining registries or applying instructions to each element of a registry.  The primary instructions to do so are <code>do-to-all</code> and <code>join</code>. <code>do-to-all</code> applies an instruction to each element of a registry and returns a new registry with the result of applying the instruction in the same register as in the original registry.  <code>join</code> joins two registries by applying any instruction that takes two arguments to the values located in the corresponding registers of the registries.  For example,
     </para>
     <programlisting>
-... set :x [ reg :one 1 :two 2 :three 3 . ] .
+... set /x [ reg /one 1 /two 2 /three 3 . ] .
 ... do-to-all ( multiply #1 3 . ) \x .
 ans = registry with:
    one of type Integer, value: 3
    two of type Integer, value: 6
    three of type Integer, value: 9
-... set :y ans .
+... set /y ans .
 ... join y x subtract .
 ans = registry with:
    one of type Integer, value: 2
@@ -295,8 +295,8 @@ ans = registry with:
       The <code>list</code> instruction creates a registry where each of the arguments to <code>list</code> are located at <code>#1,#2,..</code> in the resulting registry based on the order of the arguments.  For example,
     </para>
     <programlisting>
-... set :vec [ list 1 2 3 4 . ] .
-... print [ get :#2 \vec . ] .
+... set /vec [ list 1 2 3 4 . ] .
+... print [ get /#2 \vec . ] .
 2</programlisting>
 
     <para>
@@ -308,16 +308,16 @@ ans = registry with:
     </para>
 
     <programlisting>
-... next :#1 .
-ans = :#2
-... next :a1 .
-ans = :a2</programlisting>
+... next /#1 .
+ans = /#2
+... next /a1 .
+ans = /a2</programlisting>
 
     This instruction can be used to loop over ordered elements of a registry, like so:
     <programlisting>
-... set :vec [ list 1 2 3 4 . ] .
-... set :i :#1 .
-... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set :i ans . ) .
+... set /vec [ list 1 2 3 4 . ] .
+... set /i /#1 .
+... while ( exist-in i \vec . ) ( print [ get i \vec . ] . next i . set /i ans . ) .
 1
 2
 3
@@ -331,7 +331,7 @@ ans = :a2</programlisting>
       The <code>collapse</code> instruction can apply instructions to all elements of a registry with this form.  For example, to add up all numbers in a registry,
     </para>
     <programlisting>
-... set :vec [ list 1 2 3 4 . ] .
+... set /vec [ list 1 2 3 4 . ] .
 ... collapse \vec add "#" .
 ans = 10
 ... collapse \vec multiply "#" .
@@ -339,14 +339,14 @@ ans = 24</programlisting>
 
     The last argument to collapse gives the prefix to collapse.  So, for example,
     <programlisting>
-... set :vec [ reg :c1 1 :c2 2 :c3 3 :c4 4 . ] .
+... set /vec [ reg /c1 1 /c2 2 /c3 3 /c4 4 . ] .
 ... collapse \vec add "c" .
 ans = 10</programlisting>
 
-The last important syntax element of registries is the "slash notation".  Slash notation lets you access registers in registries in a convenient way. You can access register values by REGISTRY/REGISTER.  This can be nested with REGISTRY/REGISTER/REGISTER if the value stored at REGISTRY/REGISTER is a registry. For example,
+The last important syntax element of registries is the "colon notation".  Colon notation lets you access registers in registries in a convenient way. You can access register values by REGISTRY:REGISTER.  This can be nested with REGISTRY:REGISTER:REGISTER if the value stored at REGISTRY:REGISTER is a registry. For example,
 <programlisting>
-... set :x [ reg :h "hello" . ] .
-... print x/:h .
+... set /x [ reg /h "hello" . ] .
+... print x:/h .
 hello</programlisting>
     
 </section>
@@ -358,9 +358,9 @@ hello</programlisting>
     Registers can be referenced in ARBEL in any registry that is "above" the current registry.  The register accessed is the register in the lowest registry that has data at the registry.  For example,
   </para>
   <programlisting>
-... set :x 2 .
-... set :f ( add x #1 . ) .
-... set :g ( set :x 1 . f 1 . ) .
+... set /x 2 .
+... set /f ( add x #1 . ) .
+... set /g ( set /x 1 . f 1 . ) .
 ... g .
 ans = 2
 ... f 1 .
@@ -374,12 +374,12 @@ ans = 3</programlisting>
     Encapsulation in ARBEL is achieved through the use of registries.  For example, consider a mathematical library that wants to compute the natural logarithm of a number plus one.
   </para>
   <programlisting>
-... set :math [ reg . ] .
-... set :log1 ( log [ add \#1 1 . ] 1 . ) \math .</programlisting>
+... set /math [ reg . ] .
+... set /log1 ( log [ add \#1 1 . ] 1 . ) \math .</programlisting>
 
-You can then call the function using the slash notation.
+You can then call the function using the colon notation.
 <programlisting>
-... math/:log1 2 .  
+... math:/log1 2 .  
 ans = 1.098612</programlisting>
 </section>
   </section>
@@ -691,7 +691,7 @@ input REGISTER .</programlisting>
   </para>
   <programlisting>collapse REGISTRY INSTRUCTION STRING .</programlisting>
   <para>
-    Applies the instruction to the register <code>:STRING1</code> and <code>:STRING2</code> and then applies the instruction to what the instruction set the <code>ans</code> register to and <code>:STRING3</code> and so on.  It sets the <code>ans</code> register to the result.
+    Applies the instruction to the register <code>/STRING1</code> and <code>/STRING2</code> and then applies the instruction to what the instruction set the <code>ans</code> register to and <code>/STRING3</code> and so on.  It sets the <code>ans</code> register to the result.
   </para>
       </listitem>
 
@@ -816,7 +816,7 @@ to-number STRING .</programlisting>
         </para>
         <programlisting>' ANYTHING </programlisting>
         <para>
-          Ignore all the text following the <code>'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set :x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set :mycomment ' .</code> and then use <code>mycomment</code> as a comment. <code>'</code> must be followed by a space character to be a comment.  You could name a register <code>'re'g</code>, but you can't name it <code>reg'</code>.  You probably shouldn't do either.
+          Ignore all the text following the <code>'</code> instruction until the end of the line. This is the comment instruction.   This is the only instruction that is not first class.  For example, you can do <code>set /x print .</code> and then do <code>x "hello" .</code> to print text.  But you cannot do <code>set /mycomment ' .</code> and then use <code>mycomment</code> as a comment. <code>'</code> must be followed by a space character to be a comment.  You could name a register <code>'re'g</code>, but you can't name it <code>reg'</code>.  You probably shouldn't do either.
         </para>
       </listitem>
 
