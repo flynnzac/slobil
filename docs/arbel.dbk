@@ -913,9 +913,34 @@ link STRING1 STRING2 STRING3 .</programlisting>
           Replace INTEGER matches of regular expression STRING1 in STRING3 with STRING2.  If INTEGER is less than or equal to 0, replace all matches.
         </para>
       </listitem>
-      
-    </itemizedlist>
 
+      <listitem>
+	<para>
+	  Exponential instructions:
+	</para>
+	<programlisting>
+log NUMBER .	  
+exp NUMBER .
+to-power NUMBER1 NUMBER2 .</programlisting>
+
+<para>
+  <code>log</code> sets the <code>ans</code> register to the natural logarithm of the number.  <code>exp</code> sets the <code>ans</code> register to the value of raising the natural base to the given power.  <code>to-power</code> raises NUMBER1 to the NUMBER2 power.  All of these instructions can take integers or decimals.
+</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  File system instructions:
+	</para>
+	<programlisting>
+chdir STRING .	  
+curdir .
+copy-file STRING1 STRING2 .</programlisting>
+<para>
+  <code>chdir</code> changes the current directory to STRING. <code>curdir</code> sets the <code>ans</code> register to the name of the current registry. <code>copy-file</code> copies the file with name STRING1 to STRING2.
+</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section>
