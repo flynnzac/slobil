@@ -368,7 +368,7 @@ unsigned long
 hash_str(const char *str);
 
 char**
-split_slash (const char* name, int* cnt, int** is_regstr);
+split_by_colon (const char* name, int* cnt, int** is_regstr);
 
 char**
 copy_names (char** name, int levels);
@@ -381,6 +381,9 @@ copy_isregstr (int* is_regstr, int levels);
 
 data*
 get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
+
+const char*
+str_type (data_type type);
 
 /* global variables */
 registry* current_parse_registry;

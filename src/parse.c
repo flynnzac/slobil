@@ -1,5 +1,25 @@
 #include "arbel.h"
 
+struct parser_state
+fresh_state (int print) 
+{
+  struct parser_state state;
+  state.buffer[0] = '\0';
+  state.arg_n = 0;
+  state.i = 0;
+  state.in_instr = 0;
+  state.after_instr = 0;
+  state.in_quote = 0;
+  state.after_quote = 0;
+  state.open_paren = '\0';
+  state.print_out = print;
+  state.in_comment = 0;
+  state.cur_elem = NULL;
+  state.cur_stmt = NULL;
+
+  return state;
+}
+
 void
 clear_state_buffer (struct parser_state* state)
 {
@@ -36,7 +56,7 @@ add_lookup_argument (element** head, element* e, char* d)
 {
   int count = 0;
   int* is_regstr;
-  char** name = split_slash(d, &count, &is_regstr);
+  char** name = split_by_colon(d, &count, &is_regstr);
   unsigned long* hash_name = malloc(sizeof(unsigned long)*(count));
   int i;
   for (i=0; i < count; i++)
@@ -196,8 +216,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   int i, levels;
                   char** str_array;
                   int* is_regstr;
-                  str_array = split_slash(state->buffer+1, &levels,
-                                          &is_regstr);
+                  str_array = split_by_colon(state->buffer+1, &levels,
+                                             &is_regstr);
                   d = malloc(sizeof(data));
                   d->type = REFERENCE;
                   d->data = malloc(sizeof(ref));
