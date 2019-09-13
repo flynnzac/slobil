@@ -405,7 +405,7 @@ ans = 1.098612</programlisting>
         </para>
         <programlisting>add NUMBER1 NUMBER2 .</programlisting>
         <para>
-          Adds the two numbers (either Integer or Decimal values) together and returns the result in the <code>ans</code> register of the current registry.
+          Adds the two numbers (either Integer or Real values) together and returns the result in the <code>ans</code> register of the current registry.
         </para>
       </listitem>
 
@@ -837,7 +837,7 @@ to-number STRING .</programlisting>
         </para>
         <programlisting>
 is-integer VALUE .
-is-decimal VALUE .
+is-real VALUE .
 is-string VALUE .
 is-register VALUE .
 is-registry VALUE .
@@ -924,7 +924,7 @@ exp NUMBER .
 to-power NUMBER1 NUMBER2 .</programlisting>
 
 <para>
-  <code>log</code> sets the <code>ans</code> register to the natural logarithm of the number.  <code>exp</code> sets the <code>ans</code> register to the value of raising the natural base to the given power.  <code>to-power</code> raises NUMBER1 to the NUMBER2 power.  All of these instructions can take integers or decimals.
+  <code>log</code> sets the <code>ans</code> register to the natural logarithm of the number.  <code>exp</code> sets the <code>ans</code> register to the value of raising the natural base to the given power.  <code>to-power</code> raises NUMBER1 to the NUMBER2 power.  All of these instructions can take integers or real (floating point) numbers.
 </para>
       </listitem>
 
@@ -1028,7 +1028,7 @@ copy-file STRING1 STRING2 .</programlisting>
     <example>
       <title>Parse a Comma-Separated File</title>
       <para>
-	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
+	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Real types when appropriate.
       </para>
       <programlisting><xi:include href="../examples/parse_csv.arb" parse="text" /></programlisting>
     </example>

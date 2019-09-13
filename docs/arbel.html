@@ -223,7 +223,7 @@ ans = 1.098612</pre></div></div><div class="section"><div class="titlepage"><div
         </p></li><li class="listitem"><p>
           The <code class="code">add</code> instruction:
         </p><pre class="programlisting">add NUMBER1 NUMBER2 .</pre><p>
-          Adds the two numbers (either Integer or Decimal values) together and returns the result in the <code class="code">ans</code> register of the current registry.
+          Adds the two numbers (either Integer or Real values) together and returns the result in the <code class="code">ans</code> register of the current registry.
         </p></li><li class="listitem"><p>
           The <code class="code">subtract</code> instruction:
         </p><pre class="programlisting">subtract NUMBER1 NUMBER2 .</pre><p>
@@ -403,7 +403,7 @@ to-number STRING .</pre><p>
           The type-checking instructions:
         </p><pre class="programlisting">
 is-integer VALUE .
-is-decimal VALUE .
+is-real VALUE .
 is-string VALUE .
 is-register VALUE .
 is-registry VALUE .
@@ -446,7 +446,7 @@ link STRING1 STRING2 STRING3 .</pre><p>
 log NUMBER .	  
 exp NUMBER .
 to-power NUMBER1 NUMBER2 .</pre><p>
-  <code class="code">log</code> sets the <code class="code">ans</code> register to the natural logarithm of the number.  <code class="code">exp</code> sets the <code class="code">ans</code> register to the value of raising the natural base to the given power.  <code class="code">to-power</code> raises NUMBER1 to the NUMBER2 power.  All of these instructions can take integers or decimals.
+  <code class="code">log</code> sets the <code class="code">ans</code> register to the natural logarithm of the number.  <code class="code">exp</code> sets the <code class="code">ans</code> register to the value of raising the natural base to the given power.  <code class="code">to-power</code> raises NUMBER1 to the NUMBER2 power.  All of these instructions can take integers or real (floating point) numbers.
 </p></li><li class="listitem"><p>
 	  File system instructions:
 	</p><pre class="programlisting">
@@ -557,7 +557,7 @@ set /tokenize
       answer \tokened .
     )  .
 </pre></div></div><br class="example-break"><div class="example"><a name="idm549"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
-	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Decimal types when appropriate.
+	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Real types when appropriate.
       </p><pre class="programlisting">' parses a comma-separated file into a registry
 
 source "examples/tokenize.arb" .

@@ -22,10 +22,10 @@
 #include "arbel.h"
 
 void
-assign_dec (data** d, const double num)
+assign_real (data** d, const double num)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = DECIMAL;
+  (*d)->type = REAL;
   (*d)->data = malloc(sizeof(double));
   *((double*) (*d)->data) = num;
 }
@@ -555,8 +555,8 @@ copy_data (data* d_in)
     case INTEGER:
       assign_int(&d, *((int*) d_in->data));
       break;
-    case DECIMAL:
-      assign_dec(&d, *((double*) d_in->data));
+    case REAL:
+      assign_real(&d, *((double*) d_in->data));
       break;
     case STRING:
       assign_str(&d, (const char*) d_in->data, 1);

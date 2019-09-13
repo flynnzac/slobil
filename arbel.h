@@ -38,7 +38,7 @@
 enum data_type
   {
    INTEGER,
-   DECIMAL,
+   REAL,
    STRING,
    REGISTER,
    REGISTRY,
@@ -161,7 +161,7 @@ int
 is_integer (const char* str);
 
 void
-assign_dec (data** d, const double num);
+assign_real (data** d, const double num);
 
 void
 assign_int (data** d, const int num);
@@ -291,7 +291,7 @@ int
 is_retval (const int r);
 
 int
-is_decimal (const char* str);
+is_real (const char* str);
 
 void
 assign_active (data** d, statement* s);

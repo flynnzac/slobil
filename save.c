@@ -42,7 +42,7 @@ save_registry (FILE* f, registry* reg)
             case INTEGER:
               fwrite(reg->value->data, sizeof(int), 1, f);
               break;
-            case DECIMAL:
+            case REAL:
               fwrite(reg->value->data, sizeof(double), 1, f);
               break;
             case STRING:
@@ -107,10 +107,10 @@ read_registry (FILE* f, registry* reg)
           assign_int(&d, *((int*) cache));
           free(cache);
           break;
-        case DECIMAL:
+        case REAL:
           cache = malloc(sizeof(double));
           fread(cache, sizeof(double), 1, f);
-          assign_dec(&d, *((double*) cache));
+          assign_real(&d, *((double*) cache));
           free(cache);
           break;
         case STRING:

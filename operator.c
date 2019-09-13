@@ -116,7 +116,7 @@ op_arithmetic (registry* reg, const int code)
       return;
     }
 
-  if (arg1->type == DECIMAL || arg2->type == DECIMAL)
+  if (arg1->type == REAL || arg2->type == REAL)
     {
       double term2;
       double result;
@@ -145,7 +145,7 @@ op_arithmetic (registry* reg, const int code)
           result /= term2;
           break;
         }
-      assign_dec(&new_data, result);
+      assign_real(&new_data, result);
     }
   else
     {
@@ -1578,7 +1578,7 @@ op_to_string (registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+  if (arg1->type != INTEGER && arg1->type != REAL)
     {
       do_error("The argument to `to-string` should be numeric.");
       return;
@@ -1677,10 +1677,10 @@ op_to_number (registry* reg)
       assign_int(&d, result);
       ret_ans(reg, d);
     }
-  else if (is_decimal(value) && (strcmp(value, ".") != 0))
+  else if (is_real(value) && (strcmp(value, ".") != 0))
     {
       double result = atof(value);
-      assign_dec(&d, result);
+      assign_real(&d, result);
       ret_ans(reg, d);
     }
   else
@@ -1815,9 +1815,9 @@ op_is_integer (registry* reg)
 }
 
 void
-op_is_decimal (registry* reg)
+op_is_real (registry* reg)
 {
-  op_is_type(reg, DECIMAL);
+  op_is_type(reg, REAL);
 }
 
 void
@@ -2487,7 +2487,7 @@ op_log (registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+  if (arg1->type != INTEGER && arg1->type != REAL)
     {
       do_error("`log` requires a numeric argument.");
       return;
@@ -2496,11 +2496,11 @@ op_log (registry* reg)
   data* d;
   if (arg1->type == INTEGER)
     {
-      assign_dec(&d, log((double) (*((int*) arg1->data))));
+      assign_real(&d, log((double) (*((int*) arg1->data))));
     }
   else
     {
-      assign_dec(&d, log(*((double*) arg1->data)));
+      assign_real(&d, log(*((double*) arg1->data)));
     }
 
   ret_ans(reg,d);
@@ -2518,7 +2518,7 @@ op_exp (registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+  if (arg1->type != INTEGER && arg1->type != REAL)
     {
       do_error("`exp` requires a numeric argument.");
       return;
@@ -2527,11 +2527,11 @@ op_exp (registry* reg)
   data* d;
   if (arg1->type == INTEGER)
     {
-      assign_dec(&d, exp((double) (*((int*) arg1->data))));
+      assign_real(&d, exp((double) (*((int*) arg1->data))));
     }
   else
     {
-      assign_dec(&d, exp(*((double*) arg1->data)));
+      assign_real(&d, exp(*((double*) arg1->data)));
     }
 
   ret_ans(reg,d);
@@ -2549,8 +2549,8 @@ op_to_power (registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != DECIMAL
-      && arg2->type != INTEGER && arg2->type != DECIMAL)
+  if (arg1->type != INTEGER && arg1->type != REAL
+      && arg2->type != INTEGER && arg2->type != REAL)
     {
       do_error("`to-power` requires two numeric argument.");
       return;
@@ -2577,7 +2577,7 @@ op_to_power (registry* reg)
       power = *((double*) arg2->data);
     }
 
-  assign_dec(&d, pow(base,power));
+  assign_real(&d, pow(base,power));
 
   ret_ans(reg,d);
 }
@@ -2983,8 +2983,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_integer);
   set(reg,d,"is-integer");
 
-  assign_op(&d, op_is_decimal);
-  set(reg,d,"is-decimal");
+  assign_op(&d, op_is_real);
+  set(reg,d,"is-real");
 
   assign_op(&d, op_is_string);
   set(reg,d,"is-string");

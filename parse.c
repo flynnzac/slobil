@@ -169,10 +169,10 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   assign_int(&d, atoi(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
-              else if (is_decimal(state->buffer) &&
+              else if (is_real(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
-                  assign_dec(&d, atof(state->buffer));
+                  assign_real(&d, atof(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_register(state->buffer))

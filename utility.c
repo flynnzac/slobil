@@ -34,7 +34,7 @@ is_integer (const char* str)
 }
 
 int
-is_decimal (const char* str)
+is_real (const char* str)
 {
   int i;
   int decimals = 0;
@@ -57,7 +57,7 @@ is_decimal (const char* str)
 int
 is_numeric (data* d)
 {
-  if (d->type == DECIMAL ||
+  if (d->type == REAL ||
       d->type == INTEGER)
     {
       return 1;
@@ -311,7 +311,7 @@ print_data (data* d, int print_cmd)
     case STRING:
       printf("%s\n", (const char*) d->data);
       break;
-    case DECIMAL:
+    case REAL:
       printf("%f\n", *((double*) d->data));
       break;
     case REGISTRY:
@@ -354,8 +354,8 @@ str_type (data_type type)
     case INTEGER:
       s = "Integer";
       break;
-    case DECIMAL:
-      s = "Decimal";
+    case REAL:
+      s = "Real";
       break;
     case STRING:
       s = "String";
@@ -387,8 +387,7 @@ str_type (data_type type)
 
   return s;
 }
-        
-    
+
 void
 print_registry (registry* reg)
 {
