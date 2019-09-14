@@ -4,7 +4,8 @@ ARBEL is a programming language based on a named-list data type called a registr
 
 For a manual see: http://www.zflynn.com/arbel/arbel.html
 
-ARBEL has an Emacs mode! It has syntax highlighting, indentation, and you can spawn ARBEL sessions and send code from the buffer to the interpreter. The emacs mode is in the `emacs` folder. It requires `isend-mode` which you can get from MELPA.
+__NEWS: The basic syntax of ARBEL is now finalized and won't change going forward.__
+
 
 # Installation
 
@@ -32,6 +33,10 @@ ARBEL accepts the following command-line switches:
 - `-n` do not start the interpreter. Exit after any loading.
 - `-m` do not print out information unless explicitly using a `print` instruction.
 - `d` do not save code as entered. This option prevents using commands to write out the code you have entered interactivel, but might give a small performance boost. Implied by `-s`.
+
+# Emacs
+
+ARBEL has an Emacs mode! It has syntax highlighting, indentation, and you can spawn ARBEL sessions and send code from the buffer to the interpreter. The emacs mode is in the `emacs` folder. It requires `isend-mode` which you can get from MELPA.
 
 
 
