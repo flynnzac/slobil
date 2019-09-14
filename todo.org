@@ -342,5 +342,28 @@ as if it was typed exactly like that.
 Decided on just using a built-in "up" instruction
 * TODO Make `up` more efficient.  Currently it is copying its arguments twice.
 * TODO Have an "assert"-like command which checks type of values at registers and errors if register does not exist or if the type doesn't match
+* TODO Basic inefficiency to eliminate right now is in how "lookups" are performed, lots of room for improvement instead of scanning unordered linked list (maybe)  Let's try a hash table implementation
+
+struct registry
+{
+	unsigned long* key;
+  entry* r;
+  size_t num;
+};
+
+Where entry is basically current registry without the linked list part
+
+get is then:
+
+for (int i = 0; i < registry->num; i++)
+{
+	if (registry->key[i] == hash)
+  {
+    return registry->r[i]->data;
+  }
+}
+
+return NULL;
+
 
 
