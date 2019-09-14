@@ -641,7 +641,7 @@ set /integrate
 void
 log_plus_one (registry* reg)
 {
-  data* arg1 = lookup(reg, "#1", 0);
+  data* arg1 = lookup(reg, hash_str("#1"), 0);
 
   if (arg1 == NULL)
     {
@@ -649,7 +649,7 @@ log_plus_one (registry* reg)
       return;
     }
 
-  if (arg1-&gt;type != INTEGER &amp;&amp; arg1-&gt;type != DECIMAL)
+  if (arg1-&gt;type != INTEGER &amp;&amp; arg1-&gt;type != REAL)
     {
       do_error("Argument to `log1` must be numeric.");
       return;
@@ -666,14 +666,14 @@ log_plus_one (registry* reg)
     }
 
   data* d;
-  assign_dec(&amp;d, ans);
+  assign_real(&amp;d, ans);
   ret_ans(reg,d);
 }
 
 </pre><p>
         The ARBEL code:
       </p><pre class="programlisting">' Demonstrates linking C code in
-link "link.so" "log_plus_one" "log1" .
+link "./link.so" "log_plus_one" "log1" .
 print [ log1 2 . ] .
 print [ log1 2.3241 . ] .
 print [ log1 0.5 . ] .

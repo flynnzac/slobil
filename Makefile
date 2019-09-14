@@ -19,7 +19,7 @@ doc: docs/arbel.dbk docs/arbel.css
 	$(DOC)
 	cat docs/mysite.mro docs/index.mro.html | mro > docs/index.html
 
-examples: examples/link.c libarbel.$(SUFFIX)
+examples: examples/link.c libarbel.$(SUFFIX) .FORCE
 	cc -c -fPIC -I. -L. -larbel -lm examples/link.c
 	cc -shared -fPIC -o link.$(SUFFIX) -L. -I. link.o -larbel
 

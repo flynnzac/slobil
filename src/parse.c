@@ -424,16 +424,14 @@ interact (FILE* f, parser_state* state, registry* reg)
       execute_code(s, reg);
       if (!is_error(-1))
         {
-          if (reg->up == NULL && is_retval(-1) &&
-              state->print_out)
-            {
-              d = get(reg, arbel_hash_ans, 0);
-              print_data(d,0);
-              is_retval(0);
-            }
-
           if (reg->up == NULL && state->print_out)
             {
+              d = get(reg, arbel_hash_ans, 0);
+              if (d != NULL)
+                {
+                  print_data(d,0);
+                  is_retval(0);
+                }
               printf("OK.\n");
             }
 

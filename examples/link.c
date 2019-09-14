@@ -9,7 +9,7 @@
 void
 log_plus_one (registry* reg)
 {
-  data* arg1 = lookup(reg, "#1", 0);
+  data* arg1 = lookup(reg, hash_str("#1"), 0);
 
   if (arg1 == NULL)
     {
@@ -17,7 +17,7 @@ log_plus_one (registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != DECIMAL)
+  if (arg1->type != INTEGER && arg1->type != REAL)
     {
       do_error("Argument to `log1` must be numeric.");
       return;
@@ -34,7 +34,7 @@ log_plus_one (registry* reg)
     }
 
   data* d;
-  assign_dec(&d, ans);
+  assign_real(&d, ans);
   ret_ans(reg,d);
 }
 
