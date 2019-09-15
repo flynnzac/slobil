@@ -153,6 +153,8 @@
                 "repeat"
                 "substring"
                 "up"
+                "of"
+                "isof"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\/[^\s]*\\)\s*")
