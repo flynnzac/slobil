@@ -65,10 +65,14 @@ main (int argc, char** argv)
   arbel_hash_3 = hash_str("#3");
   arbel_hash_4 = hash_str("#4");
   arbel_hash_data = hash_str("data");
+  arbel_hash_class = hash_str("-class");
+
   arbel_error = 0;
 
   arbel_ll = NULL;
   arbel_ll_cnt = 0;
+
+  last_ans = NULL;
 
   char* code = NULL;
   char* prompt = "... ";

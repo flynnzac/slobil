@@ -2817,6 +2817,78 @@ op_up (registry* reg)
 
 }
 
+void
+op_of (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg2 = lookup(reg, arbel_hash_2, 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`of` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("First argument to `of` must be a string.");
+      return;
+    }
+
+  if (arg2->type != REGISTRY)
+    {
+      do_error("Second argument to `of` must be a registry.");
+      return;
+    }
+
+  data* d;
+  assign_str(&d, (char*) arg1->data, 1);
+  set((registry*) arg2->data, d, "-class");
+}
+
+void
+op_isof (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg2 = lookup(reg, arbel_hash_2, 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`isof` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("The first argument to `isof` must be a string.");
+      return;
+    }
+  if (arg2->type != REGISTRY)
+    {
+      do_error("The second argument to `isof` must be a registry.");
+      return;
+    }
+
+  data* d = lookup((registry*) arg2->data, arbel_hash_class, 0);
+
+  if (d == NULL || d->type != STRING)
+    {
+      do_error("`class` register not found.");
+      return;
+    }
+
+  if (strcmp((char*) d->data, (char*) arg1->data)==0)
+    {
+      assign_int(&d, 1);
+    }
+  else
+    {
+      assign_int(&d, 0);
+    }
+
+  ret_ans(reg, d);
+  
+}
 
 void
 add_basic_ops (registry* reg)
@@ -3073,6 +3145,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_up);
   set(reg,d,"up");
   
+  assign_op(&d, op_of);
+  set(reg,d,"of");
+
+  assign_op(&d, op_isof);
+  set(reg,d,"isof");
   
 }
   

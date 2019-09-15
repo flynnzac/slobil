@@ -427,10 +427,10 @@ interact (FILE* f, parser_state* state, registry* reg)
           if (reg->up == NULL && state->print_out)
             {
               d = get(reg, arbel_hash_ans, 0);
-              if (d != NULL)
+              if (d != NULL && d != last_ans)
                 {
                   print_data(d,0);
-                  is_retval(0);
+                  last_ans = d;
                 }
               printf("OK.\n");
             }

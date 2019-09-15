@@ -400,6 +400,9 @@ unsigned long arbel_hash_3;
 unsigned long arbel_hash_4;
 unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
+unsigned long arbel_hash_class;
+
+data* last_ans;
 
 int arbel_error;
 
