@@ -1,33 +1,31 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ARBEL</title><link rel="stylesheet" type="text/css" href="arbel.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idm1"></a>ARBEL</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Zach</span> <span class="surname">Flynn</span></h3></div></div><div><p class="copyright">Copyright © 2019 Zach Flynn</p></div><div><div class="legalnotice"><a name="idm17"></a>
       Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 by the Free Software Foundation. A copy of the license is included in the section entitled "GNU Free Documentation License".
-    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">September 13, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dd><dl><dt><span class="section"><a href="#idm36">Categorizing ARBEL</a></span></dt></dl></dd><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm45">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm129">Using Registries and References</a></span></dt><dt><span class="section"><a href="#idm177">Scoping Rules and Encapsulation</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm520">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm522">String Escape Sequences</a></span></dt></dl></dd><dt><span class="section"><a href="#idm538">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
+    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">September 13, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introducing ARBEL</a></span></dt><dd><dl><dt><span class="section"><a href="#idm33">Categorizing ARBEL</a></span></dt></dl></dd><dt><span class="section"><a href="#syntax">Grammar: ARBEL Syntax</a></span></dt><dd><dl><dt><span class="section"><a href="#idm42">Basic Syntax</a></span></dt><dt><span class="section"><a href="#idm126">Using Registries and References</a></span></dt><dt><span class="section"><a href="#idm174">Scoping Rules and Encapsulation</a></span></dt></dl></dd><dt><span class="section"><a href="#built-in">Vocabulary: Built-In Instructions</a></span></dt><dt><span class="section"><a href="#idm517">Miscellaneous Tidbits</a></span></dt><dd><dl><dt><span class="section"><a href="#idm519">String Escape Sequences</a></span></dt></dl></dd><dt><span class="section"><a href="#idm535">Examples</a></span></dt><dt><span class="appendix"><a href="#fdl">A. GNU Free Documentation License</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introducing ARBEL</h2></div></div></div><p>
       ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </p><p>
       ARBEL's basic syntax is similar to running programs from a UNIX shell.  All instructions have the form <code class="code">INSTRUCTION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. It uses different parenthesis types to control when different sub-statements provided in the place of arguments are executed.  It has either lazy or greedy evaluation of arguments depending on which parenthesis are used to enclose substatements. This removes the need for many common special forms found in other languages.
     </p><p>
-      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of BASIC and LISP machines.  
+      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of old BASIC-based systems and LISP machines.  
     </p><p>
-      I followed a couple design principles in developing ARBEL:
+      The main selling points of ARBEL:
     </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-        ARBEL should be easy to use interactively.  It should be convenient to write "personal programs", programs for the user's own computing.  
+        It is easy to use interactively.  It is convenient to write "personal programs", programs for the user's own computing.  
       </li><li class="listitem">
-        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. ARBEL's "metaphor" for computing is that the user is giving instructions or commands about what the computer should do.
+        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. This method of programming is intuitive and straightforward.
       </li><li class="listitem">
         Everything in ARBEL is data.  There are no special objects. Everything in ARBEL is contained in a registry at a certain register, including instructions.
       </li><li class="listitem">
-        ARBEL is about modifying data.  There is a top-level set of data in memory and we want to modify it in some way. This dataset can be saved to disk and restored later.
+        ARBEL is about modifying data.  There is a top-level set of data in memory and we want to modify it in some way. This dataset can be saved to disk and restored later.  So the user can pick up from where they left off easily.
       </li><li class="listitem">
         ARBEL's syntax is highly regular.  It never deviates from the form <code class="code">INSTRUCTION ARG1 ... ARGN . </code></li></ol></div><p>
       ARBEL is an acroynym for A Register-Based Environment and Language. I pronounce it AR-bel (rhymes with "garble").  You, of course, may pronounce it however you like.
-    </p><p>
-      The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects.  You can check out <code class="code">operator.c</code> in the distribution for the implementation of the built-in functions for some examples of how to write such a function.  You can compile as a shared library (linking against libarbel.so) and link the newly added C code into the ARBEL environment with the <code class="code">link</code> instruction.
-    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm36"></a>Categorizing ARBEL</h3></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm33"></a>Categorizing ARBEL</h3></div></div></div><p>
         ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and values have a certain type and the type does not change without explicit instruction (excepting a couple arithmetic commands which convert integers to floating point values if necessary).
       </p><p>
         Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
       </p><p>
         ARBEL does not have any special object-oriented constructs.  I personally don't program using those methods very often so the language is unlikely to get them unless someone wants to add them.  It would be easy to do most of what object orientation is used for by modeling classes as registries with a <code class="code">:class</code> register.  Instructions could then do different things based on the value in the <code class="code">:class</code> register.  Similar to what R does with S3 classes.
-      </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="syntax"></a>Grammar: ARBEL Syntax</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm45"></a>Basic Syntax</h3></div></div></div><p>
+      </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="syntax"></a>Grammar: ARBEL Syntax</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm42"></a>Basic Syntax</h3></div></div></div><p>
         This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instructions and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
       </p><p>
         A statement consists of an <span class="emphasis"><em>instruction</em></span> followed by several arguments.  Each element of a statement must be separated from the others by whitespace (space, tab, or a new line), including the statement terminator ("."). For example, the statement,
@@ -102,7 +100,7 @@ ans = 120 </pre><p>
 ... print ans .
 61.5
 ... print [ subtract [ add 40 25 . ] 3.5 . ] .
-61.5</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm129"></a>Using Registries and References</h3></div></div></div><p>
+61.5</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm126"></a>Using Registries and References</h3></div></div></div><p>
       The basic data type of ARBEL is a registry.  When the interpreter is started, you are working in the default registry. To switch which registry you are currently working in, you can use the instruction <code class="code">go-in</code> and <code class="code">go-out</code>, like so:
     </p><pre class="programlisting">
 ... set /newreg [ reg . ] .
@@ -196,7 +194,7 @@ The last important syntax element of registries is the "colon notation".  Colon 
 <pre class="programlisting">
 ... set /x [ reg /h "hello" . ] .
 ... print x:/h .
-hello</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm177"></a>Scoping Rules and Encapsulation</h3></div></div></div><p>
+hello</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm174"></a>Scoping Rules and Encapsulation</h3></div></div></div><p>
     Registers can be referenced in ARBEL in any registry that is "above" the current registry.  The register accessed is the register in the lowest registry that has data at the registry.  For example,
   </p><pre class="programlisting">
 ... set /x 2 .
@@ -462,7 +460,7 @@ copy-file STRING1 STRING2 .</pre><p>
 	  The <code class="code">repeat</code> instruction,
 	</p><pre class="programlisting">repeat INTEGER INSTRUCTION .</pre><p>
 	  Execute INSTRUCTION in the current registry INTEGER times.
-	</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm520"></a>Miscellaneous Tidbits</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm522"></a>String Escape Sequences</h3></div></div></div><p>
+	</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm517"></a>Miscellaneous Tidbits</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm519"></a>String Escape Sequences</h3></div></div></div><p>
         Here are the escape sequences to enter special characters in strings in ARBEL.  Escape characters start with a backslash.  If no pattern matches, the literal sequence will be entered.  For example, "\w" will insert "\w" while "\n" will insert a newline character.
       </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
             \\ inserts a backslash character (\).
@@ -476,9 +474,9 @@ copy-file STRING1 STRING2 .</pre><p>
             \r inserts a carriage return.
           </p></li><li class="listitem"><p>
             An unescaped single quote character (') inserts a double quote character (").
-          </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm538"></a>Examples</h2></div></div></div><p>
+          </p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idm535"></a>Examples</h2></div></div></div><p>
       The purpose of this section is to give some more "full-fledged" examples of ARBEL in action to get a feel for the language.
-    </p><div class="example"><a name="idm541"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
+    </p><div class="example"><a name="idm538"></a><p class="title"><b>Example 1. Basic Matrix Algebra</b></p><div class="example-contents"><p>
         These instructions do basic matrix algebra, treating a matrix as a registry of registries.  Each top-level registry corresponds to a column.  So the matrix with first row (1,2) and second row (3,4) would be entered as: <code class="code">list [ list 1 3 . ] [ list 2 4 . ] .</code>
       </p><pre class="programlisting">' Computes v^T v for a vector 
 set /dotproduct
@@ -528,7 +526,7 @@ set /transpose
 
 set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
 set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm546"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">' Tokenize a string /#1 by splitting on string /#2
+</pre></div></div><br class="example-break"><div class="example"><a name="idm543"></a><p class="title"><b>Example 2. Tokenize a string</b></p><div class="example-contents"><pre class="programlisting">' Tokenize a string /#1 by splitting on string /#2
 set /tokenize
     (
       mov /#1 /word .
@@ -556,7 +554,7 @@ set /tokenize
       in \tokened ( set cur-reg buffer . ) .
       answer \tokened .
     )  .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm549"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm546"></a><p class="title"><b>Example 3. Parse a Comma-Separated File</b></p><div class="example-contents"><p>
 	Parses a comma-separated file and returns each row as a registry.  Uses the tokenize instruction above.  This is a very simple implementation which does not allow quoting the commas, deal with any edge cases, or convert from String to Integer or Real types when appropriate.
       </p><pre class="programlisting">' parses a comma-separated file into a registry
 
@@ -580,7 +578,7 @@ set /parse-csv
       close /file .
       answer \parsed .
     ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm553"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm550"></a><p class="title"><b>Example 4. Simple text editor</b></p><div class="example-contents"><p>
         This example is a simple line-oriented text-editor.  It lets you change lines with <code class="code">n</code> and <code class="code">p</code>, insert text with <code class="code">i</code>, and print a line out with <code class="code">o</code>.  It also demonstrates a useful way to write applications or modules in ARBEL.  It creates a registry of instructions and a text buffer to write text to.  You then <code class="code">go-in</code> the registry to use the text editing environment.
       </p><pre class="programlisting">' Simple line-oriented text editor
 set /arbed [ reg . ] .
@@ -605,7 +603,7 @@ in \arbed
            print [ get ans \buffer . ] .
          ) .
    ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm562"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm559"></a><p class="title"><b>Example 5. Numerical Integration</b></p><div class="example-contents"><p>
         Computes numerical integral using simple left-hand Riemmann sums.  It can compute the integral for an arbitrary instruction that sets the <code class="code">ans</code> register to something numeric.
       </p><pre class="programlisting">' takes a function as an argument and return left hand
 ' riemmann sum over range
@@ -626,7 +624,7 @@ set /integrate
             ) .
       multiply \int \delta .
     ) .
-</pre></div></div><br class="example-break"><div class="example"><a name="idm567"></a><p class="title"><b>Example 6. Linking C code</b></p><div class="example-contents"><p>
+</pre></div></div><br class="example-break"><div class="example"><a name="idm564"></a><p class="title"><b>Example 6. Linking C code</b></p><div class="example-contents"><p>
         Here is an example of linking in C code to add an instruction to the language. 
       </p><p>
         The C code:

@@ -52,10 +52,10 @@ save_registry (FILE* f, registry* reg)
                      strlen((char*) reg->value->data), f);
               break;
             case REGISTER:
-              size = strlen((char*) reg->value->data);
+              size = strlen(((regstr*) reg->value->data)->name);
               fwrite(&size, sizeof(int), 1, f);
               fwrite(reg->value->data, sizeof(char),
-                     strlen((char*) reg->value->data), f);
+                     strlen(((regstr*) reg->value->data)->name), f);
               break;
             case REGISTRY:
               save_registry(f, (registry*) reg->value->data);

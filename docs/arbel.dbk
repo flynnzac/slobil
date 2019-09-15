@@ -37,19 +37,19 @@
     </para>
 
     <para>
-      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of BASIC and LISP machines.  
+      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of old BASIC-based systems and LISP machines.  
     </para>
 
     <para>
-      I followed a couple design principles in developing ARBEL:
+      The main selling points of ARBEL:
     </para>
     <orderedlist>
       <listitem>
-        ARBEL should be easy to use interactively.  It should be convenient to write "personal programs", programs for the user's own computing.  
+        It is easy to use interactively.  It is convenient to write "personal programs", programs for the user's own computing.  
       </listitem>
 
       <listitem>
-        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. ARBEL's "metaphor" for computing is that the user is giving instructions or commands about what the computer should do.
+        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. This method of programming is intuitive and straightforward.
       </listitem>
 
       <listitem>
@@ -57,7 +57,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is about modifying data.  There is a top-level set of data in memory and we want to modify it in some way. This dataset can be saved to disk and restored later.
+        ARBEL is about modifying data.  There is a top-level set of data in memory and we want to modify it in some way. This dataset can be saved to disk and restored later.  So the user can pick up from where they left off easily.
       </listitem>
 
       <listitem>
@@ -68,10 +68,6 @@
 
     <para>
       ARBEL is an acroynym for A Register-Based Environment and Language. I pronounce it AR-bel (rhymes with "garble").  You, of course, may pronounce it however you like.
-    </para>
-
-    <para>
-      The structure of the interpreter would make it easy to embed in C, and I may write a library for doing so at some point.  The language has an intuitive, "command" syntax that may make it useful for embedding. It is more or less trivial to write C functions that manipulate ARBEL objects.  You can check out <code>operator.c</code> in the distribution for the implementation of the built-in functions for some examples of how to write such a function.  You can compile as a shared library (linking against libarbel.so) and link the newly added C code into the ARBEL environment with the <code>link</code> instruction.
     </para>
 
     <section>
