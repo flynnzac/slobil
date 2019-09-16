@@ -2778,40 +2778,9 @@ op_up (registry* reg)
       return;
     }
 
-  reg = copy_registry(reg);
-  int num = 0;
-  regstr old;
-  regstr new;
-
-
-
-  del(reg, arbel_hash_0, 1);
-
-  old.name = NULL;
-  new.name = NULL;
-  
-  do
-    {
-      num++;
-      
-      if (old.name != NULL)
-        free(old.name);
-
-      if (new.name != NULL)
-        free(new.name);
-
-      old.name = argument_name(num);
-      new.name = argument_name(num-1);
-      old.key = hash_str(old.name);
-      new.key = hash_str(new.name);
-
-    }
-  while (mov(reg, &old, &new) != NULL);
-
-  free(new.name);
-  free(old.name);
-
+  reg = shift_list_down(reg);
   reg->up = reg->up->up;
+  
   compute(reg);
   free_registry(reg);
 
@@ -2888,6 +2857,86 @@ op_isof (registry* reg)
 
   ret_ans(reg, d);
   
+}
+
+void
+op_dispatch (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg2 = lookup(reg, arbel_hash_2, 0);
+
+  if (arg1 == NULL || arg2 == NULL)
+    {
+      do_error("`dispatch` requires two arguments.");
+      return;
+    }
+
+  if (arg1->type != STRING)
+    {
+      do_error("The first argument to `dispatch` must be a string.");
+      return;
+    }
+
+  const char* class;
+  data* d = NULL;
+  switch (arg2->type)
+    {
+    case INTEGER:
+      class = "Integer";
+      break;
+    case REAL:
+      class = "Real";
+      break;
+    case STRING:
+      class = "String";
+      break;
+    case REGISTER:
+      class = "Register";
+      break;
+    case REGISTRY:
+      d = lookup((registry*) arg2->data, arbel_hash_class, 0);
+      if (d != NULL)
+        {
+          class = (char*) d->data;
+        }
+      else
+        {
+          class = "Registry";
+        }
+      break;
+    case INSTRUCTION:
+      class = "Instruction";
+      break;
+    case OPERATION:
+      class = "Instruction";
+      break;
+    case ARBEL_FILE:
+      class = "File";
+      break;
+    case NOTHING:
+      class = "Nothing";
+      break;
+    default:
+      class = "";
+      break;
+    }
+
+  char* grab = malloc(sizeof(char)*(strlen((char*) arg1->data)+
+                                       strlen(class)+strlen("+")+1));
+  strcpy(grab, (char*) arg1->data);
+  strcat(grab, "+");
+  strcat(grab, class);
+
+  unsigned long hash_grab = hash_str(grab);
+
+  d = lookup(reg, hash_grab, 1);
+  if (d != NULL)
+    {
+      d = copy_data(d);
+      ret_ans(reg,d);
+    }
+
+  free(grab);
 }
 
 void
@@ -3150,6 +3199,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_isof);
   set(reg,d,"isof");
+
+  assign_op(&d, op_dispatch);
+  set(reg,d,"dispatch");
   
 }
   

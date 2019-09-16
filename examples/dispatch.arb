@@ -1,0 +1,47 @@
+' Demonstration of class and dispatch system in ARBEL
+' Gets "first" element of two different kinds of registries:
+' an ordered list indexed by numbers and a list indexed alphabetically
+
+set /x [ list 1 2 3 . ] .
+of "List" \x .
+
+set /y [ reg /a 4 /b 5 /c 6 . ] .
+of "Alpha-List" \y .
+
+set /first
+    (
+      dispatch "first" \#1 .
+      ans \#1 .
+    ) .
+set /first+List ( answer \#1:/#1 . ) .
+set /first+Alpha-List ( answer \#1:/a . ) .
+
+first x .
+first y .
+
+' Demonstrates dispatching to different types
+
+set /add-n-times
+    (
+      dispatch "add-n-times" \#1 .
+      ans \#1 \#2 .
+    ) .
+
+set /add-n-times+Integer
+    (
+      multiply \#1 \#2 .
+    ) .
+
+set /add-n-times+Real add-n-times+Integer .
+
+set /add-n-times+String
+    (
+      mov /#1 /str .
+      set /result str .
+      repeat \#2 ( set /result [ concat \result \str . ] . ) .
+      answer \result .
+    ) .
+
+add-n-times 4 5 .
+add-n-times 4.0 5 .
+add-n-times "hello" 5 .

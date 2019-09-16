@@ -109,6 +109,44 @@ escape_str (char* str)
 
 }
 
+registry*
+shift_list_down (registry* reg)
+{
+  registry* shifted_reg = copy_registry(reg);
+  int num = 0;
+  regstr old;
+  regstr new;
+
+  del(shifted_reg, arbel_hash_0, 1);
+
+  old.name = NULL;
+  new.name = NULL;
+  
+  do
+    {
+      num++;
+      
+      if (old.name != NULL)
+        free(old.name);
+
+      if (new.name != NULL)
+        free(new.name);
+
+      old.name = argument_name(num);
+      new.name = argument_name(num-1);
+      old.key = hash_str(old.name);
+      new.key = hash_str(new.name);
+
+    }
+  while (mov(shifted_reg, &old, &new) != NULL);
+
+  free(new.name);
+  free(old.name);
+
+  return shifted_reg;
+
+}
+
 
 
 

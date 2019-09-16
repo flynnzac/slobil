@@ -385,6 +385,10 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 const char*
 str_type (data_type type);
 
+registry*
+shift_list_down (registry* reg);
+
+
 /* global variables */
 registry* current_parse_registry;
 char* source_code;
