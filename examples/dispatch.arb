@@ -38,7 +38,8 @@ set /add-n-times+String
     (
       mov /#1 /str .
       set /result str .
-      repeat \#2 ( set /result [ concat \result \str . ] . ) .
+      repeat [ subtract \#2 1 . ]
+             ( set /result [ concat \result \str . ] . ) .
       answer \result .
     ) .
 

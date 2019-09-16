@@ -2812,7 +2812,7 @@ op_of (registry* reg)
 
   data* d;
   assign_str(&d, (char*) arg1->data, 1);
-  set((registry*) arg2->data, d, "-class");
+  set((registry*) arg2->data, d, "--of");
 }
 
 void

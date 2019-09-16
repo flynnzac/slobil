@@ -24,7 +24,7 @@
       </p><p>
         Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
       </p><p>
-        The class system in ARBEL is similar to R's S3 classes. Classes are attributes applied to registries.
+        ARBEL uses an "attribute" based system for object-oriented methods.  This means that you can apply an attribute to a value and then that value is treated as being of a certain kind.  Instructions will then do different things depending on the kind of object. The system is "name-based" as opposed to "structure-based".  A value is a of a certain kind if it is declared to be so, not based on the underlying structure of the value.
       </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="syntax"></a>Grammar: ARBEL Syntax</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm40"></a>Basic Syntax</h3></div></div></div><p>
         This section describes the basic data-types and syntax of ARBEL.  ARBEL is based on two objects: instructions and registries.  A registry consists of data located at the various registers (named locations to store data). Instructions are executed in the context of a certain registry and modify the data contained in the registry.
       </p><p>
@@ -666,7 +666,8 @@ set /add-n-times+String
     (
       mov /#1 /str .
       set /result str .
-      repeat \#2 ( set /result [ concat \result \str . ] . ) .
+      repeat [ subtract \#2 1 . ]
+             ( set /result [ concat \result \str . ] . ) .
       answer \result .
     ) .
 

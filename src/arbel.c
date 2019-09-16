@@ -65,7 +65,7 @@ main (int argc, char** argv)
   arbel_hash_3 = hash_str("#3");
   arbel_hash_4 = hash_str("#4");
   arbel_hash_data = hash_str("data");
-  arbel_hash_class = hash_str("-class");
+  arbel_hash_class = hash_str("--of");
 
   arbel_error = 0;
 
