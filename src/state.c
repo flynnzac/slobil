@@ -51,13 +51,3 @@ is_exit (int e)
   return do_exit;
 }
 
-int
-is_retval (const int r)
-{
-  static int retval = 0;
-
-  if (r >= 0)
-    retval = r;
-
-  return retval;
-}

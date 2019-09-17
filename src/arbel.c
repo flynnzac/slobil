@@ -55,7 +55,6 @@ main (int argc, char** argv)
   registry* reg = new_registry(NULL);
   add_basic_ops(reg);
   is_exit(0);
-  is_retval(0);
   current_parse_registry = reg;
   
   arbel_hash_ans = hash_str("ans");

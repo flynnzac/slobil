@@ -237,7 +237,6 @@ op_set (registry* reg)
   data* d = copy_data(arg2);
   set(to_set, d, name);
 
-  is_retval(0);
 
 }
 
@@ -1071,7 +1070,6 @@ op_repeat (registry* reg)
       execute_code(((instruction*) arg2->data)->stmt, reg->up);
       if (is_error(-1)) break;
     }
-  is_retval(0);
 }
 
 void
@@ -1564,7 +1562,6 @@ op_load (registry* reg)
   FILE* f = fopen(fname, "rb");
   read_registry(f, reg->up);
   fclose(f);
-  is_retval(0);
 
 }
 

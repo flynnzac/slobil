@@ -42,11 +42,6 @@ ret_ans (registry* reg, data* d)
     return;
   
   ret(reg, d, "ans");
-  if (!is_error(-1) && reg->up != NULL)
-    {
-      if (reg->up->up == NULL)
-        is_retval(1);
-    }
 }
   
 void

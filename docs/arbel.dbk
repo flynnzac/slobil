@@ -37,7 +37,7 @@
     </para>
 
     <para>
-      The goal of ARBEL is to revive a computing system where the interpreter is always open and available to use to create small programs to do the user's computing --- hence, the command-like syntax.  The vision is a modern form of old BASIC-based systems and LISP machines.  
+      The goal of ARBEL is to enable a computing system where the interpreter is always open and available to use to create small programs to do the user's computing.  This leads to its command-like syntax and instructions to save and restore state.  The vision is a modern form of old BASIC-based systems and LISP machines.  
     </para>
 
     <para>
@@ -49,7 +49,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is instruction-based.  ARBEL follows instructions to modify the data in registries. It is an imperative language.  Instructions modify state. This method of programming is intuitive and straightforward.
+        ARBEL is imperative. ARBEL follows instructions to modify the data in registries. .
       </listitem>
 
       <listitem>
@@ -955,8 +955,53 @@ copy-file STRING1 STRING2 .</programlisting>
 	  Execute INSTRUCTION in the current registry INTEGER times.
 	</para>
       </listitem>
+
+      <listitem>
+        <para>
+        The <code>substring</code> instruction:
+        </para>
+        <programlisting>
+        substring STRING INTEGER1 INTEGER2 .</programlisting>
+
+        <para>
+          Sets the <code>ans</code> register to the substring STRING with the first position given by INTEGER1 and the last position given by INTEGER2.  The string positions are like in <code>character</code>.  The first character is 1 and positions less than or equal to zero are that many places from the last character in the string.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+        The <code>up</code> instruction:
+        </para>
+        <programlisting>up STATEMENT .</programlisting>
+        <para>
+          The <code>up</code> instruction executes a statement in the registry above the current context.  This instruction cannot be used at the top-level, but can be used inside another instruction's definition to run code in the register above it. See the "arbed" example in the examples section.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+          The kind instructions to set the kind of registry and dispatch.
+        </para>
+        <programlisting>
+          of STRING REGISTRY .
+          isof STRING REGISTRY .
+          dispatch STRING VALUE .</programlisting>
+          <para>
+            <code>of</code> labels a REGISTRY as being of a certain kind. You will usually want to pass the REGISTRY as a reference so that the registry in the current context becomes a certain kind.
+          </para>
+
+          <para>
+            <code>isof</code> sets the <code>ans</code> register to 1 if the REGISTRY is of the kind given by string and to 0 otherwise.
+          </para>
+
+          <para>
+            <code>dispatch</code> sets the <code>ans</code> register to the instruction "STRING+TYPE" where TYPE is the type of VALUE.
+          </para>
+      </listitem>
     </itemizedlist>
   </section>
+
+
 
   <section>
     <title>Miscellaneous Tidbits</title>
