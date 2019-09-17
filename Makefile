@@ -15,9 +15,10 @@ endif
 arbel: .FORCE
 	make -C src
 
-doc: docs/arbel.dbk docs/arbel.css
+doc: docs/arbel.dbk docs/arbel.css docs/index.mro.html docs/examples.mro.html
 	$(DOC)
 	cat docs/mysite.mro docs/index.mro.html | mro > docs/index.html
+	cat docs/mysite.mro docs/examples.mro.html | mro > docs/examples.html
 
 examples: examples/link.c libarbel.$(SUFFIX) .FORCE
 	cc -c -fPIC -I. -L. -larbel -lm examples/link.c
