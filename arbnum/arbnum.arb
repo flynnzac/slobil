@@ -1,0 +1,33 @@
+set /length
+    (
+      last \#1 \#2 .
+      register-number \ans .
+    ) .
+
+set /mean
+    (
+      divide
+        [ to-real [ collapse \#1 add \#2 . ] . ]
+        [ length \#1 \#2 . ] .
+
+    ) .
+
+set /sd
+    (
+      do-to-all ( to-power \#1 2 . ) \#1 .
+      mean \ans "#" .
+      mov /ans /mom2 .
+      to-power [ mean \#1 "#" . ] 2 .
+      to-power [ subtract \mom2 \ans . ] 0.5 .
+    ) .
+
+          
+set /cov
+    (
+      join \#1 \#2 multiply .
+      mean \ans "#" .
+      subtract \ans [ multiply
+                        [ mean \#1 "#" . ]
+                        [ mean \#2 "#" . ] . ] .
+    ) .
+

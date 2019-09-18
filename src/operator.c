@@ -1093,6 +1093,7 @@ op_to_register (registry* reg)
 
 }
 
+
 void
 op_collapse (registry* reg)
 {
@@ -1687,6 +1688,69 @@ op_to_number (registry* reg)
     }
   
 }
+
+void
+op_to_real (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  if (arg1 == NULL)
+    {
+      do_error("`to-real` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != INTEGER && arg1->type != REAL)
+    {
+      do_error("The argument to `to-real` must be an integer or real.");
+      return;
+    }
+
+  data* d;
+  if (arg1->type == INTEGER)
+    assign_real(&d, *((int*) arg1->data));
+  else
+    d = copy_data(arg1);
+  
+  ret_ans(reg,d);
+  
+}
+
+
+void
+op_register_number (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+
+  if (arg1 == NULL)
+    {
+      do_error("`register-to-number` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != REGISTER)
+    {
+      do_error("`register-to-number` requires a register argument.");
+      return;
+    }
+
+  char* name = ((regstr*) arg1->data)->name;
+  int i = strlen(name);
+  for (i = (strlen(name)-1); i >= 0; i--)
+    {
+      if (!isdigit(name[i]))
+        break;
+    }
+
+  if (i >= (strlen(name)-1)) return;
+
+  name += i + 1;
+
+  data* d;
+  assign_int(&d, atoi(name));
+  ret_ans(reg,d);
+}
+  
+  
 
 void
 op_ref (registry* reg)
@@ -3199,6 +3263,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_dispatch);
   set(reg,d,"dispatch");
+
+  assign_op(&d, op_register_number);
+  set(reg,d,"register-number");
+
+  assign_op(&d, op_to_real);
+  set(reg,d,"to-real");
   
 }
   
