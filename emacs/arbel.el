@@ -156,6 +156,8 @@
                 "of"
                 "isof"
                 "dispatch"
+                "register-number"
+                "to-real"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\/[^\s]*\\)\s*")

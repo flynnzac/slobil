@@ -31,3 +31,15 @@ set /cov
                         [ mean \#2 "#" . ] . ] .
     ) .
 
+set /v
+    (
+      set /vec [ list . ] .
+      mov /#2 /value .
+      set /i /#1 .
+      repeat \#1
+             (
+               set \i \value \vec .
+               set /i [ next \i . ] .
+             ) .
+      answer \vec .
+    ) .
