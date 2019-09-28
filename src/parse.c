@@ -206,6 +206,12 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   *complete = 1;
                   continue;
                 }
+              else if (strcmp(state->buffer,",")==0)
+                {
+                  *complete = 1;
+                  state->print_out = 0;
+                  continue;
+                }
               else if (strcmp(state->buffer, "'")==0)
                 {
                   state->in_comment = 1;
