@@ -343,4 +343,24 @@ Decided on just using a built-in "up" instruction
 * TODO Make `up` more efficient.  Currently it is copying its arguments twice.
 * TODO Have an "assert"-like command which checks type of values at registers and errors if register does not exist or if the type doesn't match
 * TODO do-to-all should have a prefix option like similar instructions, order of registry and instruction should be same
+* TODO Registries should really be hash tables to improve lookup speed
+
+Idea is to make "registry" be a hash table containing what is now "registry".
+
+Something like:
+
+struct registry
+{
+	registry_content* contents[HASH_SIZE];
+  struct registry* up;
+};
+
+struct registry_content = old struct registry
+
+One idea is to use current "perfect hash" mod HASH_SIZE
+
+"contents" will be set to current "head" registry.
+
+
+
 
