@@ -4,8 +4,6 @@ ARBEL is a programming language based on a named-list data type called a registr
 
 For a manual see: http://www.zflynn.com/arbel/arbel.html
 
-__NEWS: The basic syntax of ARBEL is now finalized and won't change going forward.__
-
 
 # Installation
 
