@@ -805,27 +805,32 @@ op_do_to_all (registry* reg)
   set(tmp_reg, arg1, "#0");
 
   registry* arg_reg = (registry*) arg2->data;
-  arg_reg = tail(arg_reg);
-
   registry* ret_reg = new_registry(reg->up);
-
   data* d;
-  while (arg_reg != NULL)
+
+  for  (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      d = arg_reg->value;
-      set(tmp_reg, d, "#1");
-      compute(tmp_reg);
-      d = lookup(reg, arbel_hash_ans, 0);
-      if (d == NULL)
+      content* c = arg_reg->objects[i];
+      if (is_init_reg(c))
+        continue;
+
+      c = tail(c);
+      while (c != NULL)
         {
-          do_error("Instruction in `do-to-all` did not set `ans` register.");
-          break;
+          d = c->value;
+          set(tmp_reg, d, "#1");
+          compute(tmp_reg);
+          d = lookup(reg, arbel_hash_ans, 0);
+          if (d == NULL)
+            {
+              do_error("Instruction in `do-to-all` did not set `ans` register.");
+              break;
+            }
+          d = copy_data(d);
+          set(ret_reg, d, c->name);
+          del(tmp_reg, arbel_hash_1, 0);
+          c = c->right;
         }
-        
-      d = copy_data(d);
-      set(ret_reg, d, arg_reg->name);
-      del(tmp_reg, arbel_hash_1, 0);
-      arg_reg = arg_reg->right;
     }
 
   del(tmp_reg, arbel_hash_0, 0);
@@ -835,7 +840,6 @@ op_do_to_all (registry* reg)
       d = malloc(sizeof(data));
       d->type = REGISTRY;
       d->data = ret_reg;
-
       ret_ans(reg, d);
     }
   
@@ -1209,37 +1213,43 @@ op_join (registry* reg)
   registry* reg2 = (registry*) arg2->data;
   registry* out_reg = new_registry(reg->up);
   registry* instr_reg = new_registry(reg1);
-
-  registry* cur = tail(reg1);
   data* d1 = NULL;
   data* d2 = NULL;
   data* d;
-
-  set(instr_reg, arg3, "#0");
-  
-  while (cur != NULL)
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      d = get(reg2, cur->key, 0);
-      if (d != NULL)
-        {
-          d1 = lookup(reg1, cur->key, 0);
-          d2 = lookup(reg2, cur->key, 0);
-          set(instr_reg, d1, "#1");
-          set(instr_reg, d2, "#2");
-          
-          compute(instr_reg);
+      content* cur = reg1->objects[i];
 
-          del(instr_reg, arbel_hash_1, 0);
-          del(instr_reg, arbel_hash_2, 0);
-          
-          d = lookup(reg1, arbel_hash_ans, 0);
-          del(reg1, arbel_hash_ans, 0);
+      if (is_init_reg(cur))
+        continue;
+      
+      cur = tail(cur);
+      set(instr_reg, arg3, "#0");
+  
+      while (cur != NULL)
+        {
+          d = get(reg2, cur->key, 0);
           if (d != NULL)
             {
-              set(out_reg, d, cur->name);
+              d1 = lookup(reg1, cur->key, 0);
+              d2 = lookup(reg2, cur->key, 0);
+              set(instr_reg, d1, "#1");
+              set(instr_reg, d2, "#2");
+          
+              compute(instr_reg);
+
+              del(instr_reg, arbel_hash_1, 0);
+              del(instr_reg, arbel_hash_2, 0);
+          
+              d = lookup(reg1, arbel_hash_ans, 0);
+              del(reg1, arbel_hash_ans, 0);
+              if (d != NULL)
+                {
+                  set(out_reg, d, cur->name);
+                }
             }
+          cur = cur->right;
         }
-      cur = cur->right;
     }
 
   del(instr_reg, arbel_hash_0, 0);
@@ -2721,18 +2731,27 @@ op_import (registry* reg)
     }
 
   registry* r1 = (registry*) arg1->data;
-  r1 = tail(r1);
-  
-  data* d = NULL;
-  while (r1 != NULL)
+
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      d = r1->value;
-      if (d != NULL)
+      content* c = r1->objects[i];
+
+      if (is_init_reg(c))
+        continue;
+      
+      c = tail(c);
+  
+      data* d = NULL;
+      while (c != NULL)
         {
-          d = copy_data(d);
-          set(reg->up, d, (char*) r1->name);
+          d = c->value;
+          if (d != NULL)
+            {
+              d = copy_data(d);
+              set(reg->up, d, (char*) c->name);
+            }
+          c = c->right;
         }
-      r1 = r1->right;
     }
 }
 
@@ -3004,10 +3023,6 @@ void
 add_basic_ops (registry* reg)
 {
   data* d;
-
-  reg->left = NULL;
-  reg->right = NULL;
-  reg->up = NULL;
 
   assign_op(&d, op_set);
   set(reg, d, "set");

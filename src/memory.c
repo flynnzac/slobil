@@ -64,7 +64,6 @@ free_statement (statement* s)
         }
       s_tmp = s;
       s = s->right;
-      free_registry(s_tmp->arg_reg);
       free(s_tmp);
 
     }
@@ -147,26 +146,32 @@ free_registry (registry* reg)
   if (reg==NULL)
     return;
 
-  if (is_init_reg(reg))
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      free(reg);
-      return;
+      content* c = reg->objects[i];
+      if (is_init_reg(c))
+        {
+          free(c);
+          continue;
+        }
+      content* cur = tail(c);
+      content* tmp;
+
+      if (cur != NULL)
+        free(cur->left);
+
+      while (cur != NULL)
+        {
+          if (!cur->do_not_free_data)
+            free_data(cur->value);
+
+          free(cur->name);
+          tmp = cur->right;
+          free(cur);
+          cur = tmp;
+        }
     }
-  registry* cur = tail(reg);
-  registry* tmp;
 
-  if (cur != NULL)
-    free(cur->left);
-
-  while (cur != NULL)
-    {
-      if (!cur->do_not_free_data)
-        free_data(cur->value);
-
-      free(cur->name);
-      tmp = cur->right;
-      free(cur);
-      cur = tmp;
-    }
+  free(reg);
 
 }

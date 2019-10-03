@@ -146,6 +146,7 @@ main (int argc, char** argv)
       complete = interact(f, &state, current_parse_registry);
       fclose(f);
       free(code);
+      state.print_out = echo;
     }
 
   free(source_code);

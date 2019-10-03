@@ -24,6 +24,18 @@
 int
 save_registry (FILE* f, registry* reg)
 {
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+    {
+      save_content(f, reg->objects[i]);
+    }
+
+  return 0;
+}
+
+
+int
+save_content (FILE* f, content* reg)
+{
 
   reg = tail(reg);
   int size;

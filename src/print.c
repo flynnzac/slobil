@@ -72,14 +72,24 @@ print_data (data* d, int print_cmd)
 void
 print_registry (registry* reg)
 {
-  registry* cur = tail(reg);
-  const char* s = "";
-  while (cur != NULL)
+  if (reg == NULL)
+    return;
+  
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      s = str_type(cur->value->type);
-      printf("%s of type %s", (const char*) cur->name, s);
-      printf(", value: ");
-      print_data(cur->value,1);
-      cur = cur->right;
+      
+      content* cur = reg->objects[i];
+      if (cur == NULL || is_init_reg(cur))
+        continue;
+      cur = tail(cur);
+      const char* s = "";
+      while (cur != NULL)
+        {
+          s = str_type(cur->value->type);
+          printf("%s of type %s", (const char*) cur->name, s);
+          printf(", value: ");
+          print_data(cur->value,1);
+          cur = cur->right;
+        }
     }
 }

@@ -88,8 +88,6 @@ assign_op (data** d, const operation op)
   (*d)->data = op;
 }
 
-
-
 void
 assign_registry (data** d, registry* r)
 {
@@ -240,12 +238,16 @@ copy_registry(registry* r0)
 {
   registry* r1 = new_registry(r0->up);
   data* d;
-  registry* cur = tail(r0);
-  while (cur != NULL)
+
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      d = copy_data(cur->value);
-      set(r1, d, cur->name);
-      cur = cur->right;
+      content* cur = tail(r0->objects[i]);
+      while (cur != NULL)
+        {
+          d = copy_data(cur->value);
+          set(r1, d, cur->name);
+          cur = cur->right;
+        }
     }
 
   return r1;

@@ -23,6 +23,7 @@
 #ifndef ARBEL_H
 #define ARBEL_H
 #define _GNU_SOURCE
+#define ARBEL_HASH_SIZE 997
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,15 +60,23 @@ struct data
 };
 typedef struct data data;
 
-struct registry
+
+struct content
 {
   data* value;
   unsigned long key;
   char* name;
-  struct registry* right;
-  struct registry* left;
-  struct registry* up;
+  struct content* right;
+  struct content* left;
   int do_not_free_data;
+};
+
+typedef struct content content;
+
+struct registry
+{
+  content* objects[ARBEL_HASH_SIZE];
+  struct registry* up;
 };
 
 typedef struct registry registry;
@@ -141,7 +150,6 @@ struct statement
 {
   element* head;
   struct statement* right;
-  registry* arg_reg;
 };
 
 typedef struct statement statement;
@@ -200,22 +208,22 @@ free_data (data* d);
 void
 free_registry (registry* reg);
 
-registry*
-head (registry* reg);
+content*
+head (content* reg);
 
-registry*
-tail (registry* reg);
+content*
+tail (content* reg);
 
-void
+content*
 set (registry* reg, data* d, const char* name);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
 
-registry*
+content*
 mov (registry* reg, regstr* old, regstr* new);
 
-registry*
+content*
 del (registry* reg, unsigned long hash_name, int del_data);
 
 data*
@@ -264,7 +272,7 @@ int
 is_exit (int e);
 
 int
-is_init_reg (registry* r);
+is_init_reg (content* r);
 
 registry*
 new_registry (registry* parent);
@@ -388,6 +396,8 @@ str_type (data_type type);
 registry*
 shift_list_down (registry* reg);
 
+int
+save_content (FILE* f, content* reg);
 
 /* global variables */
 registry* current_parse_registry;

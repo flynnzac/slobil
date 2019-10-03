@@ -21,59 +21,76 @@
 
 #include "arbel.h"
 
+content*
+new_content ()
+{
+  content* c = malloc(sizeof(content));
+  c->right = NULL;
+  c->left = NULL;
+  c->value = NULL;
+  c->name = NULL;
+  c->key = 0;
+  c->do_not_free_data = 0;
+  return c;
+}
+
 registry*
-new_registry (registry* parent)
+new_registry (registry* up)
 {
   registry* r = malloc(sizeof(registry));
-  r->right = NULL;
-  r->left = NULL;
-  r->up = parent;
-  r->value = NULL;
-  r->name = NULL;
-  r->key = 0;
-  r->do_not_free_data = 0;
+  r->up = up;
+
+  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+    {
+      r->objects[i] = new_content();
+    }
+
   return r;
 }
 
 int
-is_init_reg (registry* r)
+is_init_reg (content* r)
 {
   return (r->right == NULL) && (r->left==NULL) && (r->value == NULL) &&
     (r->key == 0) && (r->name == NULL);
 }
 
-void
+content*
 set (registry* reg, data* d, const char* name)
 {
   unsigned long hash_name = hash_str(name);
-  registry* new_reg = del(reg,hash_name,-1);
-
-  if (new_reg == NULL)
-    {
-
-      reg = head(reg);
-      new_reg = malloc(sizeof(registry));
-      new_reg->left = reg;
-      new_reg->right = NULL;
-      new_reg->up = reg->up;
-      new_reg->value = d;
-      reg->right = new_reg;
-      new_reg->do_not_free_data = 0;
-      new_reg->name = malloc(sizeof(char)*(strlen(name)+1));
-      strcpy(new_reg->name, name);
-      new_reg->key = hash_name;
-    }
-  else
-    {
-      new_reg->do_not_free_data = 0;
-      new_reg->value = d;
-    }
+  content* c = del(reg,hash_name,-1);
 
   if (d != NULL && d->type == REGISTRY)
     {
       ((registry*) d->data)->up = reg;
     }
 
+
+  if (c == NULL)
+    {
+      c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+      c = head(c);
+      content* new_c = malloc(sizeof(content));
+      new_c->left = c;
+      new_c->right = NULL;
+      new_c->value = d;
+      c->right = new_c;
+      new_c->do_not_free_data = 0;
+      new_c->name = malloc(sizeof(char)*(strlen(name)+1));
+      strcpy(new_c->name, name);
+      new_c->key = hash_name;
+
+      return new_c;
+    }
+  else
+    {
+      c->do_not_free_data = 0;
+      c->value = d;
+      return c;
+    }
+
+  return NULL;
 
 }
 
@@ -83,7 +100,9 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-  if (is_init_reg(reg))
+  content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  
+  if (is_init_reg(c))
     {
       if (recursive)
         {
@@ -95,18 +114,17 @@ get (registry* reg, unsigned long hash_name, int recursive)
         }
     }
 
-  registry* cur = reg->right;
+  c = c->right;
 
-  while (cur != NULL)
+  while (c != NULL)
     {
-      if (cur->key == hash_name && cur->value != NULL)
+      if (c->key == hash_name && c->value != NULL)
         {
-          return cur->value;
+          return c->value;
         }
-      cur = cur->right;
+      c = c->right;
     }
 
-  if (reg == NULL) return NULL;
   if ((reg->up != NULL) && recursive)
     {
       return get(reg->up, hash_name, recursive);
@@ -177,33 +195,36 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
   return d;
 }
 
-registry*
+content*
 mov (registry* reg, regstr* old, regstr* new)
 {
-  registry* cur = tail(reg);
+  unsigned long old_element = old->key % ARBEL_HASH_SIZE;
+
+  content* cur = reg->objects[old_element];
+  cur = cur->right;
+  
   while (cur != NULL)
     {
       if (cur->key == old->key)
         {
           del(reg, new->key,1);
-          if (cur->name != NULL)
-            free(cur->name);
-          
-          cur->name = malloc(sizeof(char)*(strlen(new->name)+1));
-          strcpy(cur->name, new->name);
-          cur->key = new->key;
-          return cur;
+          data* d = cur->value;
+          del(reg, old->key, 0);
+          return set(reg, d, new->name);
         }
       cur = cur->right;
     }
   return NULL;
 }
 
-registry*
+content*
 del (registry* reg, unsigned long hash_name, int del_data)
 {
-  registry* cur;
-  cur = tail(reg);
+  content* cur = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  if (is_init_reg(cur))
+    return NULL;
+  
+  cur = tail(cur);
 
   while (cur != NULL)
     {
@@ -250,18 +271,20 @@ del (registry* reg, unsigned long hash_name, int del_data)
 void
 mark_do_not_free (registry* reg, unsigned long hash_name)
 {
-  if (reg==NULL || is_init_reg(reg))
+
+  content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  if (c==NULL || is_init_reg(c))
     return;
 
-  registry* cur = reg->right;
-  while (cur != NULL)
+  c = c->right;
+  while (c != NULL)
     {
-      if (cur->key == hash_name)
+      if (c->key == hash_name)
         {
-          cur->do_not_free_data = 1;
+          c->do_not_free_data = 1;
           return;
         }
-      cur = cur->right;
+      c = c->right;
     }
 
 }
@@ -333,30 +356,30 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 
 
 
-registry*
-head (registry* reg)
+content*
+head (content* c)
 {
-  if (reg == NULL)
+  if (c == NULL)
     return NULL;
 
-  while (reg->right != NULL)
+  while (c->right != NULL)
     {
-      reg = reg->right;
+      c = c->right;
     }
 
-  return reg;
+  return c;
 }
 
-registry*
-tail (registry* reg)
+content*
+tail (content* c)
 {
-  if (reg == NULL)
+  if (c == NULL)
     return NULL;
   
-  while (reg->left != NULL)
+  while (c->left != NULL)
     {
-      reg = reg->left;
+      c = c->left;
     }
 
-  return reg->right;
+  return c->right;
 }
