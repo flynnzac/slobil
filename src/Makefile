@@ -12,7 +12,7 @@ endif
 
 DEBUG=1
 ifdef DEBUG
-	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c -lreadline -g -lm -Wall -ldl
+	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c -lreadline -g -lm -Wall -ldl -pg
 else
 	COMPILE=cc -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c -lreadline -O3 -lm -Wall -ldl
 endif
