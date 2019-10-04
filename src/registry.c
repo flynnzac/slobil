@@ -209,8 +209,11 @@ mov (registry* reg, regstr* old, regstr* new)
         {
           del(reg, new->key,1);
           data* d = cur->value;
+          int do_not_free_data = cur->do_not_free_data;
           del(reg, old->key, 0);
-          return set(reg, d, new->name);
+          content* c = set(reg, d, new->name);
+          c->do_not_free_data = do_not_free_data;
+          return c;
         }
       cur = cur->right;
     }
@@ -369,6 +372,23 @@ head (content* c)
 
   return c;
 }
+
+content*
+right_n (content* c, size_t n)
+{
+  if (c == NULL)
+    return NULL;
+
+  size_t i = 0;
+  while (c->right != NULL && i < n)
+    {
+      c = c->right;
+      i++;
+    }
+
+  return c;
+}
+
 
 content*
 tail (content* c)

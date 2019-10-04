@@ -62,6 +62,8 @@ free_statement (statement* s)
           e = e->right;
           free(e_tmp);
         }
+      free_registry(s->arg_reg);
+      free(s->hash_bins);
       s_tmp = s;
       s = s->right;
       free(s_tmp);
@@ -170,6 +172,7 @@ free_registry (registry* reg)
           free(cur);
           cur = tmp;
         }
+
     }
 
   free(reg);

@@ -67,6 +67,44 @@ append_statement_element (element* current, statement* s)
   return e;
 }
 
+registry*
+gen_arg_reg (element* e, unsigned long** hash_bin)
+{
+  int n = 0;
+  char* name;
+  unsigned long hash_name;
+  registry* arg_reg = new_registry(NULL);
+  registry* reg = arg_reg;
+  element* e1 = e;
+
+  while (e1 != NULL)
+    {
+      n++;
+      e1 = e1->right;
+    }
+  *hash_bin = malloc(sizeof(unsigned long)*n);
+  n = 0;
+
+  while (e != NULL)
+    {
+      name = argument_name(n);
+      hash_name = hash_str(name);
+      (*hash_bin)[n] = hash_name % ARBEL_HASH_SIZE;
+      content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+      c = head(c);
+      c->right = new_content();
+      c->right->left = c;
+      c->right->name = name;
+      c->right->key = hash_name;
+      c->right->value = NULL;
+      e = e->right;
+      n++;
+    }
+
+  return arg_reg;
+  
+}
+
 
 statement*
 append_statement (statement* current, element* head)
@@ -74,7 +112,7 @@ append_statement (statement* current, element* head)
   statement* s = malloc(sizeof(statement));
   s->right = NULL;
   s->head = head;
-        
+  s->arg_reg = gen_arg_reg(head, &s->hash_bins);
   if (current != NULL)
     {
       current->right = s;
@@ -86,14 +124,15 @@ append_statement (statement* current, element* head)
 void
 execute_statement (statement* s, registry* reg)
 {
-  registry* arg_reg = new_registry(reg);
+  registry* arg_reg = s->arg_reg;
+  arg_reg->up = reg;
+
   element* e = s->head;
   int arg_n = 0;
   data* d = NULL;
-  char* arg_name = NULL;
   while (e != NULL)
     {
-      arg_name = argument_name(arg_n);
+      
       if (e->literal)
         {
           if (e->data == NULL)
@@ -133,9 +172,15 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          content* c = set(arg_reg, d, arg_name);
+          content* c = right_n(arg_reg->objects[s->hash_bins[arg_n]],
+                               arg_n+1);
 
-          if (e->literal || e->statement || arg_n == 0)
+          if (c->value != NULL && !c->do_not_free_data)
+            free_data(c->value);
+          
+          c->value = d;
+
+          if (e->literal || arg_n == 0)
             {
               c->do_not_free_data = 1;
             }
@@ -143,19 +188,18 @@ execute_statement (statement* s, registry* reg)
             {
               c->do_not_free_data = 0;
             }
+
         }
 
       arg_n++;
       e = e->right;
-      free(arg_name);
+
       if (is_error(-1)) break;
     }
 
   if (!is_error(-1))
     compute(arg_reg);
 
-
-  free_registry(arg_reg);
 
 }
 

@@ -150,6 +150,8 @@ struct statement
 {
   element* head;
   struct statement* right;
+  registry* arg_reg;
+  unsigned long* hash_bins;
 };
 
 typedef struct statement statement;
@@ -398,6 +400,12 @@ shift_list_down (registry* reg);
 
 int
 save_content (FILE* f, content* reg);
+
+content*
+new_content ();
+
+content*
+right_n (content* c, size_t n);
 
 /* global variables */
 registry* current_parse_registry;
