@@ -23,7 +23,7 @@
 #ifndef ARBEL_H
 #define ARBEL_H
 #define _GNU_SOURCE
-#define ARBEL_HASH_SIZE 997
+#define ARBEL_HASH_SIZE 57
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
