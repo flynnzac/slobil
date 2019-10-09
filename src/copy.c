@@ -241,7 +241,11 @@ copy_registry(registry* r0)
 
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      content* cur = tail(r0->objects[i]);
+      content* cur = r0->objects[i];
+      if (cur == NULL)
+        continue;
+      
+      cur = tail(r0->objects[i]);
       while (cur != NULL)
         {
           d = copy_data(cur->value);

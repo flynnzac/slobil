@@ -151,6 +151,9 @@ free_registry (registry* reg)
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
       content* c = reg->objects[i];
+      if (c == NULL)
+        continue;
+      
       if (is_init_reg(c))
         {
           free(c);

@@ -42,7 +42,7 @@ new_registry (registry* up)
 
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      r->objects[i] = new_content();
+      r->objects[i] = NULL;
     }
 
   return r;
@@ -69,6 +69,10 @@ set (registry* reg, data* d, const char* name)
 
   if (c == NULL)
     {
+      if (reg->objects[hash_name % ARBEL_HASH_SIZE] == NULL)
+        {
+          reg->objects[hash_name % ARBEL_HASH_SIZE] = new_content();
+        }
       c = reg->objects[hash_name % ARBEL_HASH_SIZE];
       c = head(c);
       content* new_c = malloc(sizeof(content));
@@ -101,6 +105,17 @@ get (registry* reg, unsigned long hash_name, int recursive)
     return NULL;
 
   content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  if (c == NULL)
+    {
+      if (recursive)
+        {
+          return get(reg->up, hash_name, recursive);
+        }
+      else
+        {
+          return NULL;
+        }
+    }
   
   if (is_init_reg(c))
     {
@@ -201,6 +216,8 @@ mov (registry* reg, regstr* old, regstr* new)
   unsigned long old_element = old->key % ARBEL_HASH_SIZE;
 
   content* cur = reg->objects[old_element];
+  if (cur == NULL)
+    return NULL;
   cur = cur->right;
   
   while (cur != NULL)
@@ -224,6 +241,9 @@ content*
 del (registry* reg, unsigned long hash_name, int del_data)
 {
   content* cur = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  
+  if (cur == NULL)
+    return NULL;
   if (is_init_reg(cur))
     return NULL;
   

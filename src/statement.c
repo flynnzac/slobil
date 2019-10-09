@@ -90,6 +90,11 @@ gen_arg_reg (element* e, unsigned long** hash_bin)
       name = argument_name(n);
       hash_name = hash_str(name);
       (*hash_bin)[n] = hash_name % ARBEL_HASH_SIZE;
+
+      if (reg->objects[hash_name % ARBEL_HASH_SIZE] == NULL)
+        {
+          reg->objects[hash_name % ARBEL_HASH_SIZE] = new_content();
+        }
       content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
       c = head(c);
       c->right = new_content();
