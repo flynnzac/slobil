@@ -28,6 +28,7 @@ free_statement (statement* s)
   element* e_tmp;
   statement* s_tmp;
   int i;
+
   while (s != NULL)
     {
       e = s->head;
@@ -166,9 +167,11 @@ free_registry (registry* reg)
         free(cur->left);
 
       while (cur != NULL)
-        {
-          if (!cur->do_not_free_data)
-            free_data(cur->value);
+       {
+         if (strcmp(cur->name,"ans")==0)
+           printf("name: %s\n", cur->name);
+         if (!cur->do_not_free_data)
+           free_data(cur->value);
 
           free(cur->name);
           tmp = cur->right;

@@ -244,7 +244,7 @@ copy_registry(registry* r0)
       content* cur = r0->objects[i];
       if (cur == NULL)
         continue;
-      
+
       cur = tail(r0->objects[i]);
       while (cur != NULL)
         {

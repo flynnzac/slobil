@@ -77,7 +77,6 @@ print_registry (registry* reg)
   
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
-      
       content* cur = reg->objects[i];
       if (cur == NULL || is_init_reg(cur))
         continue;

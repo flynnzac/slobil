@@ -59,7 +59,15 @@ content*
 set (registry* reg, data* d, const char* name)
 {
   unsigned long hash_name = hash_str(name);
+  if (hash_name == arbel_hash_ans)
+    {
+      printf("Pre-del for ans\n");
+    }
   content* c = del(reg,hash_name,-1);
+  if (hash_name == arbel_hash_ans)
+    {
+      printf("Post-del for ans\n");
+    }  
 
   if (d != NULL && d->type == REGISTRY)
     {
@@ -75,12 +83,11 @@ set (registry* reg, data* d, const char* name)
         }
       c = reg->objects[hash_name % ARBEL_HASH_SIZE];
       c = head(c);
-      content* new_c = malloc(sizeof(content));
+      content* new_c = new_content();
       new_c->left = c;
       new_c->right = NULL;
       new_c->value = d;
       c->right = new_c;
-      new_c->do_not_free_data = 0;
       new_c->name = malloc(sizeof(char)*(strlen(name)+1));
       strcpy(new_c->name, name);
       new_c->key = hash_name;
@@ -105,7 +112,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
     return NULL;
 
   content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
-  if (c == NULL)
+  if (c == NULL || is_init_reg(c))
     {
       if (recursive)
         {
@@ -117,18 +124,6 @@ get (registry* reg, unsigned long hash_name, int recursive)
         }
     }
   
-  if (is_init_reg(c))
-    {
-      if (recursive)
-        {
-          return get(reg->up, hash_name, recursive);
-        }
-      else
-        {
-          return NULL;
-        }
-    }
-
   c = c->right;
 
   while (c != NULL)
@@ -244,6 +239,7 @@ del (registry* reg, unsigned long hash_name, int del_data)
   
   if (cur == NULL)
     return NULL;
+  
   if (is_init_reg(cur))
     return NULL;
   
@@ -262,7 +258,7 @@ del (registry* reg, unsigned long hash_name, int del_data)
               cur->left->right = cur->right;
             }
 
-          if (del_data && cur->value != NULL && !cur->do_not_free_data)
+          if (del_data && cur->value != NULL && (!cur->do_not_free_data))
             {
               free_data(cur->value);
               cur->value = NULL;
@@ -273,7 +269,8 @@ del (registry* reg, unsigned long hash_name, int del_data)
               free(cur->name);
               cur->name = NULL;
             }
-                
+
+
           if (del_data < 0)
             {
               return cur;
@@ -281,6 +278,13 @@ del (registry* reg, unsigned long hash_name, int del_data)
           else
             {
               free(cur);
+
+              if (is_init_reg(reg->objects[hash_name % ARBEL_HASH_SIZE]))
+                {
+                  free(reg->objects[hash_name % ARBEL_HASH_SIZE]);
+                  reg->objects[hash_name % ARBEL_HASH_SIZE] = NULL;
+                }
+                
               return NULL;
             }
 

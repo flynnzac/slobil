@@ -181,10 +181,18 @@ execute_statement (statement* s, registry* reg)
                                arg_n+1);
 
           if (c->value != NULL && !c->do_not_free_data)
-            free_data(c->value);
+            {
+              free_data(c->value);
+              c->value = NULL;
+            }
           
           c->value = d;
 
+          /* if (e->statement) */
+          /*   { */
+          /*     del(reg, arbel_hash_ans, 0); */
+          /*   } */
+          
           if (e->literal || arg_n == 0)
             {
               c->do_not_free_data = 1;

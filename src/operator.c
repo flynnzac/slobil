@@ -769,12 +769,8 @@ op_source (registry* reg)
     }
 
   struct parser_state state = fresh_state(0);
-  statement* s = NULL;
-  parse(f, &state, &s);
+  interact(f, &state, reg->up);
   fclose(f);
-  execute_code(s, reg->up);
-  free_statement(s);
-
 }
 
 void
@@ -811,6 +807,9 @@ op_do_to_all (registry* reg)
   for  (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
       content* c = arg_reg->objects[i];
+      if (c == NULL)
+        continue;
+      
       if (is_init_reg(c))
         continue;
 
@@ -1216,15 +1215,19 @@ op_join (registry* reg)
   data* d1 = NULL;
   data* d2 = NULL;
   data* d;
+  set(instr_reg, arg3, "#0");
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
       content* cur = reg1->objects[i];
+
+      if (cur == NULL)
+        continue;
 
       if (is_init_reg(cur))
         continue;
       
       cur = tail(cur);
-      set(instr_reg, arg3, "#0");
+      
   
       while (cur != NULL)
         {
@@ -2735,6 +2738,9 @@ op_import (registry* reg)
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
       content* c = r1->objects[i];
+
+      if (c == NULL)
+        continue;
 
       if (is_init_reg(c))
         continue;
