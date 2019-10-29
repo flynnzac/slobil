@@ -771,6 +771,7 @@ op_source (registry* reg)
   struct parser_state state = fresh_state(0);
   interact(f, &state, reg->up);
   fclose(f);
+  del(reg->up, arbel_hash_ans, 0);
 }
 
 void
@@ -1009,8 +1010,10 @@ op_while (registry* reg)
     }
 
   data* d;
+  int n = 0;
   while (1)
     {
+      
       execute_code(((instruction*) arg1->data)->stmt, reg->up);
       if (is_error(-1))
         break;
@@ -1033,10 +1036,15 @@ op_while (registry* reg)
         {
           break;
         }
+
+      n++;
+      printf("%d\n", n);
       
       execute_code(((instruction*) arg2->data)->stmt, reg->up);
       if (is_error(-1))
         break;
+
+      
 
     }
 

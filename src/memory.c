@@ -168,8 +168,6 @@ free_registry (registry* reg)
 
       while (cur != NULL)
        {
-         if (strcmp(cur->name,"ans")==0)
-           printf("name: %s\n", cur->name);
          if (!cur->do_not_free_data)
            free_data(cur->value);
 

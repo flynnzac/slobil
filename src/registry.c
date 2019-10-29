@@ -59,15 +59,7 @@ content*
 set (registry* reg, data* d, const char* name)
 {
   unsigned long hash_name = hash_str(name);
-  if (hash_name == arbel_hash_ans)
-    {
-      printf("Pre-del for ans\n");
-    }
   content* c = del(reg,hash_name,-1);
-  if (hash_name == arbel_hash_ans)
-    {
-      printf("Post-del for ans\n");
-    }  
 
   if (d != NULL && d->type == REGISTRY)
     {
@@ -404,7 +396,7 @@ right_n (content* c, size_t n)
     return NULL;
 
   size_t i = 0;
-  while (c->right != NULL && i < n)
+  while (c->right != NULL && i <= n)
     {
       c = c->right;
       i++;

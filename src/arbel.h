@@ -152,6 +152,7 @@ struct statement
   struct statement* right;
   registry* arg_reg;
   unsigned long* hash_bins;
+  size_t* location;
 };
 
 typedef struct statement statement;

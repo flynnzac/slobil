@@ -68,7 +68,7 @@ append_statement_element (element* current, statement* s)
 }
 
 registry*
-gen_arg_reg (element* e, unsigned long** hash_bin)
+gen_arg_reg (element* e, unsigned long** hash_bin, size_t** location)
 {
   int n = 0;
   char* name;
@@ -83,6 +83,7 @@ gen_arg_reg (element* e, unsigned long** hash_bin)
       e1 = e1->right;
     }
   *hash_bin = malloc(sizeof(unsigned long)*n);
+  *location = malloc(sizeof(size_t)*n);
   n = 0;
 
   while (e != NULL)
@@ -91,18 +92,31 @@ gen_arg_reg (element* e, unsigned long** hash_bin)
       hash_name = hash_str(name);
       (*hash_bin)[n] = hash_name % ARBEL_HASH_SIZE;
 
+      content* c;
       if (reg->objects[hash_name % ARBEL_HASH_SIZE] == NULL)
         {
           reg->objects[hash_name % ARBEL_HASH_SIZE] = new_content();
+          c = reg->objects[hash_name % ARBEL_HASH_SIZE];
         }
-      content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
-      c = head(c);
+      else
+        {
+          c = head(reg->objects[hash_name % ARBEL_HASH_SIZE]);
+        }
+      content* cprime = reg->objects[hash_name % ARBEL_HASH_SIZE];
+      (*location)[n] = 1;
+      while (cprime->right != NULL)
+        {
+          (*location)[n]++;
+          cprime = cprime->right;
+        }
+      
       c->right = new_content();
       c->right->left = c;
       c->right->name = name;
       c->right->key = hash_name;
       c->right->value = NULL;
       e = e->right;
+
       n++;
     }
 
@@ -117,7 +131,7 @@ append_statement (statement* current, element* head)
   statement* s = malloc(sizeof(statement));
   s->right = NULL;
   s->head = head;
-  s->arg_reg = gen_arg_reg(head, &s->hash_bins);
+  s->arg_reg = gen_arg_reg(head, &s->hash_bins, &s->location);
   if (current != NULL)
     {
       current->right = s;
@@ -157,7 +171,7 @@ execute_statement (statement* s, registry* reg)
               d = get(reg, arbel_hash_ans, 0);
               if (d == NULL)
                 {
-                  do_error("Instruction in [] did not set $ans register.");
+                  do_error("Instruction in [] did not set /ans register.");
                 }
               else
                 {
@@ -178,7 +192,8 @@ execute_statement (statement* s, registry* reg)
       if (!is_error(-1))
         {
           content* c = right_n(arg_reg->objects[s->hash_bins[arg_n]],
-                               arg_n+1);
+                               s->location[arg_n]);
+
 
           if (c->value != NULL && !c->do_not_free_data)
             {
@@ -187,13 +202,9 @@ execute_statement (statement* s, registry* reg)
             }
           
           c->value = d;
-
-          /* if (e->statement) */
-          /*   { */
-          /*     del(reg, arbel_hash_ans, 0); */
-          /*   } */
           
-          if (e->literal || arg_n == 0)
+          if (e->literal || (arg_n == 0 && (d->type == INSTRUCTION ||
+                                            d->type == OPERATION)))
             {
               c->do_not_free_data = 1;
             }
