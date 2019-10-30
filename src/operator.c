@@ -1010,7 +1010,6 @@ op_while (registry* reg)
     }
 
   data* d;
-  int n = 0;
   while (1)
     {
       
@@ -1037,14 +1036,10 @@ op_while (registry* reg)
           break;
         }
 
-      n++;
-      printf("%d\n", n);
       
       execute_code(((instruction*) arg2->data)->stmt, reg->up);
       if (is_error(-1))
         break;
-
-      
 
     }
 

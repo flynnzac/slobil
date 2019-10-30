@@ -131,7 +131,9 @@ append_statement (statement* current, element* head)
   statement* s = malloc(sizeof(statement));
   s->right = NULL;
   s->head = head;
-  s->arg_reg = gen_arg_reg(head, &s->hash_bins, &s->location);
+  s->arg_reg = NULL;
+  s->location = NULL;
+  s->hash_bins = NULL;
   if (current != NULL)
     {
       current->right = s;
@@ -143,7 +145,9 @@ append_statement (statement* current, element* head)
 void
 execute_statement (statement* s, registry* reg)
 {
-  registry* arg_reg = s->arg_reg;
+  size_t* location = NULL;
+  unsigned long* hash_bins = NULL;
+  registry* arg_reg = gen_arg_reg(s->head, &hash_bins, &location);
   arg_reg->up = reg;
 
   element* e = s->head;
@@ -175,7 +179,7 @@ execute_statement (statement* s, registry* reg)
                 }
               else
                 {
-                  mark_do_not_free(reg, arbel_hash_ans);
+                  d = copy_data(d);
                 }
             }
           else
@@ -191,8 +195,8 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          content* c = right_n(arg_reg->objects[s->hash_bins[arg_n]],
-                               s->location[arg_n]);
+          content* c = right_n(arg_reg->objects[hash_bins[arg_n]],
+                               location[arg_n]);
 
 
           if (c->value != NULL && !c->do_not_free_data)
@@ -224,6 +228,9 @@ execute_statement (statement* s, registry* reg)
   if (!is_error(-1))
     compute(arg_reg);
 
+  free_registry(arg_reg);
+  free(location);
+  free(hash_bins);
 
 }
 
