@@ -177,10 +177,6 @@ execute_statement (statement* s, registry* reg)
                 {
                   do_error("Instruction in [] did not set /ans register.");
                 }
-              else
-                {
-                  d = copy_data(d);
-                }
             }
           else
             {
@@ -206,9 +202,10 @@ execute_statement (statement* s, registry* reg)
             }
           
           c->value = d;
-          
-          if (e->literal || (arg_n == 0 && (d->type == INSTRUCTION ||
-                                            d->type == OPERATION)))
+
+          if (e->literal || e->statement ||
+              (arg_n == 0 && (d->type == INSTRUCTION ||
+                              d->type == OPERATION)))
             {
               c->do_not_free_data = 1;
             }

@@ -67,8 +67,7 @@ compute (registry* reg)
       data* d = get(reg, arbel_hash_ans, 0);
       if (d != NULL)
         {
-          d = copy_data(d);
-          /* mark_do_not_free(reg, arbel_hash_ans); */
+          mark_do_not_free(reg, arbel_hash_ans);
           ret_ans(reg, d);
         }
       return;
