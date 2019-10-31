@@ -735,7 +735,7 @@ op_compute (registry* reg)
   registry* arg_reg = (registry*) d->data;
   arg_reg->up = reg->up;
 
-  compute(arg_reg);
+  compute(lookup(arg_reg, arbel_hash_0, 0), arg_reg);
 
   
 }
@@ -819,7 +819,7 @@ op_do_to_all (registry* reg)
         {
           d = c->value;
           set(tmp_reg, d, "#1");
-          compute(tmp_reg);
+          compute(arg1, tmp_reg);
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
@@ -1154,7 +1154,7 @@ op_collapse (registry* reg)
       d2 = lookup(to_walk, second_hash, 0);
       set(r, d1, "#1");
       set(r, d2, "#2");
-      compute(r);
+      compute(arg2, r);
       
       if (first_hash != arbel_hash_ans)
         {
@@ -1242,7 +1242,7 @@ op_join (registry* reg)
               set(instr_reg, d1, "#1");
               set(instr_reg, d2, "#2");
           
-              compute(instr_reg);
+              compute(arg3, instr_reg);
 
               del(instr_reg, arbel_hash_1, 0);
               del(instr_reg, arbel_hash_2, 0);
@@ -2870,7 +2870,7 @@ op_up (registry* reg)
   reg = shift_list_down(reg);
   reg->up = reg->up->up;
   
-  compute(reg);
+  compute(lookup(reg, arbel_hash_0, 0), reg);
   free_registry(reg);
 
 }
@@ -3077,18 +3077,21 @@ op_call (registry* reg)
   if (r != NULL)
     free(r);
 
+  compute(arg1, r_new);
 
+  data* ans;
 
-  compute(r_new);
-  data* ans = get(r_new, arbel_hash_ans, 0);
-
-  if (ans != NULL)
+  if (!is_error(-1))
     {
-      ans = copy_data(ans);
-      ret_ans(reg, ans);
+      ans = get(r_new, arbel_hash_ans, 0);
+      if (ans != NULL)
+        {
+          mark_do_not_free(r_new, arbel_hash_ans);
+          ret_ans(reg, ans);
+        }
     }
+  
   del(r_new, arbel_hash_0, 0);
-
   free_registry(r_new);
 
 }  

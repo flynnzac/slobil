@@ -226,7 +226,7 @@ execute_statement (statement* s, registry* reg)
     }
 
   if (!is_error(-1))
-    compute(arg_reg);
+    compute(lookup(arg_reg, arbel_hash_0, 0), arg_reg);
 
   free_registry(arg_reg);
   free(location);

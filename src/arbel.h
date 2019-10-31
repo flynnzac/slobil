@@ -311,7 +311,7 @@ data*
 lookup (registry* reg, unsigned long hash_name, int recursive);
 
 void
-compute (registry* reg);
+compute (data* cmd, registry* reg);
 
 int
 save_registry (FILE* f, registry* reg);

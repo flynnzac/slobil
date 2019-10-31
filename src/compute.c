@@ -45,40 +45,26 @@ ret_ans (registry* reg, data* d)
 }
   
 void
-compute (registry* reg)
+compute (data* cmd, registry* reg)
 {
-  data* arg = lookup(reg,arbel_hash_0,0);
-  if (arg == NULL)
+  if (cmd == NULL)
     {
-      do_error("Cannot compute a registry without an instruction at #0.");
-    }
-  else if (arg->type != OPERATION && arg->type != INSTRUCTION)
-    {
-
-      do_error("Cannot compute a registry without an instruction at #0.");
-    }
-
-  if (is_error(-1))
-    return;
-
-  if (arg->type == INSTRUCTION)
-    {
-      execute_code(((instruction*) arg->data)->stmt, reg);
-      data* d = get(reg, arbel_hash_ans, 0);
-      if (d != NULL)
-        {
-          mark_do_not_free(reg, arbel_hash_ans);
-          ret_ans(reg, d);
-        }
+      do_error("Cannot compute without an operation or instruction at #0.");
       return;
     }
-
-  if (is_error(-1))
-    {
-      return;
-    }
-
-  ((operation) arg->data)(reg);
   
+  switch (cmd->type)
+    {
+    case OPERATION:
+      ((operation) cmd->data)(reg);
+      break;
+    case INSTRUCTION:
+      execute_code(((instruction*) cmd->data)->stmt, reg);
+      break;
+    default:
+      do_error("Tried to compute something that is not an operation or instruction.");
+      break;
+    }
+
 }
 
