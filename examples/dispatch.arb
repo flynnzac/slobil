@@ -37,8 +37,9 @@ set /add-n-times+Real add-n-times+Integer .
 set /add-n-times+String
     (
       mov /#1 /str .
+      mov /#2 /n .
       set /result str .
-      repeat [ subtract \#2 1 . ]
+      repeat [ subtract \n 1 . ]
              ( set /result [ concat \result \str . ] . ) .
       answer \result .
     ) .

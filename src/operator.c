@@ -771,7 +771,7 @@ op_source (registry* reg)
   struct parser_state state = fresh_state(0);
   interact(f, &state, reg->up);
   fclose(f);
-  del(reg->up, arbel_hash_ans, 0);
+
 }
 
 void
