@@ -3029,6 +3029,71 @@ op_dispatch (registry* reg)
 }
 
 void
+op_call (registry* reg)
+{
+  data* arg1 = lookup(reg, arbel_hash_1, 0);
+
+  if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
+    {
+      do_error("First argument to `call` must be an instruction.");
+      return;
+    }
+
+  /* set arg1 to #0 in new registry */
+  registry* r_new = new_registry(reg->up);
+  set(r_new, arg1, "#0");
+  
+  data* d = NULL;
+  data* d_data = NULL;
+  data* d_new;
+  int i = 2;
+  char* r = NULL;
+  unsigned long hash_r = 0;
+
+  r = argument_name(i);
+  hash_r = hash_str(r);
+
+  while ((d = lookup(reg, hash_r, 0)) != NULL)
+    {
+      if (d->type != REGISTER)
+        {
+          do_error("Expected a register");
+          free_registry(r_new);
+          free(r);
+          return;
+        }
+      free(r);
+      r = argument_name(i+1);
+      hash_r = hash_str(r);
+      d_data = lookup(reg,hash_r,0);
+      d_new = copy_data(d_data);
+      set(r_new, d_new, ((regstr*) d->data)->name);
+      i = i + 2;
+      free(r);
+      r = argument_name(i);
+      hash_r = hash_str(r);
+    }
+
+  if (r != NULL)
+    free(r);
+
+
+
+  compute(r_new);
+  data* ans = get(r_new, arbel_hash_ans, 0);
+
+  if (ans != NULL)
+    {
+      ans = copy_data(ans);
+      ret_ans(reg, ans);
+    }
+  del(r_new, arbel_hash_0, 0);
+
+  free_registry(r_new);
+
+}  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -3293,6 +3358,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_to_real);
   set(reg,d,"to-real");
+
+  assign_op(&d, op_call);
+  set(reg,d,"call");
+
   
 }
   
