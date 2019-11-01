@@ -145,10 +145,6 @@ append_statement (statement* current, element* head)
 void
 execute_statement (statement* s, registry* reg)
 {
-  size_t* location = NULL;
-  unsigned long* hash_bins = NULL;
-  registry* arg_reg = gen_arg_reg(s->head, &hash_bins, &location);
-  arg_reg->up = reg;
 
   element* e = s->head;
   int arg_n = 0;
@@ -195,28 +191,17 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          content* c = right_n(arg_reg->objects[hash_bins[arg_n]],
-                               location[arg_n]);
+          s->arg.arg_array[arg_n] = d;
 
-
-          if (c->value != NULL && !c->do_not_free_data)
+          if (e->literal || (arg_n == 0 && (d->type == OPERATION)))
             {
-              free_data(c->value);
-              c->value = NULL;
-            }
-          
-          c->value = d;
-
-          if (e->literal || (arg_n == 0 && (d->type == INSTRUCTION ||
-                                            d->type == OPERATION)))
-            {
-              c->do_not_free_data = 1;
+              s->arg.free_data[arg_n] = 0;
             }
           else
             {
-              c->do_not_free_data = 0;
+              s->arg.free_data[arg_n] = 1;
             }
-
+              
         }
 
       arg_n++;
@@ -226,11 +211,9 @@ execute_statement (statement* s, registry* reg)
     }
 
   if (!is_error(-1))
-    compute(lookup(arg_reg, arbel_hash_0, 0), arg_reg);
+    compute(s->arg.arg_array[0], reg, s->arg);
 
-  free_registry(arg_reg);
-  free(location);
-  free(hash_bins);
+  free_arg_array_data(&s->arg);
 
 }
 

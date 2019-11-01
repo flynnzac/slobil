@@ -45,7 +45,7 @@ ret_ans (registry* reg, data* d)
 }
   
 void
-compute (data* cmd, registry* reg)
+compute (data* cmd, registry* reg, args arg)
 {
   if (cmd == NULL)
     {
@@ -56,7 +56,7 @@ compute (data* cmd, registry* reg)
   switch (cmd->type)
     {
     case OPERATION:
-      ((operation) cmd->data)(reg);
+      ((operation) cmd->data)(arg, reg);
       break;
     case INSTRUCTION:
       execute_code(((instruction*) cmd->data)->stmt, reg);
@@ -67,4 +67,5 @@ compute (data* cmd, registry* reg)
     }
 
 }
+
 

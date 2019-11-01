@@ -182,3 +182,14 @@ free_registry (registry* reg)
   free(reg);
 
 }
+
+void
+free_arg_array_data (args* a)
+{
+  for (int i = 0; i < a->length; i++)
+    {
+      if (a->free_data[i])
+        free_data(a->arg_array[i]);
+    }
+
+}

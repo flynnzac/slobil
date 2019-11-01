@@ -398,6 +398,17 @@ parse (FILE* f, parser_state* state, statement** s)
       if (complete && !state->in_comment)
         {
           stmt = append_statement(stmt, state->cur_elem);
+          size_t i = 0;
+          element* e = stmt->head;
+          while (e != NULL)
+            {
+              i++;
+              e = e->right;
+            }
+          stmt->arg.length = i;
+          stmt->arg.free_data = malloc(sizeof(int)*i);
+          stmt->arg.arg_array = malloc(sizeof(data*)*i);
+          
           *state = fresh_state(state->print_out);
           if (*s == NULL)
             {
