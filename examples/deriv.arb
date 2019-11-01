@@ -1,10 +1,7 @@
 ' Compute the numerical derivative of a function
 set /deriv
     (
-      mov /#1 /x .
-      mov /#2 /f .
-      mov /#3 /h .
-      divide [ subtract [ f [ add x h . ] . ]
-                        [ f [ subtract x h . ] . ] . ]
+      divide [ subtract [ call f /y [ add x h . ] . ]
+                        [ call f /y [ subtract x h . ] . ] . ]
              [ multiply 2 h . ] .
     ) .
