@@ -22,25 +22,21 @@
 #include "arbel.h"
 
 void
-op_list (registry* reg)
+op_list (args a, registry* reg)
 {
   registry* r_new = new_registry(reg->up);
-  data* d = NULL;
+  data* d;
   data* d_new;
   int i = 1;
   char* r = NULL;
-  unsigned long hash_r = 0;
 
-  r = argument_name(i);
-  hash_r = hash_str(r);
-  while ((d = lookup(reg, hash_r, 0)) != NULL)
+  for (i=1; i < a->length; i++)
     {
-      d_new = copy_data(d);
+      r = argument_name(i);
+      d_new = copy_data(a->arg_array[i]);
       set(r_new, d_new, r);
       i++;
       free(r);
-      r = argument_name(i);
-      hash_r = hash_str(r);
     }
 
   if (r != NULL)

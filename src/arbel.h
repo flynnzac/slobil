@@ -332,7 +332,7 @@ int
 read_registry (FILE* f, registry* reg);
 
 void
-op_list (registry* reg);
+op_list (args a, registry* reg);
 
 void
 op_call (registry* reg);
