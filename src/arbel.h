@@ -53,7 +53,7 @@ enum data_type
 
 typedef enum data_type data_type;
 
-struct args;
+struct arg;
 
 struct data
 {
@@ -83,7 +83,7 @@ struct registry
 
 typedef struct registry registry;
 
-typedef void (*operation)(struct args, registry*);
+typedef void (*operation)(struct arg, registry*);
 
 struct regstr
 {
@@ -148,19 +148,19 @@ struct element
 
 typedef struct element element;
 
-struct args
+struct arg
 {
   data** arg_array;
   int* free_data;
   size_t length;
 };
 
-typedef struct args args;
+typedef struct arg arg;
 
 struct statement
 {
   element* head;
-  args arg;
+  arg arg;
   struct statement* right;
   registry* arg_reg;
   unsigned long* hash_bins;
@@ -323,22 +323,13 @@ data*
 lookup (registry* reg, unsigned long hash_name, int recursive);
 
 void
-compute (data* cmd, registry* reg, args arg);
+compute (data* cmd, registry* reg, arg arg);
 
 int
 save_registry (FILE* f, registry* reg);
 
 int
 read_registry (FILE* f, registry* reg);
-
-void
-op_list (args a, registry* reg);
-
-void
-op_call (registry* reg);
-
-void
-op_add (registry* reg);
 
 char*
 vector_name (const char* lead, int n);
@@ -421,7 +412,13 @@ content*
 right_n (content* c, size_t n);
 
 void
-free_arg_array_data (args* a);
+free_arg_array_data (arg* a);
+
+void
+free_arg (arg* a);
+
+arg
+gen_arg (int length, int def_free);
 
 /* global variables */
 registry* current_parse_registry;

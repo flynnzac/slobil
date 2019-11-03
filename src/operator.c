@@ -22,7 +22,7 @@
 #include "arbel.h"
 
 void
-op_list (args a, registry* reg)
+op_list (arg a, registry* reg)
 {
   registry* r_new = new_registry(reg->up);
   data* d;
@@ -39,9 +39,6 @@ op_list (args a, registry* reg)
       free(r);
     }
 
-  if (r != NULL)
-    free(r);
-
   d = malloc(sizeof(data));
   d->type = REGISTRY;
   d->data = r_new;
@@ -50,7 +47,7 @@ op_list (args a, registry* reg)
 }
 
 void
-op_reg (args a, registry* reg)
+op_reg (arg a, registry* reg)
 {
   registry* r_new = new_registry(reg->up);
   data* d = NULL;
@@ -596,7 +593,7 @@ op_print (arg a, registry* reg)
 }
 
 void
-op_character (registry* reg)
+op_character (arg a, registry* reg)
 {
   data* arg1 = a.arg_array[1];
   data* arg2 = a.arg_array[2];
@@ -670,7 +667,7 @@ op_count_characters (arg a, registry* reg)
 }
 
 void
-op_concat (registry* reg)
+op_concat (arg a, registry* reg)
 {
   data* arg1 = a.arg_array[1];
   data* arg2 = a.arg_array[2];
@@ -1185,8 +1182,6 @@ op_collapse (arg a, registry* reg)
 
 }
 
-/* STOPPED MODERNIZING HERE: Need to review op_join again. */
-
 /* apply an instruction to all matching pairs of two registries return a new registry */
 void
 op_join (arg a, registry* reg)
@@ -1220,9 +1215,13 @@ op_join (arg a, registry* reg)
   data* d1 = NULL;
   data* d2 = NULL;
   data* d;
+  arg a1 = gen_arg(3, 0);
+  
   if (arg3->type == INSTRUCTION)
     set(instr_reg, arg3, "#0");
-  
+  else
+    a1.arg_array[0] = arg3;
+
   for (int i = 0; i < ARBEL_HASH_SIZE; i++)
     {
       content* cur = reg1->objects[i];
@@ -1243,26 +1242,39 @@ op_join (arg a, registry* reg)
             {
               d1 = lookup(reg1, cur->key, 0);
               d2 = lookup(reg2, cur->key, 0);
-              set(instr_reg, d1, "#1");
-              set(instr_reg, d2, "#2");
-          
-              compute(arg3, instr_reg);
 
-              del(instr_reg, arbel_hash_1, 0);
-              del(instr_reg, arbel_hash_2, 0);
+              if (arg3->type == INSTRUCTION)
+                {
+                  set(instr_reg, d1, "#1");
+                  set(instr_reg, d2, "#2");
+                }
+              else
+                {
+                  a1.arg_array[1] = d1;
+                  a1.arg_array[2] = d2;
+                }
+          
+              compute(arg3, instr_reg, a1);
+
+              if (arg3->type == INSTRUCTION)
+                {
+                  del(instr_reg, arbel_hash_1, 0);
+                  del(instr_reg, arbel_hash_2, 0);
+                }
           
               d = lookup(reg1, arbel_hash_ans, 0);
-              del(reg1, arbel_hash_ans, 0);
               if (d != NULL)
                 {
                   set(out_reg, d, cur->name);
                 }
+              del(reg1, arbel_hash_ans, 0);
             }
           cur = cur->right;
         }
     }
 
-  del(instr_reg, arbel_hash_0, 0);
+  if (arg3->type == INSTRUCTION)
+    del(instr_reg, arbel_hash_0, 0);
 
   d = malloc(sizeof(data));
   d->type = REGISTRY;
@@ -1271,13 +1283,15 @@ op_join (arg a, registry* reg)
   free_registry(instr_reg);
   ret_ans(reg, d);
 
+  free_arg(&a1);
+
 }
 
 void
-op_string_eq (registry* reg)
+op_string_eq (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1307,10 +1321,10 @@ op_string_eq (registry* reg)
 }
 
 void
-op_string_lt (registry* reg)
+op_string_lt (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1340,10 +1354,10 @@ op_string_lt (registry* reg)
 }
 
 void
-op_string_gt (registry* reg)
+op_string_gt (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1373,10 +1387,10 @@ op_string_gt (registry* reg)
 }
 
 void
-op_exist_in (registry* reg)
+op_exist_in (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1411,10 +1425,10 @@ op_exist_in (registry* reg)
 }
 
 int
-op_reg_cmp (registry* reg)
+op_reg_cmp (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1432,9 +1446,9 @@ op_reg_cmp (registry* reg)
 }
 
 void
-op_reg_eq (registry* reg)
+op_reg_eq (arg a, registry* reg)
 {
-  int cmp = op_reg_cmp(reg);
+  int cmp = op_reg_cmp(a, reg);
   if (is_error(-1))
     return;
       
@@ -1452,9 +1466,9 @@ op_reg_eq (registry* reg)
 }
 
 void
-op_reg_gt (registry* reg)
+op_reg_gt (arg a, registry* reg)
 {
-  int cmp = op_reg_cmp(reg);
+  int cmp = op_reg_cmp(a, reg);
   if (is_error(-1))
     return;
   
@@ -1472,9 +1486,9 @@ op_reg_gt (registry* reg)
 }
 
 void
-op_reg_lt (registry* reg)
+op_reg_lt (arg a, registry* reg)
 {
-  int cmp = op_reg_cmp(reg);
+  int cmp = op_reg_cmp(a, reg);
   if (is_error(-1))
     return;
   
@@ -1493,9 +1507,9 @@ op_reg_lt (registry* reg)
 
 
 void
-op_go_in (registry* reg)
+op_go_in (arg a, registry* reg)
 {
-  data* arg1 = get(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1525,7 +1539,7 @@ op_go_in (registry* reg)
 }
 
 void
-op_go_out (registry* reg)
+op_go_out (arg a, registry* reg)
 {
   if (current_parse_registry->up == NULL)
     {
@@ -1537,9 +1551,9 @@ op_go_out (registry* reg)
 }
 
 void
-op_save (registry* reg)
+op_save (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1563,9 +1577,9 @@ op_save (registry* reg)
 }
 
 void
-op_load (registry* reg)
+op_load (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1587,9 +1601,9 @@ op_load (registry* reg)
 }
 
 void
-op_to_string (registry* reg)
+op_to_string (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`to-string` requires an argment.");
@@ -1620,7 +1634,7 @@ op_to_string (registry* reg)
     }
   else
     {
-      data* arg2 = lookup(reg, arbel_hash_2, 0);
+      data* arg2 = a.arg_array[2];
       int prec = 6;
       if (arg2 != NULL && arg2->type != INTEGER)
         {
@@ -1672,9 +1686,9 @@ op_to_string (registry* reg)
 }
 
 void
-op_to_number (registry* reg)
+op_to_number (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`to-number` requires an argument.");
@@ -1710,9 +1724,9 @@ op_to_number (registry* reg)
 }
 
 void
-op_to_real (registry* reg)
+op_to_real (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`to-real` requires an argument.");
@@ -1735,11 +1749,10 @@ op_to_real (registry* reg)
   
 }
 
-
 void
-op_register_number (registry* reg)
+op_register_number (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1773,10 +1786,10 @@ op_register_number (registry* reg)
   
 
 void
-op_ref (registry* reg)
+op_ref (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1807,9 +1820,9 @@ op_ref (registry* reg)
 }
 
 void
-op_output_code (registry* reg)
+op_output_code (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1837,7 +1850,7 @@ op_output_code (registry* reg)
 }
 
 void
-op_clear_code (registry* reg)
+op_clear_code (arg a, registry* reg)
 {
   if (source_code != NULL)
     free(source_code);
@@ -1846,9 +1859,9 @@ op_clear_code (registry* reg)
 }
 
 void
-op_error (registry* reg)
+op_error (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1866,9 +1879,9 @@ op_error (registry* reg)
 }
 
 void
-op_is_type (registry* reg, const data_type type)
+op_is_type (arg a, registry* reg, const data_type type)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("Assert instruction requires an argument.");
@@ -1890,58 +1903,58 @@ op_is_type (registry* reg, const data_type type)
 }
 
 void
-op_is_integer (registry* reg)
+op_is_integer (arg a, registry* reg)
 {
-  op_is_type(reg, INTEGER);
+  op_is_type(a, reg, INTEGER);
 }
 
 void
-op_is_real (registry* reg)
+op_is_real (arg a, registry* reg)
 {
-  op_is_type(reg, REAL);
+  op_is_type(a, reg, REAL);
 }
 
 void
-op_is_string (registry* reg)
+op_is_string (arg a, registry* reg)
 {
-  op_is_type(reg, STRING);
+  op_is_type(a, reg, STRING);
 }
 
 void
-op_is_register (registry* reg)
+op_is_register (arg a, registry* reg)
 {
-  op_is_type(reg, REGISTER);
+  op_is_type(a, reg, REGISTER);
 }
 
 void
-op_is_registry (registry* reg)
+op_is_registry (arg a, registry* reg)
 {
-  op_is_type(reg, REGISTRY);
+  op_is_type(a, reg, REGISTRY);
 }
 
 void
-op_is_instruction (registry* reg)
+op_is_instruction (arg a, registry* reg)
 {
-  op_is_type(reg, INSTRUCTION);
+  op_is_type(a, reg, INSTRUCTION);
 }
 
 void
-op_is_file (registry* reg)
+op_is_file (arg a, registry* reg)
 {
-  op_is_type(reg, ARBEL_FILE);
+  op_is_type(a, reg, ARBEL_FILE);
 }
 
 void
-op_is_nothing (registry* reg)
+op_is_nothing (arg a, registry* reg)
 {
-  op_is_type(reg, NOTHING);
+  op_is_type(a, reg, NOTHING);
 }
 
 
 void
-op_open_text_file (registry* reg)
+op_open_text_file (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -1969,9 +1982,9 @@ op_open_text_file (registry* reg)
 }
 
 void
-op_read (registry* reg)
+op_read (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2003,9 +2016,9 @@ op_read (registry* reg)
 }
 
 void
-op_close (registry* reg)
+op_close (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2019,7 +2032,7 @@ op_close (registry* reg)
       return;
     }
 
-  data* f = lookup(reg->up, ((regstr*) arg1->data)->key, 0);
+  data* f = lookup(reg, ((regstr*) arg1->data)->key, 0);
 
   if (f == NULL)
     {
@@ -2038,15 +2051,15 @@ op_close (registry* reg)
       fclose((FILE*) f->data);
     }
 
-  del(reg->up, ((regstr*) arg1->data)->key, 1);
+  del(reg, ((regstr*) arg1->data)->key, 1);
   
 }
 
 void
-op_or (registry* reg)
+op_or (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2074,10 +2087,10 @@ op_or (registry* reg)
 }
 
 void
-op_and (registry* reg)
+op_and (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2105,9 +2118,9 @@ op_and (registry* reg)
 }
 
 void
-op_not (registry* reg)
+op_not (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2135,9 +2148,9 @@ op_not (registry* reg)
 }
 
 void
-op_read_line (registry* reg)
+op_read_line (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2171,10 +2184,10 @@ op_read_line (registry* reg)
 }
 
 void
-op_write (registry* reg)
+op_write (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2201,9 +2214,9 @@ op_write (registry* reg)
 }
 
 void
-op_input (registry* reg)
+op_input (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`input` requires an argument.");
@@ -2220,14 +2233,14 @@ op_input (registry* reg)
   data* d;
   assign_str(&d, input, 0);
   
-  set(reg->up, d, ((regstr*) arg1->data)->name);
+  set(reg, d, ((regstr*) arg1->data)->name);
   
 }
 
 void
-op_shell (registry* reg)
+op_shell (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`shell` requires an argument.");
@@ -2275,11 +2288,12 @@ op_shell (registry* reg)
 }
 
 void
-op_link (registry* reg)
+op_link (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
-  data* arg3 = lookup(reg, arbel_hash_3, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
+  data* arg3 = a.arg_array[3];
+  
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
       do_error("`link` requires three arguments.");
@@ -2312,7 +2326,7 @@ op_link (registry* reg)
 
   data* d;
   assign_op(&d, new_op);
-  set(reg->up, d, (char*) arg3->data);
+  set(reg, d, (char*) arg3->data);
 
   if (arbel_ll == NULL)
     {
@@ -2330,11 +2344,11 @@ op_link (registry* reg)
 }
 
 void
-op_match (registry* reg)
+op_match (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
-  data* arg3 = lookup(reg, arbel_hash_3, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
+  data* arg3 = a.arg_array[3];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2433,12 +2447,12 @@ op_match (registry* reg)
 }
 
 void
-op_replace (registry* reg)
+op_replace (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
-  data* arg3 = lookup(reg, arbel_hash_3, 0);
-  data* arg4 = lookup(reg, arbel_hash_4, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
+  data* arg3 = a.arg_array[3];
+  data* arg4 = a.arg_array[4];
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2558,9 +2572,9 @@ op_replace (registry* reg)
 }
 
 void
-op_log (registry* reg)
+op_log (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2589,9 +2603,9 @@ op_log (registry* reg)
 
 
 void
-op_exp (registry* reg)
+op_exp (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2619,10 +2633,10 @@ op_exp (registry* reg)
 }
 
 void
-op_to_power (registry* reg)
+op_to_power (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
   
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2664,9 +2678,9 @@ op_to_power (registry* reg)
 }
 
 void
-op_chdir (registry* reg)
+op_chdir (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
   if (arg1 == NULL)
     {
       do_error("`chdir` requires an argument.");
@@ -2689,10 +2703,10 @@ op_chdir (registry* reg)
 }
 
 void
-op_copy_file (registry* reg)
+op_copy_file (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
   if (arg1 == NULL || arg2 == NULL)
     {
       do_error("`copy-file` requires an argument.");
@@ -2724,9 +2738,9 @@ op_copy_file (registry* reg)
 }
 
 void
-op_import (registry* reg)
+op_import (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
     {
@@ -2761,7 +2775,7 @@ op_import (registry* reg)
           if (d != NULL)
             {
               d = copy_data(d);
-              set(reg->up, d, (char*) c->name);
+              set(reg, d, (char*) c->name);
             }
           c = c->right;
         }
@@ -2770,7 +2784,7 @@ op_import (registry* reg)
 
 
 void
-op_curdir (registry* reg)
+op_curdir (arg a, registry* reg)
 {
   char* dir = get_current_dir_name();
   if (dir == NULL)
@@ -2784,11 +2798,11 @@ op_curdir (registry* reg)
 }
 
 void
-op_substring (registry* reg)
+op_substring (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
-  data* arg3 = lookup(reg, arbel_hash_3, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
+  data* arg3 = a.arg_array[3];
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2858,32 +2872,28 @@ op_substring (registry* reg)
 }
 
 void
-op_up (registry* reg)
+op_up (arg a, registry* reg)
 {
   if (reg->up == NULL)
     {
       do_error("Cannot use `up` instruction at top-level registry.");
       return;
     }
-  if (reg->up->up == NULL)
+
+  arg a1 = gen_arg(a.length-1, 0);
+  for (int i=1; i < a.length; i++)
     {
-      do_error("Cannot use `up` instruction at top-level registry.");
-      return;
+      a1.arg_array[i-1] = a.arg_array[i];
     }
 
-  reg = shift_list_down(reg);
-  reg->up = reg->up->up;
-  
-  compute(lookup(reg, arbel_hash_0, 0), reg);
-  free_registry(reg);
-
+  compute(a1.arg_array[0], reg->up, a1);
 }
 
 void
-op_of (registry* reg)
+op_of (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2909,10 +2919,10 @@ op_of (registry* reg)
 }
 
 void
-op_isof (registry* reg)
+op_isof (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2953,10 +2963,10 @@ op_isof (registry* reg)
 }
 
 void
-op_dispatch (registry* reg)
+op_dispatch (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
-  data* arg2 = lookup(reg, arbel_hash_2, 0);
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -3033,9 +3043,9 @@ op_dispatch (registry* reg)
 }
 
 void
-op_call (registry* reg)
+op_call (arg a, registry* reg)
 {
-  data* arg1 = lookup(reg, arbel_hash_1, 0);
+  data* arg1 = a.arg_array[1];
 
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
     {
@@ -3045,43 +3055,30 @@ op_call (registry* reg)
 
   /* set arg1 to #0 in new registry */
   registry* r_new = new_registry(reg->up);
-  set(r_new, arg1, "#0");
   
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
   int i = 2;
-  char* r = NULL;
-  unsigned long hash_r = 0;
 
-  r = argument_name(i);
-  hash_r = hash_str(r);
-
-  while ((d = lookup(reg, hash_r, 0)) != NULL)
+  for (i=2; i < a.length; i=i+2)
     {
+      d = a.arg_array[i];
+
       if (d->type != REGISTER)
         {
           do_error("Expected a register");
           free_registry(r_new);
-          free(r);
           return;
         }
-      free(r);
-      r = argument_name(i+1);
-      hash_r = hash_str(r);
-      d_data = lookup(reg,hash_r,0);
+      d_data = a.arg_array[i+1];
       d_new = copy_data(d_data);
       set(r_new, d_new, ((regstr*) d->data)->name);
-      i = i + 2;
-      free(r);
-      r = argument_name(i);
-      hash_r = hash_str(r);
     }
 
-  if (r != NULL)
-    free(r);
 
-  compute(arg1, r_new);
+  arg a1;
+  compute(arg1, r_new, a1);
 
   data* ans;
 
@@ -3095,7 +3092,6 @@ op_call (registry* reg)
         }
     }
   
-  del(r_new, arbel_hash_0, 0);
   free_registry(r_new);
 
 }  
@@ -3122,9 +3118,6 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_if);
   set(reg,d,"if");
-
-  assign_op(&d, op_compute);
-  set(reg,d,"compute");
 
   assign_op(&d, op_reg);
   set(reg,d,"reg");

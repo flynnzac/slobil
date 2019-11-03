@@ -24,10 +24,9 @@
 void
 ret (registry* reg, data* d, const char* name)
 {
-  registry* up = reg->up;
-  if (up != NULL)
+  if (reg != NULL)
     {
-      set(up, d, name);
+      set(reg, d, name);
     }
   else
     {
@@ -45,7 +44,7 @@ ret_ans (registry* reg, data* d)
 }
   
 void
-compute (data* cmd, registry* reg, args arg)
+compute (data* cmd, registry* reg, arg a)
 {
   if (cmd == NULL)
     {
@@ -56,7 +55,7 @@ compute (data* cmd, registry* reg, args arg)
   switch (cmd->type)
     {
     case OPERATION:
-      ((operation) cmd->data)(arg, reg);
+      ((operation) cmd->data)(a, reg);
       break;
     case INSTRUCTION:
       execute_code(((instruction*) cmd->data)->stmt, reg);
