@@ -1078,9 +1078,9 @@ op_to_register (arg a, registry* reg)
 void
 op_collapse (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[0];
-  data* arg2 = a.arg_array[1];
-  data* arg3 = a.arg_array[2];
+  data* arg1 = a.arg_array[1];
+  data* arg2 = a.arg_array[2];
+  data* arg3 = a.arg_array[3];
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
       do_error("`collapse` requires three arguments.");
@@ -1110,6 +1110,7 @@ op_collapse (arg a, registry* reg)
   char* first_name;
   int i = 2;
   registry* to_walk = (registry*) arg1->data;
+  to_walk->up = reg;
 
   first_name = vector_name((char*) arg3->data, 1);
   unsigned long first_hash = hash_str(first_name);
@@ -1134,11 +1135,15 @@ op_collapse (arg a, registry* reg)
 
   data* d1;
   data* d2;
+
+  int is_first = 1;
   
   while ((d = lookup(to_walk, second_hash, 0)) != NULL)
     {
 
-      d1 = lookup(to_walk, first_hash, 0);
+      if (is_first)
+        d1 = lookup(to_walk, first_hash, 0);
+      
       d2 = lookup(to_walk, second_hash, 0);
       if (arg2->type == INSTRUCTION)
         {
@@ -1152,13 +1157,19 @@ op_collapse (arg a, registry* reg)
         }
         
       compute(arg2, r, a1);
+      d1 = lookup(r, arbel_hash_ans, 0);
+
+      if (d1 == NULL)
+        {
+          do_error("Instruction did not set /ans register.");
+          break;
+        }
       
-      if (first_hash != arbel_hash_ans)
+      if (is_first)
         {
           free(first_name);
-          first_name = malloc(sizeof(char)*(strlen("ans")+1));
-          strcpy(first_name, "ans");
           first_hash = arbel_hash_ans;
+          is_first = 0;
         }
       i++;
       free(second_name);
@@ -1170,7 +1181,7 @@ op_collapse (arg a, registry* reg)
           del(r, arbel_hash_2, 0);
         }
     }
-  d = lookup(to_walk, arbel_hash_ans, 0);
+  d = lookup(r, arbel_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -1180,7 +1191,6 @@ op_collapse (arg a, registry* reg)
 
   free_registry(r);
   free(second_name);
-  free(first_name);
 
 
 }
@@ -3198,7 +3208,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_register);
   set(reg,d,"to-register");
 
-  /* stopped testing ops here */
   assign_op(&d, op_collapse);
   set(reg,d,"collapse");
 
