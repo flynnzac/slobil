@@ -214,11 +214,11 @@ op_set (arg a, registry* reg)
       to_set = reg;
     }
   
-
+  
   char* name = ((regstr*) arg1->data)->name;
   data* d = copy_data(arg2);
   set(to_set, d, name);
-
+  
 
 }
 
@@ -344,7 +344,7 @@ op_del (arg a, registry* reg)
   if (arg1->type != REGISTER)
     do_error("Argument to del should be a register.");
 
-  if (!is_error(-1) && reg->up != NULL)
+  if (!is_error(-1) && reg != NULL)
     {
       del(reg, ((regstr*) arg1->data)->key, 1);
     }
@@ -953,10 +953,11 @@ op_in (arg a, registry* reg)
       return;
     }
 
+  ((registry*) arg1->data)->up = reg;
 
   execute_code(((instruction*) arg2->data)->stmt,
                (registry*) arg1->data);
-
+  
   data* ans = lookup((registry*) arg1->data, arbel_hash_ans, 0);
   if (ans != NULL)
     {
@@ -3056,7 +3057,7 @@ op_call (arg a, registry* reg)
     }
 
   /* set arg1 to #0 in new registry */
-  registry* r_new = new_registry(reg->up);
+  registry* r_new = new_registry(reg);
   
   data* d = NULL;
   data* d_data = NULL;
@@ -3080,6 +3081,7 @@ op_call (arg a, registry* reg)
 
 
   arg a1;
+  a1.length = 0;
   compute(arg1, r_new, a1);
 
   data* ans;
@@ -3196,6 +3198,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_register);
   set(reg,d,"to-register");
 
+  /* stopped testing ops here */
   assign_op(&d, op_collapse);
   set(reg,d,"collapse");
 

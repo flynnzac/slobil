@@ -138,6 +138,18 @@ append_statement (statement* current, element* head)
     {
       current->right = s;
     }
+  
+  element* e = s->head;
+  size_t i = 0;
+  while (e != NULL)
+    {
+      i++;
+      e = e->right;
+    }
+  s->arg.length = i;
+  s->arg.free_data = malloc(sizeof(int)*i);
+  s->arg.arg_array = malloc(sizeof(data*)*i);
+
 
   return s;
 }
