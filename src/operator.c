@@ -24,7 +24,7 @@
 void
 op_list (arg a, registry* reg)
 {
-  registry* r_new = new_registry(reg->up);
+  registry* r_new = new_registry(reg);
   data* d;
   data* d_new;
   int i = 1;
@@ -35,7 +35,6 @@ op_list (arg a, registry* reg)
       r = argument_name(i);
       d_new = copy_data(a.arg_array[i]);
       set(r_new, d_new, r);
-      i++;
       free(r);
     }
 
@@ -49,7 +48,7 @@ op_list (arg a, registry* reg)
 void
 op_reg (arg a, registry* reg)
 {
-  registry* r_new = new_registry(reg->up);
+  registry* r_new = new_registry(reg);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -182,7 +181,10 @@ op_set (arg a, registry* reg)
 {
   data* arg1 = a.arg_array[1];
   data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+
+  data* arg3 = NULL;
+  if (a.length >= 4)
+    arg3 = a.arg_array[3];
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -197,7 +199,7 @@ op_set (arg a, registry* reg)
     }
 
   registry* to_set;
-  if (arg3 != NULL)
+  if (a.length >= 4)
     {
       if (arg3->type != REGISTRY)
         {
@@ -209,7 +211,7 @@ op_set (arg a, registry* reg)
     }
   else
     {
-      to_set = reg->up;
+      to_set = reg;
     }
   
 
