@@ -1224,7 +1224,7 @@ op_join (arg a, registry* reg)
   registry* reg1 = (registry*) arg1->data;
   registry* reg2 = (registry*) arg2->data;
   registry* out_reg = new_registry(reg);
-  registry* instr_reg = new_registry(reg1);
+  registry* instr_reg = new_registry(reg);
   data* d1 = NULL;
   data* d2 = NULL;
   data* d;
@@ -1275,12 +1275,12 @@ op_join (arg a, registry* reg)
                   del(instr_reg, arbel_hash_2, 0);
                 }
           
-              d = lookup(reg1, arbel_hash_ans, 0);
+              d = lookup(instr_reg, arbel_hash_ans, 0);
               if (d != NULL)
                 {
                   set(out_reg, d, cur->name);
                 }
-              del(reg1, arbel_hash_ans, 0);
+              del(instr_reg, arbel_hash_ans, 0);
             }
           cur = cur->right;
         }
@@ -2376,12 +2376,12 @@ op_match (arg a, registry* reg)
     }
 
   int max_matches = 0;
-  if (arg3 != NULL && arg3->type != INTEGER)
+  if (a.length >= 4 && arg3 != NULL && arg3->type != INTEGER)
     {
       do_error("The third argument to `match` must be an integer.");
       return;
     }
-  else if (arg3 != NULL)
+  else if (a.length >= 4 && arg3 != NULL)
     {
       max_matches = *((int*) arg3->data);
     }
