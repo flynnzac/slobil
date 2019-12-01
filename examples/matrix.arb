@@ -1,7 +1,7 @@
-' Computes v^T v for a vector 
+' Computes v^T w for a vector 
 set /dotproduct
     (
-      join \#1 \#2 multiply .
+      join \v \w multiply .
       collapse \ans add "#" .
     ) .
 
@@ -9,15 +9,11 @@ set /dotproduct
 ' matrix-multiply A B computes A^T B 
 set /matrix-multiply
     (
-      mov /#1 /A .
-      mov /#2 /B .
-
       set /i /#1 .
       set /out [ list . ] .
       while ( exist-in i \B . )
             (
-              set /one \A:i .
-              do-to-all ( dotproduct \#1 \one . ) \A .
+              do-to-all ( dotproduct /v \t /w \B:i . ) \A .
               mov /ans /res .
               in \out ( set i res . ) .
               next i .
@@ -29,12 +25,11 @@ set /matrix-multiply
 ' Computes A^T 
 set /transpose
     (
-      mov /#1 /A .
       set /i /#1 .
       set /out [ list . ] .
       while ( exist-in i \A:/#1 . )
             (
-              do-to-all ( answer \#1:i . ) \A .
+              do-to-all ( answer \t:i . ) \A .
               mov /ans /res .
               in \out ( set i res . ) .
               next i .

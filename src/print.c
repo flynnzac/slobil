@@ -53,7 +53,7 @@ print_data (data* d, int print_cmd)
       printf("Built-in instruction.\n");
       break;
     case REFERENCE:
-      printf("Reference to: :");
+      printf("Reference to: /");
       for (int i=0; i < (((ref*) d->data)->levels-1); i++)
         {
           printf("%s:", ((ref*) d->data)->name[i]);

@@ -152,7 +152,7 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
 
   if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
     {
-      execute_code(((instruction*) d->data)->stmt, reg->up);
+      execute_code(((instruction*) d->data)->stmt, reg);
       d = get(reg, arbel_hash_ans, 0);
 
     }

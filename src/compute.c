@@ -42,7 +42,7 @@ ret_ans (registry* reg, data* d)
   
   ret(reg, d, "ans");
 }
-  
+
 void
 compute (data* cmd, registry* reg, arg a)
 {
@@ -58,7 +58,7 @@ compute (data* cmd, registry* reg, arg a)
       ((operation) cmd->data)(a, reg);
       break;
     case INSTRUCTION:
-      execute_code(((instruction*) cmd->data)->stmt, reg);
+      _op_call(a, reg, 0);
       break;
     default:
       do_error("Tried to compute something that is not an operation or instruction.");

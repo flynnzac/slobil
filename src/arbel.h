@@ -412,13 +412,19 @@ content*
 right_n (content* c, size_t n);
 
 void
-free_arg_array_data (arg* a);
+free_arg_array_data (arg* a, int n);
 
 void
 free_arg (arg* a);
 
 arg
 gen_arg (int length, int def_free);
+
+data*
+resolve (data* arg, registry* reg);
+
+void
+_op_call (arg a, registry* reg, const int explicit);
 
 /* global variables */
 registry* current_parse_registry;

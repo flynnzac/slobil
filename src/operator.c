@@ -33,7 +33,7 @@ op_list (arg a, registry* reg)
   for (i=1; i < a.length; i++)
     {
       r = argument_name(i);
-      d_new = copy_data(a.arg_array[i]);
+      d_new = copy_data(resolve(a.arg_array[i], reg));
       set(r_new, d_new, r);
       free(r);
     }
@@ -64,7 +64,7 @@ op_reg (arg a, registry* reg)
           return;
         }
 
-      d_data = a.arg_array[i+1];
+      d_data = resolve(a.arg_array[i+1], reg);
       d_new = copy_data(d_data);
       set(r_new, d_new, ((regstr*) d->data)->name);
     }
@@ -79,8 +79,8 @@ op_reg (arg a, registry* reg)
 void
 op_arithmetic (arg a, registry* reg, const int code)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
   data* new_data;
 
   if (arg1 == NULL || arg2 == NULL)
@@ -179,12 +179,12 @@ op_divide (arg a, registry* reg)
 void
 op_set (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   data* arg3 = NULL;
   if (a.length >= 4)
-    arg3 = a.arg_array[3];
+    arg3 = resolve(a.arg_array[3], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -225,8 +225,8 @@ op_set (arg a, registry* reg)
 void
 op_get (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL)
     do_error("Get needs an argument.");
@@ -264,7 +264,7 @@ op_get (arg a, registry* reg)
 void
 op_if (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -280,7 +280,7 @@ op_if (arg a, registry* reg)
 
   if (*((int*) arg1->data))
     {
-      data* arg2 = a.arg_array[2];
+      data* arg2 = resolve(a.arg_array[2], reg);
       if (arg2 == NULL)
         {
           return;
@@ -290,7 +290,7 @@ op_if (arg a, registry* reg)
     }
   else
     {
-      data* arg3 = a.arg_array[3];
+      data* arg3 = resolve(a.arg_array[3], reg);
       data* d;
       if (arg3 != NULL)
         {
@@ -310,8 +310,8 @@ op_sit (arg a, registry* reg)
 void
 op_mov (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     do_error("`mov` requires two arguments.");
@@ -333,7 +333,7 @@ op_mov (arg a, registry* reg)
 void
 op_del (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -361,7 +361,7 @@ op_exit (arg a, registry* reg)
 void
 op_exist (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     do_error("exist requires an argument.");
@@ -395,7 +395,7 @@ op_exist (arg a, registry* reg)
 void
 op_answer (arg a, registry* reg)
 {
-  data* d = a.arg_array[1];
+  data* d = resolve(a.arg_array[1], reg);
   if (d == NULL)
     do_error("`answer` requires an argument.");
 
@@ -410,8 +410,8 @@ int
 op_comparison (arg a, registry* reg)
 {
 
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -597,8 +597,8 @@ op_print (arg a, registry* reg)
 void
 op_character (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -645,7 +645,7 @@ op_character (arg a, registry* reg)
 void
 op_count_characters (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -671,8 +671,8 @@ op_count_characters (arg a, registry* reg)
 void
 op_concat (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -702,7 +702,7 @@ op_concat (arg a, registry* reg)
 void
 op_source (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`source` requires an argument.");
@@ -736,8 +736,8 @@ op_source (arg a, registry* reg)
 void
 op_do_to_all (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -757,19 +757,24 @@ op_do_to_all (arg a, registry* reg)
       return;
     }
 
-  registry* tmp_reg = new_registry(reg);
-
   registry* arg_reg = (registry*) arg2->data;
   registry* ret_reg = new_registry(reg);
   data* d;
   arg a1;
 
-  a1.length = 2;
-  a1.free_data = malloc(sizeof(int)*2);
-  a1.free_data[0] = 0;
-  a1.free_data[1] = 0;
-  a1.arg_array = malloc(sizeof(data*)*2);
+  if (arg1->type == INSTRUCTION)
+    a1.length = 3;
+  else
+    a1.length = 2;
+
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  for (int i = 0; i < a1.length; i++)
+    a1.free_data[i] = 0;
+
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
   a1.arg_array[0] = arg1;
+  for (int i = 1; i < a1.length; i++)
+    a1.arg_array[i] = NULL;
 
 
   for  (int i = 0; i < ARBEL_HASH_SIZE; i++)
@@ -785,13 +790,21 @@ op_do_to_all (arg a, registry* reg)
       while (c != NULL)
         {
           d = c->value;
-          a1.arg_array[1] = d;
+          a1.arg_array[a1.length-1] = d;
 
           if (arg1->type == INSTRUCTION)
-            set(tmp_reg, d, "#1");
+            {
+              if (a1.arg_array[1] != NULL)
+                free_data(a1.arg_array[1]);
+              
+              assign_regstr(&a1.arg_array[1],
+                            "t",
+                            hash_str("t"));
+            }
+
           
-          compute(arg1, tmp_reg, a1);
-          d = lookup(tmp_reg, arbel_hash_ans, 0);
+          compute(arg1, reg, a1);
+          d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in `do-to-all` did not set `ans` register.");
@@ -800,14 +813,19 @@ op_do_to_all (arg a, registry* reg)
           d = copy_data(d);
           set(ret_reg, d, c->name);
           
-          if (arg1->type == INSTRUCTION)
-            del(tmp_reg, arbel_hash_1, 0);
-          
           c = c->right;
         }
+
+      if (d == NULL)
+        break;
     }
 
-  free_registry(tmp_reg);
+  if (arg1->type == INSTRUCTION)
+    {
+      if (a1.arg_array[1] != NULL)
+        free_data(a1.arg_array[1]);
+    }
+
   if (!is_error(-1))
     {
       d = malloc(sizeof(data));
@@ -822,7 +840,7 @@ op_do_to_all (arg a, registry* reg)
 void
 op_next (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -882,8 +900,8 @@ op_next (arg a, registry* reg)
 void
 op_last (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
   
   if (arg1==NULL || arg2==NULL)
     {
@@ -932,8 +950,8 @@ op_last (arg a, registry* reg)
 void
 op_in (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1==NULL || arg2==NULL)
     {
@@ -969,8 +987,8 @@ op_in (arg a, registry* reg)
 void
 op_while (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1023,8 +1041,8 @@ op_while (arg a, registry* reg)
 void
 op_repeat (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1056,7 +1074,7 @@ op_repeat (arg a, registry* reg)
 void
 op_to_register (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`to-register` requires an argument.");
@@ -1078,9 +1096,9 @@ op_to_register (arg a, registry* reg)
 void
 op_collapse (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
       do_error("`collapse` requires three arguments.");
@@ -1199,9 +1217,9 @@ op_collapse (arg a, registry* reg)
 void
 op_join (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -1303,8 +1321,8 @@ op_join (arg a, registry* reg)
 void
 op_string_eq (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1336,8 +1354,8 @@ op_string_eq (arg a, registry* reg)
 void
 op_string_lt (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1369,8 +1387,8 @@ op_string_lt (arg a, registry* reg)
 void
 op_string_gt (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1402,8 +1420,8 @@ op_string_gt (arg a, registry* reg)
 void
 op_exist_in (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1440,8 +1458,8 @@ op_exist_in (arg a, registry* reg)
 int
 op_reg_cmp (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1536,7 +1554,7 @@ op_go_in (arg a, registry* reg)
       return;
     }
 
-  arg1 = lookup(reg, arbel_hash_1, 0);
+  arg1 = resolve(arg1, reg);
 
   if (is_error(-1))
     return;
@@ -1566,7 +1584,7 @@ op_go_out (arg a, registry* reg)
 void
 op_save (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1592,7 +1610,7 @@ op_save (arg a, registry* reg)
 void
 op_load (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1616,7 +1634,7 @@ op_load (arg a, registry* reg)
 void
 op_to_string (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`to-string` requires an argment.");
@@ -1647,7 +1665,7 @@ op_to_string (arg a, registry* reg)
     }
   else
     {
-      data* arg2 = a.arg_array[2];
+      data* arg2 = resolve(a.arg_array[2], reg);
       int prec = 6;
       if (arg2 != NULL && arg2->type != INTEGER)
         {
@@ -1701,7 +1719,7 @@ op_to_string (arg a, registry* reg)
 void
 op_to_number (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`to-number` requires an argument.");
@@ -1739,7 +1757,7 @@ op_to_number (arg a, registry* reg)
 void
 op_to_real (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`to-real` requires an argument.");
@@ -1765,7 +1783,7 @@ op_to_real (arg a, registry* reg)
 void
 op_register_number (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1801,8 +1819,8 @@ op_register_number (arg a, registry* reg)
 void
 op_ref (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -1835,7 +1853,7 @@ op_ref (arg a, registry* reg)
 void
 op_output_code (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1874,7 +1892,7 @@ op_clear_code (arg a, registry* reg)
 void
 op_error (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1894,7 +1912,7 @@ op_error (arg a, registry* reg)
 void
 op_is_type (arg a, registry* reg, const data_type type)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("Assert instruction requires an argument.");
@@ -1967,7 +1985,7 @@ op_is_nothing (arg a, registry* reg)
 void
 op_open_text_file (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -1997,7 +2015,7 @@ op_open_text_file (arg a, registry* reg)
 void
 op_read (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2031,7 +2049,7 @@ op_read (arg a, registry* reg)
 void
 op_close (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2071,8 +2089,8 @@ op_close (arg a, registry* reg)
 void
 op_or (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2102,8 +2120,8 @@ op_or (arg a, registry* reg)
 void
 op_and (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2133,7 +2151,7 @@ op_and (arg a, registry* reg)
 void
 op_not (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2163,7 +2181,7 @@ op_not (arg a, registry* reg)
 void
 op_read_line (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2199,8 +2217,8 @@ op_read_line (arg a, registry* reg)
 void
 op_write (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2229,7 +2247,7 @@ op_write (arg a, registry* reg)
 void
 op_input (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`input` requires an argument.");
@@ -2253,7 +2271,7 @@ op_input (arg a, registry* reg)
 void
 op_shell (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`shell` requires an argument.");
@@ -2303,9 +2321,9 @@ op_shell (arg a, registry* reg)
 void
 op_link (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
   
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2359,9 +2377,9 @@ op_link (arg a, registry* reg)
 void
 op_match (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2462,10 +2480,10 @@ op_match (arg a, registry* reg)
 void
 op_replace (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
-  data* arg4 = a.arg_array[4];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
+  data* arg4 = resolve(a.arg_array[4], reg);
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2587,7 +2605,7 @@ op_replace (arg a, registry* reg)
 void
 op_log (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2618,7 +2636,7 @@ op_log (arg a, registry* reg)
 void
 op_exp (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2648,8 +2666,8 @@ op_exp (arg a, registry* reg)
 void
 op_to_power (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
   
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2693,7 +2711,7 @@ op_to_power (arg a, registry* reg)
 void
 op_chdir (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
       do_error("`chdir` requires an argument.");
@@ -2718,8 +2736,8 @@ op_chdir (arg a, registry* reg)
 void
 op_copy_file (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
   if (arg1 == NULL || arg2 == NULL)
     {
       do_error("`copy-file` requires an argument.");
@@ -2753,7 +2771,7 @@ op_copy_file (arg a, registry* reg)
 void
 op_import (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
     {
@@ -2813,9 +2831,9 @@ op_curdir (arg a, registry* reg)
 void
 op_substring (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
-  data* arg3 = a.arg_array[3];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
 
   if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
     {
@@ -2905,8 +2923,8 @@ op_up (arg a, registry* reg)
 void
 op_of (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2934,8 +2952,8 @@ op_of (arg a, registry* reg)
 void
 op_isof (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -2978,8 +2996,8 @@ op_isof (arg a, registry* reg)
 void
 op_dispatch (arg a, registry* reg)
 {
-  data* arg1 = a.arg_array[1];
-  data* arg2 = a.arg_array[2];
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
@@ -3056,9 +3074,10 @@ op_dispatch (arg a, registry* reg)
 }
 
 void
-op_call (arg a, registry* reg)
+_op_call (arg a, registry* reg, const int explicit)
 {
-  data* arg1 = a.arg_array[1];
+
+  data* arg1 = resolve(a.arg_array[explicit], reg);
 
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
     {
@@ -3072,9 +3091,9 @@ op_call (arg a, registry* reg)
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
-  int i = 2;
+  int i = explicit+1;
 
-  for (i=2; i < a.length; i=i+2)
+  for (i=(explicit+1); i < a.length; i=i+2)
     {
       d = a.arg_array[i];
 
@@ -3090,9 +3109,7 @@ op_call (arg a, registry* reg)
     }
 
 
-  arg a1;
-  a1.length = 0;
-  compute(arg1, r_new, a1);
+  execute_code(((instruction*) arg1->data)->stmt, r_new);
 
   data* ans;
 
@@ -3107,7 +3124,13 @@ op_call (arg a, registry* reg)
     }
   
   free_registry(r_new);
+  
+}
 
+void
+op_call (arg a, registry* reg)
+{
+  _op_call(a,reg,1);
 }  
 
 void

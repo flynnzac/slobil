@@ -150,6 +150,11 @@ append_statement (statement* current, element* head)
   s->arg.free_data = malloc(sizeof(int)*i);
   s->arg.arg_array = malloc(sizeof(data*)*i);
 
+  for (int j = 0; j < i; j++)
+    {
+      s->arg.arg_array[j] = NULL;
+      s->arg.free_data[j] = 0;
+    }
 
   return s;
 }
@@ -195,7 +200,7 @@ execute_statement (statement* s, registry* reg)
               d = get_by_levels(reg,
                                 e->hash_name, e->levels, e->is_regstr,
                                 e->name);
-              if (arg_n > 0 && d != NULL)
+              if (d != NULL && (arg_n > 0 || (d->type != OPERATION)))
                 d = copy_data(d);
               
             }
@@ -216,16 +221,20 @@ execute_statement (statement* s, registry* reg)
               
         }
 
+      if (is_error(-1)) break;      
       arg_n++;
       e = e->right;
 
-      if (is_error(-1)) break;
+
     }
 
   if (!is_error(-1))
-    compute(s->arg.arg_array[0], reg, s->arg);
+    {
+      compute(s->arg.arg_array[0], reg, s->arg);
 
-  free_arg_array_data(&s->arg);
+    }
+  
+  free_arg_array_data(&s->arg, arg_n);
 
 }
 

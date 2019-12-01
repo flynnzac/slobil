@@ -65,6 +65,7 @@ free_statement (statement* s)
         }
       free_registry(s->arg_reg);
       free(s->hash_bins);
+      free_arg(&s->arg);
       s_tmp = s;
       s = s->right;
       free(s_tmp);
@@ -184,12 +185,15 @@ free_registry (registry* reg)
 }
 
 void
-free_arg_array_data (arg* a)
+free_arg_array_data (arg* a, int n)
 {
-  for (int i = 0; i < a->length; i++)
+  for (int i = 0; i < n; i++)
     {
-      if (a->free_data[i])
-        free_data(a->arg_array[i]);
+      if (a->free_data[i] && a->arg_array[i] != NULL)
+        {
+          free_data(a->arg_array[i]);
+          a->arg_array[i] = NULL;
+        }
     }
 
 }
@@ -197,7 +201,7 @@ free_arg_array_data (arg* a)
 void
 free_arg (arg* a)
 {
-  free_arg_array_data(a);
+  free_arg_array_data(a, a->length);
   free(a->free_data);
   free(a->arg_array);
 }
