@@ -1,0 +1,10 @@
+set /assert
+    (
+      if [ not [ test . ] . ]
+         {
+           error
+             [ concat "The following test evaluated to 0:\n"
+                      [ code test . ] . ] .
+         } .
+    ) .
+      

@@ -158,6 +158,8 @@
                 "dispatch"
                 "register-number"
                 "to-real"
+                "is-error"
+                "code"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\/[^\s]*\\)\s*")

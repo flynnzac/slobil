@@ -1,15 +1,15 @@
 ' Tests with correct usage
 
 set /x [ list 1 2 3 . ] .
-if [ not [ eq x:/#1 1 . ] . ]
-   {
-     error "[ eq x:/#1 1 . ] is 0." .
-   } .
+assert /test ( eq x:/#1 1 . ) .
+assert /test ( eq x:/#2 2 . ) .
+assert /test ( eq x:/#3 3 . ) .
+assert /test ( reg-eq [ last x "#" . ] /#3 . ) .
+
 set /y [ list . ] .
-print y .
+assert /test ( not [ exist-in /#0 y . ] . ) .
 
 ' Test with wrong argument type
-
 
 ' Test with incorrect number of arguments
 

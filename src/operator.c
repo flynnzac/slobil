@@ -3138,12 +3138,60 @@ op_dispatch (arg a, registry* reg)
 }
 
 void
+op_code (arg a, registry* reg)
+{
+  CHECK_ARGS(a, 1);
+
+  data* arg1 = resolve(a.arg_array[1], reg);
+
+  if (arg1==NULL || (arg1->type != INSTRUCTION))
+    {
+      do_error("First argument to `code` must be an ARBEL instruction (not native).");
+      return;
+    }
+
+  data* d;
+  assign_str(&d, ((instruction*) arg1->data)->code, 1);
+
+  ret_ans(reg, d);
+      
+}
+
+void
+op_is_error (arg a, registry* reg)
+{
+  CHECK_ARGS(a, 1);
+
+  data* arg1 = resolve(a.arg_array[1], reg);
+
+  if (arg1 == NULL || (arg1->type != INSTRUCTION))
+    {
+      do_error("First argument to `is-error` must be an instruction.");
+      return;
+    }
+
+  execute_code(((instruction*) arg1->data)->stmt, reg);
+  data* d;
+  if (is_error(-1))
+    {
+      assign_int(&d, 1);
+    }
+  else
+    {
+      assign_int(&d, 0);
+    }
+
+  ret_ans(reg, d);
+
+}
+
+void
 _op_call (arg a, registry* reg, const int explicit)
 {
   CHECK_ARGS(a, explicit);
   data* arg1 = resolve(a.arg_array[explicit], reg);
 
-  if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
+  if (arg1 == NULL || (arg1->type != INSTRUCTION && arg1->type != OPERATION))
     {
       do_error("First argument to `call` must be an instruction.");
       return;
@@ -3463,6 +3511,12 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_call);
   set(reg,d,"call");
 
+  assign_op(&d, op_code);
+  set(reg,d,"code");
+
+  assign_op(&d, op_is_error);
+  set(reg,d,"is-error");
+  
   
 }
   
