@@ -76,3 +76,21 @@ resolve (data* arg, registry* reg)
       return arg;
     }
 }
+
+void
+check_length (arg* a, int length)
+{
+  if (a->length < length)
+    {
+      char* error_msg = malloc
+        (sizeof(char)*
+         (strlen("Number of arguments is less than ") +
+          floor(log10(length-1))+1 + strlen(".") + 1));
+
+      sprintf(error_msg, "Number of arguments is less than %d.",
+              length-1);
+          
+      do_error(error_msg);
+      free(error_msg);
+    }
+}

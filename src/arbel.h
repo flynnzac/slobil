@@ -426,6 +426,11 @@ resolve (data* arg, registry* reg);
 void
 _op_call (arg a, registry* reg, const int explicit);
 
+void
+check_length (arg* a, int length);
+
+#define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
+
 /* global variables */
 registry* current_parse_registry;
 char* source_code;

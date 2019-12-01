@@ -79,6 +79,7 @@ op_reg (arg a, registry* reg)
 void
 op_arithmetic (arg a, registry* reg, const int code)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* new_data;
@@ -179,6 +180,7 @@ op_divide (arg a, registry* reg)
 void
 op_set (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -225,6 +227,7 @@ op_set (arg a, registry* reg)
 void
 op_get (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -264,6 +267,8 @@ op_get (arg a, registry* reg)
 void
 op_if (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
+  
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -313,6 +318,7 @@ op_sit (arg a, registry* reg)
 void
 op_mov (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -336,6 +342,7 @@ op_mov (arg a, registry* reg)
 void
 op_del (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -364,6 +371,7 @@ op_exit (arg a, registry* reg)
 void
 op_exist (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -398,6 +406,7 @@ op_exist (arg a, registry* reg)
 void
 op_answer (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* d = resolve(a.arg_array[1], reg);
   if (d == NULL)
     do_error("`answer` requires an argument.");
@@ -413,6 +422,7 @@ int
 op_comparison (arg a, registry* reg)
 {
 
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -600,6 +610,7 @@ op_print (arg a, registry* reg)
 void
 op_character (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -648,6 +659,7 @@ op_character (arg a, registry* reg)
 void
 op_count_characters (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -674,6 +686,7 @@ op_count_characters (arg a, registry* reg)
 void
 op_concat (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -705,6 +718,7 @@ op_concat (arg a, registry* reg)
 void
 op_source (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -739,6 +753,7 @@ op_source (arg a, registry* reg)
 void
 op_do_to_all (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -843,6 +858,7 @@ op_do_to_all (arg a, registry* reg)
 void
 op_next (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -903,6 +919,7 @@ op_next (arg a, registry* reg)
 void
 op_last (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   
@@ -953,6 +970,7 @@ op_last (arg a, registry* reg)
 void
 op_in (arg a, registry* reg)
 {
+  CHECK_ARGS(a,2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -990,6 +1008,7 @@ op_in (arg a, registry* reg)
 void
 op_while (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1044,6 +1063,7 @@ op_while (arg a, registry* reg)
 void
 op_repeat (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1077,6 +1097,7 @@ op_repeat (arg a, registry* reg)
 void
 op_to_register (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -1099,6 +1120,7 @@ op_to_register (arg a, registry* reg)
 void
 op_collapse (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 3);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -1220,6 +1242,7 @@ op_collapse (arg a, registry* reg)
 void
 op_join (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 3);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -1324,6 +1347,7 @@ op_join (arg a, registry* reg)
 void
 op_string_eq (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1357,6 +1381,7 @@ op_string_eq (arg a, registry* reg)
 void
 op_string_lt (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1390,6 +1415,7 @@ op_string_lt (arg a, registry* reg)
 void
 op_string_gt (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1423,6 +1449,7 @@ op_string_gt (arg a, registry* reg)
 void
 op_exist_in (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1461,6 +1488,7 @@ op_exist_in (arg a, registry* reg)
 int
 op_reg_cmp (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1543,6 +1571,7 @@ op_reg_lt (arg a, registry* reg)
 void
 op_go_in (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = a.arg_array[1];
 
   if (arg1 == NULL)
@@ -1587,6 +1616,7 @@ op_go_out (arg a, registry* reg)
 void
 op_save (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1613,6 +1643,7 @@ op_save (arg a, registry* reg)
 void
 op_load (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1722,6 +1753,7 @@ op_to_string (arg a, registry* reg)
 void
 op_to_number (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -1760,6 +1792,7 @@ op_to_number (arg a, registry* reg)
 void
 op_to_real (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -1786,6 +1819,7 @@ op_to_real (arg a, registry* reg)
 void
 op_register_number (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1822,6 +1856,7 @@ op_register_number (arg a, registry* reg)
 void
 op_ref (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -1856,6 +1891,7 @@ op_ref (arg a, registry* reg)
 void
 op_output_code (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1895,6 +1931,7 @@ op_clear_code (arg a, registry* reg)
 void
 op_error (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1915,6 +1952,7 @@ op_error (arg a, registry* reg)
 void
 op_is_type (arg a, registry* reg, const data_type type)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -1988,6 +2026,7 @@ op_is_nothing (arg a, registry* reg)
 void
 op_open_text_file (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2018,6 +2057,7 @@ op_open_text_file (arg a, registry* reg)
 void
 op_read (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2052,6 +2092,7 @@ op_read (arg a, registry* reg)
 void
 op_close (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2092,6 +2133,7 @@ op_close (arg a, registry* reg)
 void
 op_or (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -2123,6 +2165,7 @@ op_or (arg a, registry* reg)
 void
 op_and (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -2154,6 +2197,7 @@ op_and (arg a, registry* reg)
 void
 op_not (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2184,6 +2228,7 @@ op_not (arg a, registry* reg)
 void
 op_read_line (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2220,6 +2265,7 @@ op_read_line (arg a, registry* reg)
 void
 op_write (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -2250,6 +2296,7 @@ op_write (arg a, registry* reg)
 void
 op_input (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -2274,6 +2321,7 @@ op_input (arg a, registry* reg)
 void
 op_shell (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -2324,6 +2372,7 @@ op_shell (arg a, registry* reg)
 void
 op_link (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 3);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -2380,6 +2429,7 @@ op_link (arg a, registry* reg)
 void
 op_match (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 3);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -2483,6 +2533,7 @@ op_match (arg a, registry* reg)
 void
 op_replace (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 4);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -2608,6 +2659,7 @@ op_replace (arg a, registry* reg)
 void
 op_log (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2639,6 +2691,7 @@ op_log (arg a, registry* reg)
 void
 op_exp (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2669,6 +2722,7 @@ op_exp (arg a, registry* reg)
 void
 op_to_power (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   
@@ -2714,6 +2768,7 @@ op_to_power (arg a, registry* reg)
 void
 op_chdir (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
@@ -2739,6 +2794,7 @@ op_chdir (arg a, registry* reg)
 void
 op_copy_file (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   if (arg1 == NULL || arg2 == NULL)
@@ -2774,6 +2830,7 @@ op_copy_file (arg a, registry* reg)
 void
 op_import (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -2834,6 +2891,7 @@ op_curdir (arg a, registry* reg)
 void
 op_substring (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 3);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
   data* arg3 = resolve(a.arg_array[3], reg);
@@ -2926,6 +2984,7 @@ op_up (arg a, registry* reg)
 void
 op_of (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -2955,6 +3014,7 @@ op_of (arg a, registry* reg)
 void
 op_isof (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -2999,6 +3059,7 @@ op_isof (arg a, registry* reg)
 void
 op_dispatch (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
@@ -3079,7 +3140,7 @@ op_dispatch (arg a, registry* reg)
 void
 _op_call (arg a, registry* reg, const int explicit)
 {
-
+  CHECK_ARGS(a, explicit);
   data* arg1 = resolve(a.arg_array[explicit], reg);
 
   if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
