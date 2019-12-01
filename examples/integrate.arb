@@ -8,7 +8,7 @@ set /integrate
       set /int 0.0 .
       repeat \n
             (
-              set /int [ add \int [ call f /y \x . ] . ] .
+              set /int [ add \int [ f /t \x . ] . ] .
               set /x [ add \x \delta . ] .
             ) .
       multiply \int \delta .
