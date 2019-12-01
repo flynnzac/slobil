@@ -290,12 +290,15 @@ op_if (arg a, registry* reg)
     }
   else
     {
-      data* arg3 = resolve(a.arg_array[3], reg);
-      data* d;
-      if (arg3 != NULL)
+      if (a.length >= 4)
         {
-          d = copy_data(arg3);
-          ret_ans(reg, d);
+          data* arg3 = resolve(a.arg_array[3], reg);
+          data* d;
+          if (arg3 != NULL)
+            {
+              d = copy_data(arg3);
+              ret_ans(reg, d);
+            }
         }
     }
 }
