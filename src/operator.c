@@ -1947,6 +1947,16 @@ op_error (arg a, registry* reg)
     }
 
   do_error((char*) arg1->data);
+
+  if (a.length >= 3)
+    {
+      data* arg2 = resolve(a.arg_array[2], reg);
+      if (arg2 != NULL && arg2->type == INTEGER)
+        {
+          is_error(*((int*) arg2->data));
+        }
+    }
+        
 }
 
 void
@@ -3172,14 +3182,7 @@ op_is_error (arg a, registry* reg)
 
   execute_code(((instruction*) arg1->data)->stmt, reg);
   data* d;
-  if (is_error(-1))
-    {
-      assign_int(&d, 1);
-    }
-  else
-    {
-      assign_int(&d, 0);
-    }
+  assign_int(&d, is_error(-1));
 
   ret_ans(reg, d);
 
