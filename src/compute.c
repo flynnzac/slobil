@@ -44,6 +44,61 @@ ret_ans (registry* reg, data* d)
 }
 
 void
+_op_call (arg a, registry* reg, const int explicit)
+{
+  CHECK_ARGS(a, explicit);
+  data* arg1 = resolve(a.arg_array[explicit], reg);
+
+  if (arg1 == NULL || (arg1->type != INSTRUCTION && arg1->type != OPERATION))
+    {
+      do_error("First argument to `call` must be an instruction.");
+      return;
+    }
+
+  /* set arg1 to #0 in new registry */
+  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
+  
+  data* d = NULL;
+  data* d_data = NULL;
+  data* d_new;
+  int i = explicit+1;
+
+  for (i=(explicit+1); i < a.length; i=i+2)
+    {
+      d = a.arg_array[i];
+
+      if (d->type != REGISTER)
+        {
+          do_error("Expected a register");
+          free_registry(r_new);
+          return;
+        }
+      d_data = a.arg_array[i+1];
+      d_new = copy_data(d_data);
+      set(&r_new, d_new, ((regstr*) d->data)->name);
+    }
+
+
+  execute_code(((instruction*) arg1->data)->stmt, r_new);
+
+  data* ans;
+
+  if (!is_error(-1))
+    {
+      ans = get(r_new, arbel_hash_ans, 0);
+      if (ans != NULL)
+        {
+          mark_do_not_free(r_new, arbel_hash_ans);
+          ret_ans(reg, ans);
+        }
+    }
+  
+  free_registry(r_new);
+  
+}
+
+
+void
 compute (data* cmd, registry* reg, arg a)
 {
   if (cmd == NULL)

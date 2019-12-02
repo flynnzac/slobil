@@ -236,8 +236,12 @@ copy_statement (statement* s)
 registry*
 copy_registry(registry* r0)
 {
-  registry* r1 = new_registry(r0->up,
-                              new_hash_size(r0->elements));
+  registry* r1;
+  if (update_hash_size(r0->elements, r0->hash_size))
+    r1 = new_registry(r0->up, 2*r0->hash_size);
+  else
+    r1 = new_registry(r0->up, r0->hash_size);
+  
   data* d;
 
   for (int i = 0; i < r0->hash_size; i++)

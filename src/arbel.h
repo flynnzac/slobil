@@ -266,7 +266,7 @@ void
 str_shift_left (char* buffer);
 
 void
-add_basic_ops (registry* reg);
+add_basic_ops (registry** reg);
 
 int
 is_whitespace (const char c);
@@ -434,6 +434,9 @@ new_hash_size (size_t elements);
 
 void
 check_length (arg* a, int length);
+
+int
+update_hash_size (size_t elements, size_t hash_size);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 

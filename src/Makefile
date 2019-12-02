@@ -18,8 +18,8 @@ else
 endif
 
 arbel: arbel.c operator.c utility.c parse.c statement.c save.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c arg.c
-	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c arg.c -O3 -lm -Wall -ldl -lreadline
-	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o
+	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c arg.c print.c arg.c -O3 -lm -Wall -ldl -lreadline
+	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o print.o arg.o
 	$(COMPILE)
 
 doc: docs/arbel.dbk docs/arbel.css

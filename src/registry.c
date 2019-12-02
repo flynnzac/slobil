@@ -440,12 +440,19 @@ tail (content* c)
   return c->right;
 }
 
+int
+update_hash_size (size_t elements, size_t hash_size)
+{
+  return elements > (hash_size*ARBEL_LOAD_FACTOR);
+}
+    
+  
+
 size_t
 new_hash_size (size_t elements)
 {
   size_t hash_size = ceil((double) elements / ARBEL_LOAD_FACTOR);
   size_t factor = (hash_size / ARBEL_HASH_SIZE) + 1;
-  printf("Size is: %lu\n", ARBEL_HASH_SIZE*factor);
   return ARBEL_HASH_SIZE*factor;
 }
   
