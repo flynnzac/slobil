@@ -4,7 +4,7 @@ source "examples/tokenize.arb" .
 
 set /parse-csv
     (
-      open-text-file \name .
+      open-text-file name .
       set /file ans .
       set /parsed [ list . ] .
       set /cur-reg /#1 . 
@@ -12,11 +12,11 @@ set /parse-csv
       while ( set /cur-line [ read-line file . ] . is-string cur-line . )
             (
               tokenize /line cur-line /sep "," .
-              in \parsed ( set cur-reg ans . ) .
+              in parsed ( set cur-reg ans . ) .
               set /cur-reg [ next cur-reg . ] .
             ) .
 
       
       close /file .
-      answer \parsed .
+      answer parsed .
     ) .
