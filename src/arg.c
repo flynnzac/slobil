@@ -62,11 +62,7 @@ resolve_reference (data* d, registry* reg)
 data*
 resolve (data* arg, registry* reg)
 {
-  if (arg->type == REFERENCE)
-    {
-      return resolve_reference(arg, reg);
-    }
-  else if (arg->type == ACTIVE_INSTRUCTION)
+  if (arg->type == ACTIVE_INSTRUCTION)
     {
       execute_code(((instruction*) arg->data)->stmt, reg);
       return get(reg, arbel_hash_ans, 0);

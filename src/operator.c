@@ -3207,7 +3207,24 @@ void
 op_call (arg a, registry* reg)
 {
   _op_call(a,reg,1);
-}  
+}
+
+void
+op_resolve (arg a, registry* reg)
+{
+  CHECK_ARGS(a, 1);
+
+  data* arg1 = resolve(a.arg_array[1], reg);
+
+  if (arg1->type != REFERENCE)
+    {
+      do_error("Argument to `resolve` should be a reference.");
+      return;
+    }
+
+  data* d = copy_data(resolve_reference(arg1, reg));
+  ret_ans(reg, d);
+}
 
 void
 add_basic_ops (registry* reg)
@@ -3490,6 +3507,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_is_error);
   set(reg,d,"is-error",1);
+
+  assign_op(&d, op_resolve);
+  set(reg,d,"resolve",1);
   
   
 }

@@ -161,56 +161,10 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
   if (d == NULL)
     return NULL;
 
-  if (d->type == ACTIVE_INSTRUCTION && (reg->up != NULL))
-    {
-      execute_code(((instruction*) d->data)->stmt, reg);
-      d = get(reg, arbel_hash_ans, 0);
-
-    }
-  else if (d->type == REFERENCE)
-    {
-      
-      data* d_ref;
-      if (((ref*) d->data)->reg == NULL)
-        {
-          d_ref = get_by_levels(reg->up,
-                                ((ref*) d->data)->key,
-                                ((ref*) d->data)->levels,
-                                ((ref*) d->data)->is_regstr,
-                                ((ref*) d->data)->name);
-        }
-      else
-        {
-          d_ref = get_by_levels(((ref*) d->data)->reg,
-                                ((ref*) d->data)->key,
-                                ((ref*) d->data)->levels,
-                                ((ref*) d->data)->is_regstr,
-                                ((ref*) d->data)->name);
-        }
-
-      if (d_ref == NULL)
-        {
-          char* msg = malloc(sizeof(char)*
-                             (strlen("Reference not found.") +
-                              strlen(((ref*) d->data)->name[0]) +
-                              5));
-          sprintf(msg, "Reference `%s` not found.",
-                  ((ref*) d->data)->name[0]);
-          do_error(msg);
-          free(msg);
-          d = NULL;
-        }
-      else
-        {
-          if (d_ref->type == REGISTRY)
-            {
-              ((registry*) d_ref->data)->up = reg->up;
-            }
-          d = d_ref;
-        }
-    }
+  d = resolve(d, reg);
 
   return d;
+
 }
 
 content*
