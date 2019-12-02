@@ -1,13 +1,2 @@
-source "examples/integrate.arb" .
-set /f ( multiply t t . ) .
-integrate /f f /lb 0.0 /ub 1.0 /n 1000000 .
-
-set /x [ reg . ] .
-set /i 1 .
-while ( lt i 1000000 . )
-      (
-	set [ slash i . ] i x .
-	set /i [ add i 1 . ] .
-      ) .
-     
-
+source "examples/time_integrate.arb" .
+source "examples/time_allocate.arb" .

@@ -1575,30 +1575,15 @@ void
 op_go_in (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = a.arg_array[1];
+  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
+  if (arg1 == NULL || arg1->type != REGISTRY)
     {
-      do_error("`go-in` requires an argument.");
+      do_error("Argument to `go-in` must be a registry.");
       return;
     }
 
-  if (arg1->type != REFERENCE)
-    {
-      do_error("Argument to `go-in` must be a reference.");
-      return;
-    }
-
-  arg1 = resolve(arg1, reg);
-
-  if (is_error(-1))
-    return;
-
-  if (arg1->type != REGISTRY)
-    {
-      do_error("Argument to `go-in` must be a reference to a registry.");
-      return;
-    }
+  ((registry*) arg1->data)->up = reg;
 
   current_parse_registry = (registry*) arg1->data;
   
