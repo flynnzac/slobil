@@ -156,17 +156,21 @@
                 "of"
                 "isof"
                 "dispatch"
-                "register-number"
+                "register-to-number"
+                "number-to-register"
                 "to-real"
                 "is-error"
                 "code"
+                "call"
+                "copy"
+                "slash"
+                "unslash"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
              (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
-             (reference-regexp "\\(\\\\[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*"))
+             )
 	      `(
           (,register-regexp . (1 font-lock-function-name-face))
-          (,reference-regexp . (1 font-lock-constant-face))
 	        (,functions-regexp . font-lock-builtin-face)
 	        )))
 

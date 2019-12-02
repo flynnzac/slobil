@@ -8,7 +8,7 @@ in arbed
      set /p ( up set /cur-line [ subtract cur-line 1 . ] . ) .
      set /i
          (
-           set /arbed-str #1 buffer .
+           set /arbed-str s buffer .
            in buffer
               (
                 to-register [ concat "#" [ to-string cur-line . ] . ] .

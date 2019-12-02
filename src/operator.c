@@ -3001,7 +3001,7 @@ op_of (arg a, registry* reg)
 }
 
 void
-op_isof (arg a, registry* reg)
+op_is_of (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -3009,18 +3009,18 @@ op_isof (arg a, registry* reg)
 
   if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`isof` requires two arguments.");
+      do_error("`is-of` requires two arguments.");
       return;
     }
 
   if (arg1->type != STRING)
     {
-      do_error("The first argument to `isof` must be a string.");
+      do_error("The first argument to `is-of` must be a string.");
       return;
     }
   if (arg2->type != REGISTRY)
     {
-      do_error("The second argument to `isof` must be a registry.");
+      do_error("The second argument to `is-of` must be a registry.");
       return;
     }
 
@@ -3440,7 +3440,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_of);
   set(reg,d,"of",1);
 
-  assign_op(&d, op_isof);
+  assign_op(&d, op_is_of);
   set(reg,d,"is-of",1);
 
   assign_op(&d, op_dispatch);
