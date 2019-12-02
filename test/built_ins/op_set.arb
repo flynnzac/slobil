@@ -1,4 +1,4 @@
-source "../../src/library/testing.arb" .
+source "src/library/testing.arb" .
 
 ' Tests with correct usage
 
@@ -11,16 +11,17 @@ set /x [ reg /hello "hello" . ] .
 assert /test ( is-registry x . ) .
 assert /test ( string-eq x:/hello "hello" . ) .
 
-set /y 20 \x .
+set /y 20 x .
 assert /test ( eq x:/y 20 . ) .
 
 ' Test with wrong argument type
 
 assert /test ( is-error ( set x 10 . ) . ) .
 set /z 100 .
-assert /test ( is-error ( set /x 10 \z . ) . ) .
+assert /test ( is-error ( set /x 10 z . ) . ) .
 
 ' Test with incorrect number of arguments
 
 assert /test ( is-error ( set /x . ) . ) .
 
+print "Finished `set` test." .

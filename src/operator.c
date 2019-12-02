@@ -3164,6 +3164,7 @@ op_is_error (arg a, registry* reg)
   assign_int(&d, is_error(-1));
 
   ret_ans(reg, d);
+  is_error(0);
 
 }
 

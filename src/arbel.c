@@ -56,6 +56,8 @@ main (int argc, char** argv)
   add_basic_ops(reg);
   is_exit(0);
   current_parse_registry = reg;
+
+  arbel_stop_error_threshold = 100;
   
   arbel_hash_ans = hash_str("ans");
   arbel_hash_0 = hash_str("#0");

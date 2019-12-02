@@ -246,13 +246,19 @@ void
 execute_code (statement* s, registry* reg)
 {
   statement* stmt = s;
+  int error = 0;
   while (stmt != NULL)
     {
       execute_statement(stmt, reg);
-      if (is_error(-1))
+      error = is_error(-1) > error ? is_error(-1) : error;
+      if (error >= arbel_stop_error_threshold)
         {
           break;
         }
+
+
       stmt = stmt->right;
     }
+
+  is_error(error);
 }

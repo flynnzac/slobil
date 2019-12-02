@@ -1,4 +1,4 @@
-source "../../src/library/testing.arb" .
+source "src/library/testing.arb" .
 
 ' Tests with correct usage
 
@@ -13,8 +13,9 @@ assert /test ( eq x:/ans 5 . ) .
 
 assert /test ( is-error ( reg "hello" 1 2 3 . ) . ) .
 
-
 ' Test with incorrect number of arguments
 
 assert /test ( is-error ( reg /hello . ) . ) .
+
+print "Finished `reg` test." .
 
