@@ -3,13 +3,13 @@
 
 set /integrate 
     ( 
-      set /delta [ divide [ subtract \ub \lb . ] \n . ] .
+      set /delta [ divide [ subtract ub lb . ] n . ] .
       set /x \lb .
       set /int 0.0 .
       repeat \n
             (
-              set /int [ add \int [ f /t \x . ] . ] .
-              set /x [ add \x \delta . ] .
+              set /int [ add \int [ f /t x . ] . ] .
+              set /x [ add x delta . ] .
             ) .
-      multiply \int \delta .
+      multiply int delta .
     ) .

@@ -59,24 +59,24 @@ is_init_reg (content* r)
 }
 
 content*
-set (registry** reg, data* d, const char* name, int rehash)
+set (registry* reg, data* d, const char* name, int rehash_flag)
 {
   unsigned long hash_name = hash_str(name);
-  content* c = del(*reg,hash_name,-1);
+  content* c = del(reg,hash_name,-1);
 
   if (d != NULL && d->type == REGISTRY)
     {
-      ((registry*) d->data)->up = *reg;
+      ((registry*) d->data)->up = reg;
     }
 
 
   if (c == NULL)
     {
-      if ((*reg)->objects[hash_name % (*reg)->hash_size] == NULL)
+      if (reg->objects[hash_name % reg->hash_size] == NULL)
         {
-          (*reg)->objects[hash_name % (*reg)->hash_size] = new_content();
+          reg->objects[hash_name % reg->hash_size] = new_content();
         }
-      c = (*reg)->objects[hash_name % (*reg)->hash_size];
+      c = reg->objects[hash_name % reg->hash_size];
       c = head(c);
       content* new_c = new_content();
       new_c->left = c;
@@ -86,13 +86,11 @@ set (registry** reg, data* d, const char* name, int rehash)
       new_c->name = malloc(sizeof(char)*(strlen(name)+1));
       strcpy(new_c->name, name);
       new_c->key = hash_name;
-      (*reg)->elements++;
-      if (rehash &&
-	  ((*reg)->elements > (ARBEL_LOAD_FACTOR*((*reg)->hash_size))))
+      reg->elements++;
+      if (rehash_flag &&
+	  (reg->elements > (ARBEL_LOAD_FACTOR*(reg->hash_size))))
         {
-          registry* tmp_reg = copy_registry(*reg);
-          free_registry(*reg);
-          *reg = tmp_reg;
+	  rehash(reg);
         }
 
       return new_c;
@@ -233,7 +231,7 @@ mov (registry* reg, regstr* old, regstr* new)
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
           del(reg, old->key, 0);
-          content* c = set(&reg, d, new->name, 0);
+          content* c = set(reg, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
         }
@@ -457,3 +455,69 @@ new_hash_size (size_t elements)
   return ARBEL_HASH_SIZE*factor;
 }
   
+void
+rehash (registry* r0)
+{
+
+  if (!update_hash_size(r0->elements, r0->hash_size))
+    return;
+
+  size_t old_size = r0->hash_size;
+  r0->hash_size = 2*r0->hash_size;
+  r0->elements = 0;
+  content** objects = r0->objects;
+
+  r0->objects = malloc(sizeof(content*)*r0->hash_size);
+
+  for (int i = 0; i < r0->hash_size; i++)
+    {
+      r0->objects[i] = NULL;
+    }
+
+
+  for (int i = 0; i < old_size; i++)
+    {
+      /* copy */
+      content* cur = objects[i];
+      if (cur == NULL)
+	continue;
+
+      cur = tail(objects[i]);
+      while (cur != NULL)
+	{
+	  set(r0, cur->value, cur->name, 0);
+	  if (cur->do_not_free_data)
+	    mark_do_not_free(r0, cur->key);
+	  cur = cur->right;
+	}
+
+      /* clean */
+
+      cur = objects[i];
+      if (is_init_reg(cur))
+	{
+	  free(cur);
+	  continue;
+	}
+
+      cur = tail(cur);
+      if (cur != NULL)
+	free(cur->left);
+
+      content* tmp;
+
+      while (cur != NULL)
+	{
+	  free(cur->name);
+	  tmp = cur->right;
+	  free(cur);
+	  cur = tmp;
+	}
+
+    }
+
+  free(objects);
+
+
+}
+      

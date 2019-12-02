@@ -34,7 +34,7 @@ op_list (arg a, registry* reg)
     {
       r = argument_name(i);
       d_new = copy_data(resolve(a.arg_array[i], reg));
-      set(&r_new, d_new, r, 0);
+      set(r_new, d_new, r, 0);
       free(r);
     }
 
@@ -48,8 +48,10 @@ op_list (arg a, registry* reg)
 void
 op_reg (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-  registry* r_new = new_registry(reg, a.length / 2 + 1);
+  if (a.length != 1)
+    CHECK_ARGS(a, 2);
+  
+  registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1));
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -67,7 +69,7 @@ op_reg (arg a, registry* reg)
 
       d_data = resolve(a.arg_array[i+1], reg);
       d_new = copy_data(d_data);
-      set(&r_new, d_new, ((regstr*) d->data)->name, 0);
+      set(r_new, d_new, ((regstr*) d->data)->name, 0);
     }
 
 
@@ -220,7 +222,7 @@ op_set (arg a, registry* reg)
   
   char* name = ((regstr*) arg1->data)->name;
   data* d = copy_data(arg2);
-  set(&to_set, d, name, 1);
+  set(to_set, d, name, 1);
   
 
 }
@@ -830,7 +832,7 @@ op_do_to_all (arg a, registry* reg)
               break;
             }
           d = copy_data(d);
-          set(&ret_reg, d, c->name, 1);
+          set(ret_reg, d, c->name, 1);
           
           c = c->right;
         }
@@ -1175,7 +1177,7 @@ op_collapse (arg a, registry* reg)
   a1.arg_array[0] = arg2;
   
   if (arg2->type == INSTRUCTION)
-    set(&r, arg2, "#0", 0);
+    set(r, arg2, "#0", 0);
 
   data* d1;
   data* d2;
@@ -1191,8 +1193,8 @@ op_collapse (arg a, registry* reg)
       d2 = lookup(to_walk, second_hash, 0);
       if (arg2->type == INSTRUCTION)
         {
-          set(&r, d1, "#1", 0);
-          set(&r, d2, "#2", 0);
+          set(r, d1, "#1", 0);
+          set(r, d2, "#2", 0);
         }
       else
         {
@@ -1276,7 +1278,7 @@ op_join (arg a, registry* reg)
   arg a1 = gen_arg(3, 0);
   
   if (arg3->type == INSTRUCTION)
-    set(&instr_reg, arg3, "#0", 0);
+    set(instr_reg, arg3, "#0", 0);
   else
     a1.arg_array[0] = arg3;
 
@@ -1303,8 +1305,8 @@ op_join (arg a, registry* reg)
 
               if (arg3->type == INSTRUCTION)
                 {
-                  set(&instr_reg, d1, "#1", 0);
-                  set(&instr_reg, d2, "#2", 0);
+                  set(instr_reg, d1, "#1", 0);
+                  set(instr_reg, d2, "#2", 0);
                 }
               else
                 {
@@ -1323,7 +1325,7 @@ op_join (arg a, registry* reg)
               d = lookup(instr_reg, arbel_hash_ans, 0);
               if (d != NULL)
                 {
-                  set(&out_reg, d, cur->name, 1);
+                  set(out_reg, d, cur->name, 1);
                 }
               del(instr_reg, arbel_hash_ans, 0);
             }
@@ -1818,7 +1820,7 @@ op_to_real (arg a, registry* reg)
 }
 
 void
-op_register_number (arg a, registry* reg)
+op_register_to_number (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -1852,6 +1854,33 @@ op_register_number (arg a, registry* reg)
   ret_ans(reg,d);
 }
   
+void
+op_number_to_register (arg a, registry* reg)
+{
+  CHECK_ARGS(a, 1);
+  data* arg1 = resolve(a.arg_array[1], reg);
+
+  if (arg1 == NULL)
+    {
+      do_error("`number-to-register` requires an argument.");
+      return;
+    }
+
+  if (arg1->type != INTEGER)
+    {
+      do_error("`number-to-register` requires an integer argument.");
+      return;
+    }
+
+  char* name = argument_name(*((int*) arg1->data));
+  unsigned long hash_name = hash_str(name);
+
+  data* d;
+  assign_regstr(&d, name, hash_name);
+  ret_ans(reg, d);
+
+  free(name);
+}
   
 
 void
@@ -2324,7 +2353,7 @@ op_input (arg a, registry* reg)
   data* d;
   assign_str(&d, input, 0);
   
-  set(&reg, d, ((regstr*) arg1->data)->name, 1);
+  set(reg, d, ((regstr*) arg1->data)->name, 1);
   
 }
 
@@ -2419,7 +2448,7 @@ op_link (arg a, registry* reg)
 
   data* d;
   assign_op(&d, new_op);
-  set(&reg, d, (char*) arg3->data, 1);
+  set(reg, d, (char*) arg3->data, 1);
 
   if (arbel_ll == NULL)
     {
@@ -2517,13 +2546,13 @@ op_match (arg a, registry* reg)
                   to_add[j-matches[i].rm_so] = '\0';
                   assign_str(&d_str, to_add, 0);
                   name = argument_name(i);
-                  set((registry**) &d_reg->data, d_str, name, 1);
+                  set((registry*) d_reg->data, d_str, name, 1);
                   free(name);
                 }
             }
           n_matches++;
           name = argument_name(n_matches);
-          set((registry**) &d->data, d_reg, name, 1);
+          set((registry*) d->data, d_reg, name, 1);
           free(name);
 
           free(matches);
@@ -2876,7 +2905,7 @@ op_import (arg a, registry* reg)
           if (d != NULL)
             {
               d = copy_data(d);
-              set(&reg, d, (char*) c->name, 1);
+              set(reg, d, (char*) c->name, 1);
             }
           c = c->right;
         }
@@ -3018,7 +3047,7 @@ op_of (arg a, registry* reg)
 
   data* d;
   assign_str(&d, (char*) arg1->data, 1);
-  set((registry**) &arg2->data, d, "--of", 1);
+  set((registry*) arg2->data, d, "--of", 1);
 }
 
 void
@@ -3196,7 +3225,7 @@ op_call (arg a, registry* reg)
 }  
 
 void
-add_basic_ops (registry** reg)
+add_basic_ops (registry* reg)
 {
   data* d;
 
@@ -3452,9 +3481,19 @@ add_basic_ops (registry** reg)
   assign_op(&d, op_dispatch);
   set(reg,d,"dispatch",1);
 
-  assign_op(&d, op_register_number);
-  set(reg,d,"register-number",1);
+  assign_op(&d, op_register_to_number);
+  set(reg,d,"register-to-number",1);
 
+  assign_op(&d, op_number_to_register);
+  set(reg,d,"number-to-register",1);
+
+  assign_op(&d, op_number_to_register);
+  set(reg,d,"slash",1);
+
+  assign_op(&d, op_register_to_number);
+  set(reg,d,"unslash",1);
+
+  
   assign_op(&d, op_to_real);
   set(reg,d,"to-real",1);
 

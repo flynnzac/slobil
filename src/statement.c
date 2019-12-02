@@ -194,7 +194,7 @@ execute_statement (statement* s, registry* reg)
                 }
               else 
                 {
-                  d = copy_data(d);
+		  mark_do_not_free(reg, arbel_hash_ans);
                 }
             }
           else
@@ -202,9 +202,6 @@ execute_statement (statement* s, registry* reg)
               d = get_by_levels(reg,
                                 e->hash_name, e->levels, e->is_regstr,
                                 e->name);
-              if (d != NULL && (arg_n > 0 || (d->type != OPERATION)))
-                d = copy_data(d);
-              
             }
         }
 
@@ -216,10 +213,15 @@ execute_statement (statement* s, registry* reg)
             {
               s->arg.free_data[arg_n] = 0;
             }
-          else
+          else if (e->statement)
             {
-              s->arg.free_data[arg_n] = 1;
+              s->arg.free_data[arg_n] = 0;
             }
+	  else
+	    {
+	      s->arg.free_data[arg_n] = 0;
+	    }
+	      
               
         }
 

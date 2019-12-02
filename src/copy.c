@@ -254,7 +254,7 @@ copy_registry(registry* r0)
       while (cur != NULL)
         {
           d = copy_data(cur->value);
-          set(&r1, d, cur->name, 0);
+          set(r1, d, cur->name, 0);
           cur = cur->right;
         }
     }

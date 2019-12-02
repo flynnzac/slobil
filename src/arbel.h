@@ -23,7 +23,7 @@
 #ifndef ARBEL_H
 #define ARBEL_H
 #define _GNU_SOURCE
-#define ARBEL_HASH_SIZE 37
+#define ARBEL_HASH_SIZE 31
 #define ARBEL_LOAD_FACTOR 0.75
 #include <stdio.h>
 #include <stdlib.h>
@@ -233,7 +233,7 @@ content*
 tail (content* reg);
 
 content*
-set (registry** reg, data* d, const char* name, int rehash);
+set (registry* reg, data* d, const char* name, int rehash);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
@@ -266,7 +266,7 @@ void
 str_shift_left (char* buffer);
 
 void
-add_basic_ops (registry** reg);
+add_basic_ops (registry* reg);
 
 int
 is_whitespace (const char c);
@@ -437,6 +437,9 @@ check_length (arg* a, int length);
 
 int
 update_hash_size (size_t elements, size_t hash_size);
+
+void
+rehash (registry* r0);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
