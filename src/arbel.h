@@ -24,6 +24,7 @@
 #define ARBEL_H
 #define _GNU_SOURCE
 #define ARBEL_HASH_SIZE 37
+#define ARBEL_LOAD_FACTOR 0.75
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,7 +78,9 @@ typedef struct content content;
 
 struct registry
 {
-  content* objects[ARBEL_HASH_SIZE];
+  content** objects;
+  size_t hash_size;
+  size_t elements;
   struct registry* up;
 };
 
@@ -230,7 +233,7 @@ content*
 tail (content* reg);
 
 content*
-set (registry* reg, data* d, const char* name);
+set (registry** reg, data* d, const char* name);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
@@ -290,7 +293,7 @@ int
 is_init_reg (content* r);
 
 registry*
-new_registry (registry* parent);
+new_registry (registry* parent, size_t hash_size);
 
 void
 ret (registry* reg, data* d, const char* name);
@@ -425,6 +428,9 @@ resolve (data* arg, registry* reg);
 
 void
 _op_call (arg a, registry* reg, const int explicit);
+
+size_t
+new_hash_size (size_t elements);
 
 void
 check_length (arg* a, int length);

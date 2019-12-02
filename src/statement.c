@@ -73,8 +73,6 @@ gen_arg_reg (element* e, unsigned long** hash_bin, size_t** location)
   int n = 0;
   char* name;
   unsigned long hash_name;
-  registry* arg_reg = new_registry(NULL);
-  registry* reg = arg_reg;
   element* e1 = e;
 
   while (e1 != NULL)
@@ -86,23 +84,27 @@ gen_arg_reg (element* e, unsigned long** hash_bin, size_t** location)
   *location = malloc(sizeof(size_t)*n);
   n = 0;
 
+  registry* arg_reg = new_registry(NULL, new_hash_size(n));
+  registry* reg = arg_reg;
+
+
   while (e != NULL)
     {
       name = argument_name(n);
       hash_name = hash_str(name);
-      (*hash_bin)[n] = hash_name % ARBEL_HASH_SIZE;
+      (*hash_bin)[n] = hash_name % reg->hash_size;
 
       content* c;
-      if (reg->objects[hash_name % ARBEL_HASH_SIZE] == NULL)
+      if (reg->objects[hash_name % reg->hash_size] == NULL)
         {
-          reg->objects[hash_name % ARBEL_HASH_SIZE] = new_content();
-          c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+          reg->objects[hash_name % reg->hash_size] = new_content();
+          c = reg->objects[hash_name % reg->hash_size];
         }
       else
         {
-          c = head(reg->objects[hash_name % ARBEL_HASH_SIZE]);
+          c = head(reg->objects[hash_name % reg->hash_size]);
         }
-      content* cprime = reg->objects[hash_name % ARBEL_HASH_SIZE];
+      content* cprime = reg->objects[hash_name % reg->hash_size];
       (*location)[n] = 1;
       while (cprime->right != NULL)
         {

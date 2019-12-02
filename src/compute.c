@@ -26,7 +26,7 @@ ret (registry* reg, data* d, const char* name)
 {
   if (reg != NULL)
     {
-      set(reg, d, name);
+      set(&reg, d, name);
     }
   else
     {

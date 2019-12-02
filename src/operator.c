@@ -24,7 +24,7 @@
 void
 op_list (arg a, registry* reg)
 {
-  registry* r_new = new_registry(reg);
+  registry* r_new = new_registry(reg, new_hash_size(a.length));
   data* d;
   data* d_new;
   int i = 1;
@@ -34,7 +34,7 @@ op_list (arg a, registry* reg)
     {
       r = argument_name(i);
       d_new = copy_data(resolve(a.arg_array[i], reg));
-      set(r_new, d_new, r);
+      set(&r_new, d_new, r);
       free(r);
     }
 
@@ -49,7 +49,7 @@ void
 op_reg (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  registry* r_new = new_registry(reg);
+  registry* r_new = new_registry(reg, a.length / 2 + 1);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -67,7 +67,7 @@ op_reg (arg a, registry* reg)
 
       d_data = resolve(a.arg_array[i+1], reg);
       d_new = copy_data(d_data);
-      set(r_new, d_new, ((regstr*) d->data)->name);
+      set(&r_new, d_new, ((regstr*) d->data)->name);
     }
 
 
@@ -220,7 +220,7 @@ op_set (arg a, registry* reg)
   
   char* name = ((regstr*) arg1->data)->name;
   data* d = copy_data(arg2);
-  set(to_set, d, name);
+  set(&to_set, d, name);
   
 
 }
@@ -777,7 +777,7 @@ op_do_to_all (arg a, registry* reg)
     }
 
   registry* arg_reg = (registry*) arg2->data;
-  registry* ret_reg = new_registry(reg);
+  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE);
   data* d;
   arg a1;
 
@@ -796,7 +796,7 @@ op_do_to_all (arg a, registry* reg)
     a1.arg_array[i] = NULL;
 
 
-  for  (int i = 0; i < ARBEL_HASH_SIZE; i++)
+  for  (int i = 0; i < arg_reg->hash_size; i++)
     {
       content* c = arg_reg->objects[i];
       if (c == NULL)
@@ -830,7 +830,7 @@ op_do_to_all (arg a, registry* reg)
               break;
             }
           d = copy_data(d);
-          set(ret_reg, d, c->name);
+          set(&ret_reg, d, c->name);
           
           c = c->right;
         }
@@ -1161,7 +1161,7 @@ op_collapse (arg a, registry* reg)
   second_name = vector_name((char*) arg3->data, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk);
+  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE);
 
   arg a1;
   a1.length = 3;
@@ -1175,7 +1175,7 @@ op_collapse (arg a, registry* reg)
   a1.arg_array[0] = arg2;
   
   if (arg2->type == INSTRUCTION)
-    set(r, arg2, "#0");
+    set(&r, arg2, "#0");
 
   data* d1;
   data* d2;
@@ -1191,8 +1191,8 @@ op_collapse (arg a, registry* reg)
       d2 = lookup(to_walk, second_hash, 0);
       if (arg2->type == INSTRUCTION)
         {
-          set(r, d1, "#1");
-          set(r, d2, "#2");
+          set(&r, d1, "#1");
+          set(&r, d2, "#2");
         }
       else
         {
@@ -1268,19 +1268,19 @@ op_join (arg a, registry* reg)
 
   registry* reg1 = (registry*) arg1->data;
   registry* reg2 = (registry*) arg2->data;
-  registry* out_reg = new_registry(reg);
-  registry* instr_reg = new_registry(reg);
+  registry* out_reg = new_registry(reg, ARBEL_HASH_SIZE);
+  registry* instr_reg = new_registry(reg, ARBEL_HASH_SIZE);
   data* d1 = NULL;
   data* d2 = NULL;
   data* d;
   arg a1 = gen_arg(3, 0);
   
   if (arg3->type == INSTRUCTION)
-    set(instr_reg, arg3, "#0");
+    set(&instr_reg, arg3, "#0");
   else
     a1.arg_array[0] = arg3;
 
-  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+  for (int i = 0; i < reg1->hash_size; i++)
     {
       content* cur = reg1->objects[i];
 
@@ -1303,8 +1303,8 @@ op_join (arg a, registry* reg)
 
               if (arg3->type == INSTRUCTION)
                 {
-                  set(instr_reg, d1, "#1");
-                  set(instr_reg, d2, "#2");
+                  set(&instr_reg, d1, "#1");
+                  set(&instr_reg, d2, "#2");
                 }
               else
                 {
@@ -1323,7 +1323,7 @@ op_join (arg a, registry* reg)
               d = lookup(instr_reg, arbel_hash_ans, 0);
               if (d != NULL)
                 {
-                  set(out_reg, d, cur->name);
+                  set(&out_reg, d, cur->name);
                 }
               del(instr_reg, arbel_hash_ans, 0);
             }
@@ -2324,7 +2324,7 @@ op_input (arg a, registry* reg)
   data* d;
   assign_str(&d, input, 0);
   
-  set(reg, d, ((regstr*) arg1->data)->name);
+  set(&reg, d, ((regstr*) arg1->data)->name);
   
 }
 
@@ -2419,7 +2419,7 @@ op_link (arg a, registry* reg)
 
   data* d;
   assign_op(&d, new_op);
-  set(reg, d, (char*) arg3->data);
+  set(&reg, d, (char*) arg3->data);
 
   if (arbel_ll == NULL)
     {
@@ -2517,13 +2517,13 @@ op_match (arg a, registry* reg)
                   to_add[j-matches[i].rm_so] = '\0';
                   assign_str(&d_str, to_add, 0);
                   name = argument_name(i);
-                  set((registry*) d_reg->data, d_str, name);
+                  set((registry**) &d_reg->data, d_str, name);
                   free(name);
                 }
             }
           n_matches++;
           name = argument_name(n_matches);
-          set((registry*) d->data, d_reg, name);
+          set((registry**) &d->data, d_reg, name);
           free(name);
 
           free(matches);
@@ -2857,7 +2857,7 @@ op_import (arg a, registry* reg)
 
   registry* r1 = (registry*) arg1->data;
 
-  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+  for (int i = 0; i < r1->hash_size; i++)
     {
       content* c = r1->objects[i];
 
@@ -2876,7 +2876,7 @@ op_import (arg a, registry* reg)
           if (d != NULL)
             {
               d = copy_data(d);
-              set(reg, d, (char*) c->name);
+              set(&reg, d, (char*) c->name);
             }
           c = c->right;
         }
@@ -3018,7 +3018,7 @@ op_of (arg a, registry* reg)
 
   data* d;
   assign_str(&d, (char*) arg1->data, 1);
-  set((registry*) arg2->data, d, "--of");
+  set((registry**) &arg2->data, d, "--of");
 }
 
 void
@@ -3201,7 +3201,7 @@ _op_call (arg a, registry* reg, const int explicit)
     }
 
   /* set arg1 to #0 in new registry */
-  registry* r_new = new_registry(reg);
+  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
   
   data* d = NULL;
   data* d_data = NULL;
@@ -3220,7 +3220,7 @@ _op_call (arg a, registry* reg, const int explicit)
         }
       d_data = a.arg_array[i+1];
       d_new = copy_data(d_data);
-      set(r_new, d_new, ((regstr*) d->data)->name);
+      set(&r_new, d_new, ((regstr*) d->data)->name);
     }
 
 
@@ -3254,271 +3254,271 @@ add_basic_ops (registry* reg)
   data* d;
 
   assign_op(&d, op_set);
-  set(reg, d, "set");
+  set(&reg, d, "set");
   
   assign_op(&d, op_add);
-  set(reg,d,"add");
+  set(&reg,d,"add");
 
   assign_op(&d, op_multiply);
-  set(reg,d,"multiply");
+  set(&reg,d,"multiply");
 
   assign_op(&d, op_subtract);
-  set(reg,d,"subtract");
+  set(&reg,d,"subtract");
 
   assign_op(&d, op_divide);
-  set(reg,d,"divide");
+  set(&reg,d,"divide");
   
   assign_op(&d, op_if);
-  set(reg,d,"if");
+  set(&reg,d,"if");
 
   assign_op(&d, op_reg);
-  set(reg,d,"reg");
+  set(&reg,d,"reg");
 
   assign_op(&d, op_get);
-  set(reg,d,"get");
+  set(&reg,d,"get");
 
   assign_op(&d, op_mov);
-  set(reg,d,"mov");
+  set(&reg,d,"mov");
 
   assign_op(&d, op_del);
-  set(reg,d,"del");
+  set(&reg,d,"del");
 
   assign_op(&d, op_exit);
-  set(reg,d,"exit");
+  set(&reg,d,"exit");
 
   assign_op(&d, op_answer);
-  set(reg,d,"answer");
+  set(&reg,d,"answer");
 
   assign_op(&d, op_sit);
-  set(reg,d,"sit");
+  set(&reg,d,"sit");
 
   assign_op(&d, op_exist);
-  set(reg,d,"exist");
+  set(&reg,d,"exist");
 
   assign_op(&d, op_gt);
-  set(reg,d,"gt");
+  set(&reg,d,"gt");
 
   assign_op(&d, op_lt);
-  set(reg,d,"lt");
+  set(&reg,d,"lt");
 
   assign_op(&d, op_eq);
-  set(reg,d,"eq");
+  set(&reg,d,"eq");
 
   assign_op(&d, op_lteq);
-  set(reg,d,"lteq");
+  set(&reg,d,"lteq");
 
   assign_op(&d, op_gteq);
-  set(reg,d,"gteq");
+  set(&reg,d,"gteq");
   
   assign_op(&d, op_print);
-  set(reg,d,"print");
+  set(&reg,d,"print");
 
   assign_op(&d, op_character);
-  set(reg,d,"character");
+  set(&reg,d,"character");
   
   assign_op(&d, op_count_characters);
-  set(reg,d,"count-characters");
+  set(&reg,d,"count-characters");
 
   assign_op(&d, op_concat);
-  set(reg,d,"concat");
+  set(&reg,d,"concat");
 
   assign_op(&d, op_source);
-  set(reg,d,"source");
+  set(&reg,d,"source");
 
   assign_op(&d, op_do_to_all);
-  set(reg,d,"do-to-all");
+  set(&reg,d,"do-to-all");
 
   assign_op(&d, op_next);
-  set(reg,d,"next");
+  set(&reg,d,"next");
 
   assign_op(&d, op_last);
-  set(reg,d,"last");
+  set(&reg,d,"last");
 
   assign_op(&d, op_in);
-  set(reg,d,"in");
+  set(&reg,d,"in");
 
   assign_op(&d, op_while);
-  set(reg,d,"while");
+  set(&reg,d,"while");
   
   assign_op(&d, op_list);
-  set(reg,d,"list");
+  set(&reg,d,"list");
 
   assign_op(&d, op_to_register);
-  set(reg,d,"to-register");
+  set(&reg,d,"to-register");
 
   assign_op(&d, op_collapse);
-  set(reg,d,"collapse");
+  set(&reg,d,"collapse");
 
   assign_op(&d, op_join);
-  set(reg,d,"join");
+  set(&reg,d,"join");
 
   assign_op(&d, op_string_eq);
-  set(reg,d,"string-eq");
+  set(&reg,d,"string-eq");
 
   assign_op(&d, op_string_gt);
-  set(reg,d,"string-gt");
+  set(&reg,d,"string-gt");
   
   assign_op(&d, op_string_lt);
-  set(reg,d,"string-lt");
+  set(&reg,d,"string-lt");
 
   assign_op(&d, op_exist_in);
-  set(reg,d,"exist-in");
+  set(&reg,d,"exist-in");
 
   assign_op(&d, op_reg_eq);
-  set(reg,d,"reg-eq");
+  set(&reg,d,"reg-eq");
 
   assign_op(&d, op_reg_lt);
-  set(reg,d,"reg-lt");
+  set(&reg,d,"reg-lt");
 
   assign_op(&d, op_reg_gt);
-  set(reg,d,"reg-gt");
+  set(&reg,d,"reg-gt");
 
   assign_op(&d, op_go_in);
-  set(reg,d,"go-in");
+  set(&reg,d,"go-in");
 
   assign_op(&d, op_go_out);
-  set(reg,d,"go-out");
+  set(&reg,d,"go-out");
 
   assign_op(&d, op_save);
-  set(reg,d,"save");
+  set(&reg,d,"save");
 
   assign_op(&d, op_load);
-  set(reg,d,"load");
+  set(&reg,d,"load");
 
   assign_op(&d, op_to_string);
-  set(reg,d,"to-string");
+  set(&reg,d,"to-string");
   
   assign_op(&d, op_to_number);
-  set(reg,d,"to-number");
+  set(&reg,d,"to-number");
 
   assign_op(&d, op_ref);
-  set(reg,d,"ref");
+  set(&reg,d,"ref");
 
   assign_op(&d, op_output_code);
-  set(reg,d,"output-code");
+  set(&reg,d,"output-code");
 
   assign_op(&d, op_clear_code);
-  set(reg,d,"clear-code");
+  set(&reg,d,"clear-code");
 
   assign_op(&d, op_error);
-  set(reg,d,"error");
+  set(&reg,d,"error");
 
   assign_op(&d, op_is_integer);
-  set(reg,d,"is-integer");
+  set(&reg,d,"is-integer");
 
   assign_op(&d, op_is_real);
-  set(reg,d,"is-real");
+  set(&reg,d,"is-real");
 
   assign_op(&d, op_is_string);
-  set(reg,d,"is-string");
+  set(&reg,d,"is-string");
   
   assign_op(&d, op_is_register);
-  set(reg,d,"is-register");
+  set(&reg,d,"is-register");
 
   assign_op(&d, op_is_registry);
-  set(reg,d,"is-registry");
+  set(&reg,d,"is-registry");
 
   assign_op(&d, op_is_instruction);
-  set(reg,d,"is-instruction");
+  set(&reg,d,"is-instruction");
 
   assign_op(&d, op_is_file);
-  set(reg,d,"is-file");
+  set(&reg,d,"is-file");
 
   assign_op(&d, op_is_nothing);
-  set(reg,d,"is-nothing");
+  set(&reg,d,"is-nothing");
 
   assign_op(&d, op_open_text_file);
-  set(reg,d,"open-text-file");
+  set(&reg,d,"open-text-file");
 
   assign_op(&d, op_read);
-  set(reg,d,"read");
+  set(&reg,d,"read");
 
   assign_op(&d, op_close);
-  set(reg,d,"close");
+  set(&reg,d,"close");
 
   assign_op(&d, op_and);
-  set(reg,d,"and");
+  set(&reg,d,"and");
 
   assign_op(&d, op_or);
-  set(reg,d,"or");
+  set(&reg,d,"or");
 
   assign_op(&d, op_not);
-  set(reg,d,"not");
+  set(&reg,d,"not");
 
   assign_op(&d, op_read_line);
-  set(reg,d,"read-line");
+  set(&reg,d,"read-line");
   
   assign_op(&d, op_write);
-  set(reg,d,"write");
+  set(&reg,d,"write");
   
   assign_op(&d, op_input);
-  set(reg,d,"input");
+  set(&reg,d,"input");
 
   assign_op(&d, op_shell);
-  set(reg,d,"shell");
+  set(&reg,d,"shell");
 
   assign_op(&d, op_link);
-  set(reg,d,"link");
+  set(&reg,d,"link");
 
   assign_op(&d, op_match);
-  set(reg,d,"match");
+  set(&reg,d,"match");
 
   assign_op(&d, op_replace);
-  set(reg,d,"replace");
+  set(&reg,d,"replace");
 
   assign_op(&d, op_log);
-  set(reg,d,"log");
+  set(&reg,d,"log");
 
   assign_op(&d, op_exp);
-  set(reg,d,"exp");
+  set(&reg,d,"exp");
 
   assign_op(&d, op_to_power);
-  set(reg,d,"to-power");
+  set(&reg,d,"to-power");
 
   assign_op(&d, op_chdir);
-  set(reg,d,"chdir");
+  set(&reg,d,"chdir");
 
   assign_op(&d, op_curdir);
-  set(reg,d,"curdir");
+  set(&reg,d,"curdir");
 
   assign_op(&d, op_copy_file);
-  set(reg,d,"copy-file");
+  set(&reg,d,"copy-file");
 
   assign_op(&d, op_import);
-  set(reg,d,"import");
+  set(&reg,d,"import");
   
   assign_op(&d, op_repeat);
-  set(reg,d,"repeat");
+  set(&reg,d,"repeat");
 
   assign_op(&d, op_substring);
-  set(reg,d,"substring");
+  set(&reg,d,"substring");
 
   assign_op(&d, op_up);
-  set(reg,d,"up");
+  set(&reg,d,"up");
   
   assign_op(&d, op_of);
-  set(reg,d,"of");
+  set(&reg,d,"of");
 
   assign_op(&d, op_isof);
-  set(reg,d,"isof");
+  set(&reg,d,"isof");
 
   assign_op(&d, op_dispatch);
-  set(reg,d,"dispatch");
+  set(&reg,d,"dispatch");
 
   assign_op(&d, op_register_number);
-  set(reg,d,"register-number");
+  set(&reg,d,"register-number");
 
   assign_op(&d, op_to_real);
-  set(reg,d,"to-real");
+  set(&reg,d,"to-real");
 
   assign_op(&d, op_call);
-  set(reg,d,"call");
+  set(&reg,d,"call");
 
   assign_op(&d, op_code);
-  set(reg,d,"code");
+  set(&reg,d,"code");
 
   assign_op(&d, op_is_error);
-  set(reg,d,"is-error");
+  set(&reg,d,"is-error");
   
   
 }

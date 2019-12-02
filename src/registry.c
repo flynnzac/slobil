@@ -35,12 +35,15 @@ new_content ()
 }
 
 registry*
-new_registry (registry* up)
+new_registry (registry* up, size_t hash_size)
 {
   registry* r = malloc(sizeof(registry));
   r->up = up;
+  r->hash_size = hash_size;
+  r->objects = malloc(sizeof(content*)*hash_size);
+  r->elements = 0;
 
-  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+  for (int i = 0; i < hash_size; i++)
     {
       r->objects[i] = NULL;
     }
@@ -56,24 +59,24 @@ is_init_reg (content* r)
 }
 
 content*
-set (registry* reg, data* d, const char* name)
+set (registry** reg, data* d, const char* name)
 {
   unsigned long hash_name = hash_str(name);
-  content* c = del(reg,hash_name,-1);
+  content* c = del(*reg,hash_name,-1);
 
   if (d != NULL && d->type == REGISTRY)
     {
-      ((registry*) d->data)->up = reg;
+      ((registry*) d->data)->up = *reg;
     }
 
 
   if (c == NULL)
     {
-      if (reg->objects[hash_name % ARBEL_HASH_SIZE] == NULL)
+      if ((*reg)->objects[hash_name % (*reg)->hash_size] == NULL)
         {
-          reg->objects[hash_name % ARBEL_HASH_SIZE] = new_content();
+          (*reg)->objects[hash_name % (*reg)->hash_size] = new_content();
         }
-      c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+      c = (*reg)->objects[hash_name % (*reg)->hash_size];
       c = head(c);
       content* new_c = new_content();
       new_c->left = c;
@@ -83,6 +86,13 @@ set (registry* reg, data* d, const char* name)
       new_c->name = malloc(sizeof(char)*(strlen(name)+1));
       strcpy(new_c->name, name);
       new_c->key = hash_name;
+      (*reg)->elements++;
+      if ((*reg)->elements > (ARBEL_LOAD_FACTOR*((*reg)->hash_size)))
+        {
+          registry* tmp_reg = copy_registry(*reg);
+          free_registry(*reg);
+          *reg = tmp_reg;
+        }
 
       return new_c;
     }
@@ -92,6 +102,8 @@ set (registry* reg, data* d, const char* name)
       c->value = d;
       return c;
     }
+
+
 
   return NULL;
 
@@ -103,7 +115,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-  content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  content* c = reg->objects[hash_name % reg->hash_size];
   if (c == NULL || is_init_reg(c))
     {
       if (recursive)
@@ -205,7 +217,7 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
 content*
 mov (registry* reg, regstr* old, regstr* new)
 {
-  unsigned long old_element = old->key % ARBEL_HASH_SIZE;
+  unsigned long old_element = old->key % reg->hash_size;
 
   content* cur = reg->objects[old_element];
   if (cur == NULL)
@@ -220,7 +232,7 @@ mov (registry* reg, regstr* old, regstr* new)
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
           del(reg, old->key, 0);
-          content* c = set(reg, d, new->name);
+          content* c = set(&reg, d, new->name);
           c->do_not_free_data = do_not_free_data;
           return c;
         }
@@ -232,7 +244,7 @@ mov (registry* reg, regstr* old, regstr* new)
 content*
 del (registry* reg, unsigned long hash_name, int del_data)
 {
-  content* cur = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  content* cur = reg->objects[hash_name % reg->hash_size];
   
   if (cur == NULL)
     return NULL;
@@ -246,6 +258,9 @@ del (registry* reg, unsigned long hash_name, int del_data)
     {
       if (cur->key == hash_name)
         {
+          if (del_data >= 0)
+            reg->elements--;
+          
           if (cur->right != NULL && del_data >= 0)
             {
               cur->right->left = cur->left;
@@ -276,10 +291,10 @@ del (registry* reg, unsigned long hash_name, int del_data)
             {
               free(cur);
 
-              if (is_init_reg(reg->objects[hash_name % ARBEL_HASH_SIZE]))
+              if (is_init_reg(reg->objects[hash_name % reg->hash_size]))
                 {
-                  free(reg->objects[hash_name % ARBEL_HASH_SIZE]);
-                  reg->objects[hash_name % ARBEL_HASH_SIZE] = NULL;
+                  free(reg->objects[hash_name % reg->hash_size]);
+                  reg->objects[hash_name % reg->hash_size] = NULL;
                 }
                 
               return NULL;
@@ -296,7 +311,7 @@ void
 mark_do_not_free (registry* reg, unsigned long hash_name)
 {
 
-  content* c = reg->objects[hash_name % ARBEL_HASH_SIZE];
+  content* c = reg->objects[hash_name % reg->hash_size];
   if (c==NULL || is_init_reg(c))
     return;
 
@@ -424,3 +439,13 @@ tail (content* c)
 
   return c->right;
 }
+
+size_t
+new_hash_size (size_t elements)
+{
+  size_t hash_size = ceil((double) elements / ARBEL_LOAD_FACTOR);
+  size_t factor = (hash_size / ARBEL_HASH_SIZE) + 1;
+  printf("Size is: %lu\n", ARBEL_HASH_SIZE*factor);
+  return ARBEL_HASH_SIZE*factor;
+}
+  

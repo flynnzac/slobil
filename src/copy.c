@@ -95,7 +95,7 @@ assign_registry (data** d, registry* r)
   (*d)->type = REGISTRY;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL);
+      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
     }
   else
     {
@@ -236,10 +236,11 @@ copy_statement (statement* s)
 registry*
 copy_registry(registry* r0)
 {
-  registry* r1 = new_registry(r0->up);
+  registry* r1 = new_registry(r0->up,
+                              new_hash_size(r0->elements));
   data* d;
 
-  for (int i = 0; i < ARBEL_HASH_SIZE; i++)
+  for (int i = 0; i < r0->hash_size; i++)
     {
       content* cur = r0->objects[i];
       if (cur == NULL)
@@ -249,7 +250,7 @@ copy_registry(registry* r0)
       while (cur != NULL)
         {
           d = copy_data(cur->value);
-          set(r1, d, cur->name);
+          set(&r1, d, cur->name);
           cur = cur->right;
         }
     }
