@@ -26,7 +26,7 @@ ret (registry* reg, data* d, const char* name)
 {
   if (reg != NULL)
     {
-      set(&reg, d, name);
+      set(&reg, d, name, 0);
     }
   else
     {
@@ -75,7 +75,7 @@ _op_call (arg a, registry* reg, const int explicit)
         }
       d_data = a.arg_array[i+1];
       d_new = copy_data(d_data);
-      set(&r_new, d_new, ((regstr*) d->data)->name);
+      set(&r_new, d_new, ((regstr*) d->data)->name, 1);
     }
 
 

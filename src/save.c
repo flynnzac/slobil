@@ -190,7 +190,7 @@ read_registry (FILE* f, registry* reg)
       *((char*) (cache+size)) = '\0';
 
       if (d != NULL)
-        set(&reg, d, (char*) cache);
+        set(&reg, d, (char*) cache, 1);
       
       free(cache);
     }

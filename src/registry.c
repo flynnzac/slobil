@@ -59,7 +59,7 @@ is_init_reg (content* r)
 }
 
 content*
-set (registry** reg, data* d, const char* name)
+set (registry** reg, data* d, const char* name, int rehash)
 {
   unsigned long hash_name = hash_str(name);
   content* c = del(*reg,hash_name,-1);
@@ -87,7 +87,8 @@ set (registry** reg, data* d, const char* name)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       (*reg)->elements++;
-      if ((*reg)->elements > (ARBEL_LOAD_FACTOR*((*reg)->hash_size)))
+      if (rehash &&
+	  ((*reg)->elements > (ARBEL_LOAD_FACTOR*((*reg)->hash_size))))
         {
           registry* tmp_reg = copy_registry(*reg);
           free_registry(*reg);
@@ -232,7 +233,7 @@ mov (registry* reg, regstr* old, regstr* new)
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
           del(reg, old->key, 0);
-          content* c = set(&reg, d, new->name);
+          content* c = set(&reg, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
         }

@@ -233,7 +233,7 @@ content*
 tail (content* reg);
 
 content*
-set (registry** reg, data* d, const char* name);
+set (registry** reg, data* d, const char* name, int rehash);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
