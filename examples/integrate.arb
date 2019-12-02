@@ -4,11 +4,11 @@
 set /integrate 
     ( 
       set /delta [ divide [ subtract ub lb . ] n . ] .
-      set /x \lb .
+      set /x lb .
       set /int 0.0 .
-      repeat \n
+      repeat n
             (
-              set /int [ add \int [ f /t x . ] . ] .
+              set /int [ add int [ f /t x . ] . ] .
               set /x [ add x delta . ] .
             ) .
       multiply int delta .
