@@ -4,8 +4,10 @@ set /assert
          {
            error
              [ concat "The following test evaluated to 0:\n"
-                      [ code test . ] . ] .
-         } .
+                      [ code test . ] . ] 10000 .
+         }
+         0 .
+
     ) .
       
 

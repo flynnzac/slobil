@@ -1,3 +1,5 @@
+source "../../src/library/testing.arb" .
+
 ' Tests with correct usage
 
 set /x [ reg /hello "hello" /x 1 /z 20 /ans 5 . ] .
@@ -8,11 +10,11 @@ assert /test ( eq x:/ans 5 . ) .
 
 
 ' Test with wrong argument type
-' - Not Appliable
 
 assert /test ( is-error ( reg "hello" 1 2 3 . ) . ) .
 
 
 ' Test with incorrect number of arguments
-' - Not Applicable
+
+assert /test ( is-error ( reg /hello . ) . ) .
 

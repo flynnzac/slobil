@@ -48,6 +48,7 @@ op_list (arg a, registry* reg)
 void
 op_reg (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   registry* r_new = new_registry(reg);
   data* d = NULL;
   data* d_data = NULL;
@@ -1956,7 +1957,6 @@ op_error (arg a, registry* reg)
           is_error(*((int*) arg2->data));
         }
     }
-        
 }
 
 void
