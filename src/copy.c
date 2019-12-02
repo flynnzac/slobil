@@ -116,34 +116,6 @@ assign_regstr (data** d, const char* name, unsigned long key)
 }
 
 void
-assign_ref (data** d, registry* reg,
-            char** names,
-            const unsigned long* keys,
-            const int levels,
-            const int* is_regstr)
-{
-  *d = malloc(sizeof(data));
-  (*d)->type = REFERENCE;
-  (*d)->data = malloc(sizeof(ref));
-  ((ref*) (*d)->data)->reg = reg;
-  ((ref*) (*d)->data)->name = malloc(sizeof(char*)*levels);
-  ((ref*) (*d)->data)->key = malloc(sizeof(unsigned long)*levels);
-  ((ref*) (*d)->data)->is_regstr = malloc(sizeof(int)*levels);
-  ((ref*) (*d)->data)->levels = levels;
-
-  int i;
-  for (i=0; i < levels; i++)
-    {
-      ((ref*) (*d)->data)->name[i] = malloc(sizeof(char)*
-                                            (strlen(names[i])+1));
-      strcpy(((ref*) (*d)->data)->name[i], names[i]);
-      ((ref*) (*d)->data)->key[i] = keys[i];
-      ((ref*) (*d)->data)->is_regstr[i] = is_regstr[i];
-    }
-  
-}
-
-void
 assign_file (data** d, FILE* f)
 {
   *d = malloc(sizeof(data));
@@ -300,13 +272,6 @@ copy_data (data* d_in)
       break;
     case NOTHING:
       assign_nothing(&d);
-      break;
-    case REFERENCE:
-      assign_ref(&d,((ref*) d_in->data)->reg,
-                 ((ref*) d_in->data)->name,
-                 ((ref*) d_in->data)->key,
-                 ((ref*) d_in->data)->levels,
-                 ((ref*) d_in->data)->is_regstr);
       break;
     }
 

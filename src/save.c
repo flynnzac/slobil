@@ -44,7 +44,6 @@ save_content (FILE* f, content* reg)
     {
       if (reg->value->type != OPERATION &&
           reg->value->type != ACTIVE_INSTRUCTION &&
-          reg->value->type != REFERENCE &&
           reg->value->type != NOTHING)
         {
           fwrite(&reg->value->type, sizeof(data_type), 1, f);

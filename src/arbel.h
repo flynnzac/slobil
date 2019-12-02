@@ -47,7 +47,6 @@ enum data_type
    INSTRUCTION,
    ACTIVE_INSTRUCTION,
    OPERATION,
-   REFERENCE,
    ARBEL_FILE,
    NOTHING
   };
@@ -95,17 +94,6 @@ struct regstr
 };
 
 typedef struct regstr regstr;
-
-struct ref
-{
-  char** name;
-  registry* reg;
-  unsigned long* key;
-  int levels;
-  int* is_regstr;
-};
-
-typedef struct ref ref;
 
 struct command
 {
@@ -204,12 +192,6 @@ assign_registry (data** d, registry* r);
 void
 assign_regstr (data** d, const char* name, unsigned long key);
 
-void
-assign_ref (data** d, registry* reg,
-            char** names,
-            const unsigned long* keys,
-            const int levels,
-            const int* is_regstr);
 
 void
 assign_nothing (data** d);
@@ -258,9 +240,6 @@ print_data (data* d, int print_cmd);
 
 int
 is_register (const char* str);
-
-int
-is_reference (const char* str);
 
 void
 str_shift_left (char* buffer);
@@ -440,9 +419,6 @@ update_hash_size (size_t elements, size_t hash_size);
 
 void
 rehash (registry* r0);
-
-data*
-resolve_reference (data* d, registry* reg);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 

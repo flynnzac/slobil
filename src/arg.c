@@ -14,51 +14,6 @@ gen_arg (int length, int def_free)
   return a;
 }
 
-
-data*
-resolve_reference (data* d, registry* reg)
-{
-  data* d_ref;
-  if (((ref*) d->data)->reg == NULL)
-    {
-      d_ref = get_by_levels(reg,
-                            ((ref*) d->data)->key,
-                            ((ref*) d->data)->levels,
-                            ((ref*) d->data)->is_regstr,
-                            ((ref*) d->data)->name);
-    }
-  else
-    {
-      d_ref = get_by_levels(((ref*) d->data)->reg,
-                            ((ref*) d->data)->key,
-                            ((ref*) d->data)->levels,
-                            ((ref*) d->data)->is_regstr,
-                            ((ref*) d->data)->name);
-    }
-
-  if (d_ref == NULL)
-    {
-      char* msg = malloc(sizeof(char)*
-                         (strlen("Reference not found.") +
-                          strlen(((ref*) d->data)->name[0]) +
-                          5));
-      sprintf(msg, "Reference `%s` not found.",
-              ((ref*) d->data)->name[0]);
-      do_error(msg);
-      free(msg);
-    }
-  else
-    {
-      if (d_ref->type == REGISTRY)
-        {
-          ((registry*) d_ref->data)->up = reg;
-        }
-    }
-
-  return d_ref;
-}
-
-
 data*
 resolve (data* arg, registry* reg)
 {

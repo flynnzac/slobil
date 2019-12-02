@@ -230,10 +230,9 @@ op_set (arg a, registry* reg)
 void
 op_get (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
+  CHECK_ARGS(a, 1);
 
+  data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     do_error("Get needs an argument.");
 
@@ -243,13 +242,15 @@ op_get (arg a, registry* reg)
   if (arg1->type != REGISTER)
     do_error("First argument must be a register.");
 
+
   registry* to_look;
-  if (arg2 == NULL)
+  if (a.length == 2)
     {
-      to_look = reg->up;
+      to_look = reg;
     }
   else
     {
+      data* arg2 = resolve(a.arg_array[2], reg);
       if (arg2->type != REGISTRY)
         {
           do_error("Second argument must be a registry.");
@@ -1867,42 +1868,6 @@ op_number_to_register (arg a, registry* reg)
   free(name);
 }
   
-
-void
-op_ref (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("`ref` requires two arguments.");
-      return;
-    }
-
-  if (arg1->type != REGISTER)
-    {
-      do_error("First argument to `ref` must be a register.");
-      return;
-    }
-
-  if (arg2->type != REGISTRY)
-    {
-      do_error("Second argument to `ref` must be a registry.");
-      return;
-    }
-
-  data* d;
-  int is_regstr = 1;
-  assign_ref(&d, (registry*) arg2->data,
-             &((regstr*) arg1->data)->name,
-             &((regstr*) arg1->data)->key,
-             1,
-             &is_regstr);
-  ret_ans(reg, d);
-}
-
 void
 op_output_code (arg a, registry* reg)
 {
@@ -3210,19 +3175,19 @@ op_call (arg a, registry* reg)
 }
 
 void
-op_resolve (arg a, registry* reg)
+op_copy (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
 
   data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1->type != REFERENCE)
+  if (arg1 == NULL)
     {
-      do_error("Argument to `resolve` should be a reference.");
+      do_error("`copy` requires an argument.");
       return;
     }
 
-  data* d = copy_data(resolve_reference(arg1, reg));
+  data* d = copy_data(arg1);
   ret_ans(reg, d);
 }
 
@@ -3369,9 +3334,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_number);
   set(reg,d,"to-number",1);
 
-  assign_op(&d, op_ref);
-  set(reg,d,"ref",1);
-
   assign_op(&d, op_output_code);
   set(reg,d,"output-code",1);
 
@@ -3508,9 +3470,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_error);
   set(reg,d,"is-error",1);
 
-  assign_op(&d, op_resolve);
-  set(reg,d,"resolve",1);
-  
+  assign_op(&d, op_copy);
+  set(reg,d,"copy",1);
+
   
 }
   

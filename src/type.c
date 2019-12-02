@@ -74,11 +74,6 @@ is_register (const char* str)
   return (str[0] == '/');
 }
 
-int
-is_reference (const char* str)
-{
-  return (str[0] == '\\');
-}
 
 int
 is_whitespace (const char c)
@@ -119,9 +114,6 @@ str_type (data_type type)
       break;
     case OPERATION:
       s = "Instruction";
-      break;
-    case REFERENCE:
-      s = "Reference";
       break;
     case NOTHING:
       s = "Nothing";

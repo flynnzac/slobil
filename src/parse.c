@@ -217,28 +217,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   state->in_comment = 1;
                   state->arg_n = 0;
                 }
-              else if (is_reference(state->buffer))
-                {
-                  int i, levels;
-                  char** str_array;
-                  int* is_regstr;
-                  str_array = split_by_colon(state->buffer+1, &levels,
-                                             &is_regstr);
-                  d = malloc(sizeof(data));
-                  d->type = REFERENCE;
-                  d->data = malloc(sizeof(ref));
-                  ((ref*) d->data)->reg = NULL;
-                  ((ref*) d->data)->name = str_array;
-                  ((ref*) d->data)->is_regstr = is_regstr;
-                  ((ref*) d->data)->levels = levels;
-                  ((ref*) d->data)->key = malloc(sizeof(unsigned long)*
-                                                  levels);
-                  for (i=0; i < levels; i++)
-                    {
-                      ((ref*) d->data)->key[i] = hash_str(str_array[i]);
-                    }
-                  e = add_literal_argument(&head, e, d);
-                }
               else 
                 {
                   e = add_lookup_argument(&head, e, state->buffer);
