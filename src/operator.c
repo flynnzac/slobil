@@ -281,13 +281,13 @@ op_if (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER)
+  if (arg1->type != BOOLEAN)
     {
-      do_error("First argument to `if` must be an integer.");
+      do_error("First argument to `if` must be a Boolean.");
       return;
     }
 
-  if (*((int*) arg1->data))
+  if (*((bool*) arg1->data))
     {
       data* arg2 = resolve(a.arg_array[2], reg);
       if (arg2 == NULL)
@@ -394,11 +394,11 @@ op_exist (arg a, registry* reg)
   data* d;
   if (obj == NULL)
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
   else
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
 
   ret_ans(reg,d);
@@ -505,15 +505,11 @@ op_gt (arg a, registry* reg)
     return;
 
   if (is_gt==1)
-    {
-      assign_int(&d, 1);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, true);
   else
-    {
-      assign_int(&d, 0);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, false);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -526,15 +522,11 @@ op_lt (arg a, registry* reg)
     return;
 
   if (is_lt==-1)
-    {
-      assign_int(&d, 1);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, true);
   else
-    {
-      assign_int(&d, 0);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, false);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -547,15 +539,11 @@ op_eq (arg a, registry* reg)
     return;
 
   if (is_eq==0)
-    {
-      assign_int(&d, 1);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, true);
   else
-    {
-      assign_int(&d, 0);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, false);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -568,15 +556,11 @@ op_gteq (arg a, registry* reg)
     return;
 
   if (is_gteq==1 || is_gteq==0)
-    {
-      assign_int(&d, 1);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, true);
   else
-    {
-      assign_int(&d, 0);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, false);
+
+  ret_ans(reg,d);
 }
 
 
@@ -590,15 +574,11 @@ op_lteq (arg a, registry* reg)
     return;
 
   if (is_lteq==-1 || is_lteq==0)
-    {
-      assign_int(&d, 1);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, true);
   else
-    {
-      assign_int(&d, 0);
-      ret_ans(reg,d);
-    }
+    assign_boolean(&d, false);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -1044,13 +1024,13 @@ op_while (arg a, registry* reg)
           break;
         }
 
-      if (d->type != INTEGER)
+      if (d->type != BOOLEAN)
         {
-          do_error("First instruction should set `ans` to an integer.");
+          do_error("First instruction should set `ans` to a Boolean.");
           break;
         }
 
-      if ((*(int*) d->data) == 0)
+      if (!(*(bool*) d->data))
         {
           break;
         }
@@ -1372,11 +1352,11 @@ op_string_eq (arg a, registry* reg)
   data* d;
   if (strcmp(str1,str2) == 0)
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg, d);
@@ -1406,11 +1386,11 @@ op_string_lt (arg a, registry* reg)
   data* d;
   if (strcmp(str1,str2) < 0)
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg, d);
@@ -1440,11 +1420,11 @@ op_string_gt (arg a, registry* reg)
   data* d;
   if (strcmp(str1,str2) > 0)
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg, d);
@@ -1479,11 +1459,11 @@ op_exist_in (arg a, registry* reg)
   
   if (chk != NULL)
     {
-      assign_int(&chk, 1);
+      assign_boolean(&chk, true);
     }
   else
     {
-      assign_int(&chk, 0);
+      assign_boolean(&chk, false);
     }
 
   ret_ans(reg, chk);
@@ -1521,11 +1501,11 @@ op_reg_eq (arg a, registry* reg)
   data* d;
   if (cmp == 0)
     {
-      assign_int(&d,1);
+      assign_boolean(&d,true);
     }
   else
     {
-      assign_int(&d,0);
+      assign_boolean(&d,false);
     }
 
   ret_ans(reg,d);
@@ -1541,11 +1521,11 @@ op_reg_gt (arg a, registry* reg)
   data* d;
   if (cmp > 0)
     {
-      assign_int(&d,1);
+      assign_boolean(&d,true);
     }
   else
     {
-      assign_int(&d,0);
+      assign_boolean(&d,false);
     }
 
   ret_ans(reg,d);
@@ -1561,11 +1541,11 @@ op_reg_lt (arg a, registry* reg)
   data* d;
   if (cmp < 0)
     {
-      assign_int(&d,1);
+      assign_boolean(&d,true);
     }
   else
     {
-      assign_int(&d,0);
+      assign_boolean(&d,false);
     }
 
   ret_ans(reg,d);
@@ -1953,11 +1933,11 @@ op_is_type (arg a, registry* reg, const data_type type)
   if (arg1->type == type || ((type==INSTRUCTION) &&
                              (arg1->type==OPERATION)))
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg,d);
@@ -2009,6 +1989,12 @@ void
 op_is_nothing (arg a, registry* reg)
 {
   op_is_type(a, reg, NOTHING);
+}
+
+void
+op_is_boolean (arg a, registry* reg)
+{
+  op_is_type(a, reg, BOOLEAN);
 }
 
 
@@ -2132,20 +2118,20 @@ op_or (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER || arg2->type != INTEGER)
+  if (arg1->type != BOOLEAN || arg2->type != BOOLEAN)
     {
-      do_error("Both arguments to `or` should be integers.");
+      do_error("Both arguments to `or` should be Boolean.");
       return;
     }
 
   data* d;
-  if (*((int*) arg1->data) || *((int*) arg2->data))
+  if (*((bool*) arg1->data) || *((bool*) arg2->data))
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d,0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg,d);
@@ -2164,20 +2150,20 @@ op_and (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER || arg2->type != INTEGER)
+  if (arg1->type != BOOLEAN || arg2->type != BOOLEAN)
     {
-      do_error("Both arguments to `and` should be integers.");
+      do_error("Both arguments to `and` should be Boolean.");
       return;
     }
 
   data* d;
-  if (*((int*) arg1->data) && *((int*) arg2->data))
+  if (*((bool*) arg1->data) && *((bool*) arg2->data))
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d,0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg,d);
@@ -2195,20 +2181,20 @@ op_not (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER)
+  if (arg1->type != BOOLEAN)
     {
-      do_error("The argument to `not` should be an integer.");
+      do_error("The argument to `not` should be a Boolean.");
       return;
     }
 
   data* d;
-  if (*((int*) arg1->data))
+  if (*((bool*) arg1->data))
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
   else
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
 
   ret_ans(reg,d);
@@ -3034,11 +3020,11 @@ op_is_of (arg a, registry* reg)
 
   if (strcmp((char*) d->data, (char*) arg1->data)==0)
     {
-      assign_int(&d, 1);
+      assign_boolean(&d, true);
     }
   else
     {
-      assign_int(&d, 0);
+      assign_boolean(&d, false);
     }
 
   ret_ans(reg, d);
@@ -3368,6 +3354,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_nothing);
   set(reg,d,"is-nothing",1);
 
+  assign_op(&d, op_is_boolean);
+  set(reg,d,"is-boolean",1);
+  
   assign_op(&d, op_open_text_file);
   set(reg,d,"open-text-file",1);
 

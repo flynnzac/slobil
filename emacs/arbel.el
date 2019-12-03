@@ -165,13 +165,16 @@
                 "copy"
                 "slash"
                 "unslash"
+		"is-boolean"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
-             (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
+		   (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
+		   (boolean-regexp (regexp-opt '("True" "False") 'words))
              )
 	      `(
-          (,register-regexp . (1 font-lock-function-name-face))
-	        (,functions-regexp . font-lock-builtin-face)
+		(,register-regexp . (1 font-lock-function-name-face))
+		(,boolean-regexp . (1 font-lock-constant-face))
+		(,functions-regexp . font-lock-builtin-face)
 	        )))
 
 (define-derived-mode arbel-mode prog-mode "arbel"
