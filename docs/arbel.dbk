@@ -11,7 +11,7 @@
     <revhistory>
       <revision>
         <revnumber>0.0</revnumber>
-        <date>September 13, 2019</date>
+        <date>December 2, 2019</date>
       </revision>
     </revhistory>
     <copyright>
@@ -29,11 +29,11 @@
     <title>Introducing ARBEL</title>
 
     <para>
-      ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+      ARBEL is a programming language based on <emphasis>registries</emphasis> (hash tables) and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  Code operates inside a certain registry. The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </para>
 
     <para>
-      ARBEL's basic syntax is similar to running programs from a UNIX shell.  All instructions have the form <code>INSTRUCTION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. It uses different parenthesis types to control when different sub-statements provided in the place of arguments are executed.  It has either lazy or greedy evaluation of arguments depending on which parenthesis are used to enclose substatements. This removes the need for many common special forms found in other languages.
+      ARBEL's basic syntax is similar to running programs from a DOS/UNIX shell.  The fact that registers are denoted <code>/register</code> makes a lot of the code look a bit like DOS commands.  ARBEL has a set of built-in operations. These operations all have the form <code>OPERATION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. You can also create <emphasis>instructions</emphasis> which are sets of operations or other instructions.  They all use named arguments so they have the form <code>INSTRUCTION /ARGNAME1 ARGUMENT1 /ARGNAME2 ARGUMENT2 ...</code>. This assigns the arguments to the registers <code>ARGNAME1</code>, etc.  The instruction then gets executed in a registry with those registers containing the values specified. It uses different parenthesis types to control when different sub-statements provided in the place of arguments are executed.  It has either lazy or greedy evaluation of arguments depending on which parenthesis are used to enclose substatements. This removes the need for many common special forms found in other languages.  All arguments are passed by reference.
     </para>
 
     <para>
@@ -61,7 +61,7 @@
       </listitem>
 
       <listitem>
-        ARBEL's syntax is highly regular.  It never deviates from the form <code>INSTRUCTION ARG1 ... ARGN . </code>
+        ARBEL's syntax is highly regular.
       </listitem>
 
     </orderedlist>
@@ -134,19 +134,7 @@ Howdy!
     </para>
 
     <para>
-      The command <code>set /hello "Hello, world!" .</code> is in fact a command to (temporarily) create a new registry.  The command pushes (in the new registry) the instruction <code>set</code> to register <code>#0</code>, the register <code>hello</code> to register <code>#1</code>, and the string value <code>"Hello, world!"</code> to register <code>#2</code>.  It then calls the instruction <code>compute</code> with this new registry as the argument.  <code>compute</code> executes the instruction located at <code>#0</code> inside the temporary registry.  The instruction can then refer to the values at <code>#1</code> and <code>#2</code>.  To see this in action, we could have executed <code>set /hello "Hello, world!" .</code> in the following way:
-    </para>
-    <programlisting>
-... compute [ reg /#0 set /#1 /hello /#2 "Hello, world!" . ] .
-... print hello .
-Hello, world!</programlisting>
-
-    <para>
-      This illustrates what the syntax <code>.</code> (a period) means.  It can be viewed as the statement terminator of ARBEL, but what it actually does is create a registry of the elements proceeding it and then call <code>compute</code> with that registry as an argument.  In fact, this is the only kind of statement in ARBEL: the <code>compute</code> instruction called on a registry.
-    </para>
-
-    <para>
-      The above code introduces the other syntax element of ARBEL: parenthesis.  ARBEL uses three types of parenthesis: open paranethesis ("(" and ")"), square parenthesis ("[" and "]", as above), and curly parenthesis ("{" and "}").  All parenthesis group statements, but the different parenthesis types in ARBEL control <emphasis>when</emphasis> the statements they contain are executed.
+      The other syntax element of ARBEL is parenthesis.  ARBEL uses three types of parenthesis: open paranethesis ("(" and ")"), square parenthesis ("[" and "]", as above), and curly parenthesis ("{" and "}").  All parenthesis group statements, but the different parenthesis types in ARBEL control <emphasis>when</emphasis> the statements they contain are executed.
     </para>
 
     <para>
@@ -154,7 +142,7 @@ Hello, world!</programlisting>
     </para>
 
     <para>
-      The curly parenthesis ("{}") indicate the expression should only be evaluated if the instruction actually tries to use the argument.  The <code>if</code> instruction is implemented in this way. For example, 
+      The curly parenthesis ("{}") indicate the expression should only be evaluated if the instruction actually tries to use the argument (lazy evaluation).  This expression is useful for the <code>if</code> operation. For example, 
     </para>
     <programlisting>... if [ gt x 0 . ] { print x . } { print "Negative" . } .</programlisting>
 
