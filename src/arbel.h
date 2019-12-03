@@ -36,6 +36,7 @@
 #include <regex.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdbool.h>
 
 enum data_type
   {
@@ -48,7 +49,8 @@ enum data_type
    ACTIVE_INSTRUCTION,
    OPERATION,
    ARBEL_FILE,
-   NOTHING
+   BOOLEAN,
+   NOTHING,
   };
 
 typedef enum data_type data_type;
@@ -171,7 +173,7 @@ typedef struct instruction instruction;
 char*
 argument_name (int n);
 
-int
+bool
 is_integer (const char* str);
 
 void
@@ -192,6 +194,8 @@ assign_registry (data** d, registry* r);
 void
 assign_regstr (data** d, const char* name, unsigned long key);
 
+void
+assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
@@ -199,8 +203,12 @@ assign_nothing (data** d);
 void
 assign_file (data** d, FILE* f);
 
-int
+bool
 is_numeric (data* d);
+
+bool
+is_boolean (const char* str);
+
 
 void
 free_data (data* d);
@@ -238,7 +246,7 @@ null_ans (registry* reg);
 void
 print_data (data* d, int print_cmd);
 
-int
+bool
 is_register (const char* str);
 
 void
@@ -247,7 +255,7 @@ str_shift_left (char* buffer);
 void
 add_basic_ops (registry* reg);
 
-int
+bool
 is_whitespace (const char c);
 
 void
@@ -268,7 +276,7 @@ is_error (int e);
 int
 is_exit (int e);
 
-int
+bool
 is_init_reg (content* r);
 
 registry*
@@ -295,7 +303,7 @@ copy_registry(registry* r0);
 int
 is_retval (const int r);
 
-int
+bool
 is_real (const char* str);
 
 void

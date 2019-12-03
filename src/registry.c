@@ -51,7 +51,7 @@ new_registry (registry* up, size_t hash_size)
   return r;
 }
 
-int
+bool
 is_init_reg (content* r)
 {
   return (r->right == NULL) && (r->left==NULL) && (r->value == NULL) &&

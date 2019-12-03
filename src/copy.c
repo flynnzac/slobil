@@ -124,6 +124,15 @@ assign_file (data** d, FILE* f)
   
 }
 
+void
+assign_boolean (data** d, bool val)
+{
+  *d = malloc(sizeof(data));
+  (*d)->type = BOOLEAN;
+  (*d)->data = malloc(sizeof(bool));
+  *((bool*) (*d)->data) = val;
+}
+
 
 void
 assign_nothing (data** d)
@@ -269,6 +278,9 @@ copy_data (data* d_in)
       break;
     case ARBEL_FILE:
       assign_file(&d, (FILE*) d_in->data);
+      break;
+    case BOOLEAN:
+      assign_boolean(&d, *((bool*) d_in->data));
       break;
     case NOTHING:
       assign_nothing(&d);

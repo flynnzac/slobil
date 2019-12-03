@@ -55,6 +55,12 @@ print_data (data* d, int print_cmd)
     case ARBEL_FILE:
       printf("A file.\n");
       break;
+    case BOOLEAN:
+      if (*((bool*) d->data))
+	printf("True.\n");
+      else
+	printf("False.\n");
+      break;
     default:
       break;
     }

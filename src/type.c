@@ -21,19 +21,19 @@
 
 #include "arbel.h"
 
-int
+bool
 is_integer (const char* str)
 {
   int i;
   for (i=0; i < strlen(str); i++)
     {
       if (!(isdigit((int) str[i]) || ((i==0) && str[i]=='-')))
-        return 0;
+        return false;
     }
-  return 1;
+  return true;
 }
 
-int
+bool
 is_real (const char* str)
 {
   int i;
@@ -42,10 +42,10 @@ is_real (const char* str)
     {
       if (!(isdigit((int) str[i]) || ((i==0) && str[i]=='-') ||
             str[i] == '.'))
-        return 0;
+        return false;
 
       if (str[i] == '.' && decimals == 1)
-        return 0;
+        return false;
 
       if (str[i] == '.')
         decimals++;
@@ -54,34 +54,40 @@ is_real (const char* str)
 }
 
 
-int
+bool
 is_numeric (data* d)
 {
   if (d->type == REAL ||
       d->type == INTEGER)
     {
-      return 1;
+      return true;
     }
   else
     {
-      return 0;
+      return false;
     }
 }
 
-int
+bool
 is_register (const char* str)
 {
   return (str[0] == '/');
 }
 
 
-int
+bool
 is_whitespace (const char c)
 {
   if ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))
-    return 1;
+    return true;
   else
-    return 0;
+    return false;
+}
+
+bool
+is_boolean (const char* str)
+{
+  return (strcmp(str,"True") == 0) || (strcmp(str, "False") == 0);
 }
 
 const char*
@@ -120,6 +126,10 @@ str_type (data_type type)
       break;
     case ARBEL_FILE:
       s = "File";
+      break;
+    case BOOLEAN:
+      s = "Boolean";
+      break;
     }
 
   return s;

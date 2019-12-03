@@ -201,6 +201,14 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                                 hash_str(state->buffer+1));
                   e = add_literal_argument(&head, e, d);
                 }
+	      else if (is_boolean(state->buffer))
+		{
+		  if (strcmp(state->buffer, "True")==0)
+		    assign_boolean(&d, true);
+		  else
+		    assign_boolean(&d, false);
+		  e = add_literal_argument(&head, e, d);
+		}
               else if (strcmp(state->buffer,".")==0)
                 {
                   *complete = 1;
