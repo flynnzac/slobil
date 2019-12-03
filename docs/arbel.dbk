@@ -29,11 +29,15 @@
     <title>Introducing ARBEL</title>
 
     <para>
-      ARBEL is a programming language based on <emphasis>registries</emphasis> (hash tables) and instructions to modify the contents of registries.  Data is stored at named locations in the registry called registers.  Code operates inside a certain registry. The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+      ARBEL is a programming language based on hash tables (<emphasis>registries</emphasis>) as the fundamental data type.  It has operations to modify the contents of registries.  Data is stored at named locations in the registry called registers.  Code operates inside a certain registry and there are commands to move between registries. The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. It is interpreted and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
     </para>
 
     <para>
-      ARBEL's basic syntax is similar to running programs from a DOS/UNIX shell.  The fact that registers are denoted <code>/register</code> makes a lot of the code look a bit like DOS commands.  ARBEL has a set of built-in operations. These operations all have the form <code>OPERATION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. You can also create <emphasis>instructions</emphasis> which are sets of operations or other instructions.  They all use named arguments so they have the form <code>INSTRUCTION /ARGNAME1 ARGUMENT1 /ARGNAME2 ARGUMENT2 ...</code>. This assigns the arguments to the registers <code>ARGNAME1</code>, etc.  The instruction then gets executed in a registry with those registers containing the values specified. It uses different parenthesis types to control when different sub-statements provided in the place of arguments are executed.  It has either lazy or greedy evaluation of arguments depending on which parenthesis are used to enclose substatements. This removes the need for many common special forms found in other languages.  All arguments are passed by reference.
+      ARBEL's basic syntax is similar to running programs from a UNIX/DOS shell.  The fact that registers are denoted <code>/register</code> makes the code look a bit like DOS commands (but keep reading!).  ARBEL has a set of built-in operations. These operations all have the form <code>OPERATION ARGUMENT1 ARGUMENT2 ... ARGUMENTN</code>. You can also create <emphasis>instructions</emphasis> which are sets of operations or other instructions.  They all use named arguments so they have the form <code>INSTRUCTION /ARGNAME1 ARGUMENT1 /ARGNAME2 ARGUMENT2 ...</code>. This assigns the arguments to the registers <code>ARGNAME1</code> in the internal registry where the instruction operates.  The instruction then gets executed in this registry with those registers containing the values specified.
+    </para>
+    
+    <para>
+      ARBEL uses different parenthesis types ("(),[],{}") to control when different sub-statements are executed.  Using these different parenthesis allows both lazy ("{}") and greedy ("[]") evaluation and quoting expressions as code to be executed later ("()"). This removes the need for many common special forms found in other languages.  All arguments are passed by reference.
     </para>
 
     <para>
@@ -49,7 +53,7 @@
       </listitem>
 
       <listitem>
-        ARBEL is imperative. ARBEL follows instructions to modify the data in registries. .
+        ARBEL is imperative. ARBEL follows instructions to modify the data in registries.
       </listitem>
 
       <listitem>
@@ -61,7 +65,7 @@
       </listitem>
 
       <listitem>
-        ARBEL's syntax is highly regular.
+        ARBEL's syntax is highly regular and looks a bit like a command line.  
       </listitem>
 
     </orderedlist>
@@ -74,17 +78,16 @@
       <title>Categorizing ARBEL</title>
 
       <para>
-        ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and values have a certain type and the type does not change without explicit instruction (excepting a couple arithmetic commands which convert integers to floating point values if necessary).
+        ARBEL is an imperative, dynamically-typed, strongly-typed language.  What this means is that it operates by executing instructions in order to modify state (imperative), registers (variables) do not have types only values have types, and types do not change without explicit instruction (excepting a couple arithmetic commands which convert integers to floating point values if necessary).
       </para>
 
       <para>
-        Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions and registries.
+        Every value in ARBEL is "first class".  Any value can be stored at a register, including instructions, registries, and other registers.
       </para>
 
       <para>
-        ARBEL uses an "attribute" based system for object-oriented methods.  This means that you can apply an attribute to a value and then that value is treated as being of a certain kind.  Instructions will then do different things depending on the kind of object. The system is "name-based" as opposed to "structure-based".  A value is a of a certain kind if it is declared to be so, not based on the underlying structure of the value.
+        ARBEL uses an "attribute" based system for object-oriented methods.  This means that you can apply an attribute to a value and then that value is treated as being of a certain kind.  Instructions will then do different things depending on the kind of object. The system is "name-based" as opposed to "structure-based".  A value is a of a certain kind if it is declared to be so, not based on the underlying structure of the value.  If you are familiar with R, it is similar to R's S3 classes.  At some point, I may make the type system more extensive.  But the main data type of the language is the hash table and such tables can represent a lot of different kinds of data.
       </para>
-
     </section>
 
   </section>
