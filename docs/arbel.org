@@ -6,7 +6,9 @@
 
   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a /map/ or a /table/.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate /within/ a certain registry.  The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
 
-  From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs and scripts.  It's goal is to be easy to use interactively which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.
+  From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs.  It's goal is to be easy to use interactively for building /personal/ programs (programs primarily for the user's own use) which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+
+  A distinguishing feature of ARBEL that makes it especially useful for constructing personal programs is that it is /naturally generic/.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over library code.
 
   The language is imperative and does not try to avoid side-effects (the whole point is to modify the current state of the registry and, perhaps, save it to disk), it is dynamically-typed (registers do not have types, only the values entered in the registries do), and it is strongly typed (values have a certain type and cannot be coerced to other types except explicitly).
 
@@ -20,18 +22,18 @@
    A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
   
    #+BEGIN_SRC
-    set /hello "Hello, world!" .
+   ... set /hello "Hello, world!" .
    #+END_SRC
     
 
    =set= is the ARBEL operation to set a register to a certain value.  Names that have a forward slash (​/) preceeding them are /registers/, like =/hello= above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
 
    #+BEGIN_SRC
-    set /days-in-week 7 .
-    set /penny 0.01 .
-    set /facts True .
-    set /lies False .
-    set /add-one ( add t 1 . ) .
+   ... set /days-in-week 7 .
+   ... set /penny 0.01 .
+   ... set /facts True .
+   ... set /lies False .
+   ... set /add-one ( add t 1 . ) .
    #+END_SRC
 
    An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is one which is either True or False, an Instruction is a collection of one or more statements quoted as code (usually created by enclosing code with open parenthesis, "(" and ")").
@@ -50,7 +52,7 @@
 	set /add-one (add t 1 .) .
    #+END_SRC
 
-   There must be space before the period.  There also must be space after and before parenthesis. 
+   There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
    There are three parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), and curly parenthesis ("{}").  All contain statements, but they differ in /when/ the statements they contain are executed.
    
@@ -70,7 +72,7 @@
      ans = 9
      #+END_SRC
 
-     This is a defining feature of ARBEL. Code is automatically generic. Any object in an instruction can be replaced by any other except for a literal value when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
+     This is a defining feature of ARBEL. Code is naturally generic. Any object in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
 
      Because there is no ambiguity, you do not actually need to use the =call= operation directly.  ARBEL will insert it for you if the first argument is an instruction.  So the following would work as well,
      #+BEGIN_SRC
@@ -92,7 +94,7 @@
      ans = 10
      #+END_SRC
 
-     The =/ans= register is special because after an Instruction finishes running in its temporary registry.  Whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
+     The =/ans= register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
      #+BEGIN_SRC
      ... set /add-one ( answer [ add t 1 . ] . ) .
      ... add-one /t 10 .
@@ -106,12 +108,12 @@
    - Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the =/ans= register to.  This form of evaluation is often called "lazy evaluation". We can think of closed parenthesis as marking expressions we want to "greedily evaluate" and curly parenthesis as marking expressions to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
      #+BEGIN_SRC
      ... set /gt-4
-    (
-      set /str-t [ to-string t . ] . 
-      if [ gt t 4 . ]
-	 { print [ concat str-t " is greater than 4.\n" . ] . }
-	 { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
-    ) .
+     (
+       set /str-t [ to-string t . ] . 
+       if [ gt t 4 . ]
+          { print [ concat str-t " is greater than 4.\n" . ] . }
+          { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
+     ) .
     ... gt-4 /t 10 .
     10 is greater than 4.
     ... gt-4 /t 3 .
@@ -125,6 +127,113 @@
    That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
      
 
-** Registers and registries
+** Registries
 
+   In ARBEL, most of the action happens inside /registries/.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
+   #+BEGIN_SRC
+   ... registry /hello "Hello, world!" /x 10 .
+   #+END_SRC
+
+   This =registry= operation puts a new registry in the =/ans= register.  The registry has a =/hello= register bound to the value ="Hello, world!"= and with the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
+   
+   #+BEGIN_SRC
+   ... registry /hello "Hello, world!" /x 10 .
+   ... move /ans /my-registry .
+   ... print my-registry .
+   ... ' Or:
+   ... set /my-registry [ registry /hello "Hello, world!" /x 10 . ] .
+   ... print my-registry .
+   #+END_SRC
+
+   To access values in a registry, you can either use the =get= operation or the "colon notation":
+
+   #+BEGIN_SRC
+   ... get /hello my-registry .
+   ans = Hello, world!
+   ... print my-registry:/hello
+   Hello, world!
+   ... print hello .
+   Error: Value at `/hello` not found.
+   #+END_SRC
+
+   From the last line, we can see that the value =hello= exists only in the registry located at =/my-registry= which we are not currently in.  So we cannot access its =/hello= register directly.  We can change which registry we are in with the =go-in= operation.
+   
+   #+BEGIN_SRC
+   ... go-in hello .
+   ... print hello .
+   Hello, world!
+   #+END_SRC
+
+   We can go back to the registry we were in previously by using the =go-out= operation.
+
+   #+BEGIN_SRC
+   ... go-out .
+   ... print hello 
+   Error: Value at `/hello` not found.
+   #+END_SRC
+
+   We can import values from one registry into their corresponding registers in the current registry by using the =import= operation.
+
+   #+BEGIN_SRC
+   ... import my-registry .
+   ... print hello
+   Hello, world!
+   #+END_SRC
+   
+   We can also execute an instruction inside a certain registry by using the =in= command.
+
+   #+BEGIN_SRC
+   ... in my-registry ( print [ concat hello " Goodbye!" . ] . ) .
+   Hello, world! Goodbye!
+   #+END_SRC
+
+   
+
+   Aside from being a useful data structure, registries are also how ARBEL does /namespaces/.  For example,
+
+   #+BEGIN_SRC
+   ... set /math [ registry . ] .
+   ... set /factorial
+          (
+            set /i 2 .
+            set /prod 1 .
+            while ( lteq i t . )
+                  (
+                    set /prod [ multiply i prod . ] .
+                    set /i [ add i 1 . ] .
+                  ) .
+            answer prod .
+          ) math .
+   ... math:/factorial /t 5 .
+   ans = 120
+   #+END_SRC       
+
+   You can assign Instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the =set= operation takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry as we have seen above.
+
+   Of course, if you don't need to worry about name collisions, you can just =import= it.
+
+   #+BEGIN_SRC
+   ... import math .
+   ... factorial /t 5 .
+   ans = 120
+   #+END_SRC
+
+   
+   Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+
+** Registers   
+
+* Reference
+
+Arguments that are optional are enclosed in angle brackets (<>).
+
+- =set REGISTER VALUE <REGISTRY>= --- sets the value at REGISTER to VALUE in the registry REGISTRY.  If the REGISTRY argument is omitted, then it will set the register in the current registry.
+
+- =add NUMBER1 NUMBER2= --- adds the two numbers together and sets the =/ans= register to the result.
+
+- =multiply NUMBER1 NUMBER2= --- multiplies the two numbers together and sets the =/ans= register to the result.
+
+- =subtract NUMBER1 NUMBER2= --- subtracts the second number from the first and sets the =/ans= register to the result.
+
+- =divide NUMBER1 NUMBER2= --- divides the first number by the second and sets the =/ans= register to the result.

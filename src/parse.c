@@ -425,7 +425,6 @@ interact (FILE* f, parser_state* state, registry* reg)
                   print_data(d,0);
                   last_ans = d;
                 }
-              printf("OK.\n");
             }
 
         }

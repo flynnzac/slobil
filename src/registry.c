@@ -290,7 +290,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
       char* msg = malloc(sizeof(char)*
                          (strlen("Value `` not found.")
                           + strlen(name[0]) + 1));
-      sprintf(msg, "Value `%s` not found.", name[0]);
+      sprintf(msg, "Value at `/%s` not found.", name[0]);
       do_error(msg);
       free(msg);
     }

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-04 Wed 15:03 -->
+<!-- 2019-12-04 Wed 18:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-04 Wed 15:03
+ARBEL<br>Zach Flynn<br>2019-12-04 Wed 18:57
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,25 +239,31 @@ ARBEL<br>Zach Flynn<br>2019-12-04 Wed 15:03
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0a19359">1. Introduction</a></li>
-<li><a href="#org955a4b5">2. The Basics</a>
+<li><a href="#orgba26cd1">1. Introduction</a></li>
+<li><a href="#org8e4817f">2. The Basics</a>
 <ul>
-<li><a href="#org350dc15">2.1. Statements and syntax</a></li>
-<li><a href="#orgd71b3f3">2.2. Registers and registries</a></li>
+<li><a href="#org098aa0c">2.1. Statements and syntax</a></li>
+<li><a href="#org0c167de">2.2. Registries</a></li>
+<li><a href="#orgf80e36f">2.3. Registers</a></li>
 </ul>
 </li>
+<li><a href="#org6fcfc72">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0a19359" class="outline-2">
-<h2 id="org0a19359"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgba26cd1" class="outline-2">
+<h2 id="orgba26cd1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
 </p>
 
 <p>
-From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs and scripts.  It's goal is to be easy to use interactively which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.
+From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs.  It's goal is to be easy to use interactively for building <i>personal</i> programs (programs primarily for the user's own use) which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+</p>
+
+<p>
+A distinguishing feature of ARBEL that makes it especially useful for constructing personal programs is that it is <i>naturally generic</i>.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over library code.
 </p>
 
 <p>
@@ -271,19 +277,19 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org955a4b5" class="outline-2">
-<h2 id="org955a4b5"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org8e4817f" class="outline-2">
+<h2 id="org8e4817f"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org350dc15" class="outline-3">
-<h3 id="org350dc15"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org098aa0c" class="outline-3">
+<h3 id="org098aa0c"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
 </p>
 
 <pre class="example">
-set /hello "Hello, world!" .
+... set /hello "Hello, world!" .
 </pre>
 
 
@@ -292,11 +298,11 @@ set /hello "Hello, world!" .
 </p>
 
 <pre class="example">
-set /days-in-week 7 .
-set /penny 0.01 .
-set /facts True .
-set /lies False .
-set /add-one ( add t 1 . ) .
+... set /days-in-week 7 .
+... set /penny 0.01 .
+... set /facts True .
+... set /lies False .
+... set /add-one ( add t 1 . ) .
 </pre>
 
 <p>
@@ -322,7 +328,7 @@ set /add-one (add t 1 .) .
 </pre>
 
 <p>
-There must be space before the period.  There also must be space after and before parenthesis. 
+There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 </p>
 
 <p>
@@ -351,7 +357,7 @@ ans = 9
 </pre>
 
 <p>
-This is a defining feature of ARBEL. Code is automatically generic. Any object in an instruction can be replaced by any other except for a literal value when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding <code>/name value</code> in the call to the Instruction.
+This is a defining feature of ARBEL. Code is naturally generic. Any object in an instruction can be replaced by any other (except for a literal value like <code>11</code> or <code>"hello"</code> ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding <code>/name value</code> in the call to the Instruction.
 </p>
 
 <p>
@@ -383,7 +389,7 @@ ans = 10
 </pre>
 
 <p>
-The <code>/ans</code> register is special because after an Instruction finishes running in its temporary registry.  Whatever the value at the <code>/ans</code> register is in that registry is moved to the <code>/ans</code> register in the registry that called the instruction.  For example,
+The <code>/ans</code> register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the <code>/ans</code> register is in that registry is moved to the <code>/ans</code> register in the registry that called the instruction.  For example,
 </p>
 <pre class="example">
 ... set /add-one ( answer [ add t 1 . ] . ) .
@@ -402,12 +408,12 @@ Curly parenthesis ("{}") also enclose statements, but those statements are only 
 </p>
 <pre class="example">
  ... set /gt-4
-(
-  set /str-t [ to-string t . ] . 
-  if [ gt t 4 . ]
-     { print [ concat str-t " is greater than 4.\n" . ] . }
-     { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
-) .
+ (
+   set /str-t [ to-string t . ] . 
+   if [ gt t 4 . ]
+      { print [ concat str-t " is greater than 4.\n" . ] . }
+      { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
+ ) .
 ... gt-4 /t 10 .
 10 is greater than 4.
 ... gt-4 /t 3 .
@@ -430,14 +436,155 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-orgd71b3f3" class="outline-3">
-<h3 id="orgd71b3f3"><span class="section-number-3">2.2</span> Registers and registries</h3>
+<div id="outline-container-org0c167de" class="outline-3">
+<h3 id="org0c167de"><span class="section-number-3">2.2</span> Registries</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
+</p>
+
+<pre class="example">
+... registry /hello "Hello, world!" /x 10 .
+</pre>
+
+<p>
+This <code>registry</code> operation puts a new registry in the <code>/ans</code> register.  The registry has a <code>/hello</code> register bound to the value <code>"Hello, world!"</code> and with the <code>/x</code> register bound to the value <code>10</code>.  Usually, you will want to bind the value to another register besides <code>/ans</code> which will be overwritten by subsequent statements. You can do either of:
+</p>
+
+<pre class="example">
+... registry /hello "Hello, world!" /x 10 .
+... move /ans /my-registry .
+... print my-registry .
+... ' Or:
+... set /my-registry [ registry /hello "Hello, world!" /x 10 . ] .
+... print my-registry .
+</pre>
+
+<p>
+To access values in a registry, you can either use the <code>get</code> operation or the "colon notation":
+</p>
+
+<pre class="example">
+... get /hello my-registry .
+ans = Hello, world!
+... print my-registry:/hello
+Hello, world!
+... print hello .
+Error: Value at `/hello` not found.
+</pre>
+
+<p>
+From the last line, we can see that the value <code>hello</code> exists only in the registry located at <code>/my-registry</code> which we are not currently in.  So we cannot access its <code>/hello</code> register directly.  We can change which registry we are in with the <code>go-in</code> operation.
+</p>
+
+<pre class="example">
+... go-in hello .
+... print hello .
+Hello, world!
+</pre>
+
+<p>
+We can go back to the registry we were in previously by using the <code>go-out</code> operation.
+</p>
+
+<pre class="example">
+... go-out .
+... print hello 
+Error: Value at `/hello` not found.
+</pre>
+
+<p>
+We can import values from one registry into their corresponding registers in the current registry by using the <code>import</code> operation.
+</p>
+
+<pre class="example">
+... import my-registry .
+... print hello
+Hello, world!
+</pre>
+
+<p>
+We can also execute an instruction inside a certain registry by using the <code>in</code> command.
+</p>
+
+<pre class="example">
+... in my-registry ( print [ concat hello " Goodbye!" . ] . ) .
+Hello, world! Goodbye!
+</pre>
+
+
+
+<p>
+Aside from being a useful data structure, registries are also how ARBEL does <i>namespaces</i>.  For example,
+</p>
+
+<pre class="example">
+... set /math [ registry . ] .
+... set /factorial
+       (
+         set /i 2 .
+         set /prod 1 .
+         while ( lteq i t . )
+               (
+                 set /prod [ multiply i prod . ] .
+                 set /i [ add i 1 . ] .
+               ) .
+         answer prod .
+       ) math .
+... math:/factorial /t 5 .
+ans = 120
+</pre>
+
+<p>
+You can assign Instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the <code>set</code> operation takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry as we have seen above.
+</p>
+
+<p>
+Of course, if you don't need to worry about name collisions, you can just <code>import</code> it.
+</p>
+
+<pre class="example">
+... import math .
+... factorial /t 5 .
+ans = 120
+</pre>
+
+
+<p>
+Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like <code>struct</code> in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf80e36f" class="outline-3">
+<h3 id="orgf80e36f"><span class="section-number-3">2.3</span> Registers</h3>
+</div>
+</div>
+
+<div id="outline-container-org6fcfc72" class="outline-2">
+<h2 id="org6fcfc72"><span class="section-number-2">3</span> Reference</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
+</p>
+
+<ul class="org-ul">
+<li><code>set REGISTER VALUE &lt;REGISTRY&gt;</code> &#x2014; sets the value at REGISTER to VALUE in the registry REGISTRY.  If the REGISTRY argument is omitted, then it will set the register in the current registry.</li>
+
+<li><code>add NUMBER1 NUMBER2</code> &#x2014; adds the two numbers together and sets the <code>/ans</code> register to the result.</li>
+
+<li><code>multiply NUMBER1 NUMBER2</code> &#x2014; multiplies the two numbers together and sets the <code>/ans</code> register to the result.</li>
+
+<li><code>subtract NUMBER1 NUMBER2</code> &#x2014; subtracts the second number from the first and sets the <code>/ans</code> register to the result.</li>
+
+<li><code>divide NUMBER1 NUMBER2</code> &#x2014; divides the first number by the second and sets the <code>/ans</code> register to the result.</li>
+</ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-04 Wed 15:03</p>
+<p class="date">Created: 2019-12-04 Wed 18:57</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

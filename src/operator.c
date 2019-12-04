@@ -46,7 +46,7 @@ op_list (arg a, registry* reg)
 }
 
 void
-op_reg (arg a, registry* reg)
+op_registry (arg a, registry* reg)
 {
   if (a.length != 1)
     CHECK_ARGS(a, 2);
@@ -320,7 +320,7 @@ op_sit (arg a, registry* reg)
 
 
 void
-op_mov (arg a, registry* reg)
+op_move (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -344,7 +344,7 @@ op_mov (arg a, registry* reg)
 
 
 void
-op_del (arg a, registry* reg)
+op_delete (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -1089,13 +1089,26 @@ op_to_register (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != STRING)
+  if (arg1->type != STRING && arg1->type != INTEGER)
     {
-      do_error("Argument to `to-register` must be a string.");
+      do_error("Argument to `to-register` must be a string or an integer.");
+      return;
+    }
+  data* d;
+
+  if (arg1->type == STRING)
+    {
+      assign_regstr(&d, (char*) arg1->data,
+                    hash_str((char*) arg1->data));
+    }
+  else
+    {
+      char* name = argument_name(*((int*) arg1->data));
+      unsigned long hash_name = hash_str(name);
+      assign_regstr(&d, name, hash_name);
+      free(name);
     }
 
-  data* d;
-  assign_regstr(&d, (char*) arg1->data, hash_str((char*) arg1->data));
   ret_ans(reg,d);
 
 }
@@ -1472,84 +1485,40 @@ op_exist_in (arg a, registry* reg)
 int
 op_reg_cmp (arg a, registry* reg)
 {
+
+
+  return ;
+}
+
+void
+op_register_eq (arg a, registry* reg)
+{
   CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
 
   if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`reg-eq` requires two arguments.");
-      return -2;
+      do_error("`register-eq` requires two arguments.");
+      return;
     }
 
   if (arg1->type != REGISTER || arg2->type != REGISTER)
     {
-      do_error("Both arguments to `reg-eq` should be registers.");
-      return -2;
+      do_error("Both arguments to `register-eq` should be registers.");
+      return;
     }
-
-  return strcmp(((regstr*) arg1->data)->name, ((regstr*) arg2->data)->name);
-}
-
-void
-op_reg_eq (arg a, registry* reg)
-{
-  int cmp = op_reg_cmp(a, reg);
-  if (is_error(-1))
-    return;
       
   data* d;
-  if (cmp == 0)
-    {
-      assign_boolean(&d,true);
-    }
+
+  if (((regstr*) arg1->data)->key == ((regstr*) arg2->data)->key)
+    assign_boolean(&d,true);
   else
-    {
-      assign_boolean(&d,false);
-    }
+    assign_boolean(&d,false);
 
   ret_ans(reg,d);
 }
 
-void
-op_reg_gt (arg a, registry* reg)
-{
-  int cmp = op_reg_cmp(a, reg);
-  if (is_error(-1))
-    return;
-  
-  data* d;
-  if (cmp > 0)
-    {
-      assign_boolean(&d,true);
-    }
-  else
-    {
-      assign_boolean(&d,false);
-    }
-
-  ret_ans(reg,d);
-}
-
-void
-op_reg_lt (arg a, registry* reg)
-{
-  int cmp = op_reg_cmp(a, reg);
-  if (is_error(-1))
-    return;
-  
-  data* d;
-  if (cmp < 0)
-    {
-      assign_boolean(&d,true);
-    }
-  else
-    {
-      assign_boolean(&d,false);
-    }
-
-  ret_ans(reg,d);
-}
 
 
 void
@@ -1730,30 +1699,55 @@ op_to_number (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != STRING)
+  if (arg1->type != STRING && arg1->type != REGISTER)
     {
-      do_error("The argument to `to-number` must be a string.");
+      do_error("The argument to `to-number` must be a string or a register.");
       return;
     }
 
-  char* value = (char*) arg1->data;
-  data* d;
-  if (is_integer(value))
+  if (arg1->type == STRING)
     {
-      int result = atoi(value);
-      assign_int(&d, result);
-      ret_ans(reg, d);
-    }
-  else if (is_real(value) && (strcmp(value, ".") != 0))
-    {
-      double result = atof(value);
-      assign_real(&d, result);
-      ret_ans(reg, d);
+      char* value = (char*) arg1->data;
+      data* d;
+      if (is_integer(value))
+        {
+          int result = atoi(value);
+          assign_int(&d, result);
+          ret_ans(reg, d);
+        }
+      else if (is_real(value) && (strcmp(value, ".") != 0))
+        {
+          double result = atof(value);
+          assign_real(&d, result);
+          ret_ans(reg, d);
+        }
+      else
+        {
+          do_error("String not a number.");
+          return;
+        }
     }
   else
     {
-      do_error("String not a number.");
-      return;
+      char* name = ((regstr*) arg1->data)->name;
+      int i = strlen(name);
+      for (i = (strlen(name)-1); i >= 0; i--)
+        {
+          if (!isdigit(name[i]))
+            break;
+        }
+
+      if (i >= (strlen(name)-1))
+        {
+          do_error("Register does not end in a number.");
+          return;
+        }
+
+      name += i + 1;
+
+      data* d;
+      assign_int(&d, atoi(name));
+      ret_ans(reg,d);
     }
   
 }
@@ -1785,69 +1779,6 @@ op_to_real (arg a, registry* reg)
   
 }
 
-void
-op_register_to_number (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("`register-to-number` requires an argument.");
-      return;
-    }
-
-  if (arg1->type != REGISTER)
-    {
-      do_error("`register-to-number` requires a register argument.");
-      return;
-    }
-
-  char* name = ((regstr*) arg1->data)->name;
-  int i = strlen(name);
-  for (i = (strlen(name)-1); i >= 0; i--)
-    {
-      if (!isdigit(name[i]))
-        break;
-    }
-
-  if (i >= (strlen(name)-1)) return;
-
-  name += i + 1;
-
-  data* d;
-  assign_int(&d, atoi(name));
-  ret_ans(reg,d);
-}
-  
-void
-op_number_to_register (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("`number-to-register` requires an argument.");
-      return;
-    }
-
-  if (arg1->type != INTEGER)
-    {
-      do_error("`number-to-register` requires an integer argument.");
-      return;
-    }
-
-  char* name = argument_name(*((int*) arg1->data));
-  unsigned long hash_name = hash_str(name);
-
-  data* d;
-  assign_regstr(&d, name, hash_name);
-  ret_ans(reg, d);
-
-  free(name);
-}
-  
 void
 op_output_code (arg a, registry* reg)
 {
@@ -2741,19 +2672,19 @@ op_to_power (arg a, registry* reg)
 }
 
 void
-op_chdir (arg a, registry* reg)
+op_change_dir (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
   data* arg1 = resolve(a.arg_array[1], reg);
   if (arg1 == NULL)
     {
-      do_error("`chdir` requires an argument.");
+      do_error("`change-dir` requires an argument.");
       return;
     }
 
   if (arg1->type != STRING)
     {
-      do_error("The argument to `chdir` must be a string.");
+      do_error("The argument to `change-dir` must be a string.");
       return;
     }
 
@@ -2850,7 +2781,7 @@ op_import (arg a, registry* reg)
 
 
 void
-op_curdir (arg a, registry* reg)
+op_current_dir (arg a, registry* reg)
 {
   char* dir = get_current_dir_name();
   if (dir == NULL)
@@ -3201,17 +3132,17 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_if);
   set(reg,d,"if",1);
 
-  assign_op(&d, op_reg);
-  set(reg,d,"reg",1);
+  assign_op(&d, op_registry);
+  set(reg,d,"registry",1);
 
   assign_op(&d, op_get);
   set(reg,d,"get",1);
 
-  assign_op(&d, op_mov);
-  set(reg,d,"mov",1);
+  assign_op(&d, op_move);
+  set(reg,d,"move",1);
 
-  assign_op(&d, op_del);
-  set(reg,d,"del",1);
+  assign_op(&d, op_delete);
+  set(reg,d,"delete",1);
 
   assign_op(&d, op_exit);
   set(reg,d,"exit",1);
@@ -3294,14 +3225,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_exist_in);
   set(reg,d,"exist-in",1);
 
-  assign_op(&d, op_reg_eq);
-  set(reg,d,"reg-eq",1);
-
-  assign_op(&d, op_reg_lt);
-  set(reg,d,"reg-lt",1);
-
-  assign_op(&d, op_reg_gt);
-  set(reg,d,"reg-gt",1);
+  assign_op(&d, op_register_eq);
+  set(reg,d,"register-eq",1);
 
   assign_op(&d, op_go_in);
   set(reg,d,"go-in",1);
@@ -3405,11 +3330,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_power);
   set(reg,d,"to-power",1);
 
-  assign_op(&d, op_chdir);
-  set(reg,d,"chdir",1);
+  assign_op(&d, op_change_dir);
+  set(reg,d,"change-dir",1);
 
-  assign_op(&d, op_curdir);
-  set(reg,d,"curdir",1);
+  assign_op(&d, op_current_dir);
+  set(reg,d,"current-dir",1);
 
   assign_op(&d, op_copy_file);
   set(reg,d,"copy-file",1);
@@ -3435,19 +3360,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_dispatch);
   set(reg,d,"dispatch",1);
 
-  assign_op(&d, op_register_to_number);
-  set(reg,d,"register-to-number",1);
-
-  assign_op(&d, op_number_to_register);
-  set(reg,d,"number-to-register",1);
-
-  assign_op(&d, op_number_to_register);
-  set(reg,d,"slash",1);
-
-  assign_op(&d, op_register_to_number);
-  set(reg,d,"unslash",1);
-
-  
   assign_op(&d, op_to_real);
   set(reg,d,"to-real",1);
 
