@@ -1,11 +1,444 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ARBEL</title><link rel="stylesheet" type="text/css" href="arbel.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idm1"></a>ARBEL</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Zach</span> <span class="surname">Flynn</span></h3></div></div><div><p class="copyright">Copyright © 2019 Zach Flynn</p></div><div><div class="legalnotice"><a name="idm17"></a>
-      Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 by the Free Software Foundation. A copy of the license is included in the section entitled "GNU Free Documentation License".
-    </div></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.0</td><td align="left">December 2, 2019</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#intro">Introduction</a></span></dt><dt><span class="section"><a href="#basics">The Basics</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>Introduction</h2></div></div></div><p>
-      ARBEL is a Registry-Based Environment and Language. A <span class="emphasis"><em>registry</em></span> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <span class="emphasis"><em>map</em></span> or a <span class="emphasis"><em>table</em></span>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <code class="code">within</code> a certain registry.  The <span class="emphasis"><em>environment</em></span> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
-    </p><p>
-      From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs and scripts.  It's goal is to be easy to use interactively which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.
-    </p><p>
-      The language is imperative and does not try to avoid side-effects (the whole point is to modify the current state and, perhaps, save it to disk), it is dynamically-typed (registers do not have types, only the values entered in the registries do), and it is strongly typed (values have a certain type and cannot be coerced to other types except explicitly).
-    </p><p>
-      The best way to get a feel for the language and environment is by example so I will stop the rambling about what the language is like and cut to the code.
-    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="basics"></a>The Basics</h2></div></div></div></div></div></body></html>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-12-04 Wed 15:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ARBEL</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zach Flynn" />
+<meta name="description" content="ARBEL is a registry-based environment and language. It is &quot;generic-by-default&quot; and is centered around a single flexible data structure: the registry (a hash table).  This manual describes how to use the language."
+ />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+ARBEL<br>Zach Flynn<br>2019-12-04 Wed 15:03
+</div>
+<div id="content">
+<h1 class="title">ARBEL</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org0a19359">1. Introduction</a></li>
+<li><a href="#org955a4b5">2. The Basics</a>
+<ul>
+<li><a href="#org350dc15">2.1. Statements and syntax</a></li>
+<li><a href="#orgd71b3f3">2.2. Registers and registries</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0a19359" class="outline-2">
+<h2 id="org0a19359"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
+</p>
+
+<p>
+From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs and scripts.  It's goal is to be easy to use interactively which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.
+</p>
+
+<p>
+The language is imperative and does not try to avoid side-effects (the whole point is to modify the current state of the registry and, perhaps, save it to disk), it is dynamically-typed (registers do not have types, only the values entered in the registries do), and it is strongly typed (values have a certain type and cannot be coerced to other types except explicitly).
+</p>
+
+<p>
+The best way to get a feel for the language and environment is by example so I will stop the rambling about what the language is like and cut to the code.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org955a4b5" class="outline-2">
+<h2 id="org955a4b5"><span class="section-number-2">2</span> The Basics</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org350dc15" class="outline-3">
+<h3 id="org350dc15"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
+</p>
+
+<pre class="example">
+set /hello "Hello, world!" .
+</pre>
+
+
+<p>
+<code>set</code> is the ARBEL operation to set a register to a certain value.  Names that have a forward slash (â€‹/) preceeding them are <i>registers</i>, like <code>/hello</code> above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
+</p>
+
+<pre class="example">
+set /days-in-week 7 .
+set /penny 0.01 .
+set /facts True .
+set /lies False .
+set /add-one ( add t 1 . ) .
+</pre>
+
+<p>
+An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is one which is either True or False, an Instruction is a collection of one or more statements quoted as code (usually created by enclosing code with open parenthesis, "(" and ")").
+</p>
+
+<p>
+To use the value located in a registry, simply type the name of the register without the preceeding forward slash.  For example,
+</p>
+<pre class="example">
+... print days-in-week .
+7
+</pre>
+
+<p>
+All code elements must be separated by whitespace in ARBEL including the period that ends the statement and parenthesis.  So it would <i>not</i> be valid to write,
+</p>
+
+<pre class="example">
+' All are WRONG:
+print days-in-week.
+set /add-one (add t 1 .) .
+</pre>
+
+<p>
+There must be space before the period.  There also must be space after and before parenthesis. 
+</p>
+
+<p>
+There are three parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), and curly parenthesis ("{}").  All contain statements, but they differ in <i>when</i> the statements they contain are executed.
+</p>
+
+<ul class="org-ul">
+<li><p>
+Open parenthesis store the code itself as an Instruction object to be executed later using the operation <code>call</code>.  For example,
+</p>
+<pre class="example">
+... set /add-one ( add t 1 . ) .
+... call add-one /t 10 .
+ans = 11
+</pre>
+
+<p>
+<code>call</code> takes an instruction and then assigns each of the registers that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of registers to set for any Instruction.  For example, 
+</p>
+<pre class="example">
+... set /add-one ( add t 1 . ) .
+... call add-one /t 10 .
+ans = 11
+... call add-one /t 10 /add subtract .
+ans = 9
+</pre>
+
+<p>
+This is a defining feature of ARBEL. Code is automatically generic. Any object in an instruction can be replaced by any other except for a literal value when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding <code>/name value</code> in the call to the Instruction.
+</p>
+
+<p>
+Because there is no ambiguity, you do not actually need to use the <code>call</code> operation directly.  ARBEL will insert it for you if the first argument is an instruction.  So the following would work as well,
+</p>
+<pre class="example">
+... add-one /t 10 .
+ans = 11
+</pre>
+
+<p>
+Instruction objects can also be used in the <code>while</code> looping operation and in several other operations.  Their main purpose is to be evaluated later in a potentially different and separate registry.
+</p></li>
+
+<li><p>
+Closed parenthesis ("[]") execute the statements inside of them immediately and evaluate to whatever the code sets the <code>/ans</code> register to.  The purpose of these statements is to avoid needing to define temporary registers for intermediate calculations.  For example,
+</p>
+<pre class="example">
+... add [ subtract 5 3 . ] [ multiply 2 3 . ] .
+ans = 8
+</pre>
+
+<p>
+You may have noticed the <code>ans = ...</code> after entering a lot of these commands.  This tells you the current value of the <code>/ans</code> register which is special in ARBEL.  Operations often write to the <code>/ans</code> register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the <code>/ans</code> register in the current registry by using the <code>answer</code> operation.
+</p>
+<pre class="example">
+... answer 10 .
+ans = 10
+</pre>
+
+<p>
+The <code>/ans</code> register is special because after an Instruction finishes running in its temporary registry.  Whatever the value at the <code>/ans</code> register is in that registry is moved to the <code>/ans</code> register in the registry that called the instruction.  For example,
+</p>
+<pre class="example">
+... set /add-one ( answer [ add t 1 . ] . ) .
+... add-one /t 10 .
+ans = 11
+... print ans .
+11
+</pre>
+
+<p>
+The other reason that the <code>/ans</code> register is special is, as mentioned, closed parenthesis evaluate to the value the statements inside them set the <code>/ans</code> register to.  Because <code>subtract 5 3 .</code> sets the <code>/ans</code> register to <code>2</code> and <code>multiply 2 3 .</code> sets the <code>/ans</code> register to <code>6</code>, <code>add [ subtract 5 3 . ] [ multiply 2 3 . ] .</code> sets the <code>/ans</code> register to <code>8</code>.
+</p></li>
+
+<li><p>
+Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated <i>if</i> we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the <code>/ans</code> register to.  This form of evaluation is often called "lazy evaluation". We can think of closed parenthesis as marking expressions we want to "greedily evaluate" and curly parenthesis as marking expressions to "lazily evaluate".  Lazy evaluation is useful for the <code>if</code> operation and other, similar instructions.  For example,
+</p>
+<pre class="example">
+ ... set /gt-4
+(
+  set /str-t [ to-string t . ] . 
+  if [ gt t 4 . ]
+     { print [ concat str-t " is greater than 4.\n" . ] . }
+     { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
+) .
+... gt-4 /t 10 .
+10 is greater than 4.
+... gt-4 /t 3 .
+3 is less than or equal to 4.
+</pre>
+
+<p>
+It works this way because the <code>if</code> operation returns the second value if the first value is <code>True</code> and the third value if the first value is <code>False</code>.  So it tries to access the second value when <code>t</code> is <code>10</code>, executing the statements in the second argument, and similarly for the third argument when <code>t</code> is <code>3</code>.
+</p>
+
+<p>
+If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to <code>if</code>.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
+</p></li>
+</ul>
+
+<p>
+That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgd71b3f3" class="outline-3">
+<h3 id="orgd71b3f3"><span class="section-number-3">2.2</span> Registers and registries</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Zach Flynn</p>
+<p class="date">Created: 2019-12-04 Wed 15:03</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
