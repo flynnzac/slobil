@@ -4,10 +4,8 @@ endif
 
 ifeq ($(OS),Windows_NT)
 	SUFFIX=dll
-	DOC=xsltproc  --xinclude --output docs/arbel.html --stringparam html.stylesheet arbel.css ~/docbook/docbook-xsl-1.79.1/html/docbook.xsl docs/arbel_nv.dbk
 else
 	SUFFIX=so
-	DOC=xsltproc --xinclude  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel_nv.dbk
 endif
 
 .FORCE:
@@ -15,8 +13,7 @@ endif
 arbel: .FORCE
 	make -C src
 
-doc: docs/arbel.dbk docs/arbel.css docs/index.mro.html docs/examples.mro.html
-	$(DOC)
+doc: docs/arbel.html docs/index.mro.html docs/examples.mro.html
 	cat docs/mysite.mro docs/index.mro.html | mro > docs/index.html
 	cat docs/mysite.mro docs/examples.mro.html | mro > docs/examples.html
 
