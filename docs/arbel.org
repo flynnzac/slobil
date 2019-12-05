@@ -260,4 +260,39 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =lt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is less than =NUMBER2= and to =False= otherwise.
 
+- =eq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is equal to =NUMBER2= and to =False= otherwise.
+
+- =lteq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is less than or equal to =NUMBER2= and to =False= otherwise.
+
+- =gteq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
+
+- =print VALUE= --- prints =VALUE= to screen.
+
+- =character STRING INTEGER= --- sets the =/ans= register to a String containing the character in =STRING= at location =INTEGER=.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER= is =0=, then it will set the =/ans= register to the last character in =STRING=.
+
+- =count-characters STRING= --- sets the =/ans= register to the number of characters in =STRING=.
+
+- =concat STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
+
+- =source STRING= --- executes ARBEL code in the file named by STRING.
+
+- =do-to-all INSTRUCTION REGISTRY= --- execute =INSTRUCTION= which takes an argument at Register =/t= for each element in =REGISTRY=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.
+
+- =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
+
+- =last REGISTRY STRING= --- return the last Register in the =REGISTRY= that starts with =STRING=.  So that if you had registers =/x0=, =/x1=, and =/x2= in the Registry, =last REGISTRY "x"= would return =/x2=.
+
+- =in REGISTRY INSTRUCTION= --- call =INSTRUCTION= in =REGISTRY=.
+
+- =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
+
+- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/#1=, =VALUE2= at Register =/#2=, and so on.
+
+- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
+
+- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t= and =/s=. For example, =collapse ( add t s . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+
+
+
+
 

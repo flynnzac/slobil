@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-04 Wed 18:57 -->
+<!-- 2019-12-05 Thu 11:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-04 Wed 18:57
+ARBEL<br>Zach Flynn<br>2019-12-05 Thu 11:09
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,20 +239,20 @@ ARBEL<br>Zach Flynn<br>2019-12-04 Wed 18:57
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgba26cd1">1. Introduction</a></li>
-<li><a href="#org8e4817f">2. The Basics</a>
+<li><a href="#orgb4e0f35">1. Introduction</a></li>
+<li><a href="#org624bb07">2. The Basics</a>
 <ul>
-<li><a href="#org098aa0c">2.1. Statements and syntax</a></li>
-<li><a href="#org0c167de">2.2. Registries</a></li>
-<li><a href="#orgf80e36f">2.3. Registers</a></li>
+<li><a href="#orga23b65e">2.1. Statements and syntax</a></li>
+<li><a href="#orgea8f2cd">2.2. Registries</a></li>
+<li><a href="#org02d0d06">2.3. Registers</a></li>
 </ul>
 </li>
-<li><a href="#org6fcfc72">3. Reference</a></li>
+<li><a href="#orgc35281e">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgba26cd1" class="outline-2">
-<h2 id="orgba26cd1"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgb4e0f35" class="outline-2">
+<h2 id="orgb4e0f35"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -277,12 +277,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org8e4817f" class="outline-2">
-<h2 id="org8e4817f"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org624bb07" class="outline-2">
+<h2 id="org624bb07"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org098aa0c" class="outline-3">
-<h3 id="org098aa0c"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-orga23b65e" class="outline-3">
+<h3 id="orga23b65e"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -436,8 +436,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-org0c167de" class="outline-3">
-<h3 id="org0c167de"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-orgea8f2cd" class="outline-3">
+<h3 id="orgea8f2cd"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -522,14 +522,14 @@ Aside from being a useful data structure, registries are also how ARBEL does <i>
 ... set /math [ registry . ] .
 ... set /factorial
        (
-         set /i 2 .
-         set /prod 1 .
-         while ( lteq i t . )
-               (
-                 set /prod [ multiply i prod . ] .
-                 set /i [ add i 1 . ] .
-               ) .
-         answer prod .
+	 set /i 2 .
+	 set /prod 1 .
+	 while ( lteq i t . )
+	       (
+		 set /prod [ multiply i prod . ] .
+		 set /i [ add i 1 . ] .
+	       ) .
+	 answer prod .
        ) math .
 ... math:/factorial /t 5 .
 ans = 120
@@ -556,20 +556,20 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-orgf80e36f" class="outline-3">
-<h3 id="orgf80e36f"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org02d0d06" class="outline-3">
+<h3 id="org02d0d06"><span class="section-number-3">2.3</span> Registers</h3>
 </div>
 </div>
 
-<div id="outline-container-org6fcfc72" class="outline-2">
-<h2 id="org6fcfc72"><span class="section-number-2">3</span> Reference</h2>
+<div id="outline-container-orgc35281e" class="outline-2">
+<h2 id="orgc35281e"><span class="section-number-2">3</span> Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 </p>
 
 <ul class="org-ul">
-<li><code>set REGISTER VALUE &lt;REGISTRY&gt;</code> &#x2014; sets the value at REGISTER to VALUE in the registry REGISTRY.  If the REGISTRY argument is omitted, then it will set the register in the current registry.</li>
+<li><code>set REGISTER VALUE &lt;REGISTRY&gt;</code> &#x2014; sets the value at <code>REGISTER</code> to <code>VALUE</code> in the registry <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is omitted, then it will set the register in the current registry.</li>
 
 <li><code>add NUMBER1 NUMBER2</code> &#x2014; adds the two numbers together and sets the <code>/ans</code> register to the result.</li>
 
@@ -578,13 +578,67 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 <li><code>subtract NUMBER1 NUMBER2</code> &#x2014; subtracts the second number from the first and sets the <code>/ans</code> register to the result.</li>
 
 <li><code>divide NUMBER1 NUMBER2</code> &#x2014; divides the first number by the second and sets the <code>/ans</code> register to the result.</li>
+
+<li><code>if BOOLEAN VALUE1 &lt;VALUE2&gt;</code> &#x2014; if the first argument is <code>True</code>, sets the <code>/ans</code> register to <code>VALUE1</code>, if it is <code>False</code>, sets the <code>/ans</code> register to <code>VALUE2</code>.  If <code>VALUE2</code> is omitted, do nothing if the first argument is <code>False</code>.</li>
+
+<li><code>registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...</code> &#x2014; sets the <code>/ans</code> register to a registry with <code>VALUE1</code> located at <code>REGISTER1</code> and so on.</li>
+
+<li><code>get REGISTER &lt;REGISTRY&gt;</code> &#x2014; sets the <code>/ans</code> register to the value located at <code>REGISTER</code> in <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is not specified, get from the current registry.</li>
+
+<li><code>move REGISTER1 REGISTER2</code> &#x2014; move the value located at <code>REGISTER1</code> to <code>REGISTER2</code>.  Does not copy the data so it is an efficient way to move data.</li>
+
+<li><code>delete REGISTER</code> &#x2014; delete the value at <code>REGISTER</code> in the current registry.</li>
+
+<li><code>exit</code> &#x2014; exit ARBEL.</li>
+
+<li><code>answer VALUE</code> &#x2014; set the <code>/ans</code> register to <code>VALUE</code>.</li>
+
+<li><code>sit</code> &#x2014; do nothing.</li>
+
+<li><code>exist REGISTER &lt;REGISTRY&gt;</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if a value exists at the <code>REGISTER</code> in <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is omitted, check in the current registry.</li>
+
+<li><code>gt NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is greater than <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
+
+<li><code>lt NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is less than <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
+
+<li><code>eq NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is equal to <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
+
+<li><code>lteq NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is less than or equal to <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
+
+<li><code>gteq NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is greater than or equal to <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
+
+<li><code>print VALUE</code> &#x2014; prints <code>VALUE</code> to screen.</li>
+
+<li><code>character STRING INTEGER</code> &#x2014; sets the <code>/ans</code> register to a String containing the character in <code>STRING</code> at location <code>INTEGER</code>.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if <code>INTEGER</code> is <code>0</code>, then it will set the <code>/ans</code> register to the last character in <code>STRING</code>.</li>
+
+<li><code>count-characters STRING</code> &#x2014; sets the <code>/ans</code> register to the number of characters in <code>STRING</code>.</li>
+
+<li><code>concat STRING1 STRING2</code> &#x2014; sets the <code>/ans</code> register to the concatenation of the two Strings so that the resulting string is <code>"STRING1STRING2"</code>.</li>
+
+<li><code>source STRING</code> &#x2014; executes ARBEL code in the file named by STRING.</li>
+
+<li><code>do-to-all INSTRUCTION REGISTRY</code> &#x2014; execute <code>INSTRUCTION</code> which takes an argument at Register <code>/t</code> for each element in <code>REGISTRY</code>.  Set the <code>/ans</code> register to a Registry which contains whatever the <code>INSTRUCTION</code> evaluates to at the corresponding Registers.</li>
+
+<li><code>next REGISTER</code> &#x2014; if the <code>REGISTER</code> ends in a number, return the Register with that number incremented by 1.</li>
+
+<li><code>last REGISTRY STRING</code> &#x2014; return the last Register in the <code>REGISTRY</code> that starts with <code>STRING</code>.  So that if you had registers <code>/x0</code>, <code>/x1</code>, and <code>/x2</code> in the Registry, <code>last REGISTRY "x"</code> would return <code>/x2</code>.</li>
+
+<li><code>in REGISTRY INSTRUCTION</code> &#x2014; call <code>INSTRUCTION</code> in <code>REGISTRY</code>.</li>
+
+<li><code>while INSTRUCTION1 INSTRUCTION2</code> &#x2014; Call <code>INSTRUCTION1</code> in the current Registry. If it sets its <code>/ans</code> register to <code>True</code>, call <code>INSTRUCTION2</code>.  Repeat.</li>
+
+<li><code>list VALUE1 VALUE2 ...</code> &#x2014; set the <code>/ans</code> register to a Registry with <code>VALUE1</code> at Register <code>/#1</code>, <code>VALUE2</code> at Register <code>/#2</code>, and so on.</li>
+
+<li><code>to-register STRING|INTEGER</code> &#x2014; sets the <code>/ans</code> register to a Register named <code>STRING</code> or to <code>/#INTEGER</code>.</li>
+
+<li><code>collapse INSTRUCTION REGISTRY &lt;STRING&gt;</code> &#x2014; sets the <code>/ans</code> register to the value of applying <code>INSTRUCTION</code> to the value at Register <code>/STRING1</code> and <code>/STRING2</code> and then again to the result of that and to the value of  <code>/STRING3</code> and so on where the <code>INSTRUCTION</code> takes each argument at registers <code>/t</code> and <code>/s</code>. For example, <code>collapse ( add t s . ) [ list 1 2 3 . ] "#"</code> sets the <code>/ans</code> register to <code>6</code>.  If the <code>STRING</code> argument is omitted, it is assumed to be <code>"#"</code>.</li>
 </ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-04 Wed 18:57</p>
+<p class="date">Created: 2019-12-05 Thu 11:09</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

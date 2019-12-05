@@ -1136,62 +1136,74 @@ op_to_register (arg a, registry* reg)
 void
 op_collapse (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 3);
+  CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
   data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
-  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
+
+  if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`collapse` requires three arguments.");
+      do_error("`collapse` requires two arguments.");
       return;
     }
 
-  if (arg1->type != REGISTRY)
+  if (arg1->type != INSTRUCTION)
     {
-      do_error("The first argument to `collapse` must be a registry.");
+      do_error("The first argument to `collapse` must be an instruction.");
       return;
     }
 
-  if (arg2->type != INSTRUCTION && arg2->type != OPERATION)
+  if (arg2->type != REGISTRY)
     {
-      do_error("The second argument to `collapse` must be an instruction.");
+      do_error("The second argument to `collapse` must be a registry.");
       return;
     }
 
-  if (arg3->type != STRING)
+  const char* prefix = "#";
+  if (a.length >= 4)
     {
-      do_error("The third argument to `collapse` must be a string.");
-      return;
+      data* arg3 = resolve(a.arg_array[3], reg);
+      if (arg3->type != STRING)
+	{
+	  do_error("The third argument to `collapse` must be a string.");
+	  return;
+	}
+      prefix = (char*) arg3->data;
     }
 
   data* d;
   char* second_name;
   char* first_name;
   int i = 2;
-  registry* to_walk = (registry*) arg1->data;
+  registry* to_walk = (registry*) arg2->data;
   to_walk->up = reg;
 
-  first_name = vector_name((char*) arg3->data, 1);
+  first_name = vector_name(prefix, 1);
   unsigned long first_hash = hash_str(first_name);
-  second_name = vector_name((char*) arg3->data, i);
+  second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
   registry* r = new_registry(to_walk, ARBEL_HASH_SIZE);
 
   arg a1;
-  a1.length = 3;
-  a1.free_data = malloc(sizeof(int)*3);
-  a1.arg_array = malloc(sizeof(data*)*3);
-  for (int j = 0; j < 3; j++)
+  a1.length = 5;
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
+  for (int j = 0; j < a1.length; j++)
     {
-      a1.free_data[j] = 0;
+      if (j==1 || j == 3)
+	{
+	  a1.free_data[j] = 1;
+	}
+      else
+	{
+	  a1.free_data[j] = 0;
+	}
     }
 
-  a1.arg_array[0] = arg2;
+  a1.arg_array[0] = arg1;
+  assign_regstr(&a1.arg_array[1], "t", hash_str("t"));
+  assign_regstr(&a1.arg_array[3], "s", hash_str("s"));
   
-  if (arg2->type == INSTRUCTION)
-    set(r, arg2, "#0", 0);
-
   data* d1;
   data* d2;
 
@@ -1204,18 +1216,11 @@ op_collapse (arg a, registry* reg)
         d1 = lookup(to_walk, first_hash, 0);
       
       d2 = lookup(to_walk, second_hash, 0);
-      if (arg2->type == INSTRUCTION)
-        {
-          set(r, d1, "#1", 0);
-          set(r, d2, "#2", 0);
-        }
-      else
-        {
-          a1.arg_array[1] = d1;
-          a1.arg_array[2] = d2;
-        }
+
+      a1.arg_array[2] = d1;
+      a1.arg_array[4] = d2;
         
-      compute(arg2, r, a1);
+      compute(arg1, r, a1);
       d1 = lookup(r, arbel_hash_ans, 0);
 
       if (d1 == NULL)
@@ -1232,13 +1237,8 @@ op_collapse (arg a, registry* reg)
         }
       i++;
       free(second_name);
-      second_name = vector_name((char*) arg3->data, i);
+      second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
-      if (arg2->type == INSTRUCTION)
-        {
-          del(r, arbel_hash_1, 0);
-          del(r, arbel_hash_2, 0);
-        }
     }
   d = lookup(r, arbel_hash_ans, 0);
   if (d != NULL)
@@ -1250,113 +1250,8 @@ op_collapse (arg a, registry* reg)
 
   free_registry(r);
   free(second_name);
-
-
-}
-
-/* apply an instruction to all matching pairs of two registries return a new registry */
-void
-op_join (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 3);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
-
-  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
-    {
-      do_error("`join` requires three arguments.");
-      return;
-    }
-
-  if (arg1->type != REGISTRY || arg2->type != REGISTRY)
-    {
-      do_error("The first two arguments of `join` must be registries.");
-      return;
-    }
-
-  if (arg3->type != INSTRUCTION && arg3->type != OPERATION)
-    {
-      do_error("The third argument of `join` must be an instruction.");
-      return;
-    }
-
-  registry* reg1 = (registry*) arg1->data;
-  registry* reg2 = (registry*) arg2->data;
-  registry* out_reg = new_registry(reg, ARBEL_HASH_SIZE);
-  registry* instr_reg = new_registry(reg, ARBEL_HASH_SIZE);
-  data* d1 = NULL;
-  data* d2 = NULL;
-  data* d;
-  arg a1 = gen_arg(3, 0);
-  
-  if (arg3->type == INSTRUCTION)
-    set(instr_reg, arg3, "#0", 0);
-  else
-    a1.arg_array[0] = arg3;
-
-  for (int i = 0; i < reg1->hash_size; i++)
-    {
-      content* cur = reg1->objects[i];
-
-      if (cur == NULL)
-        continue;
-
-      if (is_init_reg(cur))
-        continue;
-      
-      cur = tail(cur);
-      
-  
-      while (cur != NULL)
-        {
-          d = get(reg2, cur->key, 0);
-          if (d != NULL)
-            {
-              d1 = lookup(reg1, cur->key, 0);
-              d2 = lookup(reg2, cur->key, 0);
-
-              if (arg3->type == INSTRUCTION)
-                {
-                  set(instr_reg, d1, "#1", 0);
-                  set(instr_reg, d2, "#2", 0);
-                }
-              else
-                {
-                  a1.arg_array[1] = d1;
-                  a1.arg_array[2] = d2;
-                }
-          
-              compute(arg3, instr_reg, a1);
-
-              if (arg3->type == INSTRUCTION)
-                {
-                  del(instr_reg, arbel_hash_1, 0);
-                  del(instr_reg, arbel_hash_2, 0);
-                }
-          
-              d = lookup(instr_reg, arbel_hash_ans, 0);
-              if (d != NULL)
-                {
-                  set(out_reg, d, cur->name, 1);
-                }
-              del(instr_reg, arbel_hash_ans, 0);
-            }
-          cur = cur->right;
-        }
-    }
-
-  if (arg3->type == INSTRUCTION)
-    del(instr_reg, arbel_hash_0, 0);
-
-  d = malloc(sizeof(data));
-  d->type = REGISTRY;
-  d->data = out_reg;
-  
-  free_registry(instr_reg);
-  ret_ans(reg, d);
-
   free_arg(&a1);
+
 
 }
 
@@ -3190,9 +3085,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_collapse);
   set(reg,d,"collapse",1);
-
-  assign_op(&d, op_join);
-  set(reg,d,"join",1);
 
   assign_op(&d, op_string_eq);
   set(reg,d,"string-eq",1);
