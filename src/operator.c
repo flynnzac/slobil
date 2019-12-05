@@ -390,7 +390,26 @@ op_exist (arg a, registry* reg)
   if (is_error(-1))
     return;
 
-  data* obj = get(reg, ((regstr*) arg1->data)->key, 0);
+  registry* to_use = reg;
+  if (a.length >= 3)
+    {
+      data* arg2 = resolve(a.arg_array[2], reg);
+      if (arg2 == NULL)
+        {
+          do_error("The second argument to exist is specified but has no value.");
+          return;
+        }
+
+      if (arg2->type != REGISTRY)
+        {
+          do_error("The second argument to exist must be a registry.");
+          return;
+        }
+
+      to_use = (registry*) arg2->data;
+    }
+
+  data* obj = get(to_use, ((regstr*) arg1->data)->key, 0);
   data* d;
   if (obj == NULL)
     {
@@ -1443,44 +1462,6 @@ op_string_gt (arg a, registry* reg)
   ret_ans(reg, d);
 }
 
-void
-op_exist_in (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("`exist-in` requires two arguments.");
-      return;
-    }
-
-  if (arg1->type != REGISTER)
-    {
-      do_error("First argument to `exist-in` must be a register.");
-      return;
-    }
-
-  if (arg2->type != REGISTRY)
-    {
-      do_error("Second argument to `exist-in` must be a registry.");
-      return;
-    }
-
-  data* chk = get((registry*) arg2->data, ((regstr*) arg1->data)->key, 0);
-  
-  if (chk != NULL)
-    {
-      assign_boolean(&chk, true);
-    }
-  else
-    {
-      assign_boolean(&chk, false);
-    }
-
-  ret_ans(reg, chk);
-}
 
 int
 op_reg_cmp (arg a, registry* reg)
@@ -3221,9 +3202,6 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_string_lt);
   set(reg,d,"string-lt",1);
-
-  assign_op(&d, op_exist_in);
-  set(reg,d,"exist-in",1);
 
   assign_op(&d, op_register_eq);
   set(reg,d,"register-eq",1);

@@ -228,7 +228,7 @@
 
 Arguments that are optional are enclosed in angle brackets (<>).
 
-- =set REGISTER VALUE <REGISTRY>= --- sets the value at REGISTER to VALUE in the registry REGISTRY.  If the REGISTRY argument is omitted, then it will set the register in the current registry.
+- =set REGISTER VALUE <REGISTRY>= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
 
 - =add NUMBER1 NUMBER2= --- adds the two numbers together and sets the =/ans= register to the result.
 
@@ -237,3 +237,27 @@ Arguments that are optional are enclosed in angle brackets (<>).
 - =subtract NUMBER1 NUMBER2= --- subtracts the second number from the first and sets the =/ans= register to the result.
 
 - =divide NUMBER1 NUMBER2= --- divides the first number by the second and sets the =/ans= register to the result.
+
+- =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
+
+- =registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- sets the =/ans= register to a registry with =VALUE1= located at =REGISTER1= and so on.
+
+- =get REGISTER <REGISTRY>= --- sets the =/ans= register to the value located at =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is not specified, get from the current registry.
+
+- =move REGISTER1 REGISTER2= --- move the value located at =REGISTER1= to =REGISTER2=.  Does not copy the data so it is an efficient way to move data.
+
+- =delete REGISTER= --- delete the value at =REGISTER= in the current registry.
+
+- =exit= --- exit ARBEL.
+
+- =answer VALUE= --- set the =/ans= register to =VALUE=.
+
+- =sit= --- do nothing.
+
+- =exist REGISTER <REGISTRY>= --- set the =/ans= register to =True= if a value exists at the =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is omitted, check in the current registry.
+
+- =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
+
+- =lt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is less than =NUMBER2= and to =False= otherwise.
+
+
