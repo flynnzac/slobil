@@ -23,6 +23,8 @@
 #ifndef ARBEL_H
 #define ARBEL_H
 #define _GNU_SOURCE
+#define ARBEL_HASH_SIZE 31
+#define ARBEL_LOAD_FACTOR 0.75
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,6 +36,7 @@
 #include <regex.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdbool.h>
 
 enum data_type
   {
@@ -45,12 +48,14 @@ enum data_type
    INSTRUCTION,
    ACTIVE_INSTRUCTION,
    OPERATION,
-   REFERENCE,
    ARBEL_FILE,
-   NOTHING
+   BOOLEAN,
+   NOTHING,
   };
 
 typedef enum data_type data_type;
+
+struct arg;
 
 struct data
 {
@@ -59,20 +64,30 @@ struct data
 };
 typedef struct data data;
 
-struct registry
+
+struct content
 {
   data* value;
   unsigned long key;
   char* name;
-  struct registry* right;
-  struct registry* left;
-  struct registry* up;
+  struct content* right;
+  struct content* left;
   int do_not_free_data;
+};
+
+typedef struct content content;
+
+struct registry
+{
+  content** objects;
+  size_t hash_size;
+  size_t elements;
+  struct registry* up;
 };
 
 typedef struct registry registry;
 
-typedef void (*operation)(registry*);
+typedef void (*operation)(struct arg, registry*);
 
 struct regstr
 {
@@ -81,17 +96,6 @@ struct regstr
 };
 
 typedef struct regstr regstr;
-
-struct ref
-{
-  char** name;
-  registry* reg;
-  unsigned long* key;
-  int levels;
-  int* is_regstr;
-};
-
-typedef struct ref ref;
 
 struct command
 {
@@ -137,11 +141,23 @@ struct element
 
 typedef struct element element;
 
+struct arg
+{
+  data** arg_array;
+  int* free_data;
+  size_t length;
+};
+
+typedef struct arg arg;
+
 struct statement
 {
   element* head;
+  arg arg;
   struct statement* right;
   registry* arg_reg;
+  unsigned long* hash_bins;
+  size_t* location;
 };
 
 typedef struct statement statement;
@@ -157,7 +173,7 @@ typedef struct instruction instruction;
 char*
 argument_name (int n);
 
-int
+bool
 is_integer (const char* str);
 
 void
@@ -179,11 +195,7 @@ void
 assign_regstr (data** d, const char* name, unsigned long key);
 
 void
-assign_ref (data** d, registry* reg,
-            char** names,
-            const unsigned long* keys,
-            const int levels,
-            const int* is_regstr);
+assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
@@ -191,8 +203,12 @@ assign_nothing (data** d);
 void
 assign_file (data** d, FILE* f);
 
-int
+bool
 is_numeric (data* d);
+
+bool
+is_boolean (const char* str);
+
 
 void
 free_data (data* d);
@@ -200,22 +216,22 @@ free_data (data* d);
 void
 free_registry (registry* reg);
 
-registry*
-head (registry* reg);
+content*
+head (content* reg);
 
-registry*
-tail (registry* reg);
+content*
+tail (content* reg);
 
-void
-set (registry* reg, data* d, const char* name);
+content*
+set (registry* reg, data* d, const char* name, int rehash);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
 
-registry*
+content*
 mov (registry* reg, regstr* old, regstr* new);
 
-registry*
+content*
 del (registry* reg, unsigned long hash_name, int del_data);
 
 data*
@@ -230,11 +246,8 @@ null_ans (registry* reg);
 void
 print_data (data* d, int print_cmd);
 
-int
+bool
 is_register (const char* str);
-
-int
-is_reference (const char* str);
 
 void
 str_shift_left (char* buffer);
@@ -242,7 +255,7 @@ str_shift_left (char* buffer);
 void
 add_basic_ops (registry* reg);
 
-int
+bool
 is_whitespace (const char c);
 
 void
@@ -263,11 +276,11 @@ is_error (int e);
 int
 is_exit (int e);
 
-int
-is_init_reg (registry* r);
+bool
+is_init_reg (content* r);
 
 registry*
-new_registry (registry* parent);
+new_registry (registry* parent, size_t hash_size);
 
 void
 ret (registry* reg, data* d, const char* name);
@@ -290,7 +303,7 @@ copy_registry(registry* r0);
 int
 is_retval (const int r);
 
-int
+bool
 is_real (const char* str);
 
 void
@@ -300,22 +313,13 @@ data*
 lookup (registry* reg, unsigned long hash_name, int recursive);
 
 void
-compute (registry* reg);
+compute (data* cmd, registry* reg, arg arg);
 
 int
 save_registry (FILE* f, registry* reg);
 
 int
 read_registry (FILE* f, registry* reg);
-
-void
-op_list (registry* reg);
-
-void
-op_call (registry* reg);
-
-void
-op_add (registry* reg);
 
 char*
 vector_name (const char* lead, int n);
@@ -388,6 +392,43 @@ str_type (data_type type);
 registry*
 shift_list_down (registry* reg);
 
+int
+save_content (FILE* f, content* reg);
+
+content*
+new_content ();
+
+content*
+right_n (content* c, size_t n);
+
+void
+free_arg_array_data (arg* a, int n);
+
+void
+free_arg (arg* a);
+
+arg
+gen_arg (int length, int def_free);
+
+data*
+resolve (data* arg, registry* reg);
+
+void
+_op_call (arg a, registry* reg, const int explicit);
+
+size_t
+new_hash_size (size_t elements);
+
+void
+check_length (arg* a, int length);
+
+int
+update_hash_size (size_t elements, size_t hash_size);
+
+void
+rehash (registry* r0);
+
+#define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
 /* global variables */
 registry* current_parse_registry;
@@ -405,6 +446,8 @@ unsigned long arbel_hash_4;
 unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
 unsigned long arbel_hash_class;
+
+size_t arbel_stop_error_threshold;
 
 data* last_ans;
 

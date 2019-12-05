@@ -68,22 +68,57 @@ append_statement_element (element* current, statement* s)
 }
 
 registry*
-gen_arg_reg (element* e)
+gen_arg_reg (element* e, unsigned long** hash_bin, size_t** location)
 {
   int n = 0;
   char* name;
-  registry* arg_reg = new_registry(NULL);
+  unsigned long hash_name;
+  element* e1 = e;
+
+  while (e1 != NULL)
+    {
+      n++;
+      e1 = e1->right;
+    }
+  *hash_bin = malloc(sizeof(unsigned long)*n);
+  *location = malloc(sizeof(size_t)*n);
+  n = 0;
+
+  registry* arg_reg = new_registry(NULL, new_hash_size(n));
   registry* reg = arg_reg;
+
+
   while (e != NULL)
     {
       name = argument_name(n);
-      reg = head(reg);
-      reg->right = new_registry(NULL);
-      reg->right->left = reg;
-      reg->right->name = name;
-      reg->right->key = hash_str(name);
-      reg->right->value = NULL;
+      hash_name = hash_str(name);
+      (*hash_bin)[n] = hash_name % reg->hash_size;
+
+      content* c;
+      if (reg->objects[hash_name % reg->hash_size] == NULL)
+        {
+          reg->objects[hash_name % reg->hash_size] = new_content();
+          c = reg->objects[hash_name % reg->hash_size];
+        }
+      else
+        {
+          c = head(reg->objects[hash_name % reg->hash_size]);
+        }
+      content* cprime = reg->objects[hash_name % reg->hash_size];
+      (*location)[n] = 1;
+      while (cprime->right != NULL)
+        {
+          (*location)[n]++;
+          cprime = cprime->right;
+        }
+      
+      c->right = new_content();
+      c->right->left = c;
+      c->right->name = name;
+      c->right->key = hash_name;
+      c->right->value = NULL;
       e = e->right;
+
       n++;
     }
 
@@ -98,11 +133,29 @@ append_statement (statement* current, element* head)
   statement* s = malloc(sizeof(statement));
   s->right = NULL;
   s->head = head;
-  s->arg_reg = gen_arg_reg(head);
-        
+  s->arg_reg = NULL;
+  s->location = NULL;
+  s->hash_bins = NULL;
   if (current != NULL)
     {
       current->right = s;
+    }
+  
+  element* e = s->head;
+  size_t i = 0;
+  while (e != NULL)
+    {
+      i++;
+      e = e->right;
+    }
+  s->arg.length = i;
+  s->arg.free_data = malloc(sizeof(int)*i);
+  s->arg.arg_array = malloc(sizeof(data*)*i);
+
+  for (int j = 0; j < i; j++)
+    {
+      s->arg.arg_array[j] = NULL;
+      s->arg.free_data[j] = 0;
     }
 
   return s;
@@ -111,15 +164,13 @@ append_statement (statement* current, element* head)
 void
 execute_statement (statement* s, registry* reg)
 {
-  registry* arg_reg = s->arg_reg;
-  arg_reg->up = reg;
-  registry* cur_set = arg_reg->right;
-  /* registry* st_reg = NULL; */
+
   element* e = s->head;
   int arg_n = 0;
   data* d = NULL;
   while (e != NULL)
     {
+      
       if (e->literal)
         {
           if (e->data == NULL)
@@ -139,11 +190,11 @@ execute_statement (statement* s, registry* reg)
               d = get(reg, arbel_hash_ans, 0);
               if (d == NULL)
                 {
-                  do_error("Instruction in [] did not set $ans register.");
+                  do_error("Instruction in [] did not set /ans register.");
                 }
-              else
+              else 
                 {
-                  mark_do_not_free(reg, arbel_hash_ans);
+		  mark_do_not_free(reg, arbel_hash_ans);
                 }
             }
           else
@@ -151,36 +202,43 @@ execute_statement (statement* s, registry* reg)
               d = get_by_levels(reg,
                                 e->hash_name, e->levels, e->is_regstr,
                                 e->name);
-              if (cur_set->key != arbel_hash_0 && d != NULL)
-                d = copy_data(d);
-                  
             }
         }
 
       if (!is_error(-1))
         {
-          if (cur_set->value != NULL && !cur_set->do_not_free_data)
-            free_data(cur_set->value);
-          cur_set->value = d;
-          if (e->literal || cur_set->key == arbel_hash_0)
-            {
-              cur_set->do_not_free_data = 1;
-            }
-          else
-            {
-              cur_set->do_not_free_data = 0;
-            }
+          s->arg.arg_array[arg_n] = d;
 
-          cur_set = cur_set->right;
+          if (e->literal || (arg_n == 0 && (d->type == OPERATION)))
+            {
+              s->arg.free_data[arg_n] = 0;
+            }
+          else if (e->statement)
+            {
+              s->arg.free_data[arg_n] = 0;
+            }
+	  else
+	    {
+	      s->arg.free_data[arg_n] = 0;
+	    }
+	      
+              
         }
 
+      if (is_error(-1)) break;      
       arg_n++;
       e = e->right;
-      if (is_error(-1)) break;
+
+
     }
 
   if (!is_error(-1))
-    compute(arg_reg);
+    {
+      compute(s->arg.arg_array[0], reg, s->arg);
+
+    }
+  
+  free_arg_array_data(&s->arg, arg_n);
 
 }
 
@@ -188,13 +246,19 @@ void
 execute_code (statement* s, registry* reg)
 {
   statement* stmt = s;
+  int error = 0;
   while (stmt != NULL)
     {
       execute_statement(stmt, reg);
-      if (is_error(-1))
+      error = is_error(-1) > error ? is_error(-1) : error;
+      if (error >= arbel_stop_error_threshold)
         {
           break;
         }
+
+
       stmt = stmt->right;
     }
+
+  is_error(error);
 }

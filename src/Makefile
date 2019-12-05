@@ -10,15 +10,16 @@ else
 	DOC=xsltproc --xinclude  --output docs/arbel.html --stringparam html.stylesheet arbel.css /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl docs/arbel.dbk
 endif
 
+#DEBUG=1
 ifdef DEBUG
-	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c -lreadline -g -lm -Wall -ldl
+	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c -lreadline -g -lm -Wall -ldl 
 else
-	COMPILE=cc -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c -lreadline -O3 -lm -Wall -ldl
+	COMPILE=cc -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c -lreadline -O3 -lm -Wall -ldl 
 endif
 
-arbel: arbel.c operator.c utility.c parse.c statement.c save.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c
-	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c -O3 -lm -Wall -ldl -lreadline
-	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o
+arbel: arbel.c operator.c utility.c parse.c statement.c save.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c arg.c
+	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c arg.c print.c arg.c -O3 -lm -Wall -ldl -lreadline
+	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o print.o arg.o
 	$(COMPILE)
 
 doc: docs/arbel.dbk docs/arbel.css

@@ -293,8 +293,10 @@ set @func1 ( ... ) \namespace .
 * DONE Really need to clean up do-to-all, join, collapse, next code.  It's bad.
   CLOSED: [2019-09-11 Wed 08:17]
 * TODO Do another efficiency pass
-* TODO An "of" and "isof" typing system?
-* TODO Consider whether we want to reserve register type with post-sigils
+* DONE An "of" and "isof" typing system?
+  CLOSED: [2019-12-02 Mon 00:15]
+* DONE Consider whether we want to reserve register type with post-sigils
+  CLOSED: [2019-12-02 Mon 00:15]
 
 Like so:
 
@@ -305,6 +307,8 @@ a decimal - :decimal%
 an instruction = :instruction
 a file = :file_
 a register = :register:
+
+No, I don't like this.
 * DONE Remove data and up registers.  Think of a better way to get that feature.
   CLOSED: [2019-09-11 Wed 23:49]
 
@@ -340,10 +344,12 @@ expands to
 as if it was typed exactly like that.
 
 Decided on just using a built-in "up" instruction
-* TODO Make `up` more efficient.  Currently it is copying its arguments twice.
+* DONE Make `up` more efficient.  Currently it is copying its arguments twice.
+  CLOSED: [2019-12-02 Mon 00:15]
 * TODO Have an "assert"-like command which checks type of values at registers and errors if register does not exist or if the type doesn't match
 * TODO do-to-all should have a prefix option like similar instructions, order of registry and instruction should be same
-* TODO Registries should really be hash tables to improve lookup speed
+* DONE Registries should really be hash tables to improve lookup speed
+  CLOSED: [2019-12-02 Mon 00:15]
 
 Idea is to make "registry" be a hash table containing what is now "registry".
 
@@ -360,10 +366,36 @@ struct registry_content = old struct registry
 One idea is to use current "perfect hash" mod HASH_SIZE
 
 "contents" will be set to current "head" registry.
-* TODO How to make hash table argument pass fast
+* DONE Need to start hash tables with NULL, or maybe have a list of nodes with data already included in registry to make get faster...
+  CLOSED: [2019-12-02 Mon 00:15]
+* TODO Make fundamental objects be vectors, so there is a dimension element to them.
 
-replace gen_arg_reg with a hashtable equivalent that has just what is needed for a statement
+Idea would be to use "_" for element so:
 
-Main blocker to making it main branch
+x_1 = first element of x
+x_2 = second element, etc
+
+
+words-are-separated-with-dashes
+
+* TODO op_last should error if no value found with prefix or return an error code (i.e. a register like /0 which could not normally be used).  Currently returns prefix0.
+
+* DONE Not a huge fan of the Lisp/Scheme like naming convention I have now for the objects.  Just visually with the kind of punctuation I am using.  Will experiment.
+  CLOSED: [2019-12-01 Sun 18:39]
+
+I actually don't think there is much better.  Tried a few things.  Like current convention best.
+
+* TODO Make registries true hash table (i.e. number of bins grows with entries)
+
+* TODO Consider name change to something hash based.  Maybe switch from "registry" terminology?  Although I kind of like that.
+
+* DONE Some way to "capture" errors so they do not stop interpretation
+  CLOSED: [2019-12-02 Mon 15:19]
+
+* TODO Make sure to add a way to change error stop threshold.
+
+* DONE There is something that creates a registry without using new_registry and it does not set size
+  CLOSED: [2019-12-02 Mon 11:35]
+
 
 

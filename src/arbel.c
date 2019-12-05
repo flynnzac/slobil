@@ -52,10 +52,12 @@ main (int argc, char** argv)
 {
   source_code = NULL;
   rl_event_hook = dummy_event;
-  registry* reg = new_registry(NULL);
+  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE);
   add_basic_ops(reg);
   is_exit(0);
   current_parse_registry = reg;
+
+  arbel_stop_error_threshold = 100;
   
   arbel_hash_ans = hash_str("ans");
   arbel_hash_0 = hash_str("#0");
@@ -146,6 +148,7 @@ main (int argc, char** argv)
       complete = interact(f, &state, current_parse_registry);
       fclose(f);
       free(code);
+      state.print_out = echo;
     }
 
   free(source_code);

@@ -1,0 +1,32 @@
+source "src/library/testing.arb" .
+
+' Tests with correct usage
+
+add 1 2 .
+assert /test ( eq ans 3 . ) .
+add 1 2.5 .
+assert /test ( eq ans 3.5 . ) .
+subtract 1 2 .
+assert /test ( eq ans -1 . ) .
+subtract 1 2.5 .
+assert /test ( eq ans -1.5 . ) .
+multiply 2.3 2 .
+assert /test ( eq ans 4.6 . ) .
+multiply -23.2 0.5 .
+assert /test ( eq ans -11.6 . ) .
+divide 10 3 .
+assert /test ( eq ans 3 . ) .
+divide 10.0 2.5 .
+assert /test ( eq ans 4.0 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( add "hello" 1 . ) . ) .
+
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( add 1 . ) . ) .
+
+
+print "Finished `arithmetic` test." .

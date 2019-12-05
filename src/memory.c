@@ -28,6 +28,7 @@ free_statement (statement* s)
   element* e_tmp;
   statement* s_tmp;
   int i;
+
   while (s != NULL)
     {
       e = s->head;
@@ -62,9 +63,11 @@ free_statement (statement* s)
           e = e->right;
           free(e_tmp);
         }
+      free_registry(s->arg_reg);
+      free(s->hash_bins);
+      free_arg(&s->arg);
       s_tmp = s;
       s = s->right;
-      free_registry(s_tmp->arg_reg);
       free(s_tmp);
 
     }
@@ -91,19 +94,6 @@ free_data (data* d)
   if (d->type == REGISTRY)
     {
       free_registry((registry*) d->data);
-      free(d);
-    }
-  else if (d->type == REFERENCE)
-    {
-      int i;
-      for (i = 0; i < ((ref*) d->data)->levels; i++)
-        {
-          free(((ref*) d->data)->name[i]);
-        }
-      free(((ref*) d->data)->name);
-      free(((ref*) d->data)->key);
-      free(((ref*) d->data)->is_regstr);
-      free(d->data);
       free(d);
     }
   else if (d->type == REGISTER)
@@ -147,26 +137,61 @@ free_registry (registry* reg)
   if (reg==NULL)
     return;
 
-  if (is_init_reg(reg))
+  for (int i = 0; i < reg->hash_size; i++)
     {
-      free(reg);
-      return;
+      content* c = reg->objects[i];
+      if (c == NULL)
+        continue;
+      
+      if (is_init_reg(c))
+        {
+          free(c);
+          continue;
+        }
+      content* cur = tail(c);
+      content* tmp;
+
+      if (cur != NULL)
+        free(cur->left);
+
+      while (cur != NULL)
+       {
+         if (!cur->do_not_free_data)
+           free_data(cur->value);
+
+          free(cur->name);
+          tmp = cur->right;
+          free(cur);
+          cur = tmp;
+        }
+
     }
-  registry* cur = tail(reg);
-  registry* tmp;
 
-  if (cur != NULL)
-    free(cur->left);
+  free(reg->objects);
 
-  while (cur != NULL)
+  free(reg);
+
+}
+
+void
+free_arg_array_data (arg* a, int n)
+{
+  for (int i = 0; i < n; i++)
     {
-      if (!cur->do_not_free_data)
-        free_data(cur->value);
-
-      free(cur->name);
-      tmp = cur->right;
-      free(cur);
-      cur = tmp;
+      if (a->free_data[i] && a->arg_array[i] != NULL)
+        {
+          free_data(a->arg_array[i]);
+          a->arg_array[i] = NULL;
+        }
     }
 
 }
+
+void
+free_arg (arg* a)
+{
+  free_arg_array_data(a, a->length);
+  free(a->free_data);
+  free(a->arg_array);
+}
+  

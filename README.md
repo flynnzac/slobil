@@ -4,7 +4,6 @@ ARBEL is a programming language based on a named-list data type called a registr
 
 For a manual see: http://www.zflynn.com/arbel/arbel.html
 
-
 # Installation
 
 I have tested that the interpreter works on GNU/Linux and under MSYS on Windows. GNU Readline is a required depedency. Other than the standard GNU C Library, nothing else is required to build.
