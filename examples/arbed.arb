@@ -1,6 +1,6 @@
 ' Simple line-oriented text editor
 set /arbed [ reg . ] .
-in \arbed
+in arbed
    (
      set /buffer [ list . ] . 
      set /cur-line 1 . 
@@ -8,8 +8,8 @@ in \arbed
      set /p ( up set /cur-line [ subtract cur-line 1 . ] . ) .
      set /i
          (
-           set /arbed-str \#1 \buffer .
-           in \buffer
+           set /arbed-str s buffer .
+           in buffer
               (
                 to-register [ concat "#" [ to-string cur-line . ] . ] .
                 set ans arbed-str .
@@ -18,6 +18,8 @@ in \arbed
      set /o
          (
            to-register [ concat "#" [ to-string cur-line . ] . ] .
-           print [ get ans \buffer . ] .
+           print [ get ans buffer . ] .
          ) .
    ) .
+
+     

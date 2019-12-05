@@ -88,8 +88,6 @@ assign_op (data** d, const operation op)
   (*d)->data = op;
 }
 
-
-
 void
 assign_registry (data** d, registry* r)
 {
@@ -97,7 +95,7 @@ assign_registry (data** d, registry* r)
   (*d)->type = REGISTRY;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL);
+      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
     }
   else
     {
@@ -118,40 +116,21 @@ assign_regstr (data** d, const char* name, unsigned long key)
 }
 
 void
-assign_ref (data** d, registry* reg,
-            char** names,
-            const unsigned long* keys,
-            const int levels,
-            const int* is_regstr)
-{
-  *d = malloc(sizeof(data));
-  (*d)->type = REFERENCE;
-  (*d)->data = malloc(sizeof(ref));
-  ((ref*) (*d)->data)->reg = reg;
-  ((ref*) (*d)->data)->name = malloc(sizeof(char*)*levels);
-  ((ref*) (*d)->data)->key = malloc(sizeof(unsigned long)*levels);
-  ((ref*) (*d)->data)->is_regstr = malloc(sizeof(int)*levels);
-  ((ref*) (*d)->data)->levels = levels;
-
-  int i;
-  for (i=0; i < levels; i++)
-    {
-      ((ref*) (*d)->data)->name[i] = malloc(sizeof(char)*
-                                            (strlen(names[i])+1));
-      strcpy(((ref*) (*d)->data)->name[i], names[i]);
-      ((ref*) (*d)->data)->key[i] = keys[i];
-      ((ref*) (*d)->data)->is_regstr[i] = is_regstr[i];
-    }
-  
-}
-
-void
 assign_file (data** d, FILE* f)
 {
   *d = malloc(sizeof(data));
   (*d)->type = ARBEL_FILE;
   (*d)->data = f;
   
+}
+
+void
+assign_boolean (data** d, bool val)
+{
+  *d = malloc(sizeof(data));
+  (*d)->type = BOOLEAN;
+  (*d)->data = malloc(sizeof(bool));
+  *((bool*) (*d)->data) = val;
 }
 
 
@@ -238,14 +217,27 @@ copy_statement (statement* s)
 registry*
 copy_registry(registry* r0)
 {
-  registry* r1 = new_registry(r0->up);
+  registry* r1;
+  if (update_hash_size(r0->elements, r0->hash_size))
+    r1 = new_registry(r0->up, 2*r0->hash_size);
+  else
+    r1 = new_registry(r0->up, r0->hash_size);
+  
   data* d;
-  registry* cur = tail(r0);
-  while (cur != NULL)
+
+  for (int i = 0; i < r0->hash_size; i++)
     {
-      d = copy_data(cur->value);
-      set(r1, d, cur->name);
-      cur = cur->right;
+      content* cur = r0->objects[i];
+      if (cur == NULL)
+        continue;
+
+      cur = tail(r0->objects[i]);
+      while (cur != NULL)
+        {
+          d = copy_data(cur->value);
+          set(r1, d, cur->name, 0);
+          cur = cur->right;
+        }
     }
 
   return r1;
@@ -287,15 +279,11 @@ copy_data (data* d_in)
     case ARBEL_FILE:
       assign_file(&d, (FILE*) d_in->data);
       break;
+    case BOOLEAN:
+      assign_boolean(&d, *((bool*) d_in->data));
+      break;
     case NOTHING:
       assign_nothing(&d);
-      break;
-    case REFERENCE:
-      assign_ref(&d,((ref*) d_in->data)->reg,
-                 ((ref*) d_in->data)->name,
-                 ((ref*) d_in->data)->key,
-                 ((ref*) d_in->data)->levels,
-                 ((ref*) d_in->data)->is_regstr);
       break;
     }
 

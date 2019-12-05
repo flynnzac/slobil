@@ -58,7 +58,7 @@
                              (modify-syntax-entry ?] ")[" st)
         (modify-syntax-entry ?\{ "(}" st)
         (modify-syntax-entry ?\} "){" st)
-        (modify-syntax-entry ?- "w" st)
+        (modify-syntax-entry ?- "-" st)
         (modify-syntax-entry ?# "w" st)
         (modify-syntax-entry ?/ "_" st)
         (modify-syntax-entry ?\\ "_" st)
@@ -78,7 +78,7 @@
                 "divide"
                 "if"
                 "compute"
-                "reg"
+                "registry"
                 "get"
                 "mov"
                 "del"
@@ -109,16 +109,13 @@
                 "string-gt"
                 "string-lt"
                 "exist-in"
-                "reg-eq"
-                "reg-lt"
-                "reg-gt"
+                "register-eq"
                 "go-in"
                 "go-out"
                 "save"
                 "load"
                 "to-string"
                 "to-number"
-                "ref"
                 "output-code"
                 "clear-code"
                 "error"
@@ -156,16 +153,21 @@
                 "of"
                 "isof"
                 "dispatch"
-                "register-number"
                 "to-real"
+                "is-error"
+                "code"
+                "call"
+                "copy"
+		            "is-boolean"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
-             (register-regexp "\\(\/[^\s]*\\)\s*")
-             (reference-regexp "\\(\\\\[^\s]*\\)\s*"))
+		   (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
+		   (boolean-regexp (regexp-opt '("True" "False") 'words))
+             )
 	      `(
-	        (,functions-regexp . font-lock-builtin-face)
-	        (,register-regexp . (1 font-lock-function-name-face))
-          (,reference-regexp . (1 font-lock-constant-face))
+		(,register-regexp . (1 font-lock-function-name-face))
+		(,boolean-regexp . (1 font-lock-constant-face))
+		(,functions-regexp . font-lock-builtin-face)
 	        )))
 
 (define-derived-mode arbel-mode prog-mode "arbel"

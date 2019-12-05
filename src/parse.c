@@ -201,6 +201,14 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                                 hash_str(state->buffer+1));
                   e = add_literal_argument(&head, e, d);
                 }
+	      else if (is_boolean(state->buffer))
+		{
+		  if (strcmp(state->buffer, "True")==0)
+		    assign_boolean(&d, true);
+		  else
+		    assign_boolean(&d, false);
+		  e = add_literal_argument(&head, e, d);
+		}
               else if (strcmp(state->buffer,".")==0)
                 {
                   *complete = 1;
@@ -216,28 +224,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 {
                   state->in_comment = 1;
                   state->arg_n = 0;
-                }
-              else if (is_reference(state->buffer))
-                {
-                  int i, levels;
-                  char** str_array;
-                  int* is_regstr;
-                  str_array = split_by_colon(state->buffer+1, &levels,
-                                             &is_regstr);
-                  d = malloc(sizeof(data));
-                  d->type = REFERENCE;
-                  d->data = malloc(sizeof(ref));
-                  ((ref*) d->data)->reg = NULL;
-                  ((ref*) d->data)->name = str_array;
-                  ((ref*) d->data)->is_regstr = is_regstr;
-                  ((ref*) d->data)->levels = levels;
-                  ((ref*) d->data)->key = malloc(sizeof(unsigned long)*
-                                                  levels);
-                  for (i=0; i < levels; i++)
-                    {
-                      ((ref*) d->data)->key[i] = hash_str(str_array[i]);
-                    }
-                  e = add_literal_argument(&head, e, d);
                 }
               else 
                 {
@@ -398,6 +384,7 @@ parse (FILE* f, parser_state* state, statement** s)
       if (complete && !state->in_comment)
         {
           stmt = append_statement(stmt, state->cur_elem);
+          
           *state = fresh_state(state->print_out);
           if (*s == NULL)
             {
@@ -438,7 +425,6 @@ interact (FILE* f, parser_state* state, registry* reg)
                   print_data(d,0);
                   last_ans = d;
                 }
-              printf("OK.\n");
             }
 
         }

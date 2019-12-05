@@ -4,19 +4,19 @@ source "examples/tokenize.arb" .
 
 set /parse-csv
     (
-      open-text-file \#1 .
+      open-text-file name .
       set /file ans .
       set /parsed [ list . ] .
       set /cur-reg /#1 . 
 
       while ( set /cur-line [ read-line file . ] . is-string cur-line . )
             (
-              tokenize cur-line "," .
-              in \parsed ( set cur-reg ans . ) .
+              tokenize /line cur-line /sep "," .
+              in parsed ( set cur-reg ans . ) .
               set /cur-reg [ next cur-reg . ] .
             ) .
 
       
       close /file .
-      answer \parsed .
+      answer parsed .
     ) .

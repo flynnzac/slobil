@@ -3,46 +3,45 @@
 ' an ordered list indexed by numbers and a list indexed alphabetically
 
 set /x [ list 1 2 3 . ] .
-of "List" \x .
+of "List" x .
 
 set /y [ reg /a 4 /b 5 /c 6 . ] .
-of "Alpha-List" \y .
+of "Alpha-List" y .
 
 set /first
     (
-      dispatch "first" \#1 .
-      ans \#1 .
+      dispatch "first" L .
+      call ans /L L .
     ) .
-set /first+List ( answer \#1:/#1 . ) .
-set /first+Alpha-List ( answer \#1:/a . ) .
+set /first+List ( answer L:/#1 . ) .
+set /first+Alpha-List ( answer L:/a . ) .
 
-first x .
-first y .
+first /L x .
+first /L y .
 
 ' Demonstrates dispatching to different types
 
 set /add-n-times
     (
-      dispatch "add-n-times" \#1 .
-      ans \#1 \#2 .
+      dispatch "add-n-times" val .
+      ans /val val /times times .
     ) .
 
 set /add-n-times+Integer
     (
-      multiply \#1 \#2 .
+      multiply val times .
     ) .
 
 set /add-n-times+Real add-n-times+Integer .
 
 set /add-n-times+String
     (
-      mov /#1 /str .
-      set /result str .
-      repeat [ subtract \#2 1 . ]
-             ( set /result [ concat \result \str . ] . ) .
-      answer \result .
+      set /result val .
+      repeat [ subtract times 1 . ]
+             ( set /result [ concat result val . ] . ) .
+      answer result .
     ) .
 
-add-n-times 4 5 .
-add-n-times 4.0 5 .
-add-n-times "hello" 5 .
+add-n-times /val 4 /times 5 .
+add-n-times /val 4.0 /times 5 .
+add-n-times /val "hello" /times 5 .

@@ -1,0 +1,15 @@
+set /assert
+    (
+      test .
+      if [ not ans . ] 
+         {
+           error
+             [ concat "The following test evaluated to 0:\n"
+                      [ code test . ] . ] 10000 .
+         }
+         0 .
+
+    ) .
+      
+
+

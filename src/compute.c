@@ -24,10 +24,9 @@
 void
 ret (registry* reg, data* d, const char* name)
 {
-  registry* up = reg->up;
-  if (up != NULL)
+  if (reg != NULL)
     {
-      set(up, d, name);
+      set(reg, d, name, 1);
     }
   else
     {
@@ -43,43 +42,84 @@ ret_ans (registry* reg, data* d)
   
   ret(reg, d, "ans");
 }
-  
+
 void
-compute (registry* reg)
+_op_call (arg a, registry* reg, const int explicit)
 {
-  data* arg = lookup(reg,arbel_hash_0,0);
-  if (arg == NULL)
-    {
-      do_error("Cannot compute a registry without an instruction at #0.");
-    }
-  else if (arg->type != OPERATION && arg->type != INSTRUCTION)
-    {
+  CHECK_ARGS(a, explicit);
+  data* arg1 = resolve(a.arg_array[explicit], reg);
 
-      do_error("Cannot compute a registry without an instruction at #0.");
+  if (arg1 == NULL || (arg1->type != INSTRUCTION && arg1->type != OPERATION))
+    {
+      do_error("First argument to `call` must be an instruction.");
+      return;
     }
 
-  if (is_error(-1))
-    return;
+  /* set arg1 to #0 in new registry */
+  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
+  
+  data* d = NULL;
+  data* d_data = NULL;
+  data* d_new;
+  int i = explicit+1;
 
-  if (arg->type == INSTRUCTION)
+  for (i=(explicit+1); i < a.length; i=i+2)
     {
-      execute_code(((instruction*) arg->data)->stmt, reg);
-      data* d = get(reg, arbel_hash_ans, 0);
-      if (d != NULL)
+      d = a.arg_array[i];
+
+      if (d->type != REGISTER)
         {
-          d = copy_data(d);
-          /* mark_do_not_free(reg, arbel_hash_ans); */
-          ret_ans(reg, d);
+          do_error("Expected a register");
+          free_registry(r_new);
+          return;
         }
-      return;
+      d_data = a.arg_array[i+1];
+      d_new = copy_data(d_data);
+      set(r_new, d_new, ((regstr*) d->data)->name, 1);
     }
 
-  if (is_error(-1))
+
+  execute_code(((instruction*) arg1->data)->stmt, r_new);
+
+  data* ans;
+
+  if (!is_error(-1))
     {
-      return;
+      ans = get(r_new, arbel_hash_ans, 0);
+      if (ans != NULL)
+        {
+          mark_do_not_free(r_new, arbel_hash_ans);
+          ret_ans(reg, ans);
+        }
     }
-
-  ((operation) arg->data)(reg);
+  
+  free_registry(r_new);
   
 }
+
+
+void
+compute (data* cmd, registry* reg, arg a)
+{
+  if (cmd == NULL)
+    {
+      do_error("Cannot compute without an operation or instruction at #0.");
+      return;
+    }
+  
+  switch (cmd->type)
+    {
+    case OPERATION:
+      ((operation) cmd->data)(a, reg);
+      break;
+    case INSTRUCTION:
+      _op_call(a, reg, 0);
+      break;
+    default:
+      do_error("Tried to compute something that is not an operation or instruction.");
+      break;
+    }
+
+}
+
 

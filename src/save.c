@@ -24,6 +24,18 @@
 int
 save_registry (FILE* f, registry* reg)
 {
+  for (int i = 0; i < reg->hash_size; i++)
+    {
+      save_content(f, reg->objects[i]);
+    }
+
+  return 0;
+}
+
+
+int
+save_content (FILE* f, content* reg)
+{
 
   reg = tail(reg);
   int size;
@@ -32,7 +44,6 @@ save_registry (FILE* f, registry* reg)
     {
       if (reg->value->type != OPERATION &&
           reg->value->type != ACTIVE_INSTRUCTION &&
-          reg->value->type != REFERENCE &&
           reg->value->type != NOTHING)
         {
           fwrite(&reg->value->type, sizeof(data_type), 1, f);
@@ -135,7 +146,7 @@ read_registry (FILE* f, registry* reg)
           free(cache);          
           break;
         case REGISTRY:
-          r = new_registry(reg);
+          r = new_registry(reg, ARBEL_HASH_SIZE);
           read_registry(f, r);
           assign_registry(&d, r);
           free_registry(r);
@@ -178,7 +189,7 @@ read_registry (FILE* f, registry* reg)
       *((char*) (cache+size)) = '\0';
 
       if (d != NULL)
-        set(reg, d, (char*) cache);
+        set(reg, d, (char*) cache, 1);
       
       free(cache);
     }

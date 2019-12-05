@@ -52,17 +52,14 @@ print_data (data* d, int print_cmd)
     case OPERATION:
       printf("Built-in instruction.\n");
       break;
-    case REFERENCE:
-      printf("Reference to: :");
-      for (int i=0; i < (((ref*) d->data)->levels-1); i++)
-        {
-          printf("%s:", ((ref*) d->data)->name[i]);
-        }
-      printf("%s\n",
-             ((ref*) d->data)->name[(((ref*) d->data)->levels-1)]);
-      break;
     case ARBEL_FILE:
       printf("A file.\n");
+      break;
+    case BOOLEAN:
+      if (*((bool*) d->data))
+	printf("True.\n");
+      else
+	printf("False.\n");
       break;
     default:
       break;
@@ -72,14 +69,23 @@ print_data (data* d, int print_cmd)
 void
 print_registry (registry* reg)
 {
-  registry* cur = tail(reg);
-  const char* s = "";
-  while (cur != NULL)
+  if (reg == NULL)
+    return;
+  
+  for (int i = 0; i < reg->hash_size; i++)
     {
-      s = str_type(cur->value->type);
-      printf("%s of type %s", (const char*) cur->name, s);
-      printf(", value: ");
-      print_data(cur->value,1);
-      cur = cur->right;
+      content* cur = reg->objects[i];
+      if (cur == NULL || is_init_reg(cur))
+        continue;
+      cur = tail(cur);
+      const char* s = "";
+      while (cur != NULL)
+        {
+          s = str_type(cur->value->type);
+          printf("%s of type %s", (const char*) cur->name, s);
+          printf(", value: ");
+          print_data(cur->value,1);
+          cur = cur->right;
+        }
     }
 }

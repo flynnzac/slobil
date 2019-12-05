@@ -1,19 +1,17 @@
 ' Tokenize a string /#1 by splitting on string /#2
 set /tokenize
     (
-      mov /#1 /word .
-      mov /#2 /sep .
       set /i 1 .
-      set /len [ count-characters \word . ] .
+      set /len [ count-characters line . ] .
       set /cur-reg /#1 .
       set /tokened [ list . ] .
       set /init 1 .
       while ( lteq i len . )
             (
-              set /d [ character \word i . ] .
-              if [ string-eq d \sep . ]
+              set /d [ character line i . ] .
+              if [ string-eq d sep . ]
                  {
-                   in \tokened ( set cur-reg buffer . ) .
+                   in tokened ( set cur-reg buffer . ) .
                    set /cur-reg [ next cur-reg . ] .
                    set /init 1 .
                  }
@@ -23,6 +21,6 @@ set /tokenize
                  } .
               set /i [ add i 1 . ] .
             ) .
-      in \tokened ( set cur-reg buffer . ) .
-      answer \tokened .
+      in tokened ( set cur-reg buffer . ) .
+      answer tokened .
     )  .
