@@ -276,7 +276,7 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =source STRING= --- executes ARBEL code in the file named by STRING.
 
-- =do-to-all INSTRUCTION REGISTRY= --- execute =INSTRUCTION= which takes an argument at Register =/t= for each element in =REGISTRY=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.
+- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.
 
 - =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
 
@@ -290,7 +290,7 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
 
-- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t= and =/s=. For example, =collapse ( add t s . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
 
 
 

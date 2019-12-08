@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-05 Thu 11:09 -->
+<!-- 2019-12-05 Thu 13:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-05 Thu 11:09
+ARBEL<br>Zach Flynn<br>2019-12-05 Thu 13:07
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,20 +239,20 @@ ARBEL<br>Zach Flynn<br>2019-12-05 Thu 11:09
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb4e0f35">1. Introduction</a></li>
-<li><a href="#org624bb07">2. The Basics</a>
+<li><a href="#org2013ca8">1. Introduction</a></li>
+<li><a href="#org8b2b63f">2. The Basics</a>
 <ul>
-<li><a href="#orga23b65e">2.1. Statements and syntax</a></li>
-<li><a href="#orgea8f2cd">2.2. Registries</a></li>
-<li><a href="#org02d0d06">2.3. Registers</a></li>
+<li><a href="#org1b0e5b2">2.1. Statements and syntax</a></li>
+<li><a href="#org540b01c">2.2. Registries</a></li>
+<li><a href="#org1d01188">2.3. Registers</a></li>
 </ul>
 </li>
-<li><a href="#orgc35281e">3. Reference</a></li>
+<li><a href="#org6f1c240">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb4e0f35" class="outline-2">
-<h2 id="orgb4e0f35"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org2013ca8" class="outline-2">
+<h2 id="org2013ca8"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -277,12 +277,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org624bb07" class="outline-2">
-<h2 id="org624bb07"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org8b2b63f" class="outline-2">
+<h2 id="org8b2b63f"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga23b65e" class="outline-3">
-<h3 id="orga23b65e"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org1b0e5b2" class="outline-3">
+<h3 id="org1b0e5b2"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -436,8 +436,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-orgea8f2cd" class="outline-3">
-<h3 id="orgea8f2cd"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-org540b01c" class="outline-3">
+<h3 id="org540b01c"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -522,14 +522,14 @@ Aside from being a useful data structure, registries are also how ARBEL does <i>
 ... set /math [ registry . ] .
 ... set /factorial
        (
-	 set /i 2 .
-	 set /prod 1 .
-	 while ( lteq i t . )
-	       (
-		 set /prod [ multiply i prod . ] .
-		 set /i [ add i 1 . ] .
-	       ) .
-	 answer prod .
+         set /i 2 .
+         set /prod 1 .
+         while ( lteq i t . )
+               (
+                 set /prod [ multiply i prod . ] .
+                 set /i [ add i 1 . ] .
+               ) .
+         answer prod .
        ) math .
 ... math:/factorial /t 5 .
 ans = 120
@@ -556,13 +556,13 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org02d0d06" class="outline-3">
-<h3 id="org02d0d06"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org1d01188" class="outline-3">
+<h3 id="org1d01188"><span class="section-number-3">2.3</span> Registers</h3>
 </div>
 </div>
 
-<div id="outline-container-orgc35281e" class="outline-2">
-<h2 id="orgc35281e"><span class="section-number-2">3</span> Reference</h2>
+<div id="outline-container-org6f1c240" class="outline-2">
+<h2 id="org6f1c240"><span class="section-number-2">3</span> Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -638,7 +638,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-05 Thu 11:09</p>
+<p class="date">Created: 2019-12-05 Thu 13:07</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

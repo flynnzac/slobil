@@ -758,35 +758,57 @@ op_do_to_all (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-
-  if (arg1 == NULL || arg2 == NULL)
+  data** arg_registries = malloc(sizeof(data*)*
+                                 (a.length-2));
+  for (int i = 0; i < (a.length - 2); i++)
     {
-      do_error("`do-to-all` requires two arguments.");
+      arg_registries[i] = resolve(a.arg_array[i+2], reg);
+    }
+
+  if (arg1 == NULL)
+    {
+      do_error("`do-to-all` requires an argument.");
+      free(arg_registries);
       return;
     }
 
-  if (arg1->type != INSTRUCTION && arg1->type != OPERATION)
+  for (int i = 0; i < (a.length-2); i++)
+    {
+      if (arg_registries[i] == NULL)
+        {
+          do_error("`do-to-all` requires more than one argument.");
+          free(arg_registries);
+          return;
+        }
+    }
+  
+
+  if (arg1->type != INSTRUCTION)
     {
       do_error("First argument to `do-to-all` must be an instruction.");
       return;
     }
 
-  if (arg2->type != REGISTRY)
+  for (int i = 0; i < (a.length - 2); i++)
     {
-      do_error("Second argument to `do-to-all` must be a registry.");
-      return;
+      if (arg_registries[i]->type != REGISTRY)
+        {
+          do_error("Arguments to `do-to-all` must be registries.");
+          free(arg_registries);
+          return;
+        }
     }
 
-  registry* arg_reg = (registry*) arg2->data;
+  registry** arg_reg = malloc(sizeof(registry*)*(a.length-2));
+  for (int i = 0; i < (a.length - 2); i++)
+    {
+      arg_reg[i] = (registry*) arg_registries[i]->data;
+    }
   registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE);
   data* d;
   arg a1;
 
-  if (arg1->type == INSTRUCTION)
-    a1.length = 3;
-  else
-    a1.length = 2;
+  a1.length = 1 + 2*(a.length-2);
 
   a1.free_data = malloc(sizeof(int)*a1.length);
   for (int i = 0; i < a1.length; i++)
@@ -798,9 +820,9 @@ op_do_to_all (arg a, registry* reg)
     a1.arg_array[i] = NULL;
 
 
-  for  (int i = 0; i < arg_reg->hash_size; i++)
+  for  (int i = 0; i < arg_reg[0]->hash_size; i++)
     {
-      content* c = arg_reg->objects[i];
+      content* c = arg_reg[0]->objects[i];
       if (c == NULL)
         continue;
       
@@ -810,20 +832,36 @@ op_do_to_all (arg a, registry* reg)
       c = tail(c);
       while (c != NULL)
         {
-          d = c->value;
-          a1.arg_array[a1.length-1] = d;
-
-          if (arg1->type == INSTRUCTION)
+          bool in_all = true;
+          for (int j = 0; j < (a.length-2); j++)
             {
-              if (a1.arg_array[1] != NULL)
-                free_data(a1.arg_array[1]);
-              
-              assign_regstr(&a1.arg_array[1],
-                            "t",
-                            hash_str("t"));
+              d = get(arg_reg[j], c->key, 0);
+              if (d==NULL)
+                {
+                  c = c->right;
+                  in_all = false;
+                  break;
+                }
+              else
+                {
+                  char* tname = malloc(sizeof(char)*
+                                       (strlen("t")+
+                                        floor(log10(j+1))
+                                        + 1+1));
+                  sprintf(tname, "t%d", j+1);
+                  if (a1.arg_array[1+2*j] != NULL)
+                    free_data(a1.arg_array[1+2*j]);
+                  
+                  assign_regstr(&a1.arg_array[1+2*j], tname,
+                                hash_str(tname));
+                  free(tname);
+                  a1.arg_array[2+2*j] = d;
+                }
             }
 
-          
+          if (!in_all)
+            continue;
+
           compute(arg1, reg, a1);
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
@@ -841,10 +879,11 @@ op_do_to_all (arg a, registry* reg)
         break;
     }
 
-  if (arg1->type == INSTRUCTION)
+  for (int j = 0; j < (a.length-2); j++)
     {
-      if (a1.arg_array[1] != NULL)
-        free_data(a1.arg_array[1]);
+      if (a1.arg_array[2*j+1] == NULL)
+        free_data(a1.arg_array[2*j+1]);
+
     }
 
   if (!is_error(-1))
@@ -1201,8 +1240,8 @@ op_collapse (arg a, registry* reg)
     }
 
   a1.arg_array[0] = arg1;
-  assign_regstr(&a1.arg_array[1], "t", hash_str("t"));
-  assign_regstr(&a1.arg_array[3], "s", hash_str("s"));
+  assign_regstr(&a1.arg_array[1], "t1", hash_str("t1"));
+  assign_regstr(&a1.arg_array[3], "t2", hash_str("t2"));
   
   data* d1;
   data* d2;
