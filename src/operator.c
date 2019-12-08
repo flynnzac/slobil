@@ -1528,9 +1528,9 @@ op_to_string (arg a, registry* reg)
       return;
     }
 
-  if (arg1->type != INTEGER && arg1->type != REAL)
+  if (arg1->type != INTEGER && arg1->type != REAL && arg1->type != REGISTER)
     {
-      do_error("The argument to `to-string` should be numeric.");
+      do_error("The argument to `to-string` should be either numeric or a register.");
       return;
     }
 
@@ -1550,9 +1550,14 @@ op_to_string (arg a, registry* reg)
       result = malloc(sizeof(char)*(n_digits+1));
       sprintf(result, "%d", *((int*) arg1->data));
     }
-  else
+  else if (arg1->type == REAL)
     {
-      data* arg2 = resolve(a.arg_array[2], reg);
+      data* arg2 = NULL;
+      if (a.length >= 3)
+	{
+	  arg2 = resolve(a.arg_array[2], reg);
+	}
+      
       int prec = 6;
       if (arg2 != NULL && arg2->type != INTEGER)
         {
@@ -1564,7 +1569,7 @@ op_to_string (arg a, registry* reg)
           prec = *((int*) arg2->data);
           if (prec < 0)
             {
-              do_error("The second argument to `to-string` must be nonnegative.");
+              do_error("The second argument to `to-string` must be non-negative.");
               return;
             }
         }
@@ -1595,6 +1600,12 @@ op_to_string (arg a, registry* reg)
       result = malloc(sizeof(char)*(int_size+1+prec+1));
       sprintf(result, fmt, *((double*) arg1->data));
       free(fmt);
+    }
+  else
+    {
+      char* regstr_name = ((regstr*) arg1->data)->name;
+      result = malloc(sizeof(char)*(strlen(regstr_name)+1));
+      strcpy(result, regstr_name);
     }
 
   data* d;
