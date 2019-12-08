@@ -312,7 +312,32 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =to-number STRING|REGISTER= --- if the argument is a String, try to convert to a number and set the =/ans= Register to the result.  If the argument is a Register and ends in a number, set the =/ans= Register to the result.
 
-- =output-code=
+- =output-code STRING= --- outputs the code that has been entered at the prompt so far to the file named STRING.
+
+- =clear-code= --- clear code that has been entered so far so that the code that =output-code= outputs will be empty.
+
+- =error STRING <INTEGER>= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
+
+- =is-integer VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Integer and to =False= otherwise.
+
+- =is-real VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Real and to =False= otherwise.
+
+- =is-string VALUE= --- sets the =/ans= Register to =True= if the =Value= is a String and to =False= otherwise.
+
+- =is-register VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Register and to =False= otherwise.
+
+- =is-registry VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Registry and to =False= otherwise.
+
+- =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
+
+- =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
+
+- =is-nothing VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Nothing and to =False= otherwise.
+
+- =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Boolean and to =False= otherwise.
+
+- =open-text-file STRING= --- sets the =/ans= Register to a File object corresponding to the file named STRING.
+
 
 
 

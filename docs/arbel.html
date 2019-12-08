@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-08 Sun 10:17 -->
+<!-- 2019-12-08 Sun 10:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-08 Sun 10:17
+ARBEL<br>Zach Flynn<br>2019-12-08 Sun 10:52
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,20 +239,20 @@ ARBEL<br>Zach Flynn<br>2019-12-08 Sun 10:17
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org009db06">1. Introduction</a></li>
-<li><a href="#org92d1166">2. The Basics</a>
+<li><a href="#orgb406b10">1. Introduction</a></li>
+<li><a href="#org98c1042">2. The Basics</a>
 <ul>
-<li><a href="#orgddda167">2.1. Statements and syntax</a></li>
-<li><a href="#orgacba3aa">2.2. Registries</a></li>
-<li><a href="#org8def6d3">2.3. Registers</a></li>
+<li><a href="#org1a327d5">2.1. Statements and syntax</a></li>
+<li><a href="#org2e8ffc2">2.2. Registries</a></li>
+<li><a href="#org0354c55">2.3. Registers</a></li>
 </ul>
 </li>
-<li><a href="#org822111f">3. Reference</a></li>
+<li><a href="#org8f7105a">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org009db06" class="outline-2">
-<h2 id="org009db06"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgb406b10" class="outline-2">
+<h2 id="orgb406b10"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -277,12 +277,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org92d1166" class="outline-2">
-<h2 id="org92d1166"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org98c1042" class="outline-2">
+<h2 id="org98c1042"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgddda167" class="outline-3">
-<h3 id="orgddda167"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org1a327d5" class="outline-3">
+<h3 id="org1a327d5"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -436,8 +436,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-orgacba3aa" class="outline-3">
-<h3 id="orgacba3aa"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-org2e8ffc2" class="outline-3">
+<h3 id="org2e8ffc2"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -556,13 +556,13 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org8def6d3" class="outline-3">
-<h3 id="org8def6d3"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org0354c55" class="outline-3">
+<h3 id="org0354c55"><span class="section-number-3">2.3</span> Registers</h3>
 </div>
 </div>
 
-<div id="outline-container-org822111f" class="outline-2">
-<h2 id="org822111f"><span class="section-number-2">3</span> Reference</h2>
+<div id="outline-container-org8f7105a" class="outline-2">
+<h2 id="org8f7105a"><span class="section-number-2">3</span> Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -653,14 +653,38 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 
 <li><code>to-number STRING|REGISTER</code> &#x2014; if the argument is a String, try to convert to a number and set the <code>/ans</code> Register to the result.  If the argument is a Register and ends in a number, set the <code>/ans</code> Register to the result.</li>
 
-<li><code>output-code</code></li>
+<li><code>output-code STRING</code> &#x2014; outputs the code that has been entered at the prompt so far to the file named STRING.</li>
+
+<li><code>clear-code</code> &#x2014; clear code that has been entered so far so that the code that <code>output-code</code> outputs will be empty.</li>
+
+<li><code>error STRING &lt;INTEGER&gt;</code> &#x2014; outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is <code>1</code>).</li>
+
+<li><code>is-integer VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is an Integer and to <code>False</code> otherwise.</li>
+
+<li><code>is-real VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Real and to <code>False</code> otherwise.</li>
+
+<li><code>is-string VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a String and to <code>False</code> otherwise.</li>
+
+<li><code>is-register VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Register and to <code>False</code> otherwise.</li>
+
+<li><code>is-registry VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Registry and to <code>False</code> otherwise.</li>
+
+<li><code>is-instruction VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is an Instruction and to <code>False</code> otherwise.</li>
+
+<li><code>is-file VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a File and to <code>False</code> otherwise.</li>
+
+<li><code>is-nothing VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Nothing and to <code>False</code> otherwise.</li>
+
+<li><code>is-boolean VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Boolean and to <code>False</code> otherwise.</li>
+
+<li><code>open-text-file STRING</code> &#x2014; sets the <code>/ans</code> Register to a File object corresponding to the file named STRING.</li>
 </ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-08 Sun 10:17</p>
+<p class="date">Created: 2019-12-08 Sun 10:52</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
