@@ -2552,7 +2552,7 @@ op_exp (arg a, registry* reg)
 }
 
 void
-op_to_power (arg a, registry* reg)
+op_power (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -2560,14 +2560,14 @@ op_to_power (arg a, registry* reg)
   
   if (arg1 == NULL || arg2 == NULL)
     {
-      do_error("`to-power` requires two arguments.");
+      do_error("`power` requires two arguments.");
       return;
     }
 
   if (arg1->type != INTEGER && arg1->type != REAL
       && arg2->type != INTEGER && arg2->type != REAL)
     {
-      do_error("`to-power` requires two numeric argument.");
+      do_error("`power` requires two numeric argument.");
       return;
     }
 
@@ -2623,41 +2623,6 @@ op_change_dir (arg a, registry* reg)
 
 }
 
-void
-op_copy_file (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("`copy-file` requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING || arg2->type != STRING)
-    {
-      do_error("Both arguments to `copy-file` must be a string.");
-      return;
-    }
-
-  FILE* f_in = fopen((char*) arg1->data, "rb");
-  FILE* f_out = fopen((char*) arg2->data, "wb");
-  int c;
-  while ((c = fgetc(f_in)) != EOF)
-    {
-      c = fputc(c, f_out);
-      if (c == EOF)
-        {
-          do_error("Error writing to file.");
-          break;
-        }
-    }
-
-  fclose(f_in);
-  fclose(f_out);
-
-}
 
 void
 op_import (arg a, registry* reg)
@@ -2798,19 +2763,22 @@ op_substring (arg a, registry* reg)
 void
 op_up (arg a, registry* reg)
 {
+  CHECK_ARGS(a,1);
   if (reg->up == NULL)
     {
       do_error("Cannot use `up` instruction at top-level registry.");
       return;
     }
 
-  arg a1 = gen_arg(a.length-1, 0);
-  for (int i=1; i < a.length; i++)
+  data* arg1 = resolve(a.arg_array[1], reg);
+  if (arg1 == NULL || (arg1->type != INSTRUCTION))
     {
-      a1.arg_array[i-1] = a.arg_array[i];
+      do_error("`up` requires an instruction argument.");
+      return;
     }
 
-  compute(a1.arg_array[0], reg->up, a1);
+  execute_code(((instruction*) arg1->data)->stmt, reg->up);
+
 }
 
 void
@@ -3016,23 +2984,6 @@ void
 op_call (arg a, registry* reg)
 {
   _op_call(a,reg,1);
-}
-
-void
-op_copy (arg a, registry* reg)
-{
-  CHECK_ARGS(a, 1);
-
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("`copy` requires an argument.");
-      return;
-    }
-
-  data* d = copy_data(arg1);
-  ret_ans(reg, d);
 }
 
 void
@@ -3247,17 +3198,14 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_exp);
   set(reg,d,"exp",1);
 
-  assign_op(&d, op_to_power);
-  set(reg,d,"to-power",1);
+  assign_op(&d, op_power);
+  set(reg,d,"power",1);
 
   assign_op(&d, op_change_dir);
   set(reg,d,"change-dir",1);
 
   assign_op(&d, op_current_dir);
   set(reg,d,"current-dir",1);
-
-  assign_op(&d, op_copy_file);
-  set(reg,d,"copy-file",1);
 
   assign_op(&d, op_import);
   set(reg,d,"import",1);
@@ -3292,9 +3240,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_error);
   set(reg,d,"is-error",1);
 
-  assign_op(&d, op_copy);
-  set(reg,d,"copy",1);
 
-  
 }
   
