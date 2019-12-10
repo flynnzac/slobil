@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-08 Sun 10:52 -->
+<!-- 2019-12-10 Tue 10:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-08 Sun 10:52
+ARBEL<br>Zach Flynn<br>2019-12-10 Tue 10:46
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,20 +239,20 @@ ARBEL<br>Zach Flynn<br>2019-12-08 Sun 10:52
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb406b10">1. Introduction</a></li>
-<li><a href="#org98c1042">2. The Basics</a>
+<li><a href="#org1c63da4">1. Introduction</a></li>
+<li><a href="#org4d4a392">2. The Basics</a>
 <ul>
-<li><a href="#org1a327d5">2.1. Statements and syntax</a></li>
-<li><a href="#org2e8ffc2">2.2. Registries</a></li>
-<li><a href="#org0354c55">2.3. Registers</a></li>
+<li><a href="#org59c5a80">2.1. Statements and syntax</a></li>
+<li><a href="#org91648fd">2.2. Registries</a></li>
+<li><a href="#org588b600">2.3. Registers</a></li>
 </ul>
 </li>
-<li><a href="#org8f7105a">3. Reference</a></li>
+<li><a href="#orge805155">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb406b10" class="outline-2">
-<h2 id="orgb406b10"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org1c63da4" class="outline-2">
+<h2 id="org1c63da4"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -277,12 +277,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org98c1042" class="outline-2">
-<h2 id="org98c1042"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org4d4a392" class="outline-2">
+<h2 id="org4d4a392"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org1a327d5" class="outline-3">
-<h3 id="org1a327d5"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org59c5a80" class="outline-3">
+<h3 id="org59c5a80"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -436,8 +436,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-org2e8ffc2" class="outline-3">
-<h3 id="org2e8ffc2"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-org91648fd" class="outline-3">
+<h3 id="org91648fd"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -556,13 +556,13 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org0354c55" class="outline-3">
-<h3 id="org0354c55"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org588b600" class="outline-3">
+<h3 id="org588b600"><span class="section-number-3">2.3</span> Registers</h3>
 </div>
 </div>
 
-<div id="outline-container-org8f7105a" class="outline-2">
-<h2 id="org8f7105a"><span class="section-number-2">3</span> Reference</h2>
+<div id="outline-container-orge805155" class="outline-2">
+<h2 id="orge805155"><span class="section-number-2">3</span> Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -678,13 +678,31 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 <li><code>is-boolean VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Boolean and to <code>False</code> otherwise.</li>
 
 <li><code>open-text-file STRING</code> &#x2014; sets the <code>/ans</code> Register to a File object corresponding to the file named STRING.</li>
+
+<li><code>read FILE</code> &#x2014; read a single character from a File object and set the <code>/ans</code> Register to that character.</li>
+
+<li><code>close REGISTER</code> &#x2014; if a File object is located at REGISTER, close the File and destroy the File object.</li>
+
+<li><code>and BOOLEAN1 BOOLEAN2</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if BOOLEAN1 and BOOLEAN2 are <code>True</code> and to <code>False</code> otherwise.</li>
+
+<li><code>or BOOLEAN1 BOOLEAN2</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if either BOOLEAN1 or BOOLEAN2 are <code>True</code> and to <code>False</code> otherwise.</li>
+
+<li><code>not BOOLEAN</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if BOOLEAN is <code>False</code> and to <code>False</code> otherwise.</li>
+
+<li><code>read-line FILE</code> &#x2014; sets the <code>/ans</code> Register to the next line from FILE.</li>
+
+<li><code>write STRING FILE</code> &#x2014; write a given STRING to FILE.</li>
+
+<li><code>input REGISTER</code> &#x2014; reads a line of text the user enters and sets the <code>/ans</code> Register to the result (always a String).</li>
+
+<li><code>shell STRING</code> &#x2014; execute the shell command STRING.</li>
 </ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-08 Sun 10:52</p>
+<p class="date">Created: 2019-12-10 Tue 10:46</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

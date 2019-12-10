@@ -338,6 +338,24 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =open-text-file STRING= --- sets the =/ans= Register to a File object corresponding to the file named STRING.
 
+- =read FILE= --- read a single character from a File object and set the =/ans= Register to that character.
+
+- =close REGISTER= --- if a File object is located at REGISTER, close the File and destroy the File object.
+
+- =and BOOLEAN1 BOOLEAN2= --- sets the =/ans= Register to =True= if BOOLEAN1 and BOOLEAN2 are =True= and to =False= otherwise.
+
+- =or BOOLEAN1 BOOLEAN2= --- sets the =/ans= Register to =True= if either BOOLEAN1 or BOOLEAN2 are =True= and to =False= otherwise.
+
+- =not BOOLEAN= --- sets the =/ans= Register to =True= if BOOLEAN is =False= and to =False= otherwise.
+
+- =read-line FILE= --- sets the =/ans= Register to the next line from FILE.
+
+- =write STRING FILE= --- write a given STRING to FILE.
+
+- =input REGISTER= --- reads a line of text the user enters and sets the =/ans= Register to the result (always a String).
+
+- =shell STRING= --- execute the shell command STRING.
+
 
 
 
