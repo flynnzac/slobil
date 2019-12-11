@@ -1,15 +1,18 @@
 void
-trash (void* junk, size_t sz, trash_heap* trash)
+trash (void* junk, enum trash_type type, size_t sz)
 {
   trash_heap* heap = malloc(sizeof(trash_heap));
   heap->garbage = junk;
   heap->right = NULL;
+  heap->type = type;
+  heap->sz = sz;
+  arbel_trash_size += sz;
 
-  trash_heap* head = trash->trash;
+  trash_heap* head = arbel_trash->trash;
 
   if (head == NULL)
     {
-      trash->trash = heap;
+      arbel_trash->trash = heap;
     }
   else
     {
@@ -22,32 +25,44 @@ trash (void* junk, size_t sz, trash_heap* trash)
       
 }
 
-
 void
-trash_registry (registry* reg)
+empty_trash_if (size_t if_size)
 {
-  registry_trash_heap* heap = malloc(sizeof(registry_trash_heap));
-  heap->garbage = reg;
-  heap->right = NULL;
-  registry_trash_heap* head = arbel_trash.registry_trash;
-  if (head == NULL)
+  if (arbel_trash_size < if_size)
+    return;
+
+  trash_heap* tmp;
+  while (tr != NULL)
     {
-      arbel.registry_trash = heap;
-    }
-  else
-    {
-      while (head->right != NULL)
+      switch (tr->type)
 	{
-	  head = head->right;
+	case TRASH_C:
+	  free(tr->garbage);
+	  break;
+	case TRASH_DATA:
+	  free_data((data*) tr->garbage);
+	  break;
+	case TRASH_REGISTRY:
+	  free_registry((registry*) tr->garbage);
+	  break;
 	}
-
-      head->right = heap;
+      arbel_trash_size -= tr->sz;
+      tmp = tr->right;
+      free(tr);
+      tr = tmp;
     }
 }
 
-void
-trash_c (void* object)
-{
-  
-}
 
+size_t
+total_size_of_trash (trash_heap* tr)
+{
+  size_t total = 0;
+  while (tr != NULL)
+    {
+      total += tr->sz;
+      tr = tr->right;
+    }
+
+  return total;
+}

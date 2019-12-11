@@ -70,18 +70,17 @@
 
 (setq arbel-font-lock-keywords
       (let* (
-	           (functions
+	     (functions
               '("set"
-		            "add"
-		            "multiply"
-		            "subtract"
-                "divide"
+		"add"
+		"mul"
+		"sub"
+                "div"
                 "if"
-                "compute"
                 "registry"
                 "get"
-                "mov"
-                "del"
+                "move"
+                "delete"
                 "exit"
                 "answer"
                 "sit"
@@ -104,11 +103,9 @@
                 "list"
                 "to-register"
                 "collapse"
-                "join"
                 "string-eq"
                 "string-gt"
                 "string-lt"
-                "exist-in"
                 "register-eq"
                 "go-in"
                 "go-out"
@@ -120,13 +117,14 @@
                 "clear-code"
                 "error"
                 "is-integer"
-                "is-decimal"
+                "is-real"
                 "is-string"
                 "is-register"
                 "is-registry"
                 "is-instruction"
                 "is-file"
                 "is-nothing"
+		"is-boolean"
                 "open-text-file"
                 "read"
                 "close"
@@ -142,11 +140,10 @@
                 "replace"
                 "log"
                 "exp"
-                "to-power"
-                "chdir"
-                "curdir"
-		            "copy-file"
-		            "import"
+                "power"
+                "change-dir"
+                "current-dir"
+		"import"
                 "repeat"
                 "substring"
                 "up"
@@ -157,18 +154,17 @@
                 "is-error"
                 "code"
                 "call"
-                "copy"
-		            "is-boolean"
-		            ))
-	           (functions-regexp (regexp-opt functions 'words))
-		   (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
-		   (boolean-regexp (regexp-opt '("True" "False") 'words))
+		"is-error"
+		))
+	     (functions-regexp (regexp-opt functions 'words))
+	     (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
+	     (boolean-regexp (regexp-opt '("True" "False") 'words))
              )
-	      `(
-		(,register-regexp . (1 font-lock-function-name-face))
-		(,boolean-regexp . (1 font-lock-constant-face))
-		(,functions-regexp . font-lock-builtin-face)
-	        )))
+	`(
+	  (,register-regexp . (1 font-lock-function-name-face))
+	  (,boolean-regexp . (1 font-lock-constant-face))
+	  (,functions-regexp . font-lock-builtin-face)
+	  )))
 
 (define-derived-mode arbel-mode prog-mode "arbel"
   "Major mode for editing code in the ARBEL language"

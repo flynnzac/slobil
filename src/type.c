@@ -30,7 +30,7 @@ is_integer (const char* str)
       if (!(isdigit((int) str[i]) || ((i==0) && str[i]=='-')))
         return false;
     }
-  return true;
+  return strcmp(str, "-") != 0;
 }
 
 bool

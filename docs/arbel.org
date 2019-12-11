@@ -124,6 +124,13 @@
 
      If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
 
+
+   The last syntax element is the comment.  To write a comment in ARBEL, use a single quote (='=) as the first character in a statement.  You can think about this quote as an a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
+   #+BEGIN_SRC
+   ... ' This is a correct comment
+   ... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Register /'This
+   #+END_SRC
+
    That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
      
 
@@ -256,7 +263,7 @@ ARBEL is not only a programming language. It is also an /environment/.  The curr
 
 * Examples
 
-** Example 1: A Line-Oriented Text Editor
+** Example: A Line-Oriented Text Editor
 
 #+INCLUDE: "../examples/arbed.arb" example
 
@@ -275,7 +282,7 @@ Goodbye
 Hello
 #+END_SRC
 
-** Example 2: Numerical Differentiation
+** Example: Numerical Differentiation
 
 #+INCLUDE: "../examples/deriv.arb" example
 
@@ -286,7 +293,7 @@ Example of use:
 ans = 2.0
 #+END_SRC
 
-** Example 3: Dispatch
+** Example: Dispatch
 
 #+INCLUDE: "../examples/dispatch.arb" example
 
@@ -298,8 +305,10 @@ ans = 20
 ... add-n-times /val 4.0 /times 5 .
 ans = 20.0
 ... add-n-times /val "hello" /times 5 .
-ans = hellohellohellohellohelloh
+ans = hellohellohellohellohello
 #+END_SRC
+
+** Example: Compute Factorial
 
 * Reference
 
@@ -307,13 +316,13 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =set REGISTER VALUE <REGISTRY>= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
 
-- =add NUMBER1 NUMBER2= --- adds the two numbers together and sets the =/ans= register to the result.
+- =add NUMBER1 NUMBER2 ...= --- adds all the numbers together and sets the =/ans= register to the result.
 
-- =multiply NUMBER1 NUMBER2= --- multiplies the two numbers together and sets the =/ans= register to the result.
+- =mul NUMBER1 NUMBER2 ...= --- multiplies all the numbers together and sets the =/ans= register to the result.
 
-- =subtract NUMBER1 NUMBER2= --- subtracts the second number from the first and sets the =/ans= register to the result.
+- =sub NUMBER1 NUMBER2 ...= --- subtracts the second number from the first and the third number from that and so on and sets the =/ans= register to the result. 
 
-- =divide NUMBER1 NUMBER2= --- divides the first number by the second and sets the =/ans= register to the result.
+- =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
 
 - =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
@@ -453,7 +462,14 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.
 
-- =up INSTRUCTION= --- call INSTRUCTION in the Registry above the current Registry.
+- =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
+  #+BEGIN_SRC
+  ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
+  ... set /x 1 . 
+  ... inc /x /x . 
+  ... print x .
+  2
+  #+END_SRC
 
 - =of STRING REGISTRY= --- declare REGISTRY to be =of= kind STRING.
 

@@ -3,7 +3,7 @@
 
 set /integrate 
     ( 
-      set /delta [ divide [ subtract ub lb . ] n . ] .
+      set /delta [ div [ sub ub lb . ] n . ] .
       set /x lb .
       set /int 0.0 .
       repeat n
@@ -11,5 +11,5 @@ set /integrate
               set /int [ add int [ f /t x . ] . ] .
               set /x [ add x delta . ] .
             ) .
-      multiply int delta .
+      mul int delta .
     ) .

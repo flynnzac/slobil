@@ -5,7 +5,7 @@ set /deriv
          {
            set /h 0.001 .
          } .
-      divide [ subtract [ f /t [ add x h . ] . ]
-                        [ f /t [ subtract x h . ] . ] . ]
-             [ multiply 2 h . ] .
+      div [ sub [ f /t [ add x h . ] . ]
+                [ f /t [ sub x h . ] . ] . ]
+          [ mul 2 h . ] .
     ) .

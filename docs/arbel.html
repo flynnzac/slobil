@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-11 Wed 08:22 -->
+<!-- 2019-12-11 Wed 11:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-11 Wed 08:22
+ARBEL<br>Zach Flynn<br>2019-12-11 Wed 11:59
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,28 +239,29 @@ ARBEL<br>Zach Flynn<br>2019-12-11 Wed 08:22
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3fc4628">1. Introduction</a></li>
-<li><a href="#org86b5557">2. The Basics</a>
+<li><a href="#org0bd765a">1. Introduction</a></li>
+<li><a href="#org10f99c2">2. The Basics</a>
 <ul>
-<li><a href="#org0a8f407">2.1. Statements and syntax</a></li>
-<li><a href="#orgcf9af7c">2.2. Registries</a></li>
-<li><a href="#org9833cf4">2.3. Registers</a></li>
-<li><a href="#org9417ca0">2.4. Environment</a></li>
+<li><a href="#org99a786c">2.1. Statements and syntax</a></li>
+<li><a href="#orga1e9a73">2.2. Registries</a></li>
+<li><a href="#org69e3201">2.3. Registers</a></li>
+<li><a href="#org09a0522">2.4. Environment</a></li>
 </ul>
 </li>
-<li><a href="#org70600e5">3. Examples</a>
+<li><a href="#orgabe6bad">3. Examples</a>
 <ul>
-<li><a href="#orga9b51cf">3.1. Example 1: A Line-Oriented Text Editor</a></li>
-<li><a href="#org22cccc0">3.2. Example 2: Numerical Differentiation</a></li>
-<li><a href="#org1956735">3.3. Example 3: Dispatch</a></li>
+<li><a href="#org105b7f3">3.1. Example: A Line-Oriented Text Editor</a></li>
+<li><a href="#org58b5426">3.2. Example: Numerical Differentiation</a></li>
+<li><a href="#org0e1a046">3.3. Example: Dispatch</a></li>
+<li><a href="#org9556482">3.4. Example: Compute Factorial</a></li>
 </ul>
 </li>
-<li><a href="#orgd989d00">4. Reference</a></li>
+<li><a href="#org8e5f6cc">4. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org3fc4628" class="outline-2">
-<h2 id="org3fc4628"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org0bd765a" class="outline-2">
+<h2 id="org0bd765a"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -285,12 +286,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org86b5557" class="outline-2">
-<h2 id="org86b5557"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org10f99c2" class="outline-2">
+<h2 id="org10f99c2"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org0a8f407" class="outline-3">
-<h3 id="org0a8f407"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org99a786c" class="outline-3">
+<h3 id="org99a786c"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -437,6 +438,15 @@ If we had instead used closed parenthesis, both statements would execute everyti
 </p></li>
 </ul>
 
+
+<p>
+The last syntax element is the comment.  To write a comment in ARBEL, use a single quote (<code>'</code>) as the first character in a statement.  You can think about this quote as an a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
+</p>
+<pre class="example">
+... ' This is a correct comment
+... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Register /'This
+</pre>
+
 <p>
 That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
 </p>
@@ -444,8 +454,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-orgcf9af7c" class="outline-3">
-<h3 id="orgcf9af7c"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-orga1e9a73" class="outline-3">
+<h3 id="orga1e9a73"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -564,8 +574,8 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org9833cf4" class="outline-3">
-<h3 id="org9833cf4"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org69e3201" class="outline-3">
+<h3 id="org69e3201"><span class="section-number-3">2.3</span> Registers</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
@@ -601,8 +611,8 @@ Registers are data denoting locations so they are often useful ways to manipulat
 </div>
 </div>
 
-<div id="outline-container-org9417ca0" class="outline-3">
-<h3 id="org9417ca0"><span class="section-number-3">2.4</span> Environment</h3>
+<div id="outline-container-org09a0522" class="outline-3">
+<h3 id="org09a0522"><span class="section-number-3">2.4</span> Environment</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 ARBEL is not only a programming language. It is also an <i>environment</i>.  The current state of ARBEL &#x2014; the values and where they are located in the registry &#x2014; can be saved to disk and re-loaded later on.
@@ -611,12 +621,12 @@ ARBEL is not only a programming language. It is also an <i>environment</i>.  The
 </div>
 </div>
 
-<div id="outline-container-org70600e5" class="outline-2">
-<h2 id="org70600e5"><span class="section-number-2">3</span> Examples</h2>
+<div id="outline-container-orgabe6bad" class="outline-2">
+<h2 id="orgabe6bad"><span class="section-number-2">3</span> Examples</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orga9b51cf" class="outline-3">
-<h3 id="orga9b51cf"><span class="section-number-3">3.1</span> Example 1: A Line-Oriented Text Editor</h3>
+<div id="outline-container-org105b7f3" class="outline-3">
+<h3 id="org105b7f3"><span class="section-number-3">3.1</span> Example: A Line-Oriented Text Editor</h3>
 <div class="outline-text-3" id="text-3-1">
 <pre class="example">
 ' Line-oriented text editor
@@ -625,8 +635,8 @@ in arbed
    (
      set /buffer [ list . ] . 
      set /cur-line 1 . 
-     set /n ( up ( set /cur-line [ add cur-line 1 . ] . ) . ) .
-     set /p ( up ( set /cur-line [ subtract cur-line 1 . ] . ) . ) .
+     set /n ( up set /cur-line [ add cur-line 1 . ] . ) .
+     set /p ( up set /cur-line [ sub cur-line 1 . ] . ) .
      set /i
          (
            set /arbed-str s buffer .
@@ -663,8 +673,8 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-org22cccc0" class="outline-3">
-<h3 id="org22cccc0"><span class="section-number-3">3.2</span> Example 2: Numerical Differentiation</h3>
+<div id="outline-container-org58b5426" class="outline-3">
+<h3 id="org58b5426"><span class="section-number-3">3.2</span> Example: Numerical Differentiation</h3>
 <div class="outline-text-3" id="text-3-2">
 <pre class="example">
 ' Compute the numerical derivative of a function
@@ -674,9 +684,9 @@ set /deriv
          {
            set /h 0.001 .
          } .
-      divide [ subtract [ f /t [ add x h . ] . ]
-                        [ f /t [ subtract x h . ] . ] . ]
-             [ multiply 2 h . ] .
+      div [ sub [ f /t [ add x h . ] . ]
+                [ f /t [ sub x h . ] . ] . ]
+          [ mul 2 h . ] .
     ) .
 </pre>
 
@@ -691,8 +701,8 @@ ans = 2.0
 </div>
 </div>
 
-<div id="outline-container-org1956735" class="outline-3">
-<h3 id="org1956735"><span class="section-number-3">3.3</span> Example 3: Dispatch</h3>
+<div id="outline-container-org0e1a046" class="outline-3">
+<h3 id="org0e1a046"><span class="section-number-3">3.3</span> Example: Dispatch</h3>
 <div class="outline-text-3" id="text-3-3">
 <pre class="example">
 ' Demonstrates dispatching to different types
@@ -705,7 +715,7 @@ set /add-n-times
 
 set /add-n-times+Integer
     (
-      multiply val times .
+      mul val times .
     ) .
 
 set /add-n-times+Real add-n-times+Integer .
@@ -713,7 +723,7 @@ set /add-n-times+Real add-n-times+Integer .
 set /add-n-times+String
     (
       set /result val .
-      repeat [ subtract times 1 . ]
+      repeat [ sub times 1 . ]
              ( set /result [ concat result val . ] . ) .
       answer result .
     ) .
@@ -729,14 +739,18 @@ ans = 20
 ... add-n-times /val 4.0 /times 5 .
 ans = 20.0
 ... add-n-times /val "hello" /times 5 .
-ans = hellohellohellohellohelloh
+ans = hellohellohellohellohello
 </pre>
 </div>
 </div>
+
+<div id="outline-container-org9556482" class="outline-3">
+<h3 id="org9556482"><span class="section-number-3">3.4</span> Example: Compute Factorial</h3>
+</div>
 </div>
 
-<div id="outline-container-orgd989d00" class="outline-2">
-<h2 id="orgd989d00"><span class="section-number-2">4</span> Reference</h2>
+<div id="outline-container-org8e5f6cc" class="outline-2">
+<h2 id="org8e5f6cc"><span class="section-number-2">4</span> Reference</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -745,13 +759,13 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 <ul class="org-ul">
 <li><code>set REGISTER VALUE &lt;REGISTRY&gt;</code> &#x2014; sets the value at <code>REGISTER</code> to <code>VALUE</code> in the registry <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is omitted, then it will set the register in the current registry.</li>
 
-<li><code>add NUMBER1 NUMBER2</code> &#x2014; adds the two numbers together and sets the <code>/ans</code> register to the result.</li>
+<li><code>add NUMBER1 NUMBER2 ...</code> &#x2014; adds all the numbers together and sets the <code>/ans</code> register to the result.</li>
 
-<li><code>multiply NUMBER1 NUMBER2</code> &#x2014; multiplies the two numbers together and sets the <code>/ans</code> register to the result.</li>
+<li><code>mul NUMBER1 NUMBER2 ...</code> &#x2014; multiplies all the numbers together and sets the <code>/ans</code> register to the result.</li>
 
-<li><code>subtract NUMBER1 NUMBER2</code> &#x2014; subtracts the second number from the first and sets the <code>/ans</code> register to the result.</li>
+<li><code>sub NUMBER1 NUMBER2 ...</code> &#x2014; subtracts the second number from the first and the third number from that and so on and sets the <code>/ans</code> register to the result.</li>
 
-<li><code>divide NUMBER1 NUMBER2</code> &#x2014; divides the first number by the second and sets the <code>/ans</code> register to the result.</li>
+<li><code>div NUMBER1 NUMBER2 ...</code> &#x2014; divides the first number by the second, the result by the third number, and so on and sets the <code>/ans</code> register to the result.</li>
 
 <li><code>if BOOLEAN VALUE1 &lt;VALUE2&gt;</code> &#x2014; if the first argument is <code>True</code>, sets the <code>/ans</code> register to <code>VALUE1</code>, if it is <code>False</code>, sets the <code>/ans</code> register to <code>VALUE2</code>.  If <code>VALUE2</code> is omitted, do nothing if the first argument is <code>False</code>.</li>
 
@@ -891,7 +905,16 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 
 <li><code>substring STRING INTEGER1 INTEGER2</code> &#x2014; sets the <code>/ans</code> Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.</li>
 
-<li><code>up INSTRUCTION</code> &#x2014; call INSTRUCTION in the Registry above the current Registry.</li>
+<li><p>
+<code>up STATEMENT</code> &#x2014; execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
+</p>
+<pre class="example">
+... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
+... set /x 1 . 
+... inc /x /x . 
+... print x .
+2
+</pre></li>
 
 <li><code>of STRING REGISTRY</code> &#x2014; declare REGISTRY to be <code>of</code> kind STRING.</li>
 
@@ -910,7 +933,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-11 Wed 08:22</p>
+<p class="date">Created: 2019-12-11 Wed 11:59</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

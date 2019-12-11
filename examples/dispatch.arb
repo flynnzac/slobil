@@ -8,7 +8,7 @@ set /add-n-times
 
 set /add-n-times+Integer
     (
-      multiply val times .
+      mul val times .
     ) .
 
 set /add-n-times+Real add-n-times+Integer .
@@ -16,7 +16,7 @@ set /add-n-times+Real add-n-times+Integer .
 set /add-n-times+String
     (
       set /result val .
-      repeat [ subtract times 1 . ]
+      repeat [ sub times 1 . ]
              ( set /result [ concat result val . ] . ) .
       answer result .
     ) .

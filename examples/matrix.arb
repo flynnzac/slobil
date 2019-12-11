@@ -1,8 +1,8 @@
 ' Computes v^T w for a vector 
 set /dotproduct
     (
-      join v w multiply .
-      collapse ans add "#" .
+      do-to-all ( mul t1 t2 . ) v w .
+      collapse ( add t1 t2 . ) ans "#" .
     ) .
 
 
@@ -11,13 +11,13 @@ set /matrix-multiply
     (
       set /i /#1 .
       set /out [ list . ] .
-      while ( exist-in i B . )
+      while ( exist i B . )
             (
               do-to-all ( dotproduct /v t /w B:i . ) A .
-              mov /ans /res .
+              move /ans /res .
               in out ( set i res . ) .
               next i .
-              mov /ans /i .
+              move /ans /i .
             ) .
       answer out .
     ) .
@@ -27,13 +27,13 @@ set /transpose
     (
       set /i /#1 .
       set /out [ list . ] .
-      while ( exist-in i A:/#1 . )
+      while ( exist i A:/#1 . )
             (
               do-to-all ( answer t:i . ) A .
-              mov /ans /res .
+              move /ans /res .
               in out ( set i res . ) .
               next i .
-              mov /ans /i .
+              move /ans /i .
             ) .
       answer out .
     ) .

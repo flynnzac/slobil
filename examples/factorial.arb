@@ -1,12 +1,13 @@
-' compute a factorial
+' compute a factorial using while
 set /factorial
     (
       set /i 2 .
       set /prod 1 .
       while ( lteq i t . )
             (
-              set /prod [ multiply i prod . ] .
+              set /prod [ mul i prod . ] .
               set /i [ add i 1 . ] .
             ) .
       answer prod .
     ) .
+

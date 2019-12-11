@@ -9,7 +9,8 @@ set /parse-csv
       set /parsed [ list . ] .
       set /cur-reg /#1 . 
 
-      while ( set /cur-line [ read-line file . ] . is-string cur-line . )
+      while ( set /cur-line [ read-line file . ] .
+	      is-string cur-line . )
             (
               tokenize /line cur-line /sep "," .
               in parsed ( set cur-reg ans . ) .

@@ -82,101 +82,107 @@ op_registry (arg a, registry* reg)
 void
 op_arithmetic (arg a, registry* reg, const int code)
 {
-  CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* new_data;
-
-  if (arg1 == NULL || arg2 == NULL)
+  data* d;
+  data_type result_type = INTEGER;
+  int int_value = 0;
+  double dbl_value = 0.0;
+  for (int i = 1; i < a.length; i++)
     {
-      do_error ("Requires two arguments.");
-      return;
-    }
+      data* cur = resolve(a.arg_array[i], reg);
+      if (cur == NULL || !is_numeric(cur))
+	{
+	  do_error("Arithmetic requires at least two numeric arguments.");
+	  return;
+	}
 
-  if (!is_numeric(arg1) || !is_numeric(arg2))
-    {
-      do_error("Not numeric arguments.");
-      return;
-    }
+      if (cur->type == REAL && result_type == INTEGER)
+	{
+	  dbl_value = (double) int_value;
+	  result_type = REAL;
+	}
 
-  if (arg1->type == REAL || arg2->type == REAL)
-    {
-      double term2;
-      double result;
-      if (arg1->type == INTEGER)
-        result = *((int*) arg1->data);
+      if (result_type == INTEGER)
+	{
+	  if (i == 1)
+	    int_value = *((int*) cur->data);
+	  else
+	    switch (code)
+	      {
+	      case 1:
+		int_value += *((int*) cur->data);
+		break;
+	      case 2:
+		int_value *= *((int*) cur->data);
+		break;
+	      case 3:
+		int_value -= *((int*) cur->data);
+		break;
+	      case 4:
+		int_value /= *((int*) cur->data);
+		break;
+	      }
+	}
       else
-        result = *((double*) arg1->data);
-
-      if (arg2->type == INTEGER)
-        term2 = *((int*) arg2->data);
-      else
-        term2 = *((double*) arg2->data);
-
-      switch (code)
-        {
-        case 1:
-          result += term2;
-          break;
-        case 2:
-          result *= term2;
-          break;
-        case 3:
-          result -= term2;
-          break;
-        case 4:
-          result /= term2;
-          break;
-        }
-      assign_real(&new_data, result);
+	{
+	  double val;
+	  if (cur->type == INTEGER)
+	    val = (double) (*((int*) cur->data));
+	  else
+	    val = *((double*) cur->data);
+	    
+	  if (i == 1)
+	    dbl_value = val;
+	  else
+	    switch (code)
+	      {
+	      case 1:
+		dbl_value += val;
+		break;
+	      case 2:
+		dbl_value *= val;
+		break;
+	      case 3:
+		dbl_value -= val;
+		break;
+	      case 4:
+		dbl_value /= val;
+	      }
+	}
     }
+
+  if (result_type == INTEGER)
+    assign_int(&d, int_value);
   else
-    {
-      
-      int result_int = *((int*) arg1->data);
-      int term2_int = *((int*) arg2->data);
-      switch (code)
-        {
-        case 1:
-          result_int += term2_int;
-          break;
-        case 2:
-          result_int *= term2_int;
-          break;
-        case 3:
-          result_int -= term2_int;
-          break;
-        case 4:
-          result_int /= term2_int;
-          break;
-        }
-      assign_int(&new_data, result_int);
-    }
-  
-  ret_ans(reg, new_data);
+    assign_real(&d, dbl_value);
+	      
+  ret_ans(reg, d);
 }  
 
 void
 op_add (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   op_arithmetic(a, reg, 1);
 }
 
 void
-op_multiply (arg a, registry* reg)
+op_mul (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   op_arithmetic(a, reg, 2);
 }
 
 void
-op_subtract (arg a, registry* reg)
+op_sub (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   op_arithmetic(a, reg, 3);
 }
 
 void
-op_divide (arg a, registry* reg)
+op_div (arg a, registry* reg)
 {
+  CHECK_ARGS(a, 2);
   op_arithmetic(a, reg, 4);
 }
 
@@ -2770,14 +2776,20 @@ op_up (arg a, registry* reg)
       return;
     }
 
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL || (arg1->type != INSTRUCTION))
+  arg a1 = gen_arg(a.length-1,0);
+  for (int i=1; i < a.length; i++)
     {
-      do_error("`up` requires an instruction argument.");
-      return;
+      a1.arg_array[i-1] = resolve(a.arg_array[i], reg);
     }
 
-  execute_code(((instruction*) arg1->data)->stmt, reg->up);
+  compute(a1.arg_array[0], reg->up, a1);
+
+  data* d = lookup(reg->up, arbel_hash_ans, 0);
+  if (d != NULL)
+    {
+      d = copy_data(d);
+      ret_ans(reg, d);
+    }
 
 }
 
@@ -2997,15 +3009,15 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_add);
   set(reg,d,"add",1);
 
-  assign_op(&d, op_multiply);
-  set(reg,d,"multiply",1);
+  assign_op(&d, op_mul);
+  set(reg,d,"mul",1);
 
-  assign_op(&d, op_subtract);
-  set(reg,d,"subtract",1);
+  assign_op(&d, op_sub);
+  set(reg,d,"sub",1);
 
-  assign_op(&d, op_divide);
-  set(reg,d,"divide",1);
-  
+  assign_op(&d, op_div);
+  set(reg,d,"div",1);
+
   assign_op(&d, op_if);
   set(reg,d,"if",1);
 
