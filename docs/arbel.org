@@ -224,6 +224,83 @@
 
 ** Registers   
 
+Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
+
+#+BEGIN_SRC
+... set /x /y .
+... print x .
+/y
+... set x "hello" .
+... print x .
+/y
+... print y .
+hello
+#+END_SRC
+
+You can move data between Registers with the =move= command:
+
+#+BEGIN_SRC
+... set /x "hello" .
+... move /x /y .
+... print y .
+hello
+... print x .
+Error: Value at register /x not found.
+#+END_SRC
+
+Registers are data denoting locations so they are often useful ways to manipulate the locations of values instead of the values themselves, as with the =move= and =set= operations.
+
+** Environment
+
+ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on.
+
+* Examples
+
+** Example 1: A Line-Oriented Text Editor
+
+#+INCLUDE: "../examples/arbed.arb" example
+
+Example of use:
+#+BEGIN_SRC
+... go-in arbed .
+... i /s "Hello" .
+... o .
+Hello
+... n .
+... i /s "Goodbye" .
+... o .
+Goodbye
+... p .
+... o .
+Hello
+#+END_SRC
+
+** Example 2: Numerical Differentiation
+
+#+INCLUDE: "../examples/deriv.arb" example
+
+Example of use:
+#+BEGIN_SRC
+... set /f ( power t 2 . ) .
+... deriv /f f /x 1.0
+ans = 2.0
+#+END_SRC
+
+** Example 3: Dispatch
+
+#+INCLUDE: "../examples/dispatch.arb" example
+
+
+Example of use:
+#+BEGIN_SRC
+... add-n-times /val 4 /times 5 .
+ans = 20
+... add-n-times /val 4.0 /times 5 .
+ans = 20.0
+... add-n-times /val "hello" /times 5 .
+ans = hellohellohellohellohelloh
+#+END_SRC
+
 * Reference
 
 Arguments that are optional are enclosed in angle brackets (<>).
