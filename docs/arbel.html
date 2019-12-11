@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-10 Tue 12:29 -->
+<!-- 2019-12-10 Tue 14:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-10 Tue 12:29
+ARBEL<br>Zach Flynn<br>2019-12-10 Tue 14:02
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,20 +239,20 @@ ARBEL<br>Zach Flynn<br>2019-12-10 Tue 12:29
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcd922c6">1. Introduction</a></li>
-<li><a href="#org65f29c9">2. The Basics</a>
+<li><a href="#org9618756">1. Introduction</a></li>
+<li><a href="#org2253a06">2. The Basics</a>
 <ul>
-<li><a href="#orgb87fdc4">2.1. Statements and syntax</a></li>
-<li><a href="#org0d14bbe">2.2. Registries</a></li>
-<li><a href="#orgb516514">2.3. Registers</a></li>
+<li><a href="#org395cebb">2.1. Statements and syntax</a></li>
+<li><a href="#org34916df">2.2. Registries</a></li>
+<li><a href="#orgb5201ae">2.3. Registers</a></li>
 </ul>
 </li>
-<li><a href="#org5ca8ae5">3. Reference</a></li>
+<li><a href="#org2d84351">3. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcd922c6" class="outline-2">
-<h2 id="orgcd922c6"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org9618756" class="outline-2">
+<h2 id="org9618756"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -277,12 +277,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org65f29c9" class="outline-2">
-<h2 id="org65f29c9"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org2253a06" class="outline-2">
+<h2 id="org2253a06"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgb87fdc4" class="outline-3">
-<h3 id="orgb87fdc4"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org395cebb" class="outline-3">
+<h3 id="org395cebb"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -436,8 +436,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-org0d14bbe" class="outline-3">
-<h3 id="org0d14bbe"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-org34916df" class="outline-3">
+<h3 id="org34916df"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -556,13 +556,13 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-orgb516514" class="outline-3">
-<h3 id="orgb516514"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-orgb5201ae" class="outline-3">
+<h3 id="orgb5201ae"><span class="section-number-3">2.3</span> Registers</h3>
 </div>
 </div>
 
-<div id="outline-container-org5ca8ae5" class="outline-2">
-<h2 id="org5ca8ae5"><span class="section-number-2">3</span> Reference</h2>
+<div id="outline-container-org2d84351" class="outline-2">
+<h2 id="org2d84351"><span class="section-number-2">3</span> Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -617,7 +617,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 
 <li><code>source STRING</code> &#x2014; executes ARBEL code in the file named by STRING.</li>
 
-<li><code>do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN</code> &#x2014; execute <code>INSTRUCTION</code> which takes arguments at Registers <code>/t1</code>, <code>/t2</code>, &#x2026;, <code>/tN</code> for each element in <code>REGISTRY1</code>, &#x2026;, <code>REGISTRYN</code>.  Set the <code>/ans</code> register to a Registry which contains whatever the <code>INSTRUCTION</code> evaluates to at the corresponding Registers.  For example, <code>do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]</code> sets the <code>/ans</code> register to a Registry with elements (5,7,9) at registers <code>(/#1,/#2,/#3)</code>.</li>
+<li><code>do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN</code> &#x2014; execute <code>INSTRUCTION</code> which takes arguments at Registers <code>/t1</code>, <code>/t2</code>, &#x2026;, <code>/tN</code> for each element in <code>REGISTRY1</code>, &#x2026;, <code>REGISTRYN</code>.  Set the <code>/ans</code> register to a Registry which contains whatever the <code>INSTRUCTION</code> evaluates to at the corresponding Registers.  For example, <code>do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]</code> sets the <code>/ans</code> register to a Registry with elements (5,7,9) at registers <code>(/#1,/#2,/#3)</code>.  <code>do-to-all</code> will only return results at Registers that exist in all Registries.  So, for example, <code>do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]</code> sets the <code>/ans</code> Register to <code>list 5 7</code>.</li>
 
 <li><code>next REGISTER</code> &#x2014; if the <code>REGISTER</code> ends in a number, return the Register with that number incremented by 1.</li>
 
@@ -736,7 +736,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-10 Tue 12:29</p>
+<p class="date">Created: 2019-12-10 Tue 14:02</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

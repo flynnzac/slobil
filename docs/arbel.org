@@ -276,7 +276,7 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =source STRING= --- executes ARBEL code in the file named by STRING.
 
-- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.
+- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
 - =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
 

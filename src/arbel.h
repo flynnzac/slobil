@@ -170,6 +170,37 @@ struct instruction
 
 typedef struct instruction instruction;
 
+struct trash_heap
+{
+  void* trash;
+  struct trash_heap* right;
+};
+
+typedef struct c_trash_heap c_trash_heap;
+
+struct data_trash_heap
+{
+  data* garbage
+  struct data_trash_heap* right;
+};
+
+typedef struct data_trash_heap data_trash_heap;
+
+struct registry_trash_heap
+{
+  registry* garbage;
+  struct registry_trash_heap* right;
+};
+
+typedef struct registry_trash_heap registry_trash_heap;
+
+struct trash
+{
+  c_trash_heap* c_trash;
+  data_trash_heap* data_trash;
+  registry_trash_heap* registry_trash;
+};
+
 char*
 argument_name (int n);
 
