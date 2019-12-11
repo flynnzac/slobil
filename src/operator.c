@@ -1486,7 +1486,7 @@ op_save (arg a, registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
-  save_registry(f, reg->up);
+  save_registry(f, reg);
   data_type end = NOTHING;
   fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
@@ -1513,7 +1513,7 @@ op_load (arg a, registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
-  read_registry(f, reg->up);
+  read_registry(f, reg);
   fclose(f);
 
 }
