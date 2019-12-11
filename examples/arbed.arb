@@ -1,11 +1,11 @@
-' Simple line-oriented text editor
-set /arbed [ reg . ] .
+' Line-oriented text editor
+set /arbed [ registry . ] .
 in arbed
    (
      set /buffer [ list . ] . 
      set /cur-line 1 . 
-     set /n ( up set /cur-line [ add cur-line 1 . ] . ) .
-     set /p ( up set /cur-line [ subtract cur-line 1 . ] . ) .
+     set /n ( up ( set /cur-line [ add cur-line 1 . ] . ) . ) .
+     set /p ( up ( set /cur-line [ subtract cur-line 1 . ] . ) . ) .
      set /i
          (
            set /arbed-str s buffer .

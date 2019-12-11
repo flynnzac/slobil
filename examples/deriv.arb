@@ -1,6 +1,10 @@
 ' Compute the numerical derivative of a function
 set /deriv
     (
+      if [ not [ exist /h . ] . ]
+         {
+           set /h 0.001 .
+         } .
       divide [ subtract [ f /t [ add x h . ] . ]
                         [ f /t [ subtract x h . ] . ] . ]
              [ multiply 2 h . ] .
