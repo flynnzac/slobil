@@ -327,6 +327,45 @@ Example of use:
 ans = 0.332834
 #+END_SRC
 
+** Example: Basic Linear Algebra
+
+#+INCLUDE: "../examples/matrix.arb" example
+
+Example of use:
+#+BEGIN_SRC
+... set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+... transpose /A A .
+ans = a registry with:
+#1 of type Registry, value: a registry with:
+#1 of type Integer, value: 1
+#2 of type Integer, value: 3
+#2 of type Registry, value: a registry with:
+#1 of type Integer, value: 2
+#2 of type Integer, value: 4
+... matrix-multiply /A A /B B .
+ans = a registry with:
+#1 of type Registry, value: a registry with:
+#1 of type Integer, value: 10
+#2 of type Integer, value: 26
+#2 of type Registry, value: a registry with:
+#1 of type Integer, value: 11
+#2 of type Integer, value: 25
+#+END_SRC
+
+** Example: Split a String
+
+#+INCLUDE: "../examples/tokenize.arb" example
+
+Examples of use:
+#+BEGIN_SRC
+... tokenize /line "1,2,3" /sep "," .
+ans = a registry with:
+#1 of type String, value: 1
+#2 of type String, value: 2
+#3 of type String, value: 3
+#+END_SRC
+
 * Reference
 
 Arguments that are optional are enclosed in angle brackets (<>).

@@ -5,7 +5,6 @@ set /dotproduct
       collapse ( add t1 t2 . ) ans "#" .
     ) .
 
-
 ' matrix-multiply A B computes A^T B 
 set /matrix-multiply
     (
@@ -13,7 +12,7 @@ set /matrix-multiply
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all ( dotproduct /v t /w B:i . ) A .
+              do-to-all ( dotproduct /v t1 /w B:i . ) A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
@@ -29,7 +28,7 @@ set /transpose
       set /out [ list . ] .
       while ( exist i A:/#1 . )
             (
-              do-to-all ( answer t:i . ) A .
+              do-to-all ( answer t1:i . ) A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
@@ -39,7 +38,5 @@ set /transpose
     ) .
 
 
-set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
 
 
