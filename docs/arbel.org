@@ -297,7 +297,6 @@ ans = 2.0
 
 #+INCLUDE: "../examples/dispatch.arb" example
 
-
 Example of use:
 #+BEGIN_SRC
 ... add-n-times /val 4 /times 5 .
@@ -309,6 +308,24 @@ ans = hellohellohellohellohello
 #+END_SRC
 
 ** Example: Compute Factorial
+
+#+INCLUDE: "../examples/factorial.arb" example
+
+Example of use:
+#+BEGIN_SRC
+... factorial 5 .
+ans = 120
+#+END_SRC
+
+** Example: Numerical Integration
+
+#+INCLUDE: "../examples/integrate.arb" example
+
+Example of use:
+#+BEGIN_SRC
+... integrate /f ( power t 2 . ) /lb 0.0 /ub 1.0 /n 1000 .
+ans = 0.332834
+#+END_SRC
 
 * Reference
 

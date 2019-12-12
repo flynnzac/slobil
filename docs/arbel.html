@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-11 Wed 11:59 -->
+<!-- 2019-12-11 Wed 18:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-11 Wed 11:59
+ARBEL<br>Zach Flynn<br>2019-12-11 Wed 18:52
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,29 +239,30 @@ ARBEL<br>Zach Flynn<br>2019-12-11 Wed 11:59
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0bd765a">1. Introduction</a></li>
-<li><a href="#org10f99c2">2. The Basics</a>
+<li><a href="#org6d2aba3">1. Introduction</a></li>
+<li><a href="#org6b1d758">2. The Basics</a>
 <ul>
-<li><a href="#org99a786c">2.1. Statements and syntax</a></li>
-<li><a href="#orga1e9a73">2.2. Registries</a></li>
-<li><a href="#org69e3201">2.3. Registers</a></li>
-<li><a href="#org09a0522">2.4. Environment</a></li>
+<li><a href="#org084cf9a">2.1. Statements and syntax</a></li>
+<li><a href="#org08bc402">2.2. Registries</a></li>
+<li><a href="#orge7ff870">2.3. Registers</a></li>
+<li><a href="#org9882471">2.4. Environment</a></li>
 </ul>
 </li>
-<li><a href="#orgabe6bad">3. Examples</a>
+<li><a href="#org7f2b62b">3. Examples</a>
 <ul>
-<li><a href="#org105b7f3">3.1. Example: A Line-Oriented Text Editor</a></li>
-<li><a href="#org58b5426">3.2. Example: Numerical Differentiation</a></li>
-<li><a href="#org0e1a046">3.3. Example: Dispatch</a></li>
-<li><a href="#org9556482">3.4. Example: Compute Factorial</a></li>
+<li><a href="#orga9b0811">3.1. Example: A Line-Oriented Text Editor</a></li>
+<li><a href="#orgefd4559">3.2. Example: Numerical Differentiation</a></li>
+<li><a href="#org6264f49">3.3. Example: Dispatch</a></li>
+<li><a href="#org846e6a8">3.4. Example: Compute Factorial</a></li>
+<li><a href="#org5b7cc81">3.5. Example: Numerical Integration</a></li>
 </ul>
 </li>
-<li><a href="#org8e5f6cc">4. Reference</a></li>
+<li><a href="#orgb98af2b">4. Reference</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0bd765a" class="outline-2">
-<h2 id="org0bd765a"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org6d2aba3" class="outline-2">
+<h2 id="org6d2aba3"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -286,12 +287,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org10f99c2" class="outline-2">
-<h2 id="org10f99c2"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-org6b1d758" class="outline-2">
+<h2 id="org6b1d758"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org99a786c" class="outline-3">
-<h3 id="org99a786c"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org084cf9a" class="outline-3">
+<h3 id="org084cf9a"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -454,8 +455,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-orga1e9a73" class="outline-3">
-<h3 id="orga1e9a73"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-org08bc402" class="outline-3">
+<h3 id="org08bc402"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -540,14 +541,14 @@ Aside from being a useful data structure, registries are also how ARBEL does <i>
 ... set /math [ registry . ] .
 ... set /factorial
        (
-	 set /i 2 .
-	 set /prod 1 .
-	 while ( lteq i t . )
-	       (
-		 set /prod [ multiply i prod . ] .
-		 set /i [ add i 1 . ] .
-	       ) .
-	 answer prod .
+         set /i 2 .
+         set /prod 1 .
+         while ( lteq i t . )
+               (
+                 set /prod [ multiply i prod . ] .
+                 set /i [ add i 1 . ] .
+               ) .
+         answer prod .
        ) math .
 ... math:/factorial /t 5 .
 ans = 120
@@ -574,8 +575,8 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org69e3201" class="outline-3">
-<h3 id="org69e3201"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-orge7ff870" class="outline-3">
+<h3 id="orge7ff870"><span class="section-number-3">2.3</span> Registers</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
@@ -611,8 +612,8 @@ Registers are data denoting locations so they are often useful ways to manipulat
 </div>
 </div>
 
-<div id="outline-container-org09a0522" class="outline-3">
-<h3 id="org09a0522"><span class="section-number-3">2.4</span> Environment</h3>
+<div id="outline-container-org9882471" class="outline-3">
+<h3 id="org9882471"><span class="section-number-3">2.4</span> Environment</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 ARBEL is not only a programming language. It is also an <i>environment</i>.  The current state of ARBEL &#x2014; the values and where they are located in the registry &#x2014; can be saved to disk and re-loaded later on.
@@ -621,12 +622,12 @@ ARBEL is not only a programming language. It is also an <i>environment</i>.  The
 </div>
 </div>
 
-<div id="outline-container-orgabe6bad" class="outline-2">
-<h2 id="orgabe6bad"><span class="section-number-2">3</span> Examples</h2>
+<div id="outline-container-org7f2b62b" class="outline-2">
+<h2 id="org7f2b62b"><span class="section-number-2">3</span> Examples</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org105b7f3" class="outline-3">
-<h3 id="org105b7f3"><span class="section-number-3">3.1</span> Example: A Line-Oriented Text Editor</h3>
+<div id="outline-container-orga9b0811" class="outline-3">
+<h3 id="orga9b0811"><span class="section-number-3">3.1</span> Example: A Line-Oriented Text Editor</h3>
 <div class="outline-text-3" id="text-3-1">
 <pre class="example">
 ' Line-oriented text editor
@@ -673,8 +674,8 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-org58b5426" class="outline-3">
-<h3 id="org58b5426"><span class="section-number-3">3.2</span> Example: Numerical Differentiation</h3>
+<div id="outline-container-orgefd4559" class="outline-3">
+<h3 id="orgefd4559"><span class="section-number-3">3.2</span> Example: Numerical Differentiation</h3>
 <div class="outline-text-3" id="text-3-2">
 <pre class="example">
 ' Compute the numerical derivative of a function
@@ -701,8 +702,8 @@ ans = 2.0
 </div>
 </div>
 
-<div id="outline-container-org0e1a046" class="outline-3">
-<h3 id="org0e1a046"><span class="section-number-3">3.3</span> Example: Dispatch</h3>
+<div id="outline-container-org6264f49" class="outline-3">
+<h3 id="org6264f49"><span class="section-number-3">3.3</span> Example: Dispatch</h3>
 <div class="outline-text-3" id="text-3-3">
 <pre class="example">
 ' Demonstrates dispatching to different types
@@ -729,7 +730,6 @@ set /add-n-times+String
     ) .
 </pre>
 
-
 <p>
 Example of use:
 </p>
@@ -744,13 +744,68 @@ ans = hellohellohellohellohello
 </div>
 </div>
 
-<div id="outline-container-org9556482" class="outline-3">
-<h3 id="org9556482"><span class="section-number-3">3.4</span> Example: Compute Factorial</h3>
+<div id="outline-container-org846e6a8" class="outline-3">
+<h3 id="org846e6a8"><span class="section-number-3">3.4</span> Example: Compute Factorial</h3>
+<div class="outline-text-3" id="text-3-4">
+<pre class="example">
+' compute a factorial using while
+set /factorial
+    (
+      set /i 2 .
+      set /prod 1 .
+      while ( lteq i t . )
+            (
+              set /prod [ mul i prod . ] .
+              set /i [ add i 1 . ] .
+            ) .
+      answer prod .
+    ) .
+</pre>
+
+<p>
+Example of use:
+</p>
+<pre class="example">
+... factorial 5 .
+ans = 120
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org8e5f6cc" class="outline-2">
-<h2 id="org8e5f6cc"><span class="section-number-2">4</span> Reference</h2>
+<div id="outline-container-org5b7cc81" class="outline-3">
+<h3 id="org5b7cc81"><span class="section-number-3">3.5</span> Example: Numerical Integration</h3>
+<div class="outline-text-3" id="text-3-5">
+<pre class="example">
+' takes a function as an argument and return left hand
+' riemmann sum over range
+
+set /integrate 
+    ( 
+      set /delta [ div [ sub ub lb . ] n . ] .
+      set /x lb .
+      set /int 0.0 .
+      repeat n
+            (
+              set /int [ add int [ f /t x . ] . ] .
+              set /x [ add x delta . ] .
+            ) .
+      mul int delta .
+    ) .
+</pre>
+
+<p>
+Example of use:
+</p>
+<pre class="example">
+... integrate /f ( power t 2 . ) /lb 0.0 /ub 1.0 /n 1000 .
+ans = 0.332834
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb98af2b" class="outline-2">
+<h2 id="orgb98af2b"><span class="section-number-2">4</span> Reference</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
@@ -933,7 +988,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-11 Wed 11:59</p>
+<p class="date">Created: 2019-12-11 Wed 18:52</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
