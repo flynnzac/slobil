@@ -11,3 +11,14 @@ set /factorial
       answer prod .
     ) .
 
+
+' compute factorial using recursion
+
+set /factorial
+    (
+      if [ eq t 1 . ]
+         1
+         {
+           mul t [ factorial /t [ sub t 1 . ] . ] .
+         } .
+    ) .
