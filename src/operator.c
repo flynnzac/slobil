@@ -1042,8 +1042,7 @@ op_in (arg a, registry* reg)
 
   ((registry*) arg1->data)->up = reg;
 
-  execute_code(((instruction*) arg2->data)->stmt,
-               (registry*) arg1->data);
+  execute_0(arg2, (registry*) arg1->data);
   
   data* ans = lookup((registry*) arg1->data, arbel_hash_ans, 0);
   if (ans != NULL)
@@ -1075,8 +1074,8 @@ op_while (arg a, registry* reg)
   data* d;
   while (1)
     {
+      execute_0(arg1, reg);
       
-      execute_code(((instruction*) arg1->data)->stmt, reg);
       if (is_error(-1))
         break;
           
@@ -1099,8 +1098,7 @@ op_while (arg a, registry* reg)
           break;
         }
 
-      
-      execute_code(((instruction*) arg2->data)->stmt, reg);
+      execute_0(arg2, reg);
       if (is_error(-1))
         break;
 
@@ -1137,7 +1135,7 @@ op_repeat (arg a, registry* reg)
 
   for (i = 0; i < *((int*) arg1->data); i++)
     {
-      execute_code(((instruction*) arg2->data)->stmt, reg);
+      execute_0(arg2, reg);
       if (is_error(-1)) break;
     }
 }
@@ -2982,7 +2980,7 @@ op_is_error (arg a, registry* reg)
       return;
     }
 
-  execute_code(((instruction*) arg1->data)->stmt, reg);
+  execute_0(arg1, reg);
   data* d;
   assign_int(&d, is_error(-1));
 

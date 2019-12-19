@@ -44,6 +44,14 @@ ret_ans (registry* reg, data* d)
 }
 
 void
+execute_0 (data* instr, registry* reg)
+{
+  ((instruction*) instr->data)->being_called = true;
+  execute_code(((instruction*) instr->data)->stmt, reg);
+  ((instruction*) instr->data)->being_called = false;
+}
+
+void
 _op_call (arg a, registry* reg, const int explicit)
 {
   CHECK_ARGS(a, explicit);
@@ -55,9 +63,7 @@ _op_call (arg a, registry* reg, const int explicit)
       return;
     }
 
-  /* set arg1 to #0 in new registry */
   registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
-  
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -79,8 +85,9 @@ _op_call (arg a, registry* reg, const int explicit)
     }
 
 
+  ((instruction*) arg1->data)->being_called = true;
   execute_code(((instruction*) arg1->data)->stmt, r_new);
-
+  ((instruction*) arg1->data)->being_called = false;
   data* ans;
 
   if (!is_error(-1))

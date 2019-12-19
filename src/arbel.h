@@ -166,6 +166,7 @@ struct instruction
 {
   statement* stmt;
   char* code;
+  bool being_called;
 };
 
 typedef struct instruction instruction;
@@ -444,6 +445,9 @@ update_hash_size (size_t elements, size_t hash_size);
 
 void
 rehash (registry* r0);
+
+void
+execute_0 (data* instr, registry* reg);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 

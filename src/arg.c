@@ -19,7 +19,9 @@ resolve (data* arg, registry* reg)
 {
   if (arg->type == ACTIVE_INSTRUCTION)
     {
+      ((instruction*) arg->data)->being_called = true;
       execute_code(((instruction*) arg->data)->stmt, reg);
+      ((instruction*) arg->data)->being_called = false;
       return get(reg, arbel_hash_ans, 0);
     }
   else
