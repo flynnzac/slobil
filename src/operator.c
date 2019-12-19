@@ -2999,6 +2999,41 @@ op_call (arg a, registry* reg)
 }
 
 void
+op_for (arg a, registry* reg)
+{
+  CHECK_ARGS(a, 3);
+  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg2 = resolve(a.arg_array[2], reg);
+  data* arg3 = resolve(a.arg_array[3], reg);
+
+  if (arg1 == NULL || arg2 == NULL || arg3==NULL)
+    {
+      do_error("`for` requires three arguments.");
+      return;
+    }
+
+  if (arg1->type != REGISTRY)
+    {
+      do_error("First argument to `for` should be a registry.");
+      return;
+    }
+
+  if (arg2->type != REGISTER)
+    {
+      do_error("Second argument to `for` should be a register.");
+      return;
+    }
+
+  if (arg3->type != INSTRUCTION)
+    {
+      do_error("Third argument to `for` shoud be an instruction.");
+      return;
+    }
+
+  
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
