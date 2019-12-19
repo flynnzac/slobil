@@ -207,28 +207,21 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          s->arg.arg_array[arg_n] = d;
-
-          if (e->literal || (arg_n == 0 && (d->type == OPERATION)))
+          if (d != NULL && d->type == INSTRUCTION)
             {
+              s->arg.arg_array[arg_n] = copy_data(d);
+              s->arg.free_data[arg_n] = 1;
+            }
+          else
+            {
+              s->arg.arg_array[arg_n] = d;
               s->arg.free_data[arg_n] = 0;
             }
-          else if (e->statement)
-            {
-              s->arg.free_data[arg_n] = 0;
-            }
-	  else
-	    {
-	      s->arg.free_data[arg_n] = 0;
-	    }
-	      
-              
         }
 
       if (is_error(-1)) break;      
       arg_n++;
       e = e->right;
-
 
     }
 
