@@ -16,9 +16,11 @@ set /factorial
 
 set /factorial
     (
-      if [ eq t 1 . ]
+      move /t /x .
+      if [ eq x 1 . ]
          1
          {
-           mul t [ factorial /t [ sub t 1 . ] . ] .
+           print factorial .
+           mul x [ factorial /t [ sub x 1 . ] . ] .
          } .
     ) .
