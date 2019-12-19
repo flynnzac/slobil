@@ -67,8 +67,7 @@ assign_instr (data** d, statement* s, const char* code)
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
   strcpy(((instruction*) (*d)->data)->code, code);
-
-
+  ((instruction*) (*d)->data)->being_called = false;
 }
 
 void
@@ -78,6 +77,7 @@ assign_active (data** d, statement* s)
   (*d)->type = ACTIVE_INSTRUCTION;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
+  ((instruction*) (*d)->data)->being_called = false;
 }
 
 void
