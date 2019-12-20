@@ -21,11 +21,18 @@
 
 #include "arbel.h"
 #include <unistd.h>
+#include <signal.h>
 
 int
 dummy_event ()
 {
   return 0;
+}
+
+void
+interrupt_handler (int status)
+{
+  is_error(2);
 }
 
 char*
@@ -52,6 +59,7 @@ main (int argc, char** argv)
 {
   source_code = NULL;
   rl_event_hook = dummy_event;
+  signal(SIGINT, interrupt_handler);
   registry* reg = new_registry(NULL, ARBEL_HASH_SIZE);
   add_basic_ops(reg);
   is_exit(0);

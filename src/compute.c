@@ -113,10 +113,12 @@ compute (data* cmd, registry* reg, arg a)
       do_error("Cannot compute without an operation or instruction at #0.");
       return;
     }
-  
+
   switch (cmd->type)
     {
     case OPERATION:
+      if (is_error(-1))
+        return;
       ((operation) cmd->data)(a, reg);
       break;
     case INSTRUCTION:
