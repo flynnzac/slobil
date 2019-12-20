@@ -213,6 +213,11 @@ execute_statement (statement* s, registry* reg)
               s->arg.arg_array[arg_n] = copy_data(d);
               s->arg.free_data[arg_n] = 1;
             }
+          else if (d != NULL && e->statement)
+            {
+              s->arg.arg_array[arg_n] = d;
+              s->arg.free_data[arg_n] = 1;
+            }
           else
             {
               s->arg.arg_array[arg_n] = d;
