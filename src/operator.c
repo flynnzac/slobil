@@ -2789,6 +2789,9 @@ op_up (arg a, registry* reg)
       ret_ans(reg, d);
     }
 
+  free_arg(&a1);
+
+
 }
 
 void

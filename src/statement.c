@@ -194,7 +194,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else 
                 {
-                  mark_do_not_free(reg, arbel_hash_ans);
+                  del(reg, arbel_hash_ans, 0);
+                  /* mark_do_not_free(reg, arbel_hash_ans); */
                 }
             }
           else
@@ -208,7 +209,7 @@ execute_statement (statement* s, registry* reg)
       if (!is_error(-1))
         {
           if (d != NULL && d->type == INSTRUCTION &&
-	      ((instruction*) d->data)->being_called)
+              ((instruction*) d->data)->being_called)
             {
               s->arg.arg_array[arg_n] = copy_data(d);
               s->arg.free_data[arg_n] = 1;
