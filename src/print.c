@@ -89,3 +89,35 @@ print_registry (registry* reg)
         }
     }
 }
+
+void
+print_elements (element* e)
+{
+  while (e != NULL)
+    {
+      if (e->literal)
+	{
+	  print_data(e->data, 0);
+	}
+      else if (e->statement)
+	{
+	  printf("Statement: [  ");
+	  print_elements(e->s->head);
+	  printf(" ]");
+	}
+      else
+	{
+	  for (int i = 0; i < e->levels; i++)
+	    {
+	      printf("%s", e->name[i]);
+	    }
+	}
+
+      if (e->right != NULL)
+	printf(" ");
+	  
+      e = e->right;
+    }
+
+  printf("\n");
+}

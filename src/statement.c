@@ -224,17 +224,20 @@ execute_statement (statement* s, registry* reg)
               s->arg.free_data[arg_n] = 0;
             }
         }
+      else
+	break;
 
-      if (is_error(-1)) break;      
       arg_n++;
       e = e->right;
 
     }
 
   if (!is_error(-1))
+    compute(s->arg.arg_array[0], reg, s->arg);
+  else
     {
-      compute(s->arg.arg_array[0], reg, s->arg);
-
+      printf("Error at statement: ");
+      print_elements(s->head);
     }
   
   free_arg_array_data(&s->arg, arg_n);
