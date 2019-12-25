@@ -404,8 +404,40 @@ I actually don't think there is much better.  Tried a few things.  Like current 
   CLOSED: [2019-12-19 Thu 18:43]
 
 * TODO Better error checking (backtrace)
+- [X] Have the statement where an error occurred printed.
+- [ ] Backtrace towards exactly where it was called from
 
 * DONE Ability to interrupt a command
   CLOSED: [2019-12-19 Thu 23:00]
 
 Maybe just a check at start of all operations for whether an error?  That way it can't exit mid-operation.  There shouldn't be any operations that take significant time before executing an operation anyway.
+
+* TODO Parallel
+
+I think we could simply launch a thread in another registry and set the /ans Register to that registry.  Something like this:
+
+fork INSTRUCTION .
+move /ans /thread1 .
+wait thread1 .
+
+Data type of data at /thread1 is just a Registry.  But we will add some locking flags to Registries so that they can be locked.
+
+Without a thread, wait waits until current registry can be modified again.
+
+wait .
+
+waits until current thread can be modified.
+
+* TODO Registries aren't treated fully as pass by reference somehow...
+
+Code to replicate:
+
+set /d [ registry . ] .
+set /my-set ( in data ( set loc val . ) . ) .
+my-set /data d /loc /x /val 5 .
+
+
+I was wrong about how arguments were being passed.  Really was by
+value for Instructions instead of by reference as for Operations.  All
+should be passed by reference otherwise a little weird.
+

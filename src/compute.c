@@ -80,8 +80,10 @@ _op_call (arg a, registry* reg, const int explicit)
           return;
         }
       d_data = a.arg_array[i+1];
-      d_new = copy_data(d_data);
-      set(r_new, d_new, ((regstr*) d->data)->name, 1);
+      /* d_new = copy_data(d_data); */
+      d_new = d_data;
+      content* c = set(r_new, d_new, ((regstr*) d->data)->name, 1);
+      c->do_not_free_data = 1;
     }
 
 

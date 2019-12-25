@@ -136,7 +136,7 @@
 
 ** Registries
 
-   In ARBEL, most of the action happens inside /registries/.  When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Because they are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
    #+BEGIN_SRC
    ... registry /hello "Hello, world!" /x 10 .
