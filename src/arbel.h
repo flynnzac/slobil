@@ -449,6 +449,9 @@ rehash (registry* r0);
 void
 execute_0 (data* instr, registry* reg);
 
+void
+print_statement (statement* s);
+
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
 /* global variables */

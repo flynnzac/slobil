@@ -31,39 +31,42 @@ print_data (data* d, int print_cmd)
   switch (d->type)
     {
     case INTEGER:
-      printf("%d\n", *((int*) d->data));
+      printf("%d", *((int*) d->data));
       break;
     case STRING:
-      printf("%s\n", (const char*) d->data);
+      printf("\"%s\"", (const char*) d->data);
       break;
     case REAL:
-      printf("%f\n", *((double*) d->data));
+      printf("%f", *((double*) d->data));
       break;
     case REGISTRY:
       printf("a registry with:\n");
       print_registry((registry*) d->data);
       break;
     case INSTRUCTION:
-      printf("( %s )\n", ((instruction*) d->data)->code);
+      printf("( %s )", ((instruction*) d->data)->code);
       break;
     case REGISTER:
-      printf("/%s\n", ((regstr*) d->data)->name);
+      printf("/%s", ((regstr*) d->data)->name);
       break;
     case OPERATION:
-      printf("Built-in instruction.\n");
+      printf("Built-in instruction.");
       break;
     case ARBEL_FILE:
-      printf("A file.\n");
+      printf("A file.");
       break;
     case BOOLEAN:
       if (*((bool*) d->data))
-	printf("True.\n");
+        printf("True.");
       else
-	printf("False.\n");
+        printf("False.");
       break;
     default:
       break;
     }
+
+  if (print_cmd <= 1 && (d->type != REGISTRY))
+    printf("\n");
 }
 
 void
@@ -88,4 +91,39 @@ print_registry (registry* reg)
           cur = cur->right;
         }
     }
+}
+
+void
+print_statement (statement* s)
+{
+  element* e = s->head;
+  while (e != NULL)
+    {
+      if (e->literal)
+        {
+          print_data(e->data, 2);
+        }
+      else if (e->statement)
+        {
+          printf(" [ ");
+          print_statement(e->s);
+          printf(" ] ");
+        }
+      else
+        {
+          for (int i = 0; i < e->levels; i++)
+            {
+              if (i < (e->levels-1))
+                printf("%s:/", e->name[i]);
+              else
+                printf("%s", e->name[i]);
+            }
+        }
+      if (e->right != NULL)
+        printf(" ");
+      
+      e = e->right;
+
+    }
+  printf(" .");
 }
