@@ -428,7 +428,8 @@ wait .
 
 waits until current thread can be modified.
 
-* TODO Registries aren't treated fully as pass by reference somehow...
+* DONE Registries aren't treated fully as pass by reference somehow...
+  CLOSED: [2019-12-25 Wed 00:54]
 
 Code to replicate:
 
@@ -440,4 +441,6 @@ my-set /data d /loc /x /val 5 .
 I was wrong about how arguments were being passed.  Really was by
 value for Instructions instead of by reference as for Operations.  All
 should be passed by reference otherwise a little weird.
+
+Fixed.  Now all are pass by reference.
 
