@@ -368,19 +368,11 @@ ans = a registry with:
 
 * Reference
 
-Arguments that are optional are enclosed in angle brackets (<>).
+Arguments that are optional are enclosed in angle brackets (<>).  Operations are classified by the main data type they manipulate.
+
+** Registry operations
 
 - =set REGISTER VALUE <REGISTRY>= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
-
-- =add NUMBER1 NUMBER2 ...= --- adds all the numbers together and sets the =/ans= register to the result.
-
-- =mul NUMBER1 NUMBER2 ...= --- multiplies all the numbers together and sets the =/ans= register to the result.
-
-- =sub NUMBER1 NUMBER2 ...= --- subtracts the second number from the first and the third number from that and so on and sets the =/ans= register to the result. 
-
-- =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
-
-- =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
 - =registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- sets the =/ans= register to a registry with =VALUE1= located at =REGISTER1= and so on.
 
@@ -390,13 +382,31 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =delete REGISTER= --- delete the value at =REGISTER= in the current registry.
 
-- =exit= --- exit ARBEL.
-
-- =answer VALUE= --- set the =/ans= register to =VALUE=.
-
-- =sit= --- do nothing.
-
 - =exist REGISTER <REGISTRY>= --- set the =/ans= register to =True= if a value exists at the =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is omitted, check in the current registry.
+
+- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
+
+- =in REGISTRY INSTRUCTION= --- call =INSTRUCTION= in =REGISTRY=.
+
+- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/#1=, =VALUE2= at Register =/#2=, and so on.
+
+- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+
+- =go-in REGISTRY= --- make =REGISTRY= the new current registry.
+
+- =go-out= --- leave the current Registry and move to the Registry above it.
+
+- =is-registry VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Registry and to =False= otherwise.
+
+** Real and Integer operations
+
+- =add NUMBER1 NUMBER2 ...= --- adds all the numbers together and sets the =/ans= register to the result.
+
+- =mul NUMBER1 NUMBER2 ...= --- multiplies all the numbers together and sets the =/ans= register to the result.
+
+- =sub NUMBER1 NUMBER2 ...= --- subtracts the second number from the first and the third number from that and so on and sets the =/ans= register to the result. 
+
+- =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
 
 - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
 
@@ -408,51 +418,34 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =gteq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
 
-- =print VALUE= --- prints =VALUE= to screen.
+- =to-number STRING|REGISTER= --- if the argument is a String, try to convert to a number and set the =/ans= Register to the result.  If the argument is a Register and ends in a number, set the =/ans= Register to the result.
 
-- =character STRING INTEGER= --- sets the =/ans= register to a String containing the character in =STRING= at location =INTEGER=.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER= is =0=, then it will set the =/ans= register to the last character in =STRING=.
+- =is-integer VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Integer and to =False= otherwise.
 
-- =count-characters STRING= --- sets the =/ans= register to the number of characters in =STRING=.
+- =is-real VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Real and to =False= otherwise.
 
-- =concat STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
 
-- =source STRING= --- executes ARBEL code in the file named by STRING.
+** Control flow operations
 
-- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
-
-- =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
-
-- =last REGISTRY STRING= --- return the last Register in the =REGISTRY= that starts with =STRING=.  So that if you had registers =/x0=, =/x1=, and =/x2= in the Registry, =last REGISTRY "x"= would return =/x2=.
-
-- =in REGISTRY INSTRUCTION= --- call =INSTRUCTION= in =REGISTRY=.
+- =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
 - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
 
-- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/#1=, =VALUE2= at Register =/#2=, and so on.
+** Environment operations
 
-- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
+- =exit= --- exit ARBEL.
 
-- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+- =answer VALUE= --- set the =/ans= register to =VALUE=.
 
-- =string-eq STRING1 STRING2= --- sets the =/ans= Register to =True= if the two strings are equal and to =False= otherwise.
+- =sit= --- do nothing.
 
-- =string-lt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is less than =STRING2= in the sense that the ASCII characters have lower values.
+- =print VALUE= --- prints =VALUE= to screen.
 
-- =string-gt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is greater than =STRING2= in the sense that the ASCII characters have lower values.
-
-- =register-eq REGISTER1 REGISTER2= --- sets the =/ans= Register to =True= if the two Registers are the same and to =False= otherwise.
-
-- =go-in REGISTRY= --- make =REGISTRY= the new current registry.
-
-- =go-out= --- leave the current Registry and move to the Registry above it.
+- =source STRING= --- executes ARBEL code in the file named by STRING.
 
 - =save FILENAME= --- save the contents of the current registry to file.
 
 - =load FILENAME= --- load the contents of a saved file into the environment.
-
-- =to-string INTEGER|REAL|REGISTER <INTEGER2>= --- sets the =/ans= Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
-
-- =to-number STRING|REGISTER= --- if the argument is a String, try to convert to a number and set the =/ans= Register to the result.  If the argument is a Register and ends in a number, set the =/ans= Register to the result.
 
 - =output-code STRING= --- outputs the code that has been entered at the prompt so far to the file named STRING.
 
@@ -460,15 +453,47 @@ Arguments that are optional are enclosed in angle brackets (<>).
 
 - =error STRING <INTEGER>= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
 
-- =is-integer VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Integer and to =False= otherwise.
+** String operations
 
-- =is-real VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Real and to =False= otherwise.
+- =character STRING INTEGER= --- sets the =/ans= register to a String containing the character in =STRING= at location =INTEGER=.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER= is =0=, then it will set the =/ans= register to the last character in =STRING=.
+
+- =count-characters STRING= --- sets the =/ans= register to the number of characters in =STRING=.
+
+- =concat STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
+
+- =string-eq STRING1 STRING2= --- sets the =/ans= Register to =True= if the two strings are equal and to =False= otherwise.
+
+- =string-lt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is less than =STRING2= in the sense that the ASCII characters have lower values.
+
+- =string-gt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is greater than =STRING2= in the sense that the ASCII characters have lower values.
+
+- =to-string INTEGER|REAL|REGISTER <INTEGER2>= --- sets the =/ans= Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
 
 - =is-string VALUE= --- sets the =/ans= Register to =True= if the =Value= is a String and to =False= otherwise.
 
+
+** Register operations
+
+- =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
+
+- =last REGISTRY STRING= --- return the last Register in the =REGISTRY= that starts with =STRING=.  So that if you had registers =/x0=, =/x1=, and =/x2= in the Registry, =last REGISTRY "x"= would return =/x2=.
+
+- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
+
+- =register-eq REGISTER1 REGISTER2= --- sets the =/ans= Register to =True= if the two Registers are the same and to =False= otherwise.
+
 - =is-register VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Register and to =False= otherwise.
 
-- =is-registry VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Registry and to =False= otherwise.
+
+
+** Unclassified (so far)
+
+
+
+
+
+
+
 
 - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
 
