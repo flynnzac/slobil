@@ -398,6 +398,24 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-registry VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Registry and to =False= otherwise.
 
+- =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY.
+
+- =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
+  #+BEGIN_SRC
+  ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
+  ... set /x 1 . 
+  ... inc /x /x . 
+  ... print x .
+  2
+  #+END_SRC
+
+- =of STRING REGISTRY= --- declare REGISTRY to be =of= kind STRING.
+
+- =is-of STRING REGISTRY= --- set the =/ans= Register to =True= if REGISTRY is of kind STRING.
+
+- =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called STRING corresponding to VALUE.  In other words if =dispatch "f" 10=, sets the =/ans= register to Instruction at =/f+Integer=.
+
+
 ** Real and Integer operations
 
 - =add NUMBER1 NUMBER2 ...= --- adds all the numbers together and sets the =/ans= register to the result.
@@ -424,12 +442,21 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-real VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Real and to =False= otherwise.
 
+- =log NUMBER= --- set the =/ans= Register to the natural logarithm of NUMBER.
+
+- =exp NUMBER= --- set the =/ans= Register to the NUMBER power of the natural base.
+
+- =power NUMBER1 NUMBER2= --- set the =/ans= Register to NUMBER1 raised to the NUMBER2 power.
+
+- =to-real INTEGER= --- set the =/ans= Register to a Real representing the INTEGER.
 
 ** Control flow operations
 
 - =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
 - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
+
+- =repeat INTEGER INSTRUCTION= --- call INSTRUCTION INTEGER times.
 
 ** Environment operations
 
@@ -453,6 +480,14 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =error STRING <INTEGER>= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
 
+- =shell STRING= --- execute the shell command STRING.
+
+- =change-dir STRING= --- change directory to the location given in STRING.
+
+- =current-dir= --- set the =/ans= Register to a String giving the current directory.
+
+- =is-error INSTRUCTION= --- sets the =/ans= Register to the error code of INSTRUCTION (=0= is no error).
+
 ** String operations
 
 - =character STRING INTEGER= --- sets the =/ans= register to a String containing the character in =STRING= at location =INTEGER=.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER= is =0=, then it will set the =/ans= register to the last character in =STRING=.
@@ -471,6 +506,15 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-string VALUE= --- sets the =/ans= Register to =True= if the =Value= is a String and to =False= otherwise.
 
+- =input REGISTER= --- reads a line of text the user enters and sets the =/ans= Register to the result (always a String).
+
+- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/#N= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+
+- =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
+
+- =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.
+
+
 
 ** Register operations
 
@@ -484,24 +528,15 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-register VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Register and to =False= otherwise.
 
+** Instruction operations
 
-
-** Unclassified (so far)
-
-
-
-
-
-
-
+- =call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.
 
 - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
 
+** File operations
+
 - =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
-
-- =is-nothing VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Nothing and to =False= otherwise.
-
-- =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Boolean and to =False= otherwise.
 
 - =open-text-file STRING= --- sets the =/ans= Register to a File object corresponding to the file named STRING.
 
@@ -509,65 +544,17 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =close REGISTER= --- if a File object is located at REGISTER, close the File and destroy the File object.
 
+- =read-line FILE= --- sets the =/ans= Register to the next line from FILE.
+
+- =write STRING FILE= --- write a given STRING to FILE.
+
+** Boolean operations
+
+- =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Boolean and to =False= otherwise.
+
 - =and BOOLEAN1 BOOLEAN2= --- sets the =/ans= Register to =True= if BOOLEAN1 and BOOLEAN2 are =True= and to =False= otherwise.
 
 - =or BOOLEAN1 BOOLEAN2= --- sets the =/ans= Register to =True= if either BOOLEAN1 or BOOLEAN2 are =True= and to =False= otherwise.
 
 - =not BOOLEAN= --- sets the =/ans= Register to =True= if BOOLEAN is =False= and to =False= otherwise.
-
-- =read-line FILE= --- sets the =/ans= Register to the next line from FILE.
-
-- =write STRING FILE= --- write a given STRING to FILE.
-
-- =input REGISTER= --- reads a line of text the user enters and sets the =/ans= Register to the result (always a String).
-
-- =shell STRING= --- execute the shell command STRING.
-
-- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/#N= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
-
-- =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
-
-- =log NUMBER= --- set the =/ans= Register to the natural logarithm of NUMBER.
-
-- =exp NUMBER= --- set the =/ans= Register to the NUMBER power of the natural base.
-
-- =power NUMBER1 NUMBER2= --- set the =/ans= Register to NUMBER1 raised to the NUMBER2 power.
-
-- =change-dir STRING= --- change directory to the location given in STRING.
-
-- =current-dir= --- set the =/ans= Register to a String giving the current directory.
-
-- =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY.
-
-- =repeat INTEGER INSTRUCTION= --- call INSTRUCTION INTEGER times.
-
-- =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.
-
-- =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
-  #+BEGIN_SRC
-  ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
-  ... set /x 1 . 
-  ... inc /x /x . 
-  ... print x .
-  2
-  #+END_SRC
-
-- =of STRING REGISTRY= --- declare REGISTRY to be =of= kind STRING.
-
-- =is-of STRING REGISTRY= --- set the =/ans= Register to =True= if REGISTRY is of kind STRING.
-
-- =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called STRING corresponding to VALUE.  In other words if =dispatch "f" 10=, sets the =/ans= register to Instruction at =/f+Integer=.
-
-- =to-real INTEGER= --- set the =/ans= Register to a Real representing the INTEGER.
-
-- =call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.
-
-- =is-error INSTRUCTION= --- sets the =/ans= Register to the error code of INSTRUCTION (=0= is no error).
-
-
-
-
-
-
-
 
