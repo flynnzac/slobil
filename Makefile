@@ -10,12 +10,16 @@ endif
 
 .FORCE:
 
-arbel: .FORCE
+arbel: .FORCE pushmac
 	make -C src
 
+pushmac:
+	make -C pushmac
+	make -C pushmac install
+
 doc: docs/arbel.html docs/index.mro.html docs/examples.mro.html
-	cat docs/mysite.mro docs/index.mro.html | mro > docs/index.html
-	cat docs/mysite.mro docs/examples.mro.html | mro > docs/examples.html
+	cat docs/mysite.mro docs/index.mro.html | pushmac > docs/index.html
+	cat docs/mysite.mro docs/examples.mro.html | pushmac > docs/examples.html
 
 examples: examples/link.c libarbel.$(SUFFIX) .FORCE
 	cc -c -fPIC -I. -L. -larbel -lm examples/link.c

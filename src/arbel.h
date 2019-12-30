@@ -40,17 +40,17 @@
 
 enum data_type
   {
-   INTEGER,
-   REAL,
-   STRING,
-   REGISTER,
-   REGISTRY,
-   INSTRUCTION,
-   ACTIVE_INSTRUCTION,
-   OPERATION,
-   ARBEL_FILE,
-   BOOLEAN,
-   NOTHING,
+   INTEGER = 1,
+   REAL = 2,
+   STRING = 4,
+   REGISTER = 8,
+   REGISTRY = 16,
+   INSTRUCTION = 32,
+   ACTIVE_INSTRUCTION = 64,
+   OPERATION = 128,
+   ARBEL_FILE = 256,
+   BOOLEAN = 512,
+   NOTHING = 1024
   };
 
 typedef enum data_type data_type;
