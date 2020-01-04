@@ -28,17 +28,17 @@ if (#requireans~)
   {
     if (arg#num~ == NULL)
       {
-	do_error("#op~ requires at least #num~ arguments.");
-	return #retfail~;
+        do_error("#op~ requires at least #num~ arguments.");
+        return #retfail~;
       }
-
-    if (#checktype~ && (!(arg#num~->type & #type~)))
-      {
-	do_error("Argument #num~ of #op~ should be of type #type~.");
-	return #retfail~;
-      }
-  }'
-  @;
+  }
+if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
+  {
+    do_error("Argument #num~ of #op~ should be of type #type~.");
+    return #retfail~;
+  }
+'
+@;
 
 #requireans=true@
 #checktype=true@
@@ -161,64 +161,64 @@ op_arithmetic (arg a, registry* reg, const int code)
     {
       data* cur = resolve(a.arg_array[i], reg);
       if (cur == NULL || !is_numeric(cur))
-	{
-	  do_error("Arithmetic requires at least two numeric arguments.");
-	  return;
-	}
+        {
+          do_error("Arithmetic requires at least two numeric arguments.");
+          return;
+        }
 
       if (cur->type == REAL && result_type == INTEGER)
-	{
-	  dbl_value = (double) int_value;
-	  result_type = REAL;
-	}
+        {
+          dbl_value = (double) int_value;
+          result_type = REAL;
+        }
 
       if (result_type == INTEGER)
-	{
-	  if (i == 1)
-	    int_value = *((int*) cur->data);
-	  else
-	    switch (code)
-	      {
-	      case 1:
-		int_value += *((int*) cur->data);
-		break;
-	      case 2:
-		int_value *= *((int*) cur->data);
-		break;
-	      case 3:
-		int_value -= *((int*) cur->data);
-		break;
-	      case 4:
-		int_value /= *((int*) cur->data);
-		break;
-	      }
-	}
+        {
+          if (i == 1)
+            int_value = *((int*) cur->data);
+          else
+            switch (code)
+              {
+              case 1:
+                int_value += *((int*) cur->data);
+                break;
+              case 2:
+                int_value *= *((int*) cur->data);
+                break;
+              case 3:
+                int_value -= *((int*) cur->data);
+                break;
+              case 4:
+                int_value /= *((int*) cur->data);
+                break;
+              }
+        }
       else
-	{
-	  double val;
-	  if (cur->type == INTEGER)
-	    val = (double) (*((int*) cur->data));
-	  else
-	    val = *((double*) cur->data);
+        {
+          double val;
+          if (cur->type == INTEGER)
+            val = (double) (*((int*) cur->data));
+          else
+            val = *((double*) cur->data);
 	    
-	  if (i == 1)
-	    dbl_value = val;
-	  else
-	    switch (code)
-	      {
-	      case 1:
-		dbl_value += val;
-		break;
-	      case 2:
-		dbl_value *= val;
-		break;
-	      case 3:
-		dbl_value -= val;
-		break;
-	      case 4:
-		dbl_value /= val;
-	      }
-	}
+          if (i == 1)
+            dbl_value = val;
+          else
+            switch (code)
+              {
+              case 1:
+                dbl_value += val;
+                break;
+              case 2:
+                dbl_value *= val;
+                break;
+              case 3:
+                dbl_value -= val;
+                break;
+              case 4:
+                dbl_value /= val;
+              }
+        }
     }
 
   if (result_type == INTEGER)
@@ -344,25 +344,25 @@ op_if (arg a, registry* reg)
       #checktype=true@
 
       if (arg2 != NULL)
-	{
-	  data* d = copy_data(arg2);
-	  ret_ans(reg, d);
-	}
+        {
+          data* d = copy_data(arg2);
+          ret_ans(reg, d);
+        }
     }
   else
     {
       if (a.length >= 4)
         {
-	  #num=3@
-	  #checktype=false@
-	  ##GETARG~$;
-	  #checktype=true@
+          #num=3@
+          #checktype=false@
+          ##GETARG~$;
+          #checktype=true@
 
-	  if (arg3 != NULL)
-	    {
-	      data* d = copy_data(arg3);
-	      ret_ans(reg,d);
-	    }
+          if (arg3 != NULL)
+            {
+              data* d = copy_data(arg3);
+              ret_ans(reg,d);
+            }
         }
     }
   #requireans=true@
@@ -1153,13 +1153,13 @@ op_collapse (arg a, registry* reg)
   for (int j = 0; j < a1.length; j++)
     {
       if (j==1 || j == 3)
-	{
-	  a1.free_data[j] = 1;
-	}
+        {
+          a1.free_data[j] = 1;
+        }
       else
-	{
-	  a1.free_data[j] = 0;
-	}
+        {
+          a1.free_data[j] = 0;
+        }
     }
 
   a1.arg_array[0] = arg1;
@@ -1382,19 +1382,10 @@ void
 op_load (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*load* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("The argument to *load* must be a string.");
-      return;
-    }
+  #op=load@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
@@ -1406,19 +1397,11 @@ op_load (arg a, registry* reg)
 void
 op_to_string (arg a, registry* reg)
 {
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-string* requires an argment.");
-      return;
-    }
-
-  if (arg1->type != INTEGER && arg1->type != REAL && arg1->type != REGISTER)
-    {
-      do_error("The argument to *to-string* should be either numeric or a register.");
-      return;
-    }
-
+  CHECK_ARGS(a,1);
+  #op=to-string@
+  #num=1@
+  #type=`(INTEGER | REAL | REGISTER)'@
+  ##GETARG~$;
 
   char* result;
   if (arg1->type == INTEGER)
@@ -1439,9 +1422,9 @@ op_to_string (arg a, registry* reg)
     {
       data* arg2 = NULL;
       if (a.length >= 3)
-	{
-	  arg2 = resolve(a.arg_array[2], reg);
-	}
+        {
+          arg2 = resolve(a.arg_array[2], reg);
+        }
       
       int prec = 6;
       if (arg2 != NULL && arg2->type != INTEGER)
@@ -1503,18 +1486,11 @@ void
 op_to_number (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-number* requires an argument.");
-      return;
-    }
 
-  if (arg1->type != STRING && arg1->type != REGISTER)
-    {
-      do_error("The argument to *to-number* must be a string or a register.");
-      return;
-    }
+  #op=to-number@
+  #num=1@
+  #type=`(STRING|REGISTER)'@
+  ##GETARG~$;
 
   if (arg1->type == STRING)
     {
@@ -1567,18 +1543,10 @@ void
 op_to_real (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-real* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != INTEGER && arg1->type != REAL)
-    {
-      do_error("The argument to *to-real* must be an integer or real.");
-      return;
-    }
+  #op=to-real@
+  #num=1@
+  #type=`(INTEGER|REAL)'@
+  ##GETARG~$;
 
   data* d;
   if (arg1->type == INTEGER)
@@ -1594,19 +1562,11 @@ void
 op_output_code (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*output-code* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("Argument to *output-code* must be a string.");
-      return;
-    }
+  #op=output-code@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
   if (source_code != NULL)
     {
@@ -1634,26 +1594,21 @@ void
 op_error (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*error* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("*error* requires a string argument.");
-      return;
-    }
+  #op=error@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
   do_error((char*) arg1->data);
 
   if (a.length >= 3)
     {
-      data* arg2 = resolve(a.arg_array[2], reg);
-      if (arg2 != NULL && arg2->type == INTEGER)
+      #num=2@
+      #type=INTEGER@
+      #requireans=false@
+      ##GETARG~$;
+      #requireans=true@
+      if (arg2 != NULL)
         {
           is_error(*((int*) arg2->data));
         }
@@ -1664,12 +1619,10 @@ void
 op_is_type (arg a, registry* reg, const data_type type)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("Assert instruction requires an argument.");
-      return;
-    }
+  #op=is-Type@
+  #num=1@
+  #checktype=false@
+  ##GETARG~$;
 
   data* d;
   if (arg1->type == type || ((type==INSTRUCTION) &&
@@ -2814,7 +2767,7 @@ op_dispatch (arg a, registry* reg)
     }
 
   char* grab = malloc(sizeof(char)*(strlen((char*) arg1->data)+
-                                       strlen(class)+strlen("+")+1));
+                                    strlen(class)+strlen("+")+1));
   strcpy(grab, (char*) arg1->data);
   strcat(grab, "+");
   strcat(grab, class);

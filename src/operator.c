@@ -41,17 +41,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("range requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & INTEGER)))
-      {
-	do_error("Argument 1 of range should be of type INTEGER.");
-	return ;
+        do_error("range requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & INTEGER)))
+  {
+    do_error("Argument 1 of range should be of type INTEGER.");
+    return ;
+  }
+
+;
 
   
   
@@ -61,17 +61,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("range requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & INTEGER)))
-      {
-	do_error("Argument 2 of range should be of type INTEGER.");
-	return ;
+        do_error("range requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+  {
+    do_error("Argument 2 of range should be of type INTEGER.");
+    return ;
+  }
+
+;
 
   int by = 1;
   if (a.length >= 4)
@@ -84,17 +84,17 @@ if (true)
   {
     if (arg3 == NULL)
       {
-	do_error("range requires at least 3 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg3->type & INTEGER)))
-      {
-	do_error("Argument 3 of range should be of type INTEGER.");
-	return ;
+        do_error("range requires at least 3 arguments.");
+        return ;
       }
   }
-  ;
+if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
+  {
+    do_error("Argument 3 of range should be of type INTEGER.");
+    return ;
+  }
+
+;
       by = *((int*) arg3->data);
     }
 
@@ -195,64 +195,64 @@ op_arithmetic (arg a, registry* reg, const int code)
     {
       data* cur = resolve(a.arg_array[i], reg);
       if (cur == NULL || !is_numeric(cur))
-	{
-	  do_error("Arithmetic requires at least two numeric arguments.");
-	  return;
-	}
+        {
+          do_error("Arithmetic requires at least two numeric arguments.");
+          return;
+        }
 
       if (cur->type == REAL && result_type == INTEGER)
-	{
-	  dbl_value = (double) int_value;
-	  result_type = REAL;
-	}
+        {
+          dbl_value = (double) int_value;
+          result_type = REAL;
+        }
 
       if (result_type == INTEGER)
-	{
-	  if (i == 1)
-	    int_value = *((int*) cur->data);
-	  else
-	    switch (code)
-	      {
-	      case 1:
-		int_value += *((int*) cur->data);
-		break;
-	      case 2:
-		int_value *= *((int*) cur->data);
-		break;
-	      case 3:
-		int_value -= *((int*) cur->data);
-		break;
-	      case 4:
-		int_value /= *((int*) cur->data);
-		break;
-	      }
-	}
+        {
+          if (i == 1)
+            int_value = *((int*) cur->data);
+          else
+            switch (code)
+              {
+              case 1:
+                int_value += *((int*) cur->data);
+                break;
+              case 2:
+                int_value *= *((int*) cur->data);
+                break;
+              case 3:
+                int_value -= *((int*) cur->data);
+                break;
+              case 4:
+                int_value /= *((int*) cur->data);
+                break;
+              }
+        }
       else
-	{
-	  double val;
-	  if (cur->type == INTEGER)
-	    val = (double) (*((int*) cur->data));
-	  else
-	    val = *((double*) cur->data);
+        {
+          double val;
+          if (cur->type == INTEGER)
+            val = (double) (*((int*) cur->data));
+          else
+            val = *((double*) cur->data);
 	    
-	  if (i == 1)
-	    dbl_value = val;
-	  else
-	    switch (code)
-	      {
-	      case 1:
-		dbl_value += val;
-		break;
-	      case 2:
-		dbl_value *= val;
-		break;
-	      case 3:
-		dbl_value -= val;
-		break;
-	      case 4:
-		dbl_value /= val;
-	      }
-	}
+          if (i == 1)
+            dbl_value = val;
+          else
+            switch (code)
+              {
+              case 1:
+                dbl_value += val;
+                break;
+              case 2:
+                dbl_value *= val;
+                break;
+              case 3:
+                dbl_value -= val;
+                break;
+              case 4:
+                dbl_value /= val;
+              }
+        }
     }
 
   if (result_type == INTEGER)
@@ -306,17 +306,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("set requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of set should be of type REGISTER.");
-	return ;
+        do_error("set requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of set should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   
   
@@ -327,17 +327,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("set requires at least 2 arguments.");
-	return ;
-      }
-
-    if (false && (!(arg2->type & REGISTER)))
-      {
-	do_error("Argument 2 of set should be of type REGISTER.");
-	return ;
+        do_error("set requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && false && (!(arg2->type & REGISTER)))
+  {
+    do_error("Argument 2 of set should be of type REGISTER.");
+    return ;
+  }
+
+;
   
 
   registry* to_set;
@@ -352,17 +352,17 @@ if (true)
   {
     if (arg3 == NULL)
       {
-	do_error("set requires at least 3 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg3->type & REGISTRY)))
-      {
-	do_error("Argument 3 of set should be of type REGISTRY.");
-	return ;
+        do_error("set requires at least 3 arguments.");
+        return ;
       }
   }
-  ;
+if (arg3 != NULL && true && (!(arg3->type & REGISTRY)))
+  {
+    do_error("Argument 3 of set should be of type REGISTRY.");
+    return ;
+  }
+
+;
       
       to_set = (registry*) arg3->data;
     }
@@ -393,17 +393,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("get requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of get should be of type REGISTER.");
-	return ;
+        do_error("get requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of get should be of type REGISTER.");
+    return ;
+  }
+
+;
   
   registry* to_look;
   if (a.length == 2)
@@ -421,17 +421,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("get requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & REGISTRY)))
-      {
-	do_error("Argument 2 of get should be of type REGISTRY.");
-	return ;
+        do_error("get requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+  {
+    do_error("Argument 2 of get should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
       to_look = (registry*) arg2->data;
     }
@@ -459,17 +459,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("if requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & BOOLEAN)))
-      {
-	do_error("Argument 1 of if should be of type BOOLEAN.");
-	return ;
+        do_error("if requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
+  {
+    do_error("Argument 1 of if should be of type BOOLEAN.");
+    return ;
+  }
+
+;
 
   
   if (*((bool*) arg1->data))
@@ -483,56 +483,56 @@ if (false)
   {
     if (arg2 == NULL)
       {
-	do_error("if requires at least 2 arguments.");
-	return ;
-      }
-
-    if (false && (!(arg2->type & BOOLEAN)))
-      {
-	do_error("Argument 2 of if should be of type BOOLEAN.");
-	return ;
+        do_error("if requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && false && (!(arg2->type & BOOLEAN)))
+  {
+    do_error("Argument 2 of if should be of type BOOLEAN.");
+    return ;
+  }
+
+;
       
 
       if (arg2 != NULL)
-	{
-	  data* d = copy_data(arg2);
-	  ret_ans(reg, d);
-	}
+        {
+          data* d = copy_data(arg2);
+          ret_ans(reg, d);
+        }
     }
   else
     {
       if (a.length >= 4)
         {
-	  
-	  
-	  
+          
+          
+          
 data* arg3 = resolve(a.arg_array[3], reg);
 
 if (false)
   {
     if (arg3 == NULL)
       {
-	do_error("if requires at least 3 arguments.");
-	return ;
-      }
-
-    if (false && (!(arg3->type & BOOLEAN)))
-      {
-	do_error("Argument 3 of if should be of type BOOLEAN.");
-	return ;
+        do_error("if requires at least 3 arguments.");
+        return ;
       }
   }
-  ;
-	  
+if (arg3 != NULL && false && (!(arg3->type & BOOLEAN)))
+  {
+    do_error("Argument 3 of if should be of type BOOLEAN.");
+    return ;
+  }
 
-	  if (arg3 != NULL)
-	    {
-	      data* d = copy_data(arg3);
-	      ret_ans(reg,d);
-	    }
+;
+          
+
+          if (arg3 != NULL)
+            {
+              data* d = copy_data(arg3);
+              ret_ans(reg,d);
+            }
         }
     }
   
@@ -560,17 +560,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("move requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of move should be of type REGISTER.");
-	return ;
+        do_error("move requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of move should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   
   
@@ -580,17 +580,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("move requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & REGISTER)))
-      {
-	do_error("Argument 2 of move should be of type REGISTER.");
-	return ;
+        do_error("move requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
+  {
+    do_error("Argument 2 of move should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   mov(reg, (regstr*) arg1->data,
       (regstr*) arg2->data);
@@ -612,17 +612,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("delete requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of delete should be of type REGISTER.");
-	return ;
+        do_error("delete requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of delete should be of type REGISTER.");
+    return ;
+  }
+
+;
   
   del(reg, ((regstr*) arg1->data)->key, 1);
 }
@@ -649,17 +649,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("exist requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of exist should be of type REGISTER.");
-	return ;
+        do_error("exist requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of exist should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   registry* to_use = reg;
   if (a.length >= 3)
@@ -673,17 +673,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("exist requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & REGISTRY)))
-      {
-	do_error("Argument 2 of exist should be of type REGISTRY.");
-	return ;
+        do_error("exist requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+  {
+    do_error("Argument 2 of exist should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
       to_use = (registry*) arg2->data;
     }
@@ -717,17 +717,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("answer requires at least 1 arguments.");
-	return ;
-      }
-
-    if (false && (!(arg1->type & REGISTRY)))
-      {
-	do_error("Argument 1 of answer should be of type REGISTRY.");
-	return ;
+        do_error("answer requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && false && (!(arg1->type & REGISTRY)))
+  {
+    do_error("Argument 1 of answer should be of type REGISTRY.");
+    return ;
+  }
+
+;
   
 
   data* d = copy_data(arg1);
@@ -751,17 +751,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("comparison requires at least 1 arguments.");
-	return -2;
-      }
-
-    if (true && (!(arg1->type & (INTEGER|REAL))))
-      {
-	do_error("Argument 1 of comparison should be of type (INTEGER|REAL).");
-	return -2;
+        do_error("comparison requires at least 1 arguments.");
+        return -2;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+  {
+    do_error("Argument 1 of comparison should be of type (INTEGER|REAL).");
+    return -2;
+  }
+
+;
 
   
   
@@ -771,17 +771,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("comparison requires at least 2 arguments.");
-	return -2;
-      }
-
-    if (true && (!(arg2->type & (INTEGER|REAL))))
-      {
-	do_error("Argument 2 of comparison should be of type (INTEGER|REAL).");
-	return -2;
+        do_error("comparison requires at least 2 arguments.");
+        return -2;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
+  {
+    do_error("Argument 2 of comparison should be of type (INTEGER|REAL).");
+    return -2;
+  }
+
+;
 
   
 
@@ -937,17 +937,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("print requires at least 1 arguments.");
-	return ;
-      }
-
-    if (false && (!(arg1->type & (INTEGER|REAL))))
-      {
-	do_error("Argument 1 of print should be of type (INTEGER|REAL).");
-	return ;
+        do_error("print requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && false && (!(arg1->type & (INTEGER|REAL))))
+  {
+    do_error("Argument 1 of print should be of type (INTEGER|REAL).");
+    return ;
+  }
+
+;
   
 
   print_data(arg1,1);
@@ -968,17 +968,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("character requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of character should be of type STRING.");
-	return ;
+        do_error("character requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of character should be of type STRING.");
+    return ;
+  }
+
+;
 
   
   
@@ -989,17 +989,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("character requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & INTEGER)))
-      {
-	do_error("Argument 2 of character should be of type INTEGER.");
-	return ;
+        do_error("character requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+  {
+    do_error("Argument 2 of character should be of type INTEGER.");
+    return ;
+  }
+
+;
 
   char* str = (char*) arg1->data;
   int loc = *((int*) arg2->data);
@@ -1068,17 +1068,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("concat requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of concat should be of type STRING.");
-	return ;
+        do_error("concat requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of concat should be of type STRING.");
+    return ;
+  }
+
+;
 
   
   
@@ -1088,17 +1088,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("concat requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & STRING)))
-      {
-	do_error("Argument 2 of concat should be of type STRING.");
-	return ;
+        do_error("concat requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & STRING)))
+  {
+    do_error("Argument 2 of concat should be of type STRING.");
+    return ;
+  }
+
+;
 
   char* result = malloc(sizeof(char)*(strlen(arg1->data) +
                                       strlen(arg2->data) + 1));
@@ -1127,17 +1127,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("source requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of source should be of type STRING.");
-	return ;
+        do_error("source requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of source should be of type STRING.");
+    return ;
+  }
+
+;
 
   FILE* f = fopen((char*) arg1->data, "r");
   if (f == NULL)
@@ -1315,17 +1315,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("next requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of next should be of type REGISTER.");
-	return ;
+        do_error("next requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of next should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   char* cur_name = malloc(sizeof(char)*
                           (strlen(((regstr*) arg1->data)->name)+1));
@@ -1384,17 +1384,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("last requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTRY)))
-      {
-	do_error("Argument 1 of last should be of type REGISTRY.");
-	return ;
+        do_error("last requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+  {
+    do_error("Argument 1 of last should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
   
   
@@ -1405,17 +1405,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("last requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & STRING)))
-      {
-	do_error("Argument 2 of last should be of type STRING.");
-	return ;
+        do_error("last requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & STRING)))
+  {
+    do_error("Argument 2 of last should be of type STRING.");
+    return ;
+  }
+
+;
 
   registry* arg_reg = (registry*) arg1->data;
   char* name = NULL;
@@ -1458,17 +1458,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("in requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTRY)))
-      {
-	do_error("Argument 1 of in should be of type REGISTRY.");
-	return ;
+        do_error("in requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+  {
+    do_error("Argument 1 of in should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
   
   
@@ -1479,17 +1479,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("in requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & INSTRUCTION)))
-      {
-	do_error("Argument 2 of in should be of type INSTRUCTION.");
-	return ;
+        do_error("in requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+  {
+    do_error("Argument 2 of in should be of type INSTRUCTION.");
+    return ;
+  }
+
+;
 
   ((registry*) arg1->data)->up = reg;
 
@@ -1518,17 +1518,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("while requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & INSTRUCTION)))
-      {
-	do_error("Argument 1 of while should be of type INSTRUCTION.");
-	return ;
+        do_error("while requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+  {
+    do_error("Argument 1 of while should be of type INSTRUCTION.");
+    return ;
+  }
+
+;
 
   
   
@@ -1538,17 +1538,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("while requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & INSTRUCTION)))
-      {
-	do_error("Argument 2 of while should be of type INSTRUCTION.");
-	return ;
+        do_error("while requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+  {
+    do_error("Argument 2 of while should be of type INSTRUCTION.");
+    return ;
+  }
+
+;
 
   data* d;
   while (1)
@@ -1600,17 +1600,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("repeat requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & INTEGER)))
-      {
-	do_error("Argument 1 of repeat should be of type INTEGER.");
-	return ;
+        do_error("repeat requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & INTEGER)))
+  {
+    do_error("Argument 1 of repeat should be of type INTEGER.");
+    return ;
+  }
+
+;
 
   
   
@@ -1621,17 +1621,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("repeat requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & INSTRUCTION)))
-      {
-	do_error("Argument 2 of repeat should be of type INSTRUCTION.");
-	return ;
+        do_error("repeat requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+  {
+    do_error("Argument 2 of repeat should be of type INSTRUCTION.");
+    return ;
+  }
+
+;
 
   for (int i = 0; i < *((int*) arg1->data); i++)
     {
@@ -1655,17 +1655,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("to-register requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & (STRING|INTEGER))))
-      {
-	do_error("Argument 1 of to-register should be of type (STRING|INTEGER).");
-	return ;
+        do_error("to-register requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & (STRING|INTEGER))))
+  {
+    do_error("Argument 1 of to-register should be of type (STRING|INTEGER).");
+    return ;
+  }
+
+;
 
   data* d;
 
@@ -1701,17 +1701,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("collapse requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & INSTRUCTION)))
-      {
-	do_error("Argument 1 of collapse should be of type INSTRUCTION.");
-	return ;
+        do_error("collapse requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+  {
+    do_error("Argument 1 of collapse should be of type INSTRUCTION.");
+    return ;
+  }
+
+;
 
   
   
@@ -1722,17 +1722,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("collapse requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & REGISTRY)))
-      {
-	do_error("Argument 2 of collapse should be of type REGISTRY.");
-	return ;
+        do_error("collapse requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+  {
+    do_error("Argument 2 of collapse should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
   const char* prefix = "#";
   if (a.length >= 4)
@@ -1746,17 +1746,17 @@ if (true)
   {
     if (arg3 == NULL)
       {
-	do_error("collapse requires at least 3 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg3->type & STRING)))
-      {
-	do_error("Argument 3 of collapse should be of type STRING.");
-	return ;
+        do_error("collapse requires at least 3 arguments.");
+        return ;
       }
   }
-  ;
+if (arg3 != NULL && true && (!(arg3->type & STRING)))
+  {
+    do_error("Argument 3 of collapse should be of type STRING.");
+    return ;
+  }
+
+;
 
       prefix = (char*) arg3->data;
     }
@@ -1782,13 +1782,13 @@ if (true)
   for (int j = 0; j < a1.length; j++)
     {
       if (j==1 || j == 3)
-	{
-	  a1.free_data[j] = 1;
-	}
+        {
+          a1.free_data[j] = 1;
+        }
       else
-	{
-	  a1.free_data[j] = 0;
-	}
+        {
+          a1.free_data[j] = 0;
+        }
     }
 
   a1.arg_array[0] = arg1;
@@ -1861,17 +1861,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("string-eq requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of string-eq should be of type STRING.");
-	return ;
+        do_error("string-eq requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of string-eq should be of type STRING.");
+    return ;
+  }
+
+;
 
   
   
@@ -1882,17 +1882,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("string-eq requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & STRING)))
-      {
-	do_error("Argument 2 of string-eq should be of type STRING.");
-	return ;
+        do_error("string-eq requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & STRING)))
+  {
+    do_error("Argument 2 of string-eq should be of type STRING.");
+    return ;
+  }
+
+;
 
   char* str1 = arg1->data;
   char* str2 = arg2->data;
@@ -1924,17 +1924,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("string-lt requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of string-lt should be of type STRING.");
-	return ;
+        do_error("string-lt requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of string-lt should be of type STRING.");
+    return ;
+  }
+
+;
 
   
   
@@ -1945,17 +1945,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("string-lt requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & STRING)))
-      {
-	do_error("Argument 2 of string-lt should be of type STRING.");
-	return ;
+        do_error("string-lt requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & STRING)))
+  {
+    do_error("Argument 2 of string-lt should be of type STRING.");
+    return ;
+  }
+
+;
 
   char* str1 = arg1->data;
   char* str2 = arg2->data;
@@ -1987,17 +1987,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("string-gt requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of string-gt should be of type STRING.");
-	return ;
+        do_error("string-gt requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of string-gt should be of type STRING.");
+    return ;
+  }
+
+;
 
   
   
@@ -2008,17 +2008,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("string-gt requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & STRING)))
-      {
-	do_error("Argument 2 of string-gt should be of type STRING.");
-	return ;
+        do_error("string-gt requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & STRING)))
+  {
+    do_error("Argument 2 of string-gt should be of type STRING.");
+    return ;
+  }
+
+;
 
   char* str1 = arg1->data;
   char* str2 = arg2->data;
@@ -2051,17 +2051,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("register-eq requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTER)))
-      {
-	do_error("Argument 1 of register-eq should be of type REGISTER.");
-	return ;
+        do_error("register-eq requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+  {
+    do_error("Argument 1 of register-eq should be of type REGISTER.");
+    return ;
+  }
+
+;
 
   
   
@@ -2072,17 +2072,17 @@ if (true)
   {
     if (arg2 == NULL)
       {
-	do_error("register-eq requires at least 2 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg2->type & REGISTER)))
-      {
-	do_error("Argument 2 of register-eq should be of type REGISTER.");
-	return ;
+        do_error("register-eq requires at least 2 arguments.");
+        return ;
       }
   }
-  ;
+if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
+  {
+    do_error("Argument 2 of register-eq should be of type REGISTER.");
+    return ;
+  }
+
+;
       
   data* d;
 
@@ -2111,17 +2111,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("go-in requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & REGISTRY)))
-      {
-	do_error("Argument 1 of go-in should be of type REGISTRY.");
-	return ;
+        do_error("go-in requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+  {
+    do_error("Argument 1 of go-in should be of type REGISTRY.");
+    return ;
+  }
+
+;
 
   ((registry*) arg1->data)->up = reg;
 
@@ -2156,17 +2156,17 @@ if (true)
   {
     if (arg1 == NULL)
       {
-	do_error("save requires at least 1 arguments.");
-	return ;
-      }
-
-    if (true && (!(arg1->type & STRING)))
-      {
-	do_error("Argument 1 of save should be of type STRING.");
-	return ;
+        do_error("save requires at least 1 arguments.");
+        return ;
       }
   }
-  ;
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of save should be of type STRING.");
+    return ;
+  }
+
+;
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
@@ -2181,19 +2181,27 @@ void
 op_load (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*load* requires an argument.");
-      return;
-    }
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("load requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of load should be of type STRING.");
+    return ;
+  }
 
-  if (arg1->type != STRING)
-    {
-      do_error("The argument to *load* must be a string.");
-      return;
-    }
+;
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
@@ -2205,19 +2213,28 @@ op_load (arg a, registry* reg)
 void
 op_to_string (arg a, registry* reg)
 {
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-string* requires an argment.");
-      return;
-    }
+  CHECK_ARGS(a,1);
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1->type != INTEGER && arg1->type != REAL && arg1->type != REGISTER)
-    {
-      do_error("The argument to *to-string* should be either numeric or a register.");
-      return;
-    }
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("to-string requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & (INTEGER | REAL | REGISTER))))
+  {
+    do_error("Argument 1 of to-string should be of type (INTEGER | REAL | REGISTER).");
+    return ;
+  }
 
+;
 
   char* result;
   if (arg1->type == INTEGER)
@@ -2238,9 +2255,9 @@ op_to_string (arg a, registry* reg)
     {
       data* arg2 = NULL;
       if (a.length >= 3)
-	{
-	  arg2 = resolve(a.arg_array[2], reg);
-	}
+        {
+          arg2 = resolve(a.arg_array[2], reg);
+        }
       
       int prec = 6;
       if (arg2 != NULL && arg2->type != INTEGER)
@@ -2302,18 +2319,28 @@ void
 op_to_number (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-number* requires an argument.");
-      return;
-    }
 
-  if (arg1->type != STRING && arg1->type != REGISTER)
-    {
-      do_error("The argument to *to-number* must be a string or a register.");
-      return;
-    }
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("to-number requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & (STRING|REGISTER))))
+  {
+    do_error("Argument 1 of to-number should be of type (STRING|REGISTER).");
+    return ;
+  }
+
+;
 
   if (arg1->type == STRING)
     {
@@ -2366,18 +2393,27 @@ void
 op_to_real (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*to-real* requires an argument.");
-      return;
-    }
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1->type != INTEGER && arg1->type != REAL)
-    {
-      do_error("The argument to *to-real* must be an integer or real.");
-      return;
-    }
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("to-real requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+  {
+    do_error("Argument 1 of to-real should be of type (INTEGER|REAL).");
+    return ;
+  }
+
+;
 
   data* d;
   if (arg1->type == INTEGER)
@@ -2393,19 +2429,28 @@ void
 op_output_code (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*output-code* requires an argument.");
-      return;
-    }
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1->type != STRING)
-    {
-      do_error("Argument to *output-code* must be a string.");
-      return;
-    }
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("output-code requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of output-code should be of type STRING.");
+    return ;
+  }
+
+;
 
   if (source_code != NULL)
     {
@@ -2433,26 +2478,55 @@ void
 op_error (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*error* requires an argument.");
-      return;
-    }
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("error requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of error should be of type STRING.");
+    return ;
+  }
 
-  if (arg1->type != STRING)
-    {
-      do_error("*error* requires a string argument.");
-      return;
-    }
+;
 
   do_error((char*) arg1->data);
 
   if (a.length >= 3)
     {
-      data* arg2 = resolve(a.arg_array[2], reg);
-      if (arg2 != NULL && arg2->type == INTEGER)
+      
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (false)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("error requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+  {
+    do_error("Argument 2 of error should be of type INTEGER.");
+    return ;
+  }
+
+;
+      
+      if (arg2 != NULL)
         {
           is_error(*((int*) arg2->data));
         }
@@ -2463,12 +2537,27 @@ void
 op_is_type (arg a, registry* reg, const data_type type)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("Assert instruction requires an argument.");
-      return;
-    }
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("is-Type requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && false && (!(arg1->type & INTEGER)))
+  {
+    do_error("Argument 1 of is-Type should be of type INTEGER.");
+    return ;
+  }
+
+;
 
   data* d;
   if (arg1->type == type || ((type==INSTRUCTION) &&
@@ -3613,7 +3702,7 @@ op_dispatch (arg a, registry* reg)
     }
 
   char* grab = malloc(sizeof(char)*(strlen((char*) arg1->data)+
-                                       strlen(class)+strlen("+")+1));
+                                    strlen(class)+strlen("+")+1));
   strcpy(grab, (char*) arg1->data);
   strcat(grab, "+");
   strcat(grab, class);
