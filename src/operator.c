@@ -21,6 +21,9 @@
 
 #include "arbel.h"
 
+
+
+
 ;
 
 
@@ -30,7 +33,11 @@
 void
 op_range (arg a, registry* reg)
 {
-  CHECK_ARGS(a,2);
+  
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
+
   
   
   
@@ -154,7 +161,11 @@ void
 op_registry (arg a, registry* reg)
 {
   if (a.length != 1)
-    CHECK_ARGS(a, 2);
+    {
+      
+      check_length(&a, 2+1);
+if (is_error(-1)) return;;
+    }
   
   registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1));
   data* d = NULL;
@@ -266,35 +277,49 @@ op_arithmetic (arg a, registry* reg, const int code)
 void
 op_add (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
+
   op_arithmetic(a, reg, 1);
 }
 
 void
 op_mul (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
+
   op_arithmetic(a, reg, 2);
 }
 
 void
 op_sub (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
+
   op_arithmetic(a, reg, 3);
 }
 
 void
 op_div (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
+
   op_arithmetic(a, reg, 4);
 }
 
 void
 op_set (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
 
   
   
@@ -381,7 +406,9 @@ if (arg3 != NULL && true && (!(arg3->type & REGISTRY)))
 void
 op_get (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
 
   
   
@@ -447,7 +474,9 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
 void
 op_if (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
 
   
   
@@ -551,7 +580,9 @@ op_sit (arg a, registry* reg)
 void
 op_move (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
 
   
   
@@ -603,7 +634,9 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
 void
 op_delete (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
 
   
   
@@ -640,7 +673,9 @@ op_exit (arg a, registry* reg)
 void
 op_exist (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
 
   
   
@@ -708,7 +743,9 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
 void
 op_answer (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
 
   
   
@@ -740,8 +777,9 @@ if (arg1 != NULL && false && (!(arg1->type & REGISTRY)))
 int
 op_comparison (arg a, registry* reg)
 {
-
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
 
   
   
@@ -929,7 +967,10 @@ op_lteq (arg a, registry* reg)
 void
 op_print (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
+
   
   
   
@@ -959,7 +1000,9 @@ if (arg1 != NULL && false && (!(arg1->type & (INTEGER|REAL))))
 void
 op_character (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
 
   
   
@@ -1032,7 +1075,10 @@ if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
 void
 op_count_characters (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
+
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -1059,7 +1105,9 @@ op_count_characters (arg a, registry* reg)
 void
 op_concat (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  check_length(&a, 2+1);
+if (is_error(-1)) return;;
 
   
   
@@ -1119,7 +1167,10 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
 void
 op_source (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1);
+if (is_error(-1)) return;;
+
   
   
   
@@ -1434,6 +1485,11 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
       hash_name = hash_str(name);
     }
   free(name);
+  if (i == 1)
+    {
+      do_error("No such register in given registry.");
+      return;
+    }
   name = vector_name((char*) arg2->data, i-1);
 
   d = malloc(sizeof(data));

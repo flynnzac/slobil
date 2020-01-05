@@ -347,7 +347,8 @@ Decided on just using a built-in "up" instruction
 * DONE Make `up` more efficient.  Currently it is copying its arguments twice.
   CLOSED: [2019-12-02 Mon 00:15]
 * TODO Have an "assert"-like command which checks type of values at registers and errors if register does not exist or if the type doesn't match
-* TODO do-to-all should have a prefix option like similar instructions, order of registry and instruction should be same
+* DONE do-to-all should have a prefix option like similar instructions, order of registry and instruction should be same
+  CLOSED: [2020-01-05 Sun 17:45]
 * DONE Registries should really be hash tables to improve lookup speed
   CLOSED: [2019-12-02 Mon 00:15]
 
@@ -378,7 +379,8 @@ x_2 = second element, etc
 
 words-are-separated-with-dashes
 
-* TODO op_last should error if no value found with prefix or return an error code (i.e. a register like /0 which could not normally be used).  Currently returns prefix0.
+* DONE op_last should error if no value found with prefix or return an error code (i.e. a register like /0 which could not normally be used).  Currently returns prefix0.
+  CLOSED: [2020-01-05 Sun 18:39]
 
 * DONE Not a huge fan of the Lisp/Scheme like naming convention I have now for the objects.  Just visually with the kind of punctuation I am using.  Will experiment.
   CLOSED: [2019-12-01 Sun 18:39]
@@ -453,4 +455,5 @@ Fixed.  Now all are pass by reference.
 * TODO Use Unicode for Strings and input (i.e. allow instructions to have unicode characters)
 * TODO to-real should work with Strings too
 * TODO Update enumeration to have the type case (String, Integer, etc) so that the macros work more naturally
-* TODO Modify Emacs mode so that "#" stay at natural indent
+* DONE Modify Emacs mode so that "#" stay at natural indent
+  CLOSED: [2020-01-05 Sun 17:46]

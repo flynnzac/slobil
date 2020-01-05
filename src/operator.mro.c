@@ -21,6 +21,10 @@
 
 `#include "arbel.h"'
 
+#CHECK_ARGS=`check_length(&#a~, #length~+1);
+if (is_error(-1)) return;'@
+
+
 #GETARG=`
 data* arg#num~ = resolve(a.arg_array[#num~], reg);
 
@@ -47,7 +51,10 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
 void
 op_range (arg a, registry* reg)
 {
-  CHECK_ARGS(a,2);
+  #a=a@
+  #length=2@
+  ##CHECK_ARGS~$;
+
   #op=range@
   #num=1@
   #type=INTEGER@
@@ -120,7 +127,10 @@ void
 op_registry (arg a, registry* reg)
 {
   if (a.length != 1)
-    CHECK_ARGS(a, 2);
+    {
+      #length=2@
+      ##CHECK_ARGS~$;
+    }
   
   registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1));
   data* d = NULL;
@@ -232,35 +242,44 @@ op_arithmetic (arg a, registry* reg, const int code)
 void
 op_add (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
+
   op_arithmetic(a, reg, 1);
 }
 
 void
 op_mul (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
+
   op_arithmetic(a, reg, 2);
 }
 
 void
 op_sub (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
+
   op_arithmetic(a, reg, 3);
 }
 
 void
 op_div (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
+
   op_arithmetic(a, reg, 4);
 }
 
 void
 op_set (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
 
   #op=set@
   #num=1@
@@ -296,7 +315,8 @@ op_set (arg a, registry* reg)
 void
 op_get (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
 
   #op=get@
   #num=1@
@@ -328,7 +348,8 @@ op_get (arg a, registry* reg)
 void
 op_if (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
 
   #op=if@
   #num=1@
@@ -381,7 +402,8 @@ op_sit (arg a, registry* reg)
 void
 op_move (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
 
   #op=move@
   #num=1@
@@ -399,7 +421,8 @@ op_move (arg a, registry* reg)
 void
 op_delete (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
 
   #op=delete@
   #num=1@
@@ -419,7 +442,8 @@ op_exit (arg a, registry* reg)
 void
 op_exist (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
 
   #op=exist@
   #num=1@
@@ -453,7 +477,8 @@ op_exist (arg a, registry* reg)
 void
 op_answer (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
 
   #op=answer@
   #num=1@
@@ -468,8 +493,8 @@ op_answer (arg a, registry* reg)
 int
 op_comparison (arg a, registry* reg)
 {
-
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
 
   #op=comparison@
   #num=1@
@@ -623,7 +648,9 @@ op_lteq (arg a, registry* reg)
 void
 op_print (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
+
   #op=print@
   #num=1@
   #checktype=false@
@@ -636,7 +663,8 @@ op_print (arg a, registry* reg)
 void
 op_character (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
 
   #op=character@
   #num=1@
@@ -675,7 +703,9 @@ op_character (arg a, registry* reg)
 void
 op_count_characters (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
+
   data* arg1 = resolve(a.arg_array[1], reg);
 
   if (arg1 == NULL)
@@ -702,7 +732,8 @@ op_count_characters (arg a, registry* reg)
 void
 op_concat (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  #length=2@
+  ##CHECK_ARGS~$;
 
   #op=concat@
   #num=1@
@@ -728,7 +759,9 @@ op_concat (arg a, registry* reg)
 void
 op_source (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  #length=1@
+  ##CHECK_ARGS~$;
+
   #op=source@
   #num=1@
   #type=STRING@
@@ -975,6 +1008,11 @@ op_last (arg a, registry* reg)
       hash_name = hash_str(name);
     }
   free(name);
+  if (i == 1)
+    {
+      do_error("No such register in given registry.");
+      return;
+    }
   name = vector_name((char*) arg2->data, i-1);
 
   d = malloc(sizeof(data));
