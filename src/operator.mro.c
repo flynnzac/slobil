@@ -338,15 +338,18 @@ op_if (arg a, registry* reg)
   #requireans=false@
   if (*((bool*) arg1->data))
     {
-      #num=2@
-      #checktype=false@
-      ##GETARG~$;
-      #checktype=true@
-
-      if (arg2 != NULL)
+      if (a.length >= 3)
         {
-          data* d = copy_data(arg2);
-          ret_ans(reg, d);
+          #num=2@
+          #checktype=false@
+          ##GETARG~$;
+          #checktype=true@
+
+          if (arg2 != NULL)
+            {
+              data* d = copy_data(arg2);
+              ret_ans(reg, d);
+            }
         }
     }
   else
@@ -1623,7 +1626,7 @@ op_is_type (arg a, registry* reg, const data_type type)
   #num=1@
   #checktype=false@
   ##GETARG~$;
-
+  #checktype=true@
   data* d;
   if (arg1->type == type || ((type==INSTRUCTION) &&
                              (arg1->type==OPERATION)))
@@ -1697,19 +1700,10 @@ void
 op_open_text_file (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*open-text-file* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("Argument to *open-text-file* must be a string.");
-      return;
-    }
+  #op=open-text-file@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
   
   FILE* f = fopen((char*) arg1->data, "r+");
   if (f == NULL)
@@ -1728,19 +1722,10 @@ void
 op_read (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*read* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != ARBEL_FILE)
-    {
-      do_error("Argument to *read* must be a file.");
-      return;
-    }
+  #op=read@
+  #num=1@
+  #type=ARBEL_FILE@
+  ##GETARG~$;
 
   char c = fgetc((FILE*) arg1->data);
   char* ret;
@@ -1763,19 +1748,11 @@ void
 op_close (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*close* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != REGISTER)
-    {
-      do_error("Argument to *close* must be a register.");
-      return;
-    }
+  #op=close@
+  #num=1@
+  #type=REGISTER@
+  ##GETARG~$;
 
   data* f = lookup(reg, ((regstr*) arg1->data)->key, 0);
 
@@ -1804,20 +1781,14 @@ void
 op_or (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*or* requires two arguments.");
-      return;
-    }
+  #op=or@
+  #num=1@
+  #type=BOOLEAN@
+  ##GETARG~$;
 
-  if (arg1->type != BOOLEAN || arg2->type != BOOLEAN)
-    {
-      do_error("Both arguments to *or* should be Boolean.");
-      return;
-    }
+  #num=2@
+  ##GETARG~$;
 
   data* d;
   if (*((bool*) arg1->data) || *((bool*) arg2->data))
@@ -1836,20 +1807,14 @@ void
 op_and (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*and* requires two arguments.");
-      return;
-    }
+  #op=and@
+  #num=1@
+  #type=BOOLEAN@
+  ##GETARG~$;
 
-  if (arg1->type != BOOLEAN || arg2->type != BOOLEAN)
-    {
-      do_error("Both arguments to *and* should be Boolean.");
-      return;
-    }
+  #num=2@
+  ##GETARG~$;
 
   data* d;
   if (*((bool*) arg1->data) && *((bool*) arg2->data))
@@ -1868,19 +1833,11 @@ void
 op_not (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*not* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != BOOLEAN)
-    {
-      do_error("The argument to *not* should be a Boolean.");
-      return;
-    }
+  #op=not@
+  #num=1@
+  #type=BOOLEAN@
+  ##GETARG~$;
 
   data* d;
   if (*((bool*) arg1->data))
@@ -1899,20 +1856,11 @@ void
 op_read_line (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*read-line* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != ARBEL_FILE)
-    {
-      do_error("*read-line*'s argument must be a File.");
-      return;
-    }
-
+  #op=read-line@
+  #num=1@
+  #type=ARBEL_FILE@
+  ##GETARG~$;
 
   char* line  = NULL;
   size_t len = 0;
@@ -1936,26 +1884,15 @@ void
 op_write (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*write* requires two arguments.");
-      return;
-    }
+  #op=write@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  if (arg1->type != STRING)
-    {
-      do_error("The first argument to *write* must be a string.");
-      return;
-    }
-
-  if (arg2->type != ARBEL_FILE)
-    {
-      do_error("The second argument to *write* must be a file.");
-      return;
-    }
+  #num=2@
+  #type=ARBEL_FILE@
+  ##GETARG~$;
 
   fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
   data* d;
@@ -1967,18 +1904,11 @@ void
 op_input (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*input* requires an argument.");
-      return;
-    }
 
-  if (arg1->type != REGISTER)
-    {
-      do_error("Argument to *input* should be a register.");
-      return;
-    }
+  #op=input@
+  #num=1@
+  #type=REGISTER@
+  ##GETARG~$;
 
   char* input = readline("");
   data* d;
@@ -1992,24 +1922,13 @@ void
 op_shell (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*shell* requires an argument.");
-      return;
-    }
 
-  if (arg1->type != STRING)
-    {
-      do_error("Argument to *shell* must be a string.");
-      return;
-    }
+  #op=shell@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  char* cmd = malloc(sizeof(char)*(strlen("sh -c ")+strlen((char*) arg1->data)+1));
-  strcpy(cmd, "sh -c ");
-  strcat(cmd, (char*) arg1->data);
-  FILE* f = popen(cmd, "r");
-  free(cmd);
+  FILE* f = popen((char*) arg1->data, "r");
   
   if (f == NULL)
     {
@@ -2043,22 +1962,17 @@ void
 op_link (arg a, registry* reg)
 {
   CHECK_ARGS(a, 3);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
-  
-  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
-    {
-      do_error("*link* requires three arguments.");
-      return;
-    }
 
-  if (arg1->type != STRING || arg2->type != STRING ||
-      arg3->type != STRING)
-    {
-      do_error("All arguments to *link* must be strings.");
-      return;
-    }
+  #op=link@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
+
+  #num=2@
+  ##GETARG~$;
+
+  #num=3@
+  ##GETARG~$;
 
   void* lib = dlopen((char*) arg1->data, RTLD_LAZY);
 
@@ -2099,31 +2013,23 @@ op_link (arg a, registry* reg)
 void
 op_match (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 3);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
+  CHECK_ARGS(a, 2);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*match* requires two arguments.");
-      return;
-    }
+  #op=match@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  if (arg1->type != STRING || arg2->type != STRING)
-    {
-      do_error("The first two arguments to *match* should be strings.");
-      return;
-    }
+  #num=2@
+  ##GETARG~$;
+  
 
   int max_matches = 0;
-  if (a.length >= 4 && arg3 != NULL && arg3->type != INTEGER)
+  if (a.length >= 4)
     {
-      do_error("The third argument to *match* must be an integer.");
-      return;
-    }
-  else if (a.length >= 4 && arg3 != NULL)
-    {
+      #num=3@
+      #type=INTEGER@
+      ##GETARG~$;
       max_matches = *((int*) arg3->data);
     }
 
@@ -2203,33 +2109,25 @@ op_match (arg a, registry* reg)
 void
 op_replace (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 4);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
-  data* arg4 = resolve(a.arg_array[4], reg);
+  CHECK_ARGS(a, 3);
 
-  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
-    {
-      do_error("*replace* requires three arguments.");
-      return;
-    }
+  #op=replace@
+  #type=STRING@
+  #num=1@
+  ##GETARG~$;
 
-  if (arg1->type != STRING || arg2->type != STRING
-      || arg3->type != STRING)
-    {
-      do_error("All arguments to *replace* must be strings.");
-      return;
-    }
+  #num=2@
+  ##GETARG~$;
+
+  #num=3@
+  ##GETARG~$;
 
   int max_replace = 0;
-  if (arg4 != NULL && arg4->type != INTEGER)
+  if (a.length >= 5)
     {
-      do_error("The fourth argument to *replace* must be an integer.");
-      return;
-    }
-  else if (arg4 != NULL)
-    {
+      #num=4@
+      #type=INTEGER@
+      ##GETARG~$;
       max_replace = *((int*) arg4->data);
     }
 
@@ -2330,20 +2228,11 @@ void
 op_log (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*log* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != INTEGER && arg1->type != REAL)
-    {
-      do_error("*log* requires a numeric argument.");
-      return;
-    }
-
+  #op=log@
+  #num=1@
+  #type=`(INTEGER|REAL)'@
+  ##GETARG~$;
+  
   data* d;
   if (arg1->type == INTEGER)
     {
@@ -2362,19 +2251,10 @@ void
 op_exp (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*exp* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != INTEGER && arg1->type != REAL)
-    {
-      do_error("*exp* requires a numeric argument.");
-      return;
-    }
+  #op=exp@
+  #num=1@
+  #type=`(INTEGER|REAL)'@
+  ##GETARG~$;
 
   data* d;
   if (arg1->type == INTEGER)
@@ -2393,21 +2273,14 @@ void
 op_power (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*power* requires two arguments.");
-      return;
-    }
 
-  if (arg1->type != INTEGER && arg1->type != REAL
-      && arg2->type != INTEGER && arg2->type != REAL)
-    {
-      do_error("*power* requires two numeric argument.");
-      return;
-    }
+  #op=power@
+  #num=1@
+  #type=`(INTEGER|REAL)'@
+  ##GETARG~$;
+
+  #num=2@
+  ##GETARG~$;
 
   double base;
   double power;
@@ -2439,18 +2312,10 @@ void
 op_change_dir (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  if (arg1 == NULL)
-    {
-      do_error("*change-dir* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("The argument to *change-dir* must be a string.");
-      return;
-    }
+  #op=change-dir@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
   int error = chdir((char*) arg1->data);
   if (error)
@@ -2466,19 +2331,11 @@ void
 op_import (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
-  data* arg1 = resolve(a.arg_array[1], reg);
 
-  if (arg1 == NULL)
-    {
-      do_error("*import* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != REGISTRY)
-    {
-      do_error("The argument to *import* must be a registry.");
-      return;
-    }
+  #op=import@
+  #num=1@
+  #type=REGISTRY@
+  ##GETARG~$;
 
   registry* r1 = (registry*) arg1->data;
 
@@ -2527,27 +2384,17 @@ void
 op_substring (arg a, registry* reg)
 {
   CHECK_ARGS(a, 3);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
-  data* arg3 = resolve(a.arg_array[3], reg);
+  #op=substring@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  if (arg1 == NULL || arg2 == NULL || arg3 == NULL)
-    {
-      do_error("*substring* requires three arguments.");
-      return;
-    }
+  #num=2@
+  #type=INTEGER@
+  ##GETARG~$;
 
-  if (arg1->type != STRING)
-    {
-      do_error("First argument to *substring* must be a string.");
-      return;
-    }
-
-  if (arg2->type != INTEGER || arg3->type != INTEGER)
-    {
-      do_error("The second and third arguments of *substring* must be integers.");
-      return;
-    }
+  #num=3@
+  ##GETARG~$;
 
   char* str = (char*) arg1->data;
   int start = *((int*) arg2->data);
@@ -2632,26 +2479,15 @@ void
 op_of (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*of* requires two arguments.");
-      return;
-    }
+  #op=of@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  if (arg1->type != STRING)
-    {
-      do_error("First argument to *of* must be a string.");
-      return;
-    }
-
-  if (arg2->type != REGISTRY)
-    {
-      do_error("Second argument to *of* must be a registry.");
-      return;
-    }
+  #num=2@
+  #type=REGISTRY@
+  ##GETARG~$;
 
   data* d;
   assign_str(&d, (char*) arg1->data, 1);
@@ -2662,25 +2498,14 @@ void
 op_is_of (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
+  #op=is-of@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*is-of* requires two arguments.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("The first argument to *is-of* must be a string.");
-      return;
-    }
-  if (arg2->type != REGISTRY)
-    {
-      do_error("The second argument to *is-of* must be a registry.");
-      return;
-    }
+  #num=2@
+  #type=REGISTRY@
+  ##GETARG~$;
 
   data* d = lookup((registry*) arg2->data, arbel_hash_class, 0);
 
@@ -2707,20 +2532,16 @@ void
 op_dispatch (arg a, registry* reg)
 {
   CHECK_ARGS(a, 2);
-  data* arg1 = resolve(a.arg_array[1], reg);
-  data* arg2 = resolve(a.arg_array[2], reg);
 
-  if (arg1 == NULL || arg2 == NULL)
-    {
-      do_error("*dispatch* requires two arguments.");
-      return;
-    }
+  #op=dispatch@
+  #type=STRING@
+  #num=1@
+  ##GETARG~$;
 
-  if (arg1->type != STRING)
-    {
-      do_error("The first argument to *dispatch* must be a string.");
-      return;
-    }
+  #num=2@
+  #checktype=false@
+  ##GETARG~$;
+  #checktype=true@
 
   const char* class;
   data* d = NULL;
@@ -2789,13 +2610,10 @@ op_code (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
 
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1==NULL || (arg1->type != INSTRUCTION))
-    {
-      do_error("First argument to *code* must be an ARBEL instruction (not native).");
-      return;
-    }
+  #op=code@
+  #num=1@
+  #type=INSTRUCTION@
+  ##GETARG~$;
 
   data* d;
   assign_str(&d, ((instruction*) arg1->data)->code, 1);
@@ -2809,13 +2627,10 @@ op_is_error (arg a, registry* reg)
 {
   CHECK_ARGS(a, 1);
 
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL || (arg1->type != INSTRUCTION))
-    {
-      do_error("First argument to *is-error* must be an instruction.");
-      return;
-    }
+  #op=is-error@
+  #num=1@
+  #type=INSTRUCTION@
+  ##GETARG~$;
 
   execute_0(arg1, reg);
   data* d;
