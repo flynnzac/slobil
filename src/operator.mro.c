@@ -720,7 +720,8 @@ op_count_characters (arg a, registry* reg)
       return;
     }
 
-  int len = strlen((char*) arg1->data);
+  int len = u8_mbsnlen((unsigned char*) arg1->data,
+                       strlen((char*) arg1->data));
 
   data* d;
   assign_int(&d, len);
