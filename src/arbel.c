@@ -35,19 +35,19 @@ interrupt_handler (int status)
   is_error(2);
 }
 
-UChar*
-append_to_source_code (UChar* source_code, const UChar* new)
+char*
+append_to_source_code (char* source_code, const char* new)
 {
   if (source_code == NULL)
     {
-      source_code = malloc(sizeof(UChar)*(u_strlen(new)+1));
-      u_strcpy(source_code, new);
+      source_code = malloc(sizeof(char)*(strlen(new)+1));
+      strcpy(source_code, new);
     }
   else
     {
-      source_code = realloc(source_code, sizeof(UChar)*
-                            (u_strlen(source_code)+u_strlen(new)+1));
-      u_strcat(source_code, new);
+      source_code = realloc(source_code, sizeof(char)*
+                            (strlen(source_code)+strlen(new)+1));
+      strcat(source_code, new);
     }
 
   return source_code;
@@ -83,17 +83,15 @@ main (int argc, char** argv)
 
   last_ans = NULL;
 
-  UChar* code = NULL;
-  U_STRING_DECL(prompt, "...", 3);
-  U_STRING_INIT(prompt, "...", 3);
-
+  char* code = NULL;
+  char* prompt = "... ";
   FILE* f;
   int complete = 1;
   struct parser_state state = fresh_state(0);
 
   int k;
   int echo = 1;
-  UChar* script = NULL;
+  char* script = NULL;
   int save_code = 1;
   while ((k = getopt(argc, argv, "l:s:nm")) != -1)
     {
@@ -109,9 +107,8 @@ main (int argc, char** argv)
           break;
         case 's':
           is_exit(1);
-          script = malloc(sizeof(UChar)*(strlen(optarg)+1));
-	  UErrorCode error = U_ZERO_ERROR;
-	  u_strFromUTF8(script, strlen(optarg)+1, NULL, optarg, -1, &error);
+          script = malloc(sizeof(char)*(strlen(optarg)+1));
+          strcpy(script, optarg);
           save_code = 0;
           break;
         case 'm':

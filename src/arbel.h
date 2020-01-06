@@ -37,7 +37,6 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdbool.h>
-#include <unicode/ustring.h>
 
 enum data_type
   {
@@ -70,7 +69,7 @@ struct content
 {
   data* value;
   unsigned long key;
-  UChar* name;
+  char* name;
   struct content* right;
   struct content* left;
   int do_not_free_data;
@@ -92,7 +91,7 @@ typedef void (*operation)(struct arg, registry*);
 
 struct regstr
 {
-  UChar* name;
+  char* name;
   unsigned long key;
 };
 
@@ -100,7 +99,7 @@ typedef struct regstr regstr;
 
 struct command
 {
-  UChar* code;
+  char* code;
   registry* reg;
 };
 
@@ -130,7 +129,7 @@ typedef struct parser_state parser_state;
 struct element
 {
   data* data;
-  UChar** name;
+  char** name;
   struct statement* s;
   int literal;
   int statement;
@@ -166,7 +165,7 @@ typedef struct statement statement;
 struct instruction
 {
   statement* stmt;
-  UChar* code;
+  char* code;
   bool being_called;
 };
 
@@ -189,11 +188,11 @@ struct trash_heap
 
 typedef struct trash_heap trash_heap;
 
-UChar*
+char*
 argument_name (int n);
 
 bool
-is_integer (const UChar* str);
+is_integer (const char* str);
 
 void
 assign_real (data** d, const double num);
@@ -202,7 +201,7 @@ void
 assign_int (data** d, const int num);
 
 void
-assign_str (data** d, const UChar* str, int copy);
+assign_str (data** d, const char* str, int copy);
 
 void
 assign_op (data** d, const operation op);
@@ -211,7 +210,7 @@ void
 assign_registry (data** d, registry* r);
 
 void
-assign_regstr (data** d, const UChar* name, unsigned long key);
+assign_regstr (data** d, const char* name, unsigned long key);
 
 void
 assign_boolean (data** d, bool val);
@@ -226,7 +225,7 @@ bool
 is_numeric (data* d);
 
 bool
-is_boolean (const UChar* str);
+is_boolean (const char* str);
 
 
 void
@@ -242,7 +241,7 @@ content*
 tail (content* reg);
 
 content*
-set (registry* reg, data* d, const UChar* name, int rehash);
+set (registry* reg, data* d, const char* name, int rehash);
 
 data*
 get (registry* reg, unsigned long hash_name, int recursive);
@@ -257,7 +256,7 @@ data*
 get_data_in_registry (registry* reg, const regstr name);
 
 void
-do_error (const UChar* msg);
+do_error (const char* msg);
 
 void
 null_ans (registry* reg);
@@ -266,22 +265,22 @@ void
 print_data (data* d, int print_cmd);
 
 bool
-is_register (const UChar* str);
+is_register (const char* str);
 
 void
-str_shift_left (UChar* buffer);
+str_shift_left (char* buffer);
 
 void
 add_basic_ops (registry* reg);
 
 bool
-is_whitespace (const UChar c);
+is_whitespace (const char c);
 
 void
 print_registry (registry* reg);
 
-UChar*
-append_nl (UChar* str);
+char*
+append_nl (char* str);
 
 data*
 copy_data (data* d_in);
@@ -302,16 +301,16 @@ registry*
 new_registry (registry* parent, size_t hash_size);
 
 void
-ret (registry* reg, data* d, const UChar* name);
+ret (registry* reg, data* d, const char* name);
 
 void
 ret_ans (registry* reg, data* d);
 
 void
-relabel (registry* reg, const UChar* name, const UChar* new_name);
+relabel (registry* reg, const char* name, const char* new_name);
 
 void
-assign_instr (data** d, statement* s, const UChar* code);
+assign_instr (data** d, statement* s, const char* code);
 
 struct parser_state
 fresh_state ();
@@ -323,7 +322,7 @@ int
 is_retval (const int r);
 
 bool
-is_real (const UChar* str);
+is_real (const char* str);
 
 void
 assign_active (data** d, statement* s);
@@ -340,8 +339,8 @@ save_registry (FILE* f, registry* reg);
 int
 read_registry (FILE* f, registry* reg);
 
-UChar*
-vector_name (const UChar* lead, int n);
+char*
+vector_name (const char* lead, int n);
 
 void
 execute_statement (statement* s, registry* reg);
@@ -350,7 +349,7 @@ statement*
 append_statement (statement* current, element* head);
 
 element*
-append_argument_element (element* current, UChar** name,
+append_argument_element (element* current, char** name,
                          unsigned long* hash_name, const int levels,
                          int* is_regstr);
 
@@ -381,8 +380,8 @@ copy_statement (statement* s);
 void
 free_statement (statement* s);
 
-UChar*
-escape_str(UChar* str);
+char*
+escape_str(char* str);
 
 void
 mark_do_not_free (registry* reg, unsigned long hash_name);
@@ -390,11 +389,11 @@ mark_do_not_free (registry* reg, unsigned long hash_name);
 unsigned long
 hash_str(const char *str);
 
-UChar**
-split_by_colon (const UChar* name, int* cnt, int** is_regstr);
+char**
+split_by_colon (const char* name, int* cnt, int** is_regstr);
 
-UChar**
-copy_names (UChar** name, int levels);
+char**
+copy_names (char** name, int levels);
 
 unsigned long*
 copy_hashes (unsigned long* hashes, int levels);
@@ -403,9 +402,9 @@ int*
 copy_isregstr (int* is_regstr, int levels);
 
 data*
-get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, UChar** name);
+get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
 
-const UChar*
+const char*
 str_type (data_type type);
 
 registry*
@@ -457,7 +456,7 @@ print_statement (statement* s);
 
 /* global variables */
 registry* current_parse_registry;
-UChar* source_code;
+char* source_code;
 
 void** arbel_ll;
 int arbel_ll_cnt;
