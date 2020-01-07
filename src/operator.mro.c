@@ -402,6 +402,10 @@ op_if (arg a, registry* reg)
 void
 op_sit (arg a, registry* reg)
 {
+  for (int i=1; i < a.length; i++)
+    {
+      (void) resolve(a.arg_array[i], reg);
+    }
   return;
 }
 

@@ -244,6 +244,20 @@ execute_statement (statement* s, registry* reg)
   
   free_arg_array_data(&s->arg, arg_n);
 
+  if (is_error(-1))
+    {
+      data* err;
+      assign_int(&err, is_error(-1));
+      set(reg, err, "error-code", 0);
+    }
+  else
+    {
+      data* err;
+      assign_int(&err, 0);
+      set(reg, err, "error-code", 0);
+    }
+	
+
 }
 
 void
@@ -261,5 +275,4 @@ execute_code (statement* s, registry* reg)
       stmt = stmt->right;
     }
 
-  is_error(error);
 }

@@ -580,6 +580,10 @@ if (arg3 != NULL && false && (!(arg3->type & Boolean)))
 void
 op_sit (arg a, registry* reg)
 {
+  for (int i=1; i < a.length; i++)
+    {
+      (void) resolve(a.arg_array[i], reg);
+    }
   return;
 }
 
