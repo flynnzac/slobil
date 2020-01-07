@@ -8,7 +8,7 @@ set /tokenize
       set /init 1 .
       while ( lteq i len . )
             (
-              set /d [ character line i . ] .
+              set /d [ substring line i i . ] .
               if [ string-eq d sep . ]
                  {
                    in tokened ( set cur-reg buffer . ) .

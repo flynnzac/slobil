@@ -37,7 +37,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdbool.h>
-
+#include <unistr.h>
+#include <unistdio.h>
 enum data_type
   {
    INTEGER = 1,

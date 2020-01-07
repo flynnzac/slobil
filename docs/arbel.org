@@ -490,7 +490,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 ** String operations
 
-- =character STRING INTEGER= --- sets the =/ans= register to a String containing the character in =STRING= at location =INTEGER=.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER= is =0=, then it will set the =/ans= register to the last character in =STRING=.
+- =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
 - =count-characters STRING= --- sets the =/ans= register to the number of characters in =STRING=.
 
@@ -511,10 +511,6 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/#N= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
 - =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
-
-- =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.
-
-
 
 ** Register operations
 

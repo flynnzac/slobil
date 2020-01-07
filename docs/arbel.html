@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-27 Fri 19:48 -->
+<!-- 2020-01-06 Mon 19:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2019-12-27 Fri 19:48
+ARBEL<br>Zach Flynn<br>2020-01-06 Mon 19:56
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,44 +239,44 @@ ARBEL<br>Zach Flynn<br>2019-12-27 Fri 19:48
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org74d14b7">1. Introduction</a></li>
-<li><a href="#org2c63bc9">2. The Basics</a>
+<li><a href="#org4f51144">1. Introduction</a></li>
+<li><a href="#orgf62484f">2. The Basics</a>
 <ul>
-<li><a href="#org089362a">2.1. Statements and syntax</a></li>
-<li><a href="#org367b598">2.2. Registries</a></li>
-<li><a href="#org208cfcc">2.3. Registers</a></li>
-<li><a href="#orgdfa0c8e">2.4. Environment</a></li>
+<li><a href="#orgcd8c0d3">2.1. Statements and syntax</a></li>
+<li><a href="#orgc00c6c2">2.2. Registries</a></li>
+<li><a href="#orgc08a695">2.3. Registers</a></li>
+<li><a href="#orgf41493c">2.4. Environment</a></li>
 </ul>
 </li>
-<li><a href="#orgcf38acd">3. Examples</a>
+<li><a href="#org483e15e">3. Examples</a>
 <ul>
-<li><a href="#org3118d97">3.1. Example: A Line-Oriented Text Editor</a></li>
-<li><a href="#org10ef2e1">3.2. Example: Numerical Differentiation</a></li>
-<li><a href="#orgd978486">3.3. Example: Dispatch</a></li>
-<li><a href="#org0b10bbb">3.4. Example: Compute Factorial</a></li>
-<li><a href="#orgaee880f">3.5. Example: Numerical Integration</a></li>
-<li><a href="#org01946da">3.6. Example: Basic Linear Algebra</a></li>
-<li><a href="#org5ec28a3">3.7. Example: Split a String</a></li>
+<li><a href="#org63caed2">3.1. Example: A Line-Oriented Text Editor</a></li>
+<li><a href="#org84d4333">3.2. Example: Numerical Differentiation</a></li>
+<li><a href="#orga83b2ec">3.3. Example: Dispatch</a></li>
+<li><a href="#org6d6524d">3.4. Example: Compute Factorial</a></li>
+<li><a href="#org6ca50af">3.5. Example: Numerical Integration</a></li>
+<li><a href="#org9dbba70">3.6. Example: Basic Linear Algebra</a></li>
+<li><a href="#orgd06eae5">3.7. Example: Split a String</a></li>
 </ul>
 </li>
-<li><a href="#orgade12af">4. Reference</a>
+<li><a href="#org184b669">4. Reference</a>
 <ul>
-<li><a href="#org14603db">4.1. Registry operations</a></li>
-<li><a href="#orgd43bb71">4.2. Real and Integer operations</a></li>
-<li><a href="#org692dee1">4.3. Control flow operations</a></li>
-<li><a href="#org791239a">4.4. Environment operations</a></li>
-<li><a href="#org8a988d7">4.5. String operations</a></li>
-<li><a href="#org2f23509">4.6. Register operations</a></li>
-<li><a href="#org5764afb">4.7. Instruction operations</a></li>
-<li><a href="#org36f6aa2">4.8. File operations</a></li>
-<li><a href="#org0ba512b">4.9. Boolean operations</a></li>
+<li><a href="#org07dc0f5">4.1. Registry operations</a></li>
+<li><a href="#org7d206aa">4.2. Real and Integer operations</a></li>
+<li><a href="#org63d3942">4.3. Control flow operations</a></li>
+<li><a href="#org3ce343a">4.4. Environment operations</a></li>
+<li><a href="#org88d5b24">4.5. String operations</a></li>
+<li><a href="#orgeacde94">4.6. Register operations</a></li>
+<li><a href="#org4c7f9f3">4.7. Instruction operations</a></li>
+<li><a href="#org479802e">4.8. File operations</a></li>
+<li><a href="#org5d083ff">4.9. Boolean operations</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org74d14b7" class="outline-2">
-<h2 id="org74d14b7"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org4f51144" class="outline-2">
+<h2 id="org4f51144"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL is a Registry-Based Environment and Language. A <i>registry</i> is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a <i>map</i> or a <i>table</i>.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate <i>within</i> a certain registry.  The <i>environment</i> (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to instantiate a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
@@ -301,12 +301,12 @@ The best way to get a feel for the language and environment is by example so I w
 </div>
 
 
-<div id="outline-container-org2c63bc9" class="outline-2">
-<h2 id="org2c63bc9"><span class="section-number-2">2</span> The Basics</h2>
+<div id="outline-container-orgf62484f" class="outline-2">
+<h2 id="orgf62484f"><span class="section-number-2">2</span> The Basics</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org089362a" class="outline-3">
-<h3 id="org089362a"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-orgcd8c0d3" class="outline-3">
+<h3 id="orgcd8c0d3"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -469,8 +469,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 
 
-<div id="outline-container-org367b598" class="outline-3">
-<h3 id="org367b598"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-orgc00c6c2" class="outline-3">
+<h3 id="orgc00c6c2"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In ARBEL, most of the action happens inside <i>registries</i>.  Registries are both data structures and define what registers (variables) are in scope.  Because they are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -555,14 +555,14 @@ Aside from being a useful data structure, registries are also how ARBEL does <i>
 ... set /math [ registry . ] .
 ... set /factorial
        (
-	 set /i 2 .
-	 set /prod 1 .
-	 while ( lteq i t . )
-	       (
-		 set /prod [ multiply i prod . ] .
-		 set /i [ add i 1 . ] .
-	       ) .
-	 answer prod .
+         set /i 2 .
+         set /prod 1 .
+         while ( lteq i t . )
+               (
+                 set /prod [ multiply i prod . ] .
+                 set /i [ add i 1 . ] .
+               ) .
+         answer prod .
        ) math .
 ... math:/factorial /t 5 .
 ans = 120
@@ -589,8 +589,8 @@ Registries are flexible data structures.  They can be used to represent structur
 </div>
 </div>
 
-<div id="outline-container-org208cfcc" class="outline-3">
-<h3 id="org208cfcc"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-orgc08a695" class="outline-3">
+<h3 id="orgc08a695"><span class="section-number-3">2.3</span> Registers</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
@@ -626,8 +626,8 @@ Registers are data denoting locations so they are often useful ways to manipulat
 </div>
 </div>
 
-<div id="outline-container-orgdfa0c8e" class="outline-3">
-<h3 id="orgdfa0c8e"><span class="section-number-3">2.4</span> Environment</h3>
+<div id="outline-container-orgf41493c" class="outline-3">
+<h3 id="orgf41493c"><span class="section-number-3">2.4</span> Environment</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 ARBEL is not only a programming language. It is also an <i>environment</i>.  The current state of ARBEL &#x2014; the values and where they are located in the registry &#x2014; can be saved to disk and re-loaded later on.
@@ -636,12 +636,12 @@ ARBEL is not only a programming language. It is also an <i>environment</i>.  The
 </div>
 </div>
 
-<div id="outline-container-orgcf38acd" class="outline-2">
-<h2 id="orgcf38acd"><span class="section-number-2">3</span> Examples</h2>
+<div id="outline-container-org483e15e" class="outline-2">
+<h2 id="org483e15e"><span class="section-number-2">3</span> Examples</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org3118d97" class="outline-3">
-<h3 id="org3118d97"><span class="section-number-3">3.1</span> Example: A Line-Oriented Text Editor</h3>
+<div id="outline-container-org63caed2" class="outline-3">
+<h3 id="org63caed2"><span class="section-number-3">3.1</span> Example: A Line-Oriented Text Editor</h3>
 <div class="outline-text-3" id="text-3-1">
 <pre class="example">
 ' Line-oriented text editor
@@ -688,8 +688,8 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-org10ef2e1" class="outline-3">
-<h3 id="org10ef2e1"><span class="section-number-3">3.2</span> Example: Numerical Differentiation</h3>
+<div id="outline-container-org84d4333" class="outline-3">
+<h3 id="org84d4333"><span class="section-number-3">3.2</span> Example: Numerical Differentiation</h3>
 <div class="outline-text-3" id="text-3-2">
 <pre class="example">
 ' Compute the numerical derivative of a function
@@ -716,8 +716,8 @@ ans = 2.0
 </div>
 </div>
 
-<div id="outline-container-orgd978486" class="outline-3">
-<h3 id="orgd978486"><span class="section-number-3">3.3</span> Example: Dispatch</h3>
+<div id="outline-container-orga83b2ec" class="outline-3">
+<h3 id="orga83b2ec"><span class="section-number-3">3.3</span> Example: Dispatch</h3>
 <div class="outline-text-3" id="text-3-3">
 <pre class="example">
 ' Demonstrates dispatching to different types
@@ -758,8 +758,8 @@ ans = hellohellohellohellohello
 </div>
 </div>
 
-<div id="outline-container-org0b10bbb" class="outline-3">
-<h3 id="org0b10bbb"><span class="section-number-3">3.4</span> Example: Compute Factorial</h3>
+<div id="outline-container-org6d6524d" class="outline-3">
+<h3 id="org6d6524d"><span class="section-number-3">3.4</span> Example: Compute Factorial</h3>
 <div class="outline-text-3" id="text-3-4">
 <pre class="example">
 ' compute a factorial using while
@@ -798,8 +798,8 @@ ans = 120
 </div>
 </div>
 
-<div id="outline-container-orgaee880f" class="outline-3">
-<h3 id="orgaee880f"><span class="section-number-3">3.5</span> Example: Numerical Integration</h3>
+<div id="outline-container-org6ca50af" class="outline-3">
+<h3 id="org6ca50af"><span class="section-number-3">3.5</span> Example: Numerical Integration</h3>
 <div class="outline-text-3" id="text-3-5">
 <pre class="example">
 ' takes a function as an argument and return left hand
@@ -829,8 +829,8 @@ ans = 0.332834
 </div>
 </div>
 
-<div id="outline-container-org01946da" class="outline-3">
-<h3 id="org01946da"><span class="section-number-3">3.6</span> Example: Basic Linear Algebra</h3>
+<div id="outline-container-org9dbba70" class="outline-3">
+<h3 id="org9dbba70"><span class="section-number-3">3.6</span> Example: Basic Linear Algebra</h3>
 <div class="outline-text-3" id="text-3-6">
 <pre class="example">
 ' Computes v^T w for a vector 
@@ -899,8 +899,8 @@ ans = a registry with:
 </div>
 </div>
 
-<div id="outline-container-org5ec28a3" class="outline-3">
-<h3 id="org5ec28a3"><span class="section-number-3">3.7</span> Example: Split a String</h3>
+<div id="outline-container-orgd06eae5" class="outline-3">
+<h3 id="orgd06eae5"><span class="section-number-3">3.7</span> Example: Split a String</h3>
 <div class="outline-text-3" id="text-3-7">
 <pre class="example">
 ' Tokenize a string /#1 by splitting on string /#2
@@ -913,7 +913,7 @@ set /tokenize
       set /init 1 .
       while ( lteq i len . )
             (
-              set /d [ character line i . ] .
+              set /d [ substring line i i . ] .
               if [ string-eq d sep . ]
                  {
                    in tokened ( set cur-reg buffer . ) .
@@ -945,16 +945,16 @@ ans = a registry with:
 </div>
 </div>
 
-<div id="outline-container-orgade12af" class="outline-2">
-<h2 id="orgade12af"><span class="section-number-2">4</span> Reference</h2>
+<div id="outline-container-org184b669" class="outline-2">
+<h2 id="org184b669"><span class="section-number-2">4</span> Reference</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operations are classified by the main data type they manipulate.
 </p>
 </div>
 
-<div id="outline-container-org14603db" class="outline-3">
-<h3 id="org14603db"><span class="section-number-3">4.1</span> Registry operations</h3>
+<div id="outline-container-org07dc0f5" class="outline-3">
+<h3 id="org07dc0f5"><span class="section-number-3">4.1</span> Registry operations</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li><code>set REGISTER VALUE &lt;REGISTRY&gt;</code> &#x2014; sets the value at <code>REGISTER</code> to <code>VALUE</code> in the registry <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is omitted, then it will set the register in the current registry.</li>
@@ -1006,8 +1006,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 
 
-<div id="outline-container-orgd43bb71" class="outline-3">
-<h3 id="orgd43bb71"><span class="section-number-3">4.2</span> Real and Integer operations</h3>
+<div id="outline-container-org7d206aa" class="outline-3">
+<h3 id="org7d206aa"><span class="section-number-3">4.2</span> Real and Integer operations</h3>
 <div class="outline-text-3" id="text-4-2">
 <ul class="org-ul">
 <li><code>add NUMBER1 NUMBER2 ...</code> &#x2014; adds all the numbers together and sets the <code>/ans</code> register to the result.</li>
@@ -1045,8 +1045,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org692dee1" class="outline-3">
-<h3 id="org692dee1"><span class="section-number-3">4.3</span> Control flow operations</h3>
+<div id="outline-container-org63d3942" class="outline-3">
+<h3 id="org63d3942"><span class="section-number-3">4.3</span> Control flow operations</h3>
 <div class="outline-text-3" id="text-4-3">
 <ul class="org-ul">
 <li><code>if BOOLEAN VALUE1 &lt;VALUE2&gt;</code> &#x2014; if the first argument is <code>True</code>, sets the <code>/ans</code> register to <code>VALUE1</code>, if it is <code>False</code>, sets the <code>/ans</code> register to <code>VALUE2</code>.  If <code>VALUE2</code> is omitted, do nothing if the first argument is <code>False</code>.</li>
@@ -1058,8 +1058,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org791239a" class="outline-3">
-<h3 id="org791239a"><span class="section-number-3">4.4</span> Environment operations</h3>
+<div id="outline-container-org3ce343a" class="outline-3">
+<h3 id="org3ce343a"><span class="section-number-3">4.4</span> Environment operations</h3>
 <div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li><code>exit</code> &#x2014; exit ARBEL.</li>
@@ -1093,11 +1093,11 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org8a988d7" class="outline-3">
-<h3 id="org8a988d7"><span class="section-number-3">4.5</span> String operations</h3>
+<div id="outline-container-org88d5b24" class="outline-3">
+<h3 id="org88d5b24"><span class="section-number-3">4.5</span> String operations</h3>
 <div class="outline-text-3" id="text-4-5">
 <ul class="org-ul">
-<li><code>character STRING INTEGER</code> &#x2014; sets the <code>/ans</code> register to a String containing the character in <code>STRING</code> at location <code>INTEGER</code>.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if <code>INTEGER</code> is <code>0</code>, then it will set the <code>/ans</code> register to the last character in <code>STRING</code>.</li>
+<li><code>substring STRING INTEGER1 INTEGER2</code> &#x2014; sets the <code>/ans</code> Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if <code>INTEGER1</code> and <code>INTEGER2</code> are <code>0</code>, then it will set the <code>/ans</code> register to the last character in <code>STRING</code>.</li>
 
 <li><code>count-characters STRING</code> &#x2014; sets the <code>/ans</code> register to the number of characters in <code>STRING</code>.</li>
 
@@ -1118,16 +1118,12 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 <li><code>match STRING1 STRING2 &lt;INTEGER&gt;</code> &#x2014; find occurences of regular expression STRING1 in String STRING2.  Sets the <code>/ans</code> Register to a Registry with all submatches located at the <code>/#N</code> registries.  The optional third argument gives the number of matches to return.  If <code>0</code> is provided, return all matches (default).</li>
 
 <li><code>replace STRING1 STRING2 STRING3 &lt;INTEGER&gt;</code> &#x2014; set the <code>/ans</code> Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If <code>0</code>, replace all (default).</li>
-
-<li><code>substring STRING INTEGER1 INTEGER2</code> &#x2014; sets the <code>/ans</code> Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  They follow the same indexing rules as other String functions.</li>
 </ul>
 </div>
 </div>
 
-
-
-<div id="outline-container-org2f23509" class="outline-3">
-<h3 id="org2f23509"><span class="section-number-3">4.6</span> Register operations</h3>
+<div id="outline-container-orgeacde94" class="outline-3">
+<h3 id="orgeacde94"><span class="section-number-3">4.6</span> Register operations</h3>
 <div class="outline-text-3" id="text-4-6">
 <ul class="org-ul">
 <li><code>next REGISTER</code> &#x2014; if the <code>REGISTER</code> ends in a number, return the Register with that number incremented by 1.</li>
@@ -1143,8 +1139,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org5764afb" class="outline-3">
-<h3 id="org5764afb"><span class="section-number-3">4.7</span> Instruction operations</h3>
+<div id="outline-container-org4c7f9f3" class="outline-3">
+<h3 id="org4c7f9f3"><span class="section-number-3">4.7</span> Instruction operations</h3>
 <div class="outline-text-3" id="text-4-7">
 <ul class="org-ul">
 <li><code>call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...</code> &#x2014; executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.</li>
@@ -1154,8 +1150,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org36f6aa2" class="outline-3">
-<h3 id="org36f6aa2"><span class="section-number-3">4.8</span> File operations</h3>
+<div id="outline-container-org479802e" class="outline-3">
+<h3 id="org479802e"><span class="section-number-3">4.8</span> File operations</h3>
 <div class="outline-text-3" id="text-4-8">
 <ul class="org-ul">
 <li><code>is-file VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a File and to <code>False</code> otherwise.</li>
@@ -1173,8 +1169,8 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 </div>
 
-<div id="outline-container-org0ba512b" class="outline-3">
-<h3 id="org0ba512b"><span class="section-number-3">4.9</span> Boolean operations</h3>
+<div id="outline-container-org5d083ff" class="outline-3">
+<h3 id="org5d083ff"><span class="section-number-3">4.9</span> Boolean operations</h3>
 <div class="outline-text-3" id="text-4-9">
 <ul class="org-ul">
 <li><code>is-boolean VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Boolean and to <code>False</code> otherwise.</li>
@@ -1191,7 +1187,7 @@ Arguments that are optional are enclosed in angle brackets (&lt;&gt;).  Operatio
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2019-12-27 Fri 19:48</p>
+<p class="date">Created: 2020-01-06 Mon 19:56</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
