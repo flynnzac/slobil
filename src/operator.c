@@ -34,11 +34,12 @@ void
 op_range (arg a, registry* reg)
 {
   
-  
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
 
   
+  
+  check_length(&a, 2+1, "range");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -163,8 +164,9 @@ op_registry (arg a, registry* reg)
   if (a.length != 1)
     {
       
-      check_length(&a, 2+1);
-if (is_error(-1)) return;;
+      
+      check_length(&a, 2+1, "registry");
+if (is_error(-1)) return ;;
     }
   
   registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1));
@@ -278,8 +280,9 @@ void
 op_add (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
+  
+  check_length(&a, 2+1, "add");
+if (is_error(-1)) return ;;
 
   op_arithmetic(a, reg, 1);
 }
@@ -288,8 +291,9 @@ void
 op_mul (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
+  
+  check_length(&a, 2+1, "mul");
+if (is_error(-1)) return ;;
 
   op_arithmetic(a, reg, 2);
 }
@@ -298,8 +302,9 @@ void
 op_sub (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
+  
+  check_length(&a, 2+1, "sub");
+if (is_error(-1)) return ;;
 
   op_arithmetic(a, reg, 3);
 }
@@ -308,8 +313,9 @@ void
 op_div (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
+  
+  check_length(&a, 2+1, "div");
+if (is_error(-1)) return ;;
 
   op_arithmetic(a, reg, 4);
 }
@@ -318,10 +324,11 @@ void
 op_set (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
 
   
+  check_length(&a, 2+1, "set");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -407,10 +414,10 @@ void
 op_get (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "get");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -475,10 +482,10 @@ void
 op_if (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "if");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -581,10 +588,10 @@ void
 op_move (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 2+1, "move");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -635,9 +642,9 @@ void
 op_delete (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
+  
+  check_length(&a, 1+1, "delete");
+if (is_error(-1)) return ;;
   
   
   
@@ -674,10 +681,10 @@ void
 op_exist (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "exist");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -744,10 +751,10 @@ void
 op_answer (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "answer");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -778,10 +785,12 @@ int
 op_comparison (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
-
   
+  
+  check_length(&a, 2+1, "comparison");
+if (is_error(-1)) return -2;;
+  
+
   
   
   
@@ -968,10 +977,10 @@ void
 op_print (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "print");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1001,9 +1010,10 @@ void
 op_string_length (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
   
+  check_length(&a, 1+1, "string-length");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1039,10 +1049,10 @@ void
 op_string_append (arg a, registry* reg)
 {
   
-  check_length(&a, 2+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 2+1, "string-append");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1101,10 +1111,10 @@ void
 op_source (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1);
-if (is_error(-1)) return;;
-
   
+  check_length(&a, 1+1, "source");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1147,7 +1157,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_do_to_all (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
+  
+  
+  check_length(&a, 2+1, "do-to-all");
+if (is_error(-1)) return ;;
+
   data* arg1 = resolve(a.arg_array[1], reg);
   data** arg_registries = malloc(sizeof(data*)*
                                  (a.length-2));
@@ -1291,8 +1305,11 @@ op_do_to_all (arg a, registry* reg)
 void
 op_next (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "next");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1360,8 +1377,11 @@ if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
 void
 op_last (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
   
+  
+  check_length(&a, 2+1, "last");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1438,9 +1458,11 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
 void
 op_in (arg a, registry* reg)
 {
-  CHECK_ARGS(a,2);
-
   
+  
+  check_length(&a, 2+1, "in");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1498,9 +1520,11 @@ if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
 void
 op_while (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "while");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1580,9 +1604,11 @@ if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
 void
 op_repeat (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "repeat");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1635,9 +1661,11 @@ if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
 void
 op_to_register (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "to-register");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1682,8 +1710,11 @@ if (arg1 != NULL && true && (!(arg1->type & (STRING|INTEGER))))
 void
 op_collapse (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
   
+  
+  check_length(&a, 2+1, "collapse");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1841,9 +1872,11 @@ if (arg3 != NULL && true && (!(arg3->type & STRING)))
 void
 op_string_eq (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "string-eq");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1904,9 +1937,11 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
 void
 op_string_lt (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "string-lt");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -1967,9 +2002,11 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
 void
 op_string_gt (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "string-gt");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2031,9 +2068,11 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
 void
 op_register_eq (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "register-eq");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2091,9 +2130,11 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
 void
 op_go_in (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "go-in");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2136,9 +2177,11 @@ op_go_out (arg a, registry* reg)
 void
 op_save (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
+    
   
+  check_length(&a, 1+1, "save");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2172,8 +2215,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_load (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "load");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2205,8 +2251,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_to_string (arg a, registry* reg)
 {
-  CHECK_ARGS(a,1);
   
+  
+  check_length(&a, 1+1, "to-string");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2310,9 +2359,11 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER | REAL | REGISTER))))
 void
 op_to_number (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "to-number");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2384,8 +2435,11 @@ if (arg1 != NULL && true && (!(arg1->type & (STRING|REGISTER))))
 void
 op_to_real (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "to-real");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2420,9 +2474,11 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
 void
 op_output_code (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "output-code");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2469,8 +2525,11 @@ op_clear_code (arg a, registry* reg)
 void
 op_error (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "error");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2528,8 +2587,11 @@ if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
 void
 op_is_type (arg a, registry* reg, const data_type type)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "is-Type");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2623,8 +2685,11 @@ op_is_boolean (arg a, registry* reg)
 void
 op_open_text_file (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "open-text-file");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2662,8 +2727,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_read (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+    
   
+  check_length(&a, 1+1, "read");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2705,9 +2773,11 @@ if (arg1 != NULL && true && (!(arg1->type & ARBEL_FILE)))
 void
 op_close (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "close");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2755,9 +2825,11 @@ if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
 void
 op_or (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "or");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2815,9 +2887,11 @@ if (arg2 != NULL && true && (!(arg2->type & BOOLEAN)))
 void
 op_and (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "and");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2875,9 +2949,11 @@ if (arg2 != NULL && true && (!(arg2->type & BOOLEAN)))
 void
 op_not (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "not");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2915,9 +2991,11 @@ if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
 void
 op_read_line (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "read-line");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -2960,9 +3038,11 @@ if (arg1 != NULL && true && (!(arg1->type & ARBEL_FILE)))
 void
 op_write (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "write");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3014,7 +3094,9 @@ if (arg2 != NULL && true && (!(arg2->type & ARBEL_FILE)))
 void
 op_input (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
+  
+  check_length(&a, 1+1, "write");
+if (is_error(-1)) return ;;
 
   
   
@@ -3049,9 +3131,12 @@ if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
 void
 op_shell (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
 
   
+  
+  check_length(&a, 1+1, "shell");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3106,9 +3191,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_link (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 3);
-
   
+  
+  check_length(&a, 3+1, "link");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3209,9 +3296,11 @@ if (arg3 != NULL && true && (!(arg3->type & STRING)))
 void
 op_match (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "match");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3356,9 +3445,11 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
 void
 op_replace (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 3);
-
   
+  
+  check_length(&a, 3+1, "replace");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3542,8 +3633,11 @@ if (arg4 != NULL && true && (!(arg4->type & INTEGER)))
 void
 op_log (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "log");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3582,8 +3676,11 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
 void
 op_exp (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "exp");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3621,9 +3718,11 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
 void
 op_power (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "power");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3694,8 +3793,11 @@ if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
 void
 op_change_dir (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
   
+  
+  check_length(&a, 1+1, "change-dir");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3730,9 +3832,11 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 void
 op_import (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "import");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3800,8 +3904,11 @@ op_current_dir (arg a, registry* reg)
 void
 op_substring (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 3);
   
+  
+  check_length(&a, 3+1, "substring");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -3933,7 +4040,11 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
 void
 op_up (arg a, registry* reg)
 {
-  CHECK_ARGS(a,1);
+  
+  
+  check_length(&a, 1+1, "up");
+if (is_error(-1)) return ;;
+
   if (reg->up == NULL)
     {
       do_error("Cannot use *up* instruction at top-level registry.");
@@ -3963,9 +4074,11 @@ op_up (arg a, registry* reg)
 void
 op_of (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
+    
   
+  check_length(&a, 2+1, "of");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -4016,8 +4129,11 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
 void
 op_is_of (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
   
+  
+  check_length(&a, 2+1, "is-of");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -4084,9 +4200,11 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
 void
 op_dispatch (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 2);
-
   
+  
+  check_length(&a, 2+1, "dispatch");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -4195,9 +4313,11 @@ if (arg2 != NULL && false && (!(arg2->type & STRING)))
 void
 op_code (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "code");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -4229,9 +4349,11 @@ if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
 void
 op_is_error (arg a, registry* reg)
 {
-  CHECK_ARGS(a, 1);
-
   
+  
+  check_length(&a, 1+1, "is-error");
+if (is_error(-1)) return ;;
+
   
   
   
@@ -4266,6 +4388,10 @@ if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
 void
 op_call (arg a, registry* reg)
 {
+  
+  
+  check_length(&a, 1+1, "call");
+if (is_error(-1)) return ;;
   _op_call(a,reg,1);
 }
 

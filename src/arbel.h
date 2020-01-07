@@ -439,7 +439,7 @@ size_t
 new_hash_size (size_t elements);
 
 void
-check_length (arg* a, int length);
+check_length (arg* a, int length, char* op);
 
 int
 update_hash_size (size_t elements, size_t hash_size);

@@ -54,7 +54,6 @@ execute_0 (data* instr, registry* reg)
 void
 _op_call (arg a, registry* reg, const int explicit)
 {
-  CHECK_ARGS(a, explicit);
   data* arg1 = resolve(a.arg_array[explicit], reg);
 
   if (arg1 == NULL || (arg1->type != INSTRUCTION && arg1->type != OPERATION))
