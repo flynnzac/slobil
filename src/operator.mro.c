@@ -665,20 +665,10 @@ op_count_characters (arg a, registry* reg)
 {
   #length=1@
   ##CHECK_ARGS~$;
-
-  data* arg1 = resolve(a.arg_array[1], reg);
-
-  if (arg1 == NULL)
-    {
-      do_error("*count-characters* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("*count-characters*'s argument must be a string.");
-      return;
-    }
+  #op=count-characters@
+  #num=1@
+  #type=STRING@
+  ##GETARG~$;
 
   int len = u8_mbsnlen((unsigned char*) arg1->data,
                        strlen((char*) arg1->data));

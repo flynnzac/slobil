@@ -1003,20 +1003,27 @@ op_count_characters (arg a, registry* reg)
   
   check_length(&a, 1+1);
 if (is_error(-1)) return;;
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
 
-  data* arg1 = resolve(a.arg_array[1], reg);
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("count-characters requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & STRING)))
+  {
+    do_error("Argument 1 of count-characters should be of type STRING.");
+    return ;
+  }
 
-  if (arg1 == NULL)
-    {
-      do_error("*count-characters* requires an argument.");
-      return;
-    }
-
-  if (arg1->type != STRING)
-    {
-      do_error("*count-characters*'s argument must be a string.");
-      return;
-    }
+;
 
   int len = u8_mbsnlen((unsigned char*) arg1->data,
                        strlen((char*) arg1->data));
