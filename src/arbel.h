@@ -57,11 +57,13 @@ enum data_type
 typedef enum data_type data_type;
 
 struct arg;
+struct registry;
 
 struct data
 {
   void* data;
   data_type type;
+  struct registry* document;
 };
 typedef struct data data;
 
@@ -452,6 +454,9 @@ execute_0 (data* instr, registry* reg);
 
 void
 print_statement (statement* s);
+
+data*
+new_data();
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 

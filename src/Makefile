@@ -12,16 +12,16 @@ endif
 
 DEBUG=1
 ifdef DEBUG
-	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c -lreadline -g -lm -Wall -ldl -lunistring
+	COMPILE=cc -B src -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c data.c -lreadline -g -lm -Wall -ldl -lunistring
 else
-	COMPILE=cc -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c -lreadline -O3 -lm -Wall -ldl -lunistring
+	COMPILE=cc -o ../arbel arbel.c utility.c save.c parse.c statement.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c operator.c arg.c data.c -lreadline -O3 -lm -Wall -ldl -lunistring
 endif
 
 
 
 arbel: arbel.c operator.c utility.c parse.c statement.c save.c compute.c copy.c memory.c print.c register.c registry.c state.c type.c arg.c 
-	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c arg.c print.c arg.c -O3 -lm -Wall -ldl -lreadline
-	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o print.o arg.o
+	cc -B src -c -fPIC register.c registry.c state.c memory.c copy.c compute.c utility.c save.c statement.c parse.c type.c arg.c print.c arg.c data.c -O3 -lm -Wall -ldl -lreadline
+	cc -B src -o ../libarbel.$(SUFFIX) -fPIC -shared register.o registry.o state.o memory.o copy.o compute.o utility.o save.o statement.o parse.o type.o print.o arg.o data.o
 	$(COMPILE)
 
 operator.c: operator.mro.c

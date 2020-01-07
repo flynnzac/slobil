@@ -26,7 +26,7 @@
 void
 assign_real (data** d, const double num)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Real;
   (*d)->data = malloc(sizeof(double));
   *((double*) (*d)->data) = num;
@@ -35,7 +35,7 @@ assign_real (data** d, const double num)
 void
 assign_int (data** d, const int num)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Integer;
   (*d)->data = malloc(sizeof(int));
   *((int*) (*d)->data) = num;
@@ -44,7 +44,7 @@ assign_int (data** d, const int num)
 void
 assign_str (data** d, const char* str, int copy)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = String;
   
   if (copy)
@@ -61,7 +61,7 @@ assign_str (data** d, const char* str, int copy)
 void
 assign_instr (data** d, statement* s, const char* code)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Instruction;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
@@ -73,7 +73,7 @@ assign_instr (data** d, statement* s, const char* code)
 void
 assign_active (data** d, statement* s)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Active_Instruction;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
@@ -83,7 +83,7 @@ assign_active (data** d, statement* s)
 void
 assign_op (data** d, const operation op)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Operation;
   (*d)->data = op;
 }
@@ -91,7 +91,7 @@ assign_op (data** d, const operation op)
 void
 assign_registry (data** d, registry* r)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Registry;
   if (r == NULL)
     {
@@ -106,7 +106,7 @@ assign_registry (data** d, registry* r)
 void
 assign_regstr (data** d, const char* name, unsigned long key)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Register;
   (*d)->data = malloc(sizeof(regstr));
   ((regstr*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
@@ -118,7 +118,7 @@ assign_regstr (data** d, const char* name, unsigned long key)
 void
 assign_file (data** d, FILE* f)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = File;
   (*d)->data = f;
   
@@ -127,7 +127,7 @@ assign_file (data** d, FILE* f)
 void
 assign_boolean (data** d, bool val)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Boolean;
   (*d)->data = malloc(sizeof(bool));
   *((bool*) (*d)->data) = val;
@@ -137,7 +137,7 @@ assign_boolean (data** d, bool val)
 void
 assign_nothing (data** d)
 {
-  *d = malloc(sizeof(data));
+  *d = new_data();
   (*d)->type = Nothing;
   (*d)->data = NULL;
 }

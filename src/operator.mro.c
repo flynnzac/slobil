@@ -92,7 +92,7 @@ op_range (arg a, registry* reg)
       cur += by;
     }
 
-  d_tmp = malloc(sizeof(data));
+  d_tmp = new_data();
   d_tmp->type = Registry;
   d_tmp->data = r_new;
 
@@ -117,7 +117,7 @@ op_list (arg a, registry* reg)
       free(r);
     }
 
-  d = malloc(sizeof(data));
+  d = new_data();
   d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
@@ -156,7 +156,7 @@ op_registry (arg a, registry* reg)
     }
 
 
-  d = malloc(sizeof(data));
+  d = new_data();
   d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
@@ -713,7 +713,7 @@ op_string_append (arg a, registry* reg)
   strcpy(result, (char*) arg1->data);
   strcat(result, (char*) arg2->data);
 
-  data* d = malloc(sizeof(data));
+  data* d = new_data();
   d->type = String;
   d->data = result;
 
@@ -888,7 +888,7 @@ op_do_to_all (arg a, registry* reg)
 
   if (!is_error(-1))
     {
-      d = malloc(sizeof(data));
+      d = new_data();
       d->type = Registry;
       d->data = ret_reg;
       ret_ans(reg, d);
@@ -939,7 +939,7 @@ op_next (arg a, registry* reg)
   char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
   sprintf(new_name, "%s%d", cur_name, num);
 
-  data* d = malloc(sizeof(data));
+  data* d = new_data();
   d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = new_name;
@@ -987,7 +987,7 @@ op_last (arg a, registry* reg)
     }
   name = vector_name((char*) arg2->data, i-1);
 
-  d = malloc(sizeof(data));
+  d = new_data();
   d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = name;

@@ -169,7 +169,7 @@ read_registry (FILE* f, registry* reg)
           parse(f_sub, &state, &stmt);
           fclose(f_sub);
 
-          d = malloc(sizeof(data));
+          d = new_data();
           d->type = Instruction;
           d->data = malloc(sizeof(instruction));
           ((instruction*) d->data)->stmt = stmt;
