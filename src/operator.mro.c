@@ -661,46 +661,6 @@ op_print (arg a, registry* reg)
 }
 
 void
-op_character (arg a, registry* reg)
-{
-  #length=2@
-  ##CHECK_ARGS~$;
-
-  #op=character@
-  #num=1@
-  #type=STRING@
-  ##GETARG~$;
-
-  #num=2@
-  #type=INTEGER@
-  ##GETARG~$;
-
-  char* str = (char*) arg1->data;
-  int loc = *((int*) arg2->data);
-
-  if (loc <= 0)
-    {
-      loc += strlen(str);
-    }
-
-  if ((loc > strlen(str)) || (loc <= 0))
-    {
-      do_error("Index out of range.");
-      return;
-    }
-
-  char* res = malloc(sizeof(char)*2);
-  res[0] = str[loc-1];
-  res[1] = '\0';
-
-  data* d;
-  assign_str (&d, res, 0);
-
-  ret_ans(reg, d);
-  
-}
-
-void
 op_count_characters (arg a, registry* reg)
 {
   #length=1@
@@ -1273,10 +1233,10 @@ op_string_eq (arg a, registry* reg)
   #type=STRING@
   ##GETARG~$;
 
-  char* str1 = arg1->data;
-  char* str2 = arg2->data;
+  unsigned char* str1 = (unsigned char*) arg1->data;
+  unsigned char* str2 = (unsigned char*) arg2->data;
   data* d;
-  if (strcmp(str1,str2) == 0)
+  if (u8_strcmp(str1,str2) == 0)
     {
       assign_boolean(&d, true);
     }
@@ -1302,10 +1262,10 @@ op_string_lt (arg a, registry* reg)
   #type=STRING@
   ##GETARG~$;
 
-  char* str1 = arg1->data;
-  char* str2 = arg2->data;
+  unsigned char* str1 = (unsigned char*) arg1->data;
+  unsigned char* str2 = (unsigned char*) arg2->data;
   data* d;
-  if (strcmp(str1,str2) < 0)
+  if (u8_strcmp(str1,str2) < 0)
     {
       assign_boolean(&d, true);
     }
@@ -1331,10 +1291,10 @@ op_string_gt (arg a, registry* reg)
   #type=STRING@
   ##GETARG~$;
 
-  char* str1 = arg1->data;
-  char* str2 = arg2->data;
+  unsigned char* str1 = (unsigned char*) arg1->data;
+  unsigned char* str2 = (unsigned char*) arg2->data;
   data* d;
-  if (strcmp(str1,str2) > 0)
+  if (u8_strcmp(str1,str2) > 0)
     {
       assign_boolean(&d, true);
     }
@@ -2438,25 +2398,30 @@ op_substring (arg a, registry* reg)
   char* str = (char*) arg1->data;
   int start = *((int*) arg2->data);
   int end = *((int*) arg3->data);
+  int byte_length = strlen(str)+1;
+  int length = u8_mbsnlen((unsigned char*) str,
+                          byte_length-1);
+  
+  
 
   if (start <= 0)
     {
-      start += strlen(str);
+      start += length;
     }
 
   if (end <= 0)
     {
-      end += strlen(str);
+      end += length;
     }
 
-  if ((start > strlen(str)) || (start <= 0))
+  if ((start > length) || (start <= 0))
     {
       do_error("Index out of range.");
       return;
     }
 
 
-  if ((end > strlen(str)) || (end <= 0))
+  if ((end > length) || (end <= 0))
     {
       do_error("Index out of range.");
       return;
@@ -2468,15 +2433,29 @@ op_substring (arg a, registry* reg)
       return;
     }
 
-  char* result = malloc(sizeof(char)*(end-start + 1 + 1));
-  int i;
-
-  for (i=(start-1); i < end; i++)
+  char* first = str;
+  ucs4_t c;
+  for (int i=0; i < (start-1); i++)
     {
-      result[i+1-start] = str[i];
+      first = u8_next(&c, first);
     }
 
-  result[end-start+1] = '\0';
+  char* last = first;
+  int sz = u8_mblen(last, byte_length);
+  for (int i=0; i < (end-start); i++)
+    {
+      last = u8_next(&c, last);
+      sz += u8_mblen(last, byte_length);
+    }
+
+  char* result = malloc(sizeof(char)*(sz + 1));
+
+  for (int i=0; i < sz; i++)
+    {
+      result[i] = first[i];
+    }
+
+  result[sz] = '\0';
 
   data* d;
   assign_str(&d, result, 0);
@@ -2753,9 +2732,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_print);
   set(reg,d,"print",1);
 
-  assign_op(&d, op_character);
-  set(reg,d,"character",1);
-  
   assign_op(&d, op_count_characters);
   set(reg,d,"count-characters",1);
 
