@@ -3864,15 +3864,13 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
 
 ;
 
-  char* str = (char*) arg1->data;
+  unsigned char* str = (unsigned char*) arg1->data;
   int start = *((int*) arg2->data);
   int end = *((int*) arg3->data);
-  int byte_length = strlen(str)+1;
+  int byte_length = strlen((char*) str)+1;
   int length = u8_mbsnlen((unsigned char*) str,
                           byte_length-1);
   
-  
-
   if (start <= 0)
     {
       start += length;
@@ -3902,14 +3900,14 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
       return;
     }
 
-  char* first = str;
+  unsigned char* first = str;
   ucs4_t c;
   for (int i=0; i < (start-1); i++)
     {
       first = u8_next(&c, first);
     }
 
-  char* last = first;
+  unsigned char* last = first;
   int sz = u8_mblen(last, byte_length);
   for (int i=0; i < (end-start); i++)
     {
@@ -3921,7 +3919,7 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
 
   for (int i=0; i < sz; i++)
     {
-      result[i] = first[i];
+      result[i] = (char) first[i];
     }
 
   result[sz] = '\0';
