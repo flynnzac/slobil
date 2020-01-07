@@ -64,7 +64,7 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
   unsigned long hash_name = hash_str(name);
   content* c = del(reg,hash_name,-1);
 
-  if (d != NULL && d->type == REGISTRY)
+  if (d != NULL && d->type == Registry)
     {
       ((registry*) d->data)->up = reg;
     }
@@ -133,7 +133,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
     {
       if (c->key == hash_name && c->value != NULL)
         {
-          if (c->value->type == REGISTRY)
+          if (c->value->type == Registry)
             {
               ((registry*) c->value->data)->up = reg->up;
             }
@@ -294,7 +294,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
       do_error(msg);
       free(msg);
     }
-  else if (d->type != REGISTRY && levels > 1)
+  else if (d->type != Registry && levels > 1)
     {
       do_error("Cannot get registers in non-registry.");
     }
@@ -308,7 +308,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
               return NULL;
             }
 
-          if (d->type != REGISTRY)
+          if (d->type != Registry)
             {
               do_error("Cannot get registers in non-registry.");
               return NULL;
@@ -321,7 +321,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
           else
             {
               data* d1 = lookup(reg, hash_name[i], 1);
-              if (d1 == NULL || d1->type != REGISTER)
+              if (d1 == NULL || d1->type != Register)
                 {
                   do_error("Cannot use `:` with non-register.");
                   return NULL;

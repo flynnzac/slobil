@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   ARBEL is a Register BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
    This file is part of ARBEL.
@@ -32,13 +32,13 @@ if (#requireans~)
   {
     if (arg#num~ == NULL)
       {
-        do_error("#op~ requires at least #num~ arguments.");
+        do_error("<#op~> requires at least #num~ arguments.");
         return #retfail~;
       }
   }
 if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
   {
-    do_error("Argument #num~ of #op~ should be of type #type~.");
+    do_error("Argument #num~ of <#op~> should be of type #type~.");
     return #retfail~;
   }
 '
@@ -58,7 +58,7 @@ op_range (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INTEGER@
+  #type=Integer@
   ##GETARG~$;
 
   #num=2@
@@ -93,7 +93,7 @@ op_range (arg a, registry* reg)
     }
 
   d_tmp = malloc(sizeof(data));
-  d_tmp->type = REGISTRY;
+  d_tmp->type = Registry;
   d_tmp->data = r_new;
 
   ret_ans(reg,d_tmp);
@@ -118,7 +118,7 @@ op_list (arg a, registry* reg)
     }
 
   d = malloc(sizeof(data));
-  d->type = REGISTRY;
+  d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
 
@@ -143,7 +143,7 @@ op_registry (arg a, registry* reg)
     {
       d = a.arg_array[i];
       
-      if (d->type != REGISTER)
+      if (d->type != Register)
         {
           do_error("Expected a register");
           free_registry(r_new);
@@ -157,7 +157,7 @@ op_registry (arg a, registry* reg)
 
 
   d = malloc(sizeof(data));
-  d->type = REGISTRY;
+  d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
 }
@@ -166,7 +166,7 @@ void
 op_arithmetic (arg a, registry* reg, const int code)
 {
   data* d;
-  data_type result_type = INTEGER;
+  data_type result_type = Integer;
   int int_value = 0;
   double dbl_value = 0.0;
   for (int i = 1; i < a.length; i++)
@@ -178,13 +178,13 @@ op_arithmetic (arg a, registry* reg, const int code)
           return;
         }
 
-      if (cur->type == REAL && result_type == INTEGER)
+      if (cur->type == Real && result_type == Integer)
         {
           dbl_value = (double) int_value;
-          result_type = REAL;
+          result_type = Real;
         }
 
-      if (result_type == INTEGER)
+      if (result_type == Integer)
         {
           if (i == 1)
             int_value = *((int*) cur->data);
@@ -208,7 +208,7 @@ op_arithmetic (arg a, registry* reg, const int code)
       else
         {
           double val;
-          if (cur->type == INTEGER)
+          if (cur->type == Integer)
             val = (double) (*((int*) cur->data));
           else
             val = *((double*) cur->data);
@@ -233,7 +233,7 @@ op_arithmetic (arg a, registry* reg, const int code)
         }
     }
 
-  if (result_type == INTEGER)
+  if (result_type == Integer)
     assign_int(&d, int_value);
   else
     assign_real(&d, dbl_value);
@@ -290,7 +290,7 @@ op_set (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   #num=2@
@@ -302,7 +302,7 @@ op_set (arg a, registry* reg)
   if (a.length >= 4)
     {
       #num=3@
-      #type=REGISTRY@
+      #type=Registry@
       ##GETARG~$;
       
       to_set = (registry*) arg3->data;
@@ -327,7 +327,7 @@ op_get (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
   
   registry* to_look;
@@ -338,7 +338,7 @@ op_get (arg a, registry* reg)
   else
     {
       #num=2@
-      #type=REGISTRY@
+      #type=Registry@
       ##GETARG~$;
 
       to_look = (registry*) arg2->data;
@@ -360,7 +360,7 @@ op_if (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=BOOLEAN@
+  #type=Boolean@
   ##GETARG~$;
 
   #requireans=false@
@@ -414,7 +414,7 @@ op_move (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   #num=2@
@@ -433,7 +433,7 @@ op_delete (arg a, registry* reg)
   ##CHECK_ARGS~$;
   
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
   
   del(reg, ((regstr*) arg1->data)->key, 1);
@@ -454,14 +454,14 @@ op_exist (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   registry* to_use = reg;
   if (a.length >= 3)
     {
       #num=2@
-      #type=REGISTRY@
+      #type=Registry@
       ##GETARG~$;
 
       to_use = (registry*) arg2->data;
@@ -507,7 +507,7 @@ op_comparison (arg a, registry* reg)
   #retcheck=@
 
   #num=1@
-  #type=`(INTEGER|REAL)'@
+  #type=`(Integer|Real)'@
   #retfail=-2@
   ##GETARG~$;
 
@@ -516,7 +516,7 @@ op_comparison (arg a, registry* reg)
 
   #retfail=@
 
-  if (arg1->type == INTEGER && arg2->type == INTEGER)
+  if (arg1->type == Integer && arg2->type == Integer)
     {
       if (*((int*) arg1->data) > *((int*) arg2->data))
         {
@@ -535,12 +535,12 @@ op_comparison (arg a, registry* reg)
     {
       double dval1;
       double dval2;
-      if (arg1->type == INTEGER)
+      if (arg1->type == Integer)
         {
           dval1 = *((int*) arg1->data);
           dval2 = *((double*) arg2->data);
         }
-      else if (arg2->type == INTEGER)
+      else if (arg2->type == Integer)
         {
           dval1 = *((double*) arg1->data);
           dval2 = *((int*) arg2->data);
@@ -677,7 +677,7 @@ op_string_length (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   int len = u8_mbsnlen((unsigned char*) arg1->data,
@@ -698,7 +698,7 @@ op_string_append (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
@@ -710,7 +710,7 @@ op_string_append (arg a, registry* reg)
   strcat(result, (char*) arg2->data);
 
   data* d = malloc(sizeof(data));
-  d->type = STRING;
+  d->type = String;
   d->data = result;
 
   ret_ans(reg, d);
@@ -725,7 +725,7 @@ op_source (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   FILE* f = fopen((char*) arg1->data, "r");
@@ -779,7 +779,7 @@ op_do_to_all (arg a, registry* reg)
     }
   
 
-  if (arg1->type != INSTRUCTION)
+  if (arg1->type != Instruction)
     {
       do_error("First argument to *do-to-all* must be an instruction.");
       return;
@@ -787,7 +787,7 @@ op_do_to_all (arg a, registry* reg)
 
   for (int i = 0; i < (a.length - 2); i++)
     {
-      if (arg_registries[i]->type != REGISTRY)
+      if (arg_registries[i]->type != Registry)
         {
           do_error("Arguments to *do-to-all* must be registries.");
           free(arg_registries);
@@ -885,7 +885,7 @@ op_do_to_all (arg a, registry* reg)
   if (!is_error(-1))
     {
       d = malloc(sizeof(data));
-      d->type = REGISTRY;
+      d->type = Registry;
       d->data = ret_reg;
       ret_ans(reg, d);
     }
@@ -901,7 +901,7 @@ op_next (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   char* cur_name = malloc(sizeof(char)*
@@ -936,7 +936,7 @@ op_next (arg a, registry* reg)
   sprintf(new_name, "%s%d", cur_name, num);
 
   data* d = malloc(sizeof(data));
-  d->type = REGISTER;
+  d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = new_name;
   ((regstr*) d->data)->key = hash_str(new_name);
@@ -955,11 +955,11 @@ op_last (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   #num=2@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   registry* arg_reg = (registry*) arg1->data;
@@ -984,7 +984,7 @@ op_last (arg a, registry* reg)
   name = vector_name((char*) arg2->data, i-1);
 
   d = malloc(sizeof(data));
-  d->type = REGISTER;
+  d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = name;
   ((regstr*) d->data)->key = hash_str(name);
@@ -1001,11 +1001,11 @@ op_in (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   #num=2@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   ((registry*) arg1->data)->up = reg;
@@ -1028,7 +1028,7 @@ op_while (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   #num=2@
@@ -1050,7 +1050,7 @@ op_while (arg a, registry* reg)
           break;
         }
 
-      if (d->type != BOOLEAN)
+      if (d->type != Boolean)
         {
           do_error("First instruction should set *ans* to a Boolean.");
           break;
@@ -1077,11 +1077,11 @@ op_repeat (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INTEGER@
+  #type=Integer@
   ##GETARG~$;
 
   #num=2@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   for (int i = 0; i < *((int*) arg1->data); i++)
@@ -1099,12 +1099,12 @@ op_to_register (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(STRING|INTEGER)'@
+  #type=`(String|Integer)'@
   ##GETARG~$;
 
   data* d;
 
-  if (arg1->type == STRING)
+  if (arg1->type == String)
     {
       assign_regstr(&d, (char*) arg1->data,
                     hash_str((char*) arg1->data));
@@ -1130,18 +1130,18 @@ op_collapse (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   #num=2@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   const char* prefix = "`#'";
   if (a.length >= 4)
     {
       #num=3@
-      #type=STRING@
+      #type=String@
       ##GETARG~$;
 
       prefix = (char*) arg3->data;
@@ -1240,11 +1240,11 @@ op_string_eq (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   unsigned char* str1 = (unsigned char*) arg1->data;
@@ -1270,11 +1270,11 @@ op_string_lt (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   unsigned char* str1 = (unsigned char*) arg1->data;
@@ -1300,11 +1300,11 @@ op_string_gt (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   unsigned char* str1 = (unsigned char*) arg1->data;
@@ -1331,11 +1331,11 @@ op_register_eq (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   #num=2@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
       
   data* d;
@@ -1358,7 +1358,7 @@ op_go_in (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   ((registry*) arg1->data)->up = reg;
@@ -1387,13 +1387,13 @@ op_save (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
   save_registry(f, reg);
-  data_type end = NOTHING;
+  data_type end = Nothing;
   fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
 
@@ -1407,7 +1407,7 @@ op_load (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   char* fname = (char*) arg1->data;
@@ -1425,11 +1425,11 @@ op_to_string (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(INTEGER | REAL | REGISTER)'@
+  #type=`(Integer | Real | Register)'@
   ##GETARG~$;
 
   char* result;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       int n_digits;
       if ((*(int*) arg1->data) == 0)
@@ -1443,7 +1443,7 @@ op_to_string (arg a, registry* reg)
       result = malloc(sizeof(char)*(n_digits+1));
       sprintf(result, "%d", *((int*) arg1->data));
     }
-  else if (arg1->type == REAL)
+  else if (arg1->type == Real)
     {
       data* arg2 = NULL;
       if (a.length >= 3)
@@ -1452,7 +1452,7 @@ op_to_string (arg a, registry* reg)
         }
       
       int prec = 6;
-      if (arg2 != NULL && arg2->type != INTEGER)
+      if (arg2 != NULL && arg2->type != Integer)
         {
           do_error("The second argument to *to-string* should be an integer.");
           return;
@@ -1515,10 +1515,10 @@ op_to_number (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(STRING|REGISTER)'@
+  #type=`(String|Register)'@
   ##GETARG~$;
 
-  if (arg1->type == STRING)
+  if (arg1->type == String)
     {
       char* value = (char*) arg1->data;
       data* d;
@@ -1573,11 +1573,11 @@ op_to_real (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(INTEGER|REAL)'@
+  #type=`(Integer|Real)'@
   ##GETARG~$;
 
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     assign_real(&d, *((int*) arg1->data));
   else
     d = copy_data(arg1);
@@ -1594,7 +1594,7 @@ op_output_code (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   if (source_code != NULL)
@@ -1627,7 +1627,7 @@ op_error (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   do_error((char*) arg1->data);
@@ -1635,7 +1635,7 @@ op_error (arg a, registry* reg)
   if (a.length >= 3)
     {
       #num=2@
-      #type=INTEGER@
+      #type=Integer@
       #requireans=false@
       ##GETARG~$;
       #requireans=true@
@@ -1658,8 +1658,8 @@ op_is_type (arg a, registry* reg, const data_type type)
   ##GETARG~$;
   #checktype=true@
   data* d;
-  if (arg1->type == type || ((type==INSTRUCTION) &&
-                             (arg1->type==OPERATION)))
+  if (arg1->type == type || ((type==Instruction) &&
+                             (arg1->type==Operation)))
     {
       assign_boolean(&d, true);
     }
@@ -1674,55 +1674,55 @@ op_is_type (arg a, registry* reg, const data_type type)
 void
 op_is_integer (arg a, registry* reg)
 {
-  op_is_type(a, reg, INTEGER);
+  op_is_type(a, reg, Integer);
 }
 
 void
 op_is_real (arg a, registry* reg)
 {
-  op_is_type(a, reg, REAL);
+  op_is_type(a, reg, Real);
 }
 
 void
 op_is_string (arg a, registry* reg)
 {
-  op_is_type(a, reg, STRING);
+  op_is_type(a, reg, String);
 }
 
 void
 op_is_register (arg a, registry* reg)
 {
-  op_is_type(a, reg, REGISTER);
+  op_is_type(a, reg, Register);
 }
 
 void
 op_is_registry (arg a, registry* reg)
 {
-  op_is_type(a, reg, REGISTRY);
+  op_is_type(a, reg, Registry);
 }
 
 void
 op_is_instruction (arg a, registry* reg)
 {
-  op_is_type(a, reg, INSTRUCTION);
+  op_is_type(a, reg, Instruction);
 }
 
 void
 op_is_file (arg a, registry* reg)
 {
-  op_is_type(a, reg, ARBEL_FILE);
+  op_is_type(a, reg, File);
 }
 
 void
 op_is_nothing (arg a, registry* reg)
 {
-  op_is_type(a, reg, NOTHING);
+  op_is_type(a, reg, Nothing);
 }
 
 void
 op_is_boolean (arg a, registry* reg)
 {
-  op_is_type(a, reg, BOOLEAN);
+  op_is_type(a, reg, Boolean);
 }
 
 
@@ -1734,10 +1734,10 @@ op_open_text_file (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
   
-  FILE* f = fopen((char*) arg1->data, "r+");
+  FILE* f = fopen((char*) arg1->data, "ab+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -1758,7 +1758,7 @@ op_read (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=ARBEL_FILE@
+  #type=File@
   ##GETARG~$;
 
   char c = fgetc((FILE*) arg1->data);
@@ -1786,7 +1786,7 @@ op_close (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   data* f = lookup(reg, ((regstr*) arg1->data)->key, 0);
@@ -1797,7 +1797,7 @@ op_close (arg a, registry* reg)
       return;
     }
 
-  if (f->type != ARBEL_FILE)
+  if (f->type != File)
     {
       do_error("Register does not contain a file.");
       return;
@@ -1820,7 +1820,7 @@ op_or (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=BOOLEAN@
+  #type=Boolean@
   ##GETARG~$;
 
   #num=2@
@@ -1847,7 +1847,7 @@ op_and (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=BOOLEAN@
+  #type=Boolean@
   ##GETARG~$;
 
   #num=2@
@@ -1874,7 +1874,7 @@ op_not (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=BOOLEAN@
+  #type=Boolean@
   ##GETARG~$;
 
   data* d;
@@ -1898,7 +1898,7 @@ op_read_line (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=ARBEL_FILE@
+  #type=File@
   ##GETARG~$;
 
   char* line  = NULL;
@@ -1927,17 +1927,15 @@ op_write (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=ARBEL_FILE@
+  #type=File@
   ##GETARG~$;
 
   fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
-  data* d;
-  assign_nothing(&d);
-  ret_ans(reg,d);
+
 }
 
 void
@@ -1948,7 +1946,7 @@ op_input (arg a, registry* reg)
 
   #op=input@
   #num=1@
-  #type=REGISTER@
+  #type=Register@
   ##GETARG~$;
 
   char* input = readline("");
@@ -1968,7 +1966,7 @@ op_shell (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   FILE* f = popen((char*) arg1->data, "r");
@@ -2009,7 +2007,7 @@ op_link (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
@@ -2062,7 +2060,7 @@ op_match (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
@@ -2073,7 +2071,7 @@ op_match (arg a, registry* reg)
   if (a.length >= 4)
     {
       #num=3@
-      #type=INTEGER@
+      #type=Integer@
       ##GETARG~$;
       max_matches = *((int*) arg3->data);
     }
@@ -2158,7 +2156,7 @@ op_replace (arg a, registry* reg)
   #length=3@
   ##CHECK_ARGS~$;
 
-  #type=STRING@
+  #type=String@
   #num=1@
   ##GETARG~$;
 
@@ -2172,7 +2170,7 @@ op_replace (arg a, registry* reg)
   if (a.length >= 5)
     {
       #num=4@
-      #type=INTEGER@
+      #type=Integer@
       ##GETARG~$;
       max_replace = *((int*) arg4->data);
     }
@@ -2278,11 +2276,11 @@ op_log (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(INTEGER|REAL)'@
+  #type=`(Integer|Real)'@
   ##GETARG~$;
   
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       assign_real(&d, log((double) (*((int*) arg1->data))));
     }
@@ -2303,11 +2301,11 @@ op_exp (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(INTEGER|REAL)'@
+  #type=`(Integer|Real)'@
   ##GETARG~$;
 
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       assign_real(&d, exp((double) (*((int*) arg1->data))));
     }
@@ -2327,7 +2325,7 @@ op_power (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(INTEGER|REAL)'@
+  #type=`(Integer|Real)'@
   ##GETARG~$;
 
   #num=2@
@@ -2336,7 +2334,7 @@ op_power (arg a, registry* reg)
   double base;
   double power;
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       base = (double) (*((int*) arg1->data));
     }
@@ -2345,7 +2343,7 @@ op_power (arg a, registry* reg)
       base = *((double*) arg1->data);
     }
 
-  if (arg2->type == INTEGER)
+  if (arg2->type == Integer)
     {
       power = (double) (*((int*) arg2->data));
     }
@@ -2367,7 +2365,7 @@ op_change_dir (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   int error = chdir((char*) arg1->data);
@@ -2388,7 +2386,7 @@ op_import (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   registry* r1 = (registry*) arg1->data;
@@ -2442,11 +2440,11 @@ op_substring (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=INTEGER@
+  #type=Integer@
   ##GETARG~$;
 
   #num=3@
@@ -2559,11 +2557,11 @@ op_of (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   data* d;
@@ -2579,16 +2577,16 @@ op_is_of (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=STRING@
+  #type=String@
   ##GETARG~$;
 
   #num=2@
-  #type=REGISTRY@
+  #type=Registry@
   ##GETARG~$;
 
   data* d = lookup((registry*) arg2->data, arbel_hash_class, 0);
 
-  if (d == NULL || d->type != STRING)
+  if (d == NULL || d->type != String)
     {
       do_error("*class* register not found.");
       return;
@@ -2614,7 +2612,7 @@ op_dispatch (arg a, registry* reg)
   #length=2@
   ##CHECK_ARGS~$;
 
-  #type=STRING@
+  #type=String@
   #num=1@
   ##GETARG~$;
 
@@ -2627,19 +2625,19 @@ op_dispatch (arg a, registry* reg)
   data* d = NULL;
   switch (arg2->type)
     {
-    case INTEGER:
+    case Integer:
       class = "Integer";
       break;
-    case REAL:
+    case Real:
       class = "Real";
       break;
-    case STRING:
+    case String:
       class = "String";
       break;
-    case REGISTER:
+    case Register:
       class = "Register";
       break;
-    case REGISTRY:
+    case Registry:
       d = lookup((registry*) arg2->data, arbel_hash_class, 0);
       if (d != NULL)
         {
@@ -2650,16 +2648,16 @@ op_dispatch (arg a, registry* reg)
           class = "Registry";
         }
       break;
-    case INSTRUCTION:
+    case Instruction:
       class = "Instruction";
       break;
-    case OPERATION:
+    case Operation:
       class = "Instruction";
       break;
-    case ARBEL_FILE:
+    case File:
       class = "File";
       break;
-    case NOTHING:
+    case Nothing:
       class = "Nothing";
       break;
     default:
@@ -2693,7 +2691,7 @@ op_code (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   data* d;
@@ -2711,7 +2709,7 @@ op_is_error (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=INSTRUCTION@
+  #type=Instruction@
   ##GETARG~$;
 
   execute_0(arg1, reg);

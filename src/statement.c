@@ -208,7 +208,7 @@ execute_statement (statement* s, registry* reg)
 
       if (!is_error(-1))
         {
-          if (d != NULL && d->type == INSTRUCTION &&
+          if (d != NULL && d->type == Instruction &&
               ((instruction*) d->data)->being_called && (arg_n == 0))
             {
               s->arg.arg_array[arg_n] = copy_data(d);

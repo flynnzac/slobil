@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   ARBEL is a Register BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
    This file is part of ARBEL.
@@ -49,13 +49,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("range requires at least 1 arguments.");
+        do_error("<range> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INTEGER)))
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of range should be of type INTEGER.");
+    do_error("Argument 1 of <range> should be of type Integer.");
     return ;
   }
 
@@ -69,13 +69,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("range requires at least 2 arguments.");
+        do_error("<range> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of range should be of type INTEGER.");
+    do_error("Argument 2 of <range> should be of type Integer.");
     return ;
   }
 
@@ -92,13 +92,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("range requires at least 3 arguments.");
+        do_error("<range> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
+if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of range should be of type INTEGER.");
+    do_error("Argument 3 of <range> should be of type Integer.");
     return ;
   }
 
@@ -127,7 +127,7 @@ if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
     }
 
   d_tmp = malloc(sizeof(data));
-  d_tmp->type = REGISTRY;
+  d_tmp->type = Registry;
   d_tmp->data = r_new;
 
   ret_ans(reg,d_tmp);
@@ -152,7 +152,7 @@ op_list (arg a, registry* reg)
     }
 
   d = malloc(sizeof(data));
-  d->type = REGISTRY;
+  d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
 
@@ -178,7 +178,7 @@ if (is_error(-1)) return ;;
     {
       d = a.arg_array[i];
       
-      if (d->type != REGISTER)
+      if (d->type != Register)
         {
           do_error("Expected a register");
           free_registry(r_new);
@@ -192,7 +192,7 @@ if (is_error(-1)) return ;;
 
 
   d = malloc(sizeof(data));
-  d->type = REGISTRY;
+  d->type = Registry;
   d->data = r_new;
   ret_ans(reg, d);
 }
@@ -201,7 +201,7 @@ void
 op_arithmetic (arg a, registry* reg, const int code)
 {
   data* d;
-  data_type result_type = INTEGER;
+  data_type result_type = Integer;
   int int_value = 0;
   double dbl_value = 0.0;
   for (int i = 1; i < a.length; i++)
@@ -213,13 +213,13 @@ op_arithmetic (arg a, registry* reg, const int code)
           return;
         }
 
-      if (cur->type == REAL && result_type == INTEGER)
+      if (cur->type == Real && result_type == Integer)
         {
           dbl_value = (double) int_value;
-          result_type = REAL;
+          result_type = Real;
         }
 
-      if (result_type == INTEGER)
+      if (result_type == Integer)
         {
           if (i == 1)
             int_value = *((int*) cur->data);
@@ -243,7 +243,7 @@ op_arithmetic (arg a, registry* reg, const int code)
       else
         {
           double val;
-          if (cur->type == INTEGER)
+          if (cur->type == Integer)
             val = (double) (*((int*) cur->data));
           else
             val = *((double*) cur->data);
@@ -268,7 +268,7 @@ op_arithmetic (arg a, registry* reg, const int code)
         }
     }
 
-  if (result_type == INTEGER)
+  if (result_type == Integer)
     assign_int(&d, int_value);
   else
     assign_real(&d, dbl_value);
@@ -338,13 +338,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("set requires at least 1 arguments.");
+        do_error("<set> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of set should be of type REGISTER.");
+    do_error("Argument 1 of <set> should be of type Register.");
     return ;
   }
 
@@ -359,13 +359,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("set requires at least 2 arguments.");
+        do_error("<set> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && false && (!(arg2->type & REGISTER)))
+if (arg2 != NULL && false && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of set should be of type REGISTER.");
+    do_error("Argument 2 of <set> should be of type Register.");
     return ;
   }
 
@@ -384,13 +384,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("set requires at least 3 arguments.");
+        do_error("<set> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & REGISTRY)))
+if (arg3 != NULL && true && (!(arg3->type & Registry)))
   {
-    do_error("Argument 3 of set should be of type REGISTRY.");
+    do_error("Argument 3 of <set> should be of type Registry.");
     return ;
   }
 
@@ -427,13 +427,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("get requires at least 1 arguments.");
+        do_error("<get> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of get should be of type REGISTER.");
+    do_error("Argument 1 of <get> should be of type Register.");
     return ;
   }
 
@@ -455,13 +455,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("get requires at least 2 arguments.");
+        do_error("<get> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of get should be of type REGISTRY.");
+    do_error("Argument 2 of <get> should be of type Registry.");
     return ;
   }
 
@@ -495,13 +495,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("if requires at least 1 arguments.");
+        do_error("<if> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of if should be of type BOOLEAN.");
+    do_error("Argument 1 of <if> should be of type Boolean.");
     return ;
   }
 
@@ -521,13 +521,13 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("if requires at least 2 arguments.");
+        do_error("<if> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && false && (!(arg2->type & BOOLEAN)))
+if (arg2 != NULL && false && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of if should be of type BOOLEAN.");
+    do_error("Argument 2 of <if> should be of type Boolean.");
     return ;
   }
 
@@ -554,13 +554,13 @@ if (false)
   {
     if (arg3 == NULL)
       {
-        do_error("if requires at least 3 arguments.");
+        do_error("<if> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && false && (!(arg3->type & BOOLEAN)))
+if (arg3 != NULL && false && (!(arg3->type & Boolean)))
   {
-    do_error("Argument 3 of if should be of type BOOLEAN.");
+    do_error("Argument 3 of <if> should be of type Boolean.");
     return ;
   }
 
@@ -601,13 +601,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("move requires at least 1 arguments.");
+        do_error("<move> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of move should be of type REGISTER.");
+    do_error("Argument 1 of <move> should be of type Register.");
     return ;
   }
 
@@ -621,13 +621,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("move requires at least 2 arguments.");
+        do_error("<move> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
+if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of move should be of type REGISTER.");
+    do_error("Argument 2 of <move> should be of type Register.");
     return ;
   }
 
@@ -655,13 +655,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("delete requires at least 1 arguments.");
+        do_error("<delete> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of delete should be of type REGISTER.");
+    do_error("Argument 1 of <delete> should be of type Register.");
     return ;
   }
 
@@ -694,13 +694,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("exist requires at least 1 arguments.");
+        do_error("<exist> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of exist should be of type REGISTER.");
+    do_error("Argument 1 of <exist> should be of type Register.");
     return ;
   }
 
@@ -718,13 +718,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("exist requires at least 2 arguments.");
+        do_error("<exist> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of exist should be of type REGISTRY.");
+    do_error("Argument 2 of <exist> should be of type Registry.");
     return ;
   }
 
@@ -764,13 +764,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("answer requires at least 1 arguments.");
+        do_error("<answer> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && false && (!(arg1->type & REGISTRY)))
+if (arg1 != NULL && false && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of answer should be of type REGISTRY.");
+    do_error("Argument 1 of <answer> should be of type Registry.");
     return ;
   }
 
@@ -801,13 +801,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("comparison requires at least 1 arguments.");
+        do_error("<comparison> requires at least 1 arguments.");
         return -2;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of comparison should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <comparison> should be of type (Integer|Real).");
     return -2;
   }
 
@@ -821,13 +821,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("comparison requires at least 2 arguments.");
+        do_error("<comparison> requires at least 2 arguments.");
         return -2;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
+if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of comparison should be of type (INTEGER|REAL).");
+    do_error("Argument 2 of <comparison> should be of type (Integer|Real).");
     return -2;
   }
 
@@ -835,7 +835,7 @@ if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
 
   
 
-  if (arg1->type == INTEGER && arg2->type == INTEGER)
+  if (arg1->type == Integer && arg2->type == Integer)
     {
       if (*((int*) arg1->data) > *((int*) arg2->data))
         {
@@ -854,12 +854,12 @@ if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
     {
       double dval1;
       double dval2;
-      if (arg1->type == INTEGER)
+      if (arg1->type == Integer)
         {
           dval1 = *((int*) arg1->data);
           dval2 = *((double*) arg2->data);
         }
-      else if (arg2->type == INTEGER)
+      else if (arg2->type == Integer)
         {
           dval1 = *((double*) arg1->data);
           dval2 = *((int*) arg2->data);
@@ -990,13 +990,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("print requires at least 1 arguments.");
+        do_error("<print> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && false && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of print should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <print> should be of type (Integer|Real).");
     return ;
   }
 
@@ -1023,13 +1023,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("string-length requires at least 1 arguments.");
+        do_error("<string-length> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of string-length should be of type STRING.");
+    do_error("Argument 1 of <string-length> should be of type String.");
     return ;
   }
 
@@ -1062,13 +1062,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("string-append requires at least 1 arguments.");
+        do_error("<string-append> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of string-append should be of type STRING.");
+    do_error("Argument 1 of <string-append> should be of type String.");
     return ;
   }
 
@@ -1082,13 +1082,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("string-append requires at least 2 arguments.");
+        do_error("<string-append> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of string-append should be of type STRING.");
+    do_error("Argument 2 of <string-append> should be of type String.");
     return ;
   }
 
@@ -1100,7 +1100,7 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
   strcat(result, (char*) arg2->data);
 
   data* d = malloc(sizeof(data));
-  d->type = STRING;
+  d->type = String;
   d->data = result;
 
   ret_ans(reg, d);
@@ -1124,13 +1124,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("source requires at least 1 arguments.");
+        do_error("<source> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of source should be of type STRING.");
+    do_error("Argument 1 of <source> should be of type String.");
     return ;
   }
 
@@ -1188,7 +1188,7 @@ if (is_error(-1)) return ;;
     }
   
 
-  if (arg1->type != INSTRUCTION)
+  if (arg1->type != Instruction)
     {
       do_error("First argument to *do-to-all* must be an instruction.");
       return;
@@ -1196,7 +1196,7 @@ if (is_error(-1)) return ;;
 
   for (int i = 0; i < (a.length - 2); i++)
     {
-      if (arg_registries[i]->type != REGISTRY)
+      if (arg_registries[i]->type != Registry)
         {
           do_error("Arguments to *do-to-all* must be registries.");
           free(arg_registries);
@@ -1294,7 +1294,7 @@ if (is_error(-1)) return ;;
   if (!is_error(-1))
     {
       d = malloc(sizeof(data));
-      d->type = REGISTRY;
+      d->type = Registry;
       d->data = ret_reg;
       ret_ans(reg, d);
     }
@@ -1319,13 +1319,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("next requires at least 1 arguments.");
+        do_error("<next> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of next should be of type REGISTER.");
+    do_error("Argument 1 of <next> should be of type Register.");
     return ;
   }
 
@@ -1363,7 +1363,7 @@ if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
   sprintf(new_name, "%s%d", cur_name, num);
 
   data* d = malloc(sizeof(data));
-  d->type = REGISTER;
+  d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = new_name;
   ((regstr*) d->data)->key = hash_str(new_name);
@@ -1391,13 +1391,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("last requires at least 1 arguments.");
+        do_error("<last> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of last should be of type REGISTRY.");
+    do_error("Argument 1 of <last> should be of type Registry.");
     return ;
   }
 
@@ -1412,13 +1412,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("last requires at least 2 arguments.");
+        do_error("<last> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of last should be of type STRING.");
+    do_error("Argument 2 of <last> should be of type String.");
     return ;
   }
 
@@ -1446,7 +1446,7 @@ if (arg2 != NULL && true && (!(arg2->type & STRING)))
   name = vector_name((char*) arg2->data, i-1);
 
   d = malloc(sizeof(data));
-  d->type = REGISTER;
+  d->type = Register;
   d->data = malloc(sizeof(regstr));
   ((regstr*) d->data)->name = name;
   ((regstr*) d->data)->key = hash_str(name);
@@ -1472,13 +1472,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("in requires at least 1 arguments.");
+        do_error("<in> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of in should be of type REGISTRY.");
+    do_error("Argument 1 of <in> should be of type Registry.");
     return ;
   }
 
@@ -1493,13 +1493,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("in requires at least 2 arguments.");
+        do_error("<in> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of in should be of type INSTRUCTION.");
+    do_error("Argument 2 of <in> should be of type Instruction.");
     return ;
   }
 
@@ -1534,13 +1534,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("while requires at least 1 arguments.");
+        do_error("<while> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of while should be of type INSTRUCTION.");
+    do_error("Argument 1 of <while> should be of type Instruction.");
     return ;
   }
 
@@ -1554,13 +1554,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("while requires at least 2 arguments.");
+        do_error("<while> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of while should be of type INSTRUCTION.");
+    do_error("Argument 2 of <while> should be of type Instruction.");
     return ;
   }
 
@@ -1582,7 +1582,7 @@ if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
           break;
         }
 
-      if (d->type != BOOLEAN)
+      if (d->type != Boolean)
         {
           do_error("First instruction should set *ans* to a Boolean.");
           break;
@@ -1618,13 +1618,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("repeat requires at least 1 arguments.");
+        do_error("<repeat> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INTEGER)))
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of repeat should be of type INTEGER.");
+    do_error("Argument 1 of <repeat> should be of type Integer.");
     return ;
   }
 
@@ -1639,13 +1639,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("repeat requires at least 2 arguments.");
+        do_error("<repeat> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INSTRUCTION)))
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of repeat should be of type INSTRUCTION.");
+    do_error("Argument 2 of <repeat> should be of type Instruction.");
     return ;
   }
 
@@ -1675,13 +1675,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("to-register requires at least 1 arguments.");
+        do_error("<to-register> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (STRING|INTEGER))))
+if (arg1 != NULL && true && (!(arg1->type & (String|Integer))))
   {
-    do_error("Argument 1 of to-register should be of type (STRING|INTEGER).");
+    do_error("Argument 1 of <to-register> should be of type (String|Integer).");
     return ;
   }
 
@@ -1689,7 +1689,7 @@ if (arg1 != NULL && true && (!(arg1->type & (STRING|INTEGER))))
 
   data* d;
 
-  if (arg1->type == STRING)
+  if (arg1->type == String)
     {
       assign_regstr(&d, (char*) arg1->data,
                     hash_str((char*) arg1->data));
@@ -1724,13 +1724,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("collapse requires at least 1 arguments.");
+        do_error("<collapse> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of collapse should be of type INSTRUCTION.");
+    do_error("Argument 1 of <collapse> should be of type Instruction.");
     return ;
   }
 
@@ -1745,13 +1745,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("collapse requires at least 2 arguments.");
+        do_error("<collapse> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of collapse should be of type REGISTRY.");
+    do_error("Argument 2 of <collapse> should be of type Registry.");
     return ;
   }
 
@@ -1769,13 +1769,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("collapse requires at least 3 arguments.");
+        do_error("<collapse> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & STRING)))
+if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of collapse should be of type STRING.");
+    do_error("Argument 3 of <collapse> should be of type String.");
     return ;
   }
 
@@ -1886,13 +1886,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("string-eq requires at least 1 arguments.");
+        do_error("<string-eq> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of string-eq should be of type STRING.");
+    do_error("Argument 1 of <string-eq> should be of type String.");
     return ;
   }
 
@@ -1907,13 +1907,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("string-eq requires at least 2 arguments.");
+        do_error("<string-eq> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of string-eq should be of type STRING.");
+    do_error("Argument 2 of <string-eq> should be of type String.");
     return ;
   }
 
@@ -1951,13 +1951,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("string-lt requires at least 1 arguments.");
+        do_error("<string-lt> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of string-lt should be of type STRING.");
+    do_error("Argument 1 of <string-lt> should be of type String.");
     return ;
   }
 
@@ -1972,13 +1972,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("string-lt requires at least 2 arguments.");
+        do_error("<string-lt> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of string-lt should be of type STRING.");
+    do_error("Argument 2 of <string-lt> should be of type String.");
     return ;
   }
 
@@ -2016,13 +2016,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("string-gt requires at least 1 arguments.");
+        do_error("<string-gt> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of string-gt should be of type STRING.");
+    do_error("Argument 1 of <string-gt> should be of type String.");
     return ;
   }
 
@@ -2037,13 +2037,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("string-gt requires at least 2 arguments.");
+        do_error("<string-gt> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of string-gt should be of type STRING.");
+    do_error("Argument 2 of <string-gt> should be of type String.");
     return ;
   }
 
@@ -2082,13 +2082,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("register-eq requires at least 1 arguments.");
+        do_error("<register-eq> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of register-eq should be of type REGISTER.");
+    do_error("Argument 1 of <register-eq> should be of type Register.");
     return ;
   }
 
@@ -2103,13 +2103,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("register-eq requires at least 2 arguments.");
+        do_error("<register-eq> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTER)))
+if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of register-eq should be of type REGISTER.");
+    do_error("Argument 2 of <register-eq> should be of type Register.");
     return ;
   }
 
@@ -2144,13 +2144,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("go-in requires at least 1 arguments.");
+        do_error("<go-in> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of go-in should be of type REGISTRY.");
+    do_error("Argument 1 of <go-in> should be of type Registry.");
     return ;
   }
 
@@ -2191,13 +2191,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("save requires at least 1 arguments.");
+        do_error("<save> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of save should be of type STRING.");
+    do_error("Argument 1 of <save> should be of type String.");
     return ;
   }
 
@@ -2206,7 +2206,7 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
   save_registry(f, reg);
-  data_type end = NOTHING;
+  data_type end = Nothing;
   fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
 
@@ -2229,13 +2229,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("load requires at least 1 arguments.");
+        do_error("<load> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of load should be of type STRING.");
+    do_error("Argument 1 of <load> should be of type String.");
     return ;
   }
 
@@ -2265,20 +2265,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("to-string requires at least 1 arguments.");
+        do_error("<to-string> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER | REAL | REGISTER))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
   {
-    do_error("Argument 1 of to-string should be of type (INTEGER | REAL | REGISTER).");
+    do_error("Argument 1 of <to-string> should be of type (Integer | Real | Register).");
     return ;
   }
 
 ;
 
   char* result;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       int n_digits;
       if ((*(int*) arg1->data) == 0)
@@ -2292,7 +2292,7 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER | REAL | REGISTER))))
       result = malloc(sizeof(char)*(n_digits+1));
       sprintf(result, "%d", *((int*) arg1->data));
     }
-  else if (arg1->type == REAL)
+  else if (arg1->type == Real)
     {
       data* arg2 = NULL;
       if (a.length >= 3)
@@ -2301,7 +2301,7 @@ if (arg1 != NULL && true && (!(arg1->type & (INTEGER | REAL | REGISTER))))
         }
       
       int prec = 6;
-      if (arg2 != NULL && arg2->type != INTEGER)
+      if (arg2 != NULL && arg2->type != Integer)
         {
           do_error("The second argument to *to-string* should be an integer.");
           return;
@@ -2373,19 +2373,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("to-number requires at least 1 arguments.");
+        do_error("<to-number> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (STRING|REGISTER))))
+if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
   {
-    do_error("Argument 1 of to-number should be of type (STRING|REGISTER).");
+    do_error("Argument 1 of <to-number> should be of type (String|Register).");
     return ;
   }
 
 ;
 
-  if (arg1->type == STRING)
+  if (arg1->type == String)
     {
       char* value = (char*) arg1->data;
       data* d;
@@ -2449,20 +2449,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("to-real requires at least 1 arguments.");
+        do_error("<to-real> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of to-real should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <to-real> should be of type (Integer|Real).");
     return ;
   }
 
 ;
 
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     assign_real(&d, *((int*) arg1->data));
   else
     d = copy_data(arg1);
@@ -2488,13 +2488,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("output-code requires at least 1 arguments.");
+        do_error("<output-code> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of output-code should be of type STRING.");
+    do_error("Argument 1 of <output-code> should be of type String.");
     return ;
   }
 
@@ -2539,13 +2539,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("error requires at least 1 arguments.");
+        do_error("<error> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of error should be of type STRING.");
+    do_error("Argument 1 of <error> should be of type String.");
     return ;
   }
 
@@ -2565,13 +2565,13 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("error requires at least 2 arguments.");
+        do_error("<error> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of error should be of type INTEGER.");
+    do_error("Argument 2 of <error> should be of type Integer.");
     return ;
   }
 
@@ -2601,21 +2601,21 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("is-Type requires at least 1 arguments.");
+        do_error("<is-Type> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && false && (!(arg1->type & INTEGER)))
+if (arg1 != NULL && false && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of is-Type should be of type INTEGER.");
+    do_error("Argument 1 of <is-Type> should be of type Integer.");
     return ;
   }
 
 ;
   
   data* d;
-  if (arg1->type == type || ((type==INSTRUCTION) &&
-                             (arg1->type==OPERATION)))
+  if (arg1->type == type || ((type==Instruction) &&
+                             (arg1->type==Operation)))
     {
       assign_boolean(&d, true);
     }
@@ -2630,55 +2630,55 @@ if (arg1 != NULL && false && (!(arg1->type & INTEGER)))
 void
 op_is_integer (arg a, registry* reg)
 {
-  op_is_type(a, reg, INTEGER);
+  op_is_type(a, reg, Integer);
 }
 
 void
 op_is_real (arg a, registry* reg)
 {
-  op_is_type(a, reg, REAL);
+  op_is_type(a, reg, Real);
 }
 
 void
 op_is_string (arg a, registry* reg)
 {
-  op_is_type(a, reg, STRING);
+  op_is_type(a, reg, String);
 }
 
 void
 op_is_register (arg a, registry* reg)
 {
-  op_is_type(a, reg, REGISTER);
+  op_is_type(a, reg, Register);
 }
 
 void
 op_is_registry (arg a, registry* reg)
 {
-  op_is_type(a, reg, REGISTRY);
+  op_is_type(a, reg, Registry);
 }
 
 void
 op_is_instruction (arg a, registry* reg)
 {
-  op_is_type(a, reg, INSTRUCTION);
+  op_is_type(a, reg, Instruction);
 }
 
 void
 op_is_file (arg a, registry* reg)
 {
-  op_is_type(a, reg, ARBEL_FILE);
+  op_is_type(a, reg, File);
 }
 
 void
 op_is_nothing (arg a, registry* reg)
 {
-  op_is_type(a, reg, NOTHING);
+  op_is_type(a, reg, Nothing);
 }
 
 void
 op_is_boolean (arg a, registry* reg)
 {
-  op_is_type(a, reg, BOOLEAN);
+  op_is_type(a, reg, Boolean);
 }
 
 
@@ -2699,19 +2699,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("open-text-file requires at least 1 arguments.");
+        do_error("<open-text-file> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of open-text-file should be of type STRING.");
+    do_error("Argument 1 of <open-text-file> should be of type String.");
     return ;
   }
 
 ;
   
-  FILE* f = fopen((char*) arg1->data, "r+");
+  FILE* f = fopen((char*) arg1->data, "ab+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -2741,13 +2741,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("read requires at least 1 arguments.");
+        do_error("<read> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & ARBEL_FILE)))
+if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of read should be of type ARBEL_FILE.");
+    do_error("Argument 1 of <read> should be of type File.");
     return ;
   }
 
@@ -2787,13 +2787,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("close requires at least 1 arguments.");
+        do_error("<close> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of close should be of type REGISTER.");
+    do_error("Argument 1 of <close> should be of type Register.");
     return ;
   }
 
@@ -2807,7 +2807,7 @@ if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
       return;
     }
 
-  if (f->type != ARBEL_FILE)
+  if (f->type != File)
     {
       do_error("Register does not contain a file.");
       return;
@@ -2839,13 +2839,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("or requires at least 1 arguments.");
+        do_error("<or> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of or should be of type BOOLEAN.");
+    do_error("Argument 1 of <or> should be of type Boolean.");
     return ;
   }
 
@@ -2859,13 +2859,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("or requires at least 2 arguments.");
+        do_error("<or> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & BOOLEAN)))
+if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of or should be of type BOOLEAN.");
+    do_error("Argument 2 of <or> should be of type Boolean.");
     return ;
   }
 
@@ -2901,13 +2901,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("and requires at least 1 arguments.");
+        do_error("<and> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of and should be of type BOOLEAN.");
+    do_error("Argument 1 of <and> should be of type Boolean.");
     return ;
   }
 
@@ -2921,13 +2921,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("and requires at least 2 arguments.");
+        do_error("<and> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & BOOLEAN)))
+if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of and should be of type BOOLEAN.");
+    do_error("Argument 2 of <and> should be of type Boolean.");
     return ;
   }
 
@@ -2963,13 +2963,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("not requires at least 1 arguments.");
+        do_error("<not> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & BOOLEAN)))
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of not should be of type BOOLEAN.");
+    do_error("Argument 1 of <not> should be of type Boolean.");
     return ;
   }
 
@@ -3005,13 +3005,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("read-line requires at least 1 arguments.");
+        do_error("<read-line> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & ARBEL_FILE)))
+if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of read-line should be of type ARBEL_FILE.");
+    do_error("Argument 1 of <read-line> should be of type File.");
     return ;
   }
 
@@ -3052,13 +3052,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("write requires at least 1 arguments.");
+        do_error("<write> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of write should be of type STRING.");
+    do_error("Argument 1 of <write> should be of type String.");
     return ;
   }
 
@@ -3073,22 +3073,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("write requires at least 2 arguments.");
+        do_error("<write> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & ARBEL_FILE)))
+if (arg2 != NULL && true && (!(arg2->type & File)))
   {
-    do_error("Argument 2 of write should be of type ARBEL_FILE.");
+    do_error("Argument 2 of <write> should be of type File.");
     return ;
   }
 
 ;
 
   fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
-  data* d;
-  assign_nothing(&d);
-  ret_ans(reg,d);
+
 }
 
 void
@@ -3108,13 +3106,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("input requires at least 1 arguments.");
+        do_error("<input> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTER)))
+if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of input should be of type REGISTER.");
+    do_error("Argument 1 of <input> should be of type Register.");
     return ;
   }
 
@@ -3146,13 +3144,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("shell requires at least 1 arguments.");
+        do_error("<shell> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of shell should be of type STRING.");
+    do_error("Argument 1 of <shell> should be of type String.");
     return ;
   }
 
@@ -3205,13 +3203,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("link requires at least 1 arguments.");
+        do_error("<link> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of link should be of type STRING.");
+    do_error("Argument 1 of <link> should be of type String.");
     return ;
   }
 
@@ -3225,13 +3223,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("link requires at least 2 arguments.");
+        do_error("<link> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of link should be of type STRING.");
+    do_error("Argument 2 of <link> should be of type String.");
     return ;
   }
 
@@ -3245,13 +3243,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("link requires at least 3 arguments.");
+        do_error("<link> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & STRING)))
+if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of link should be of type STRING.");
+    do_error("Argument 3 of <link> should be of type String.");
     return ;
   }
 
@@ -3310,13 +3308,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("match requires at least 1 arguments.");
+        do_error("<match> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of match should be of type STRING.");
+    do_error("Argument 1 of <match> should be of type String.");
     return ;
   }
 
@@ -3330,13 +3328,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("match requires at least 2 arguments.");
+        do_error("<match> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of match should be of type STRING.");
+    do_error("Argument 2 of <match> should be of type String.");
     return ;
   }
 
@@ -3355,13 +3353,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("match requires at least 3 arguments.");
+        do_error("<match> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
+if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of match should be of type INTEGER.");
+    do_error("Argument 3 of <match> should be of type Integer.");
     return ;
   }
 
@@ -3459,13 +3457,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("replace requires at least 1 arguments.");
+        do_error("<replace> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of replace should be of type STRING.");
+    do_error("Argument 1 of <replace> should be of type String.");
     return ;
   }
 
@@ -3479,13 +3477,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("replace requires at least 2 arguments.");
+        do_error("<replace> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & STRING)))
+if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of replace should be of type STRING.");
+    do_error("Argument 2 of <replace> should be of type String.");
     return ;
   }
 
@@ -3499,13 +3497,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("replace requires at least 3 arguments.");
+        do_error("<replace> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & STRING)))
+if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of replace should be of type STRING.");
+    do_error("Argument 3 of <replace> should be of type String.");
     return ;
   }
 
@@ -3523,13 +3521,13 @@ if (true)
   {
     if (arg4 == NULL)
       {
-        do_error("replace requires at least 4 arguments.");
+        do_error("<replace> requires at least 4 arguments.");
         return ;
       }
   }
-if (arg4 != NULL && true && (!(arg4->type & INTEGER)))
+if (arg4 != NULL && true && (!(arg4->type & Integer)))
   {
-    do_error("Argument 4 of replace should be of type INTEGER.");
+    do_error("Argument 4 of <replace> should be of type Integer.");
     return ;
   }
 
@@ -3647,20 +3645,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("log requires at least 1 arguments.");
+        do_error("<log> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of log should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <log> should be of type (Integer|Real).");
     return ;
   }
 
 ;
   
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       assign_real(&d, log((double) (*((int*) arg1->data))));
     }
@@ -3690,20 +3688,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("exp requires at least 1 arguments.");
+        do_error("<exp> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of exp should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <exp> should be of type (Integer|Real).");
     return ;
   }
 
 ;
 
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       assign_real(&d, exp((double) (*((int*) arg1->data))));
     }
@@ -3732,13 +3730,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("power requires at least 1 arguments.");
+        do_error("<power> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (INTEGER|REAL))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of power should be of type (INTEGER|REAL).");
+    do_error("Argument 1 of <power> should be of type (Integer|Real).");
     return ;
   }
 
@@ -3752,13 +3750,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("power requires at least 2 arguments.");
+        do_error("<power> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
+if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of power should be of type (INTEGER|REAL).");
+    do_error("Argument 2 of <power> should be of type (Integer|Real).");
     return ;
   }
 
@@ -3767,7 +3765,7 @@ if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
   double base;
   double power;
   data* d;
-  if (arg1->type == INTEGER)
+  if (arg1->type == Integer)
     {
       base = (double) (*((int*) arg1->data));
     }
@@ -3776,7 +3774,7 @@ if (arg2 != NULL && true && (!(arg2->type & (INTEGER|REAL))))
       base = *((double*) arg1->data);
     }
 
-  if (arg2->type == INTEGER)
+  if (arg2->type == Integer)
     {
       power = (double) (*((int*) arg2->data));
     }
@@ -3807,13 +3805,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("change-dir requires at least 1 arguments.");
+        do_error("<change-dir> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of change-dir should be of type STRING.");
+    do_error("Argument 1 of <change-dir> should be of type String.");
     return ;
   }
 
@@ -3846,13 +3844,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("import requires at least 1 arguments.");
+        do_error("<import> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & REGISTRY)))
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of import should be of type REGISTRY.");
+    do_error("Argument 1 of <import> should be of type Registry.");
     return ;
   }
 
@@ -3918,13 +3916,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("substring requires at least 1 arguments.");
+        do_error("<substring> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of substring should be of type STRING.");
+    do_error("Argument 1 of <substring> should be of type String.");
     return ;
   }
 
@@ -3939,13 +3937,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("substring requires at least 2 arguments.");
+        do_error("<substring> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & INTEGER)))
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of substring should be of type INTEGER.");
+    do_error("Argument 2 of <substring> should be of type Integer.");
     return ;
   }
 
@@ -3959,13 +3957,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("substring requires at least 3 arguments.");
+        do_error("<substring> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & INTEGER)))
+if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of substring should be of type INTEGER.");
+    do_error("Argument 3 of <substring> should be of type Integer.");
     return ;
   }
 
@@ -4088,13 +4086,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("of requires at least 1 arguments.");
+        do_error("<of> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of of should be of type STRING.");
+    do_error("Argument 1 of <of> should be of type String.");
     return ;
   }
 
@@ -4109,13 +4107,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("of requires at least 2 arguments.");
+        do_error("<of> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of of should be of type REGISTRY.");
+    do_error("Argument 2 of <of> should be of type Registry.");
     return ;
   }
 
@@ -4143,13 +4141,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("is-of requires at least 1 arguments.");
+        do_error("<is-of> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of is-of should be of type STRING.");
+    do_error("Argument 1 of <is-of> should be of type String.");
     return ;
   }
 
@@ -4164,13 +4162,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("is-of requires at least 2 arguments.");
+        do_error("<is-of> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of is-of should be of type REGISTRY.");
+    do_error("Argument 2 of <is-of> should be of type Registry.");
     return ;
   }
 
@@ -4178,7 +4176,7 @@ if (arg2 != NULL && true && (!(arg2->type & REGISTRY)))
 
   data* d = lookup((registry*) arg2->data, arbel_hash_class, 0);
 
-  if (d == NULL || d->type != STRING)
+  if (d == NULL || d->type != String)
     {
       do_error("*class* register not found.");
       return;
@@ -4214,13 +4212,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("dispatch requires at least 1 arguments.");
+        do_error("<dispatch> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & STRING)))
+if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of dispatch should be of type STRING.");
+    do_error("Argument 1 of <dispatch> should be of type String.");
     return ;
   }
 
@@ -4235,13 +4233,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("dispatch requires at least 2 arguments.");
+        do_error("<dispatch> requires at least 2 arguments.");
         return ;
       }
   }
-if (arg2 != NULL && false && (!(arg2->type & STRING)))
+if (arg2 != NULL && false && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of dispatch should be of type STRING.");
+    do_error("Argument 2 of <dispatch> should be of type String.");
     return ;
   }
 
@@ -4252,19 +4250,19 @@ if (arg2 != NULL && false && (!(arg2->type & STRING)))
   data* d = NULL;
   switch (arg2->type)
     {
-    case INTEGER:
+    case Integer:
       class = "Integer";
       break;
-    case REAL:
+    case Real:
       class = "Real";
       break;
-    case STRING:
+    case String:
       class = "String";
       break;
-    case REGISTER:
+    case Register:
       class = "Register";
       break;
-    case REGISTRY:
+    case Registry:
       d = lookup((registry*) arg2->data, arbel_hash_class, 0);
       if (d != NULL)
         {
@@ -4275,16 +4273,16 @@ if (arg2 != NULL && false && (!(arg2->type & STRING)))
           class = "Registry";
         }
       break;
-    case INSTRUCTION:
+    case Instruction:
       class = "Instruction";
       break;
-    case OPERATION:
+    case Operation:
       class = "Instruction";
       break;
-    case ARBEL_FILE:
+    case File:
       class = "File";
       break;
-    case NOTHING:
+    case Nothing:
       class = "Nothing";
       break;
     default:
@@ -4327,13 +4325,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("code requires at least 1 arguments.");
+        do_error("<code> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of code should be of type INSTRUCTION.");
+    do_error("Argument 1 of <code> should be of type Instruction.");
     return ;
   }
 
@@ -4363,13 +4361,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("is-error requires at least 1 arguments.");
+        do_error("<is-error> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & INSTRUCTION)))
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of is-error should be of type INSTRUCTION.");
+    do_error("Argument 1 of <is-error> should be of type Instruction.");
     return ;
   }
 

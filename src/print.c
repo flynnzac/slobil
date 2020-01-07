@@ -30,32 +30,32 @@ print_data (data* d, int print_cmd)
     }
   switch (d->type)
     {
-    case INTEGER:
+    case Integer:
       printf("%d", *((int*) d->data));
       break;
-    case STRING:
+    case String:
       printf("\"%s\"", (const char*) d->data);
       break;
-    case REAL:
+    case Real:
       printf("%f", *((double*) d->data));
       break;
-    case REGISTRY:
+    case Registry:
       printf("a registry with:\n");
       print_registry((registry*) d->data);
       break;
-    case INSTRUCTION:
+    case Instruction:
       printf("( %s )", ((instruction*) d->data)->code);
       break;
-    case REGISTER:
+    case Register:
       printf("/%s", ((regstr*) d->data)->name);
       break;
-    case OPERATION:
+    case Operation:
       printf("Built-in instruction.");
       break;
-    case ARBEL_FILE:
+    case File:
       printf("A file.");
       break;
-    case BOOLEAN:
+    case Boolean:
       if (*((bool*) d->data))
         printf("True.");
       else
@@ -65,7 +65,7 @@ print_data (data* d, int print_cmd)
       break;
     }
 
-  if (print_cmd <= 1 && (d->type != REGISTRY))
+  if (print_cmd <= 1 && (d->type != Registry))
     printf("\n");
 }
 

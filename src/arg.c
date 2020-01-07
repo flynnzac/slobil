@@ -17,7 +17,7 @@ gen_arg (int length, int def_free)
 data*
 resolve (data* arg, registry* reg)
 {
-  if (arg->type == ACTIVE_INSTRUCTION)
+  if (arg->type == Active_Instruction)
     {
       ((instruction*) arg->data)->being_called = true;
       execute_code(((instruction*) arg->data)->stmt, reg);
@@ -37,11 +37,11 @@ check_length (arg* a, int length, char* op)
     {
       char* error_msg = malloc
         (sizeof(char)*
-         (strlen("Number of arguments is less than ") +
-          floor(log10(length-1))+1 + strlen(".") +
-          strlen(op) + 1));
+         (strlen("Number of arguments to < > is less than .") +
+          floor(log10(length-1)+1) + 
+	  strlen(op) + 1));
 
-      sprintf(error_msg, "Number of arguments to %s is less than %d.",
+      sprintf(error_msg, "Number of arguments to <%s> is less than %d.",
               op, length-1);
           
       do_error(error_msg);

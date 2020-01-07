@@ -56,7 +56,7 @@ _op_call (arg a, registry* reg, const int explicit)
 {
   data* arg1 = resolve(a.arg_array[explicit], reg);
 
-  if (arg1 == NULL || (arg1->type != INSTRUCTION && arg1->type != OPERATION))
+  if (arg1 == NULL || (arg1->type != Instruction && arg1->type != Operation))
     {
       do_error("First argument to `call` must be an instruction.");
       return;
@@ -72,7 +72,7 @@ _op_call (arg a, registry* reg, const int explicit)
     {
       d = a.arg_array[i];
 
-      if (d->type != REGISTER)
+      if (d->type != Register)
         {
           do_error("Expected a register");
           free_registry(r_new);
@@ -117,12 +117,12 @@ compute (data* cmd, registry* reg, arg a)
 
   switch (cmd->type)
     {
-    case OPERATION:
+    case Operation:
       if (is_error(-1))
         return;
       ((operation) cmd->data)(a, reg);
       break;
-    case INSTRUCTION:
+    case Instruction:
       _op_call(a, reg, 0);
       break;
     default:

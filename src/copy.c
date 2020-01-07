@@ -27,7 +27,7 @@ void
 assign_real (data** d, const double num)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = REAL;
+  (*d)->type = Real;
   (*d)->data = malloc(sizeof(double));
   *((double*) (*d)->data) = num;
 }
@@ -36,7 +36,7 @@ void
 assign_int (data** d, const int num)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = INTEGER;
+  (*d)->type = Integer;
   (*d)->data = malloc(sizeof(int));
   *((int*) (*d)->data) = num;
 }
@@ -45,7 +45,7 @@ void
 assign_str (data** d, const char* str, int copy)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = STRING;
+  (*d)->type = String;
   
   if (copy)
     {
@@ -62,7 +62,7 @@ void
 assign_instr (data** d, statement* s, const char* code)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = INSTRUCTION;
+  (*d)->type = Instruction;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
@@ -74,7 +74,7 @@ void
 assign_active (data** d, statement* s)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = ACTIVE_INSTRUCTION;
+  (*d)->type = Active_Instruction;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->being_called = false;
@@ -84,7 +84,7 @@ void
 assign_op (data** d, const operation op)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = OPERATION;
+  (*d)->type = Operation;
   (*d)->data = op;
 }
 
@@ -92,7 +92,7 @@ void
 assign_registry (data** d, registry* r)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = REGISTRY;
+  (*d)->type = Registry;
   if (r == NULL)
     {
       (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
@@ -107,7 +107,7 @@ void
 assign_regstr (data** d, const char* name, unsigned long key)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = REGISTER;
+  (*d)->type = Register;
   (*d)->data = malloc(sizeof(regstr));
   ((regstr*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
   strcpy(((regstr*) (*d)->data)->name, name);
@@ -119,7 +119,7 @@ void
 assign_file (data** d, FILE* f)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = ARBEL_FILE;
+  (*d)->type = File;
   (*d)->data = f;
   
 }
@@ -128,7 +128,7 @@ void
 assign_boolean (data** d, bool val)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = BOOLEAN;
+  (*d)->type = Boolean;
   (*d)->data = malloc(sizeof(bool));
   *((bool*) (*d)->data) = val;
 }
@@ -138,7 +138,7 @@ void
 assign_nothing (data** d)
 {
   *d = malloc(sizeof(data));
-  (*d)->type = NOTHING;
+  (*d)->type = Nothing;
   (*d)->data = NULL;
 }
 
@@ -250,39 +250,39 @@ copy_data (data* d_in)
 
   switch (d_in->type)
     {
-    case INTEGER:
+    case Integer:
       assign_int(&d, *((int*) d_in->data));
       break;
-    case REAL:
+    case Real:
       assign_real(&d, *((double*) d_in->data));
       break;
-    case STRING:
+    case String:
       assign_str(&d, (const char*) d_in->data, 1);
       break;
-    case REGISTER:
+    case Register:
       assign_regstr(&d, ((regstr*) d_in->data)->name,
                     ((regstr*) d_in->data)->key);
       break;
-    case REGISTRY:
+    case Registry:
       assign_registry(&d, (registry*) d_in->data);
       break;
-    case OPERATION:
+    case Operation:
       assign_op(&d, (operation) d_in->data);
       break;
-    case INSTRUCTION:
+    case Instruction:
       assign_instr(&d, ((instruction*) d_in->data)->stmt,
                    ((instruction*) d_in->data)->code);
       break;
-    case ACTIVE_INSTRUCTION:
+    case Active_Instruction:
       assign_active(&d, ((instruction*) d_in->data)->stmt);
       break;
-    case ARBEL_FILE:
+    case File:
       assign_file(&d, (FILE*) d_in->data);
       break;
-    case BOOLEAN:
+    case Boolean:
       assign_boolean(&d, *((bool*) d_in->data));
       break;
-    case NOTHING:
+    case Nothing:
       assign_nothing(&d);
       break;
     }

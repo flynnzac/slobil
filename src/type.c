@@ -57,8 +57,8 @@ is_real (const char* str)
 bool
 is_numeric (data* d)
 {
-  if (d->type == REAL ||
-      d->type == INTEGER)
+  if (d->type == Real ||
+      d->type == Integer)
     {
       return true;
     }
@@ -97,37 +97,37 @@ str_type (data_type type)
 
   switch (type)
     {
-    case INTEGER:
+    case Integer:
       s = "Integer";
       break;
-    case REAL:
+    case Real:
       s = "Real";
       break;
-    case STRING:
+    case String:
       s = "String";
       break;
-    case REGISTER:
+    case Register:
       s = "Register";
       break;
-    case REGISTRY:
+    case Registry:
       s = "Registry";
       break;
-    case INSTRUCTION:
+    case Instruction:
       s = "Instruction";
       break;
-    case ACTIVE_INSTRUCTION:
+    case Active_Instruction:
       s = "Active-Instruction";
       break;
-    case OPERATION:
+    case Operation:
       s = "Instruction";
       break;
-    case NOTHING:
+    case Nothing:
       s = "Nothing";
       break;
-    case ARBEL_FILE:
+    case File:
       s = "File";
       break;
-    case BOOLEAN:
+    case Boolean:
       s = "Boolean";
       break;
     }

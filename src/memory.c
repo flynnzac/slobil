@@ -91,31 +91,31 @@ free_data (data* d)
 {
   if (d==NULL)
     return;
-  if (d->type == REGISTRY)
+  if (d->type == Registry)
     {
       free_registry((registry*) d->data);
       free(d);
     }
-  else if (d->type == REGISTER)
+  else if (d->type == Register)
     {
       free(((regstr*) d->data)->name);
       free(d->data);
       free(d);
     }
-  else if (d->type == OPERATION)
+  else if (d->type == Operation)
     {
       free(d);
     }
-  else if (d->type == ARBEL_FILE)
+  else if (d->type == File)
     {
       free(d);
     }
-  else if (d->type == INSTRUCTION)
+  else if (d->type == Instruction)
     {
       free_instruction((instruction*) d->data);
       free(d);
     }
-  else if (d->type == ACTIVE_INSTRUCTION)
+  else if (d->type == Active_Instruction)
     {
       free_statement(((instruction*) d->data)->stmt);
       free(d->data);

@@ -41,17 +41,17 @@
 #include <unistdio.h>
 enum data_type
   {
-   INTEGER = 1,
-   REAL = 2,
-   STRING = 4,
-   REGISTER = 8,
-   REGISTRY = 16,
-   INSTRUCTION = 32,
-   ACTIVE_INSTRUCTION = 64,
-   OPERATION = 128,
-   ARBEL_FILE = 256,
-   BOOLEAN = 512,
-   NOTHING = 1024
+   Integer = 1,
+   Real = 2,
+   String = 4,
+   Register = 8,
+   Registry = 16,
+   Instruction = 32,
+   Active_Instruction = 64,
+   Operation = 128,
+   File = 256,
+   Boolean = 512,
+   Nothing = 1024
   };
 
 typedef enum data_type data_type;

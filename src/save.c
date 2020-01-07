@@ -42,38 +42,38 @@ save_content (FILE* f, content* reg)
 
   while (reg != NULL)
     {
-      if (reg->value->type != OPERATION &&
-          reg->value->type != ACTIVE_INSTRUCTION &&
-          reg->value->type != NOTHING)
+      if (reg->value->type != Operation &&
+          reg->value->type != Active_Instruction &&
+          reg->value->type != Nothing)
         {
           fwrite(&reg->value->type, sizeof(data_type), 1, f);
       
           switch (reg->value->type)
             {
-            case INTEGER:
+            case Integer:
               fwrite(reg->value->data, sizeof(int), 1, f);
               break;
-            case REAL:
+            case Real:
               fwrite(reg->value->data, sizeof(double), 1, f);
               break;
-            case STRING:
+            case String:
               size = strlen((char*) reg->value->data);
               fwrite(&size, sizeof(int), 1, f);
               fwrite(reg->value->data, sizeof(char),
                      strlen((char*) reg->value->data), f);
               break;
-            case REGISTER:
+            case Register:
               size = strlen(((regstr*) reg->value->data)->name);
               fwrite(&size, sizeof(int), 1, f);
               fwrite(reg->value->data, sizeof(char),
                      strlen(((regstr*) reg->value->data)->name), f);
               break;
-            case REGISTRY:
+            case Registry:
               save_registry(f, (registry*) reg->value->data);
-              size = NOTHING;
+              size = Nothing;
               fwrite(&size, sizeof(data_type), 1, f);
               break;
-            case INSTRUCTION:
+            case Instruction:
               size = strlen(((instruction*) reg->value->data)->code);
               fwrite(&size, sizeof(int), 1, f);
               fwrite(((instruction*) reg->value->data)->code, sizeof(char),
@@ -108,23 +108,23 @@ read_registry (FILE* f, registry* reg)
   parser_state state;
   FILE* f_sub;
   while (fread(type_cache, sizeof(data_type), 1, f)
-         && (*type_cache != NOTHING))
+         && (*type_cache != Nothing))
     {
       switch (*type_cache)
         {
-        case INTEGER:
+        case Integer:
           cache = malloc(sizeof(int));
           fread(cache, sizeof(int), 1, f);
           assign_int(&d, *((int*) cache));
           free(cache);
           break;
-        case REAL:
+        case Real:
           cache = malloc(sizeof(double));
           fread(cache, sizeof(double), 1, f);
           assign_real(&d, *((double*) cache));
           free(cache);
           break;
-        case STRING:
+        case String:
           cache = malloc(sizeof(int));
           fread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
@@ -134,7 +134,7 @@ read_registry (FILE* f, registry* reg)
           *((char*) (cache+size)) = '\0';
           assign_str(&d, (char*) cache, 0);
           break;
-        case REGISTER:
+        case Register:
           cache = malloc(sizeof(int));
           fread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
@@ -145,13 +145,13 @@ read_registry (FILE* f, registry* reg)
           assign_regstr(&d, (char*) cache, hash_str((char*) cache));
           free(cache);          
           break;
-        case REGISTRY:
+        case Registry:
           r = new_registry(reg, ARBEL_HASH_SIZE);
           read_registry(f, r);
           assign_registry(&d, r);
           free_registry(r);
           break;
-        case INSTRUCTION:
+        case Instruction:
           cache = malloc(sizeof(int));
           fread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
@@ -170,7 +170,7 @@ read_registry (FILE* f, registry* reg)
           fclose(f_sub);
 
           d = malloc(sizeof(data));
-          d->type = INSTRUCTION;
+          d->type = Instruction;
           d->data = malloc(sizeof(instruction));
           ((instruction*) d->data)->stmt = stmt;
           ((instruction*) d->data)->code = code;
