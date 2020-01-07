@@ -17,7 +17,7 @@ set /add-n-times+String
     (
       set /result val .
       repeat [ sub times 1 . ]
-             ( set /result [ concat result val . ] . ) .
+             ( set /result [ string-append result val . ] . ) .
       answer result .
     ) .
 

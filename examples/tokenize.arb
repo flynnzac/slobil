@@ -2,7 +2,7 @@
 set /tokenize
     (
       set /i 1 .
-      set /len [ count-characters line . ] .
+      set /len [ string-length line . ] .
       set /cur-reg /#1 .
       set /tokened [ list . ] .
       set /init 1 .
@@ -17,7 +17,7 @@ set /tokenize
                  }
                  {
                    if [ eq init 1 . ] { set /buffer d . set /init 0 . }
-                      { set /buffer [ concat buffer d . ] . } .
+                      { set /buffer [ string-append buffer d . ] . } .
                  } .
               set /i [ add i 1 . ] .
             ) .

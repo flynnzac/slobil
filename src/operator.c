@@ -998,7 +998,7 @@ if (arg1 != NULL && false && (!(arg1->type & (INTEGER|REAL))))
 }
 
 void
-op_count_characters (arg a, registry* reg)
+op_string_length (arg a, registry* reg)
 {
   
   check_length(&a, 1+1);
@@ -1013,13 +1013,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("count-characters requires at least 1 arguments.");
+        do_error("string-length requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & STRING)))
   {
-    do_error("Argument 1 of count-characters should be of type STRING.");
+    do_error("Argument 1 of string-length should be of type STRING.");
     return ;
   }
 
@@ -1036,7 +1036,7 @@ if (arg1 != NULL && true && (!(arg1->type & STRING)))
 }
 
 void
-op_concat (arg a, registry* reg)
+op_string_append (arg a, registry* reg)
 {
   
   check_length(&a, 2+1);
@@ -1052,13 +1052,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("concat requires at least 1 arguments.");
+        do_error("string-append requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & STRING)))
   {
-    do_error("Argument 1 of concat should be of type STRING.");
+    do_error("Argument 1 of string-append should be of type STRING.");
     return ;
   }
 
@@ -1072,13 +1072,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("concat requires at least 2 arguments.");
+        do_error("string-append requires at least 2 arguments.");
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & STRING)))
   {
-    do_error("Argument 2 of concat should be of type STRING.");
+    do_error("Argument 2 of string-append should be of type STRING.");
     return ;
   }
 
@@ -4335,11 +4335,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_print);
   set(reg,d,"print",1);
 
-  assign_op(&d, op_count_characters);
-  set(reg,d,"count-characters",1);
+  assign_op(&d, op_string_length);
+  set(reg,d,"string-length",1);
 
-  assign_op(&d, op_concat);
-  set(reg,d,"concat",1);
+  assign_op(&d, op_string_append);
+  set(reg,d,"string-append",1);
 
   assign_op(&d, op_source);
   set(reg,d,"source",1);

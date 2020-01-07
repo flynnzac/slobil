@@ -661,11 +661,11 @@ op_print (arg a, registry* reg)
 }
 
 void
-op_count_characters (arg a, registry* reg)
+op_string_length (arg a, registry* reg)
 {
   #length=1@
   ##CHECK_ARGS~$;
-  #op=count-characters@
+  #op=string-length@
   #num=1@
   #type=STRING@
   ##GETARG~$;
@@ -681,12 +681,12 @@ op_count_characters (arg a, registry* reg)
 }
 
 void
-op_concat (arg a, registry* reg)
+op_string_append (arg a, registry* reg)
 {
   #length=2@
   ##CHECK_ARGS~$;
 
-  #op=concat@
+  #op=string-append@
   #num=1@
   #type=STRING@
   ##GETARG~$;
@@ -2720,11 +2720,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_print);
   set(reg,d,"print",1);
 
-  assign_op(&d, op_count_characters);
-  set(reg,d,"count-characters",1);
+  assign_op(&d, op_string_length);
+  set(reg,d,"string-length",1);
 
-  assign_op(&d, op_concat);
-  set(reg,d,"concat",1);
+  assign_op(&d, op_string_append);
+  set(reg,d,"string-append",1);
 
   assign_op(&d, op_source);
   set(reg,d,"source",1);

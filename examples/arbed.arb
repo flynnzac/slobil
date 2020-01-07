@@ -11,13 +11,15 @@ in arbed
            set /arbed-str s buffer .
            in buffer
               (
-                to-register [ concat "#" [ to-string cur-line . ] . ] .
+                to-register [ string-append
+                                     "#" [ to-string cur-line . ] . ] .
                 set ans arbed-str .
               ) .
          ) .
      set /o
          (
-           to-register [ concat "#" [ to-string cur-line . ] . ] .
+           to-register [ string-append
+                                "#" [ to-string cur-line . ] . ] .
            print [ get ans buffer . ] .
          ) .
    ) .

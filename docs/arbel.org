@@ -111,8 +111,8 @@
      (
        set /str-t [ to-string t . ] . 
        if [ gt t 4 . ]
-          { print [ concat str-t " is greater than 4.\n" . ] . }
-          { print [ concat str-t " is less than or equal to 4.\n" . ] . } .
+          { print [ string-append str-t " is greater than 4.\n" . ] . }
+          { print [ string-append str-t " is less than or equal to 4.\n" . ] . } .
      ) .
     ... gt-4 /t 10 .
     10 is greater than 4.
@@ -191,7 +191,7 @@
    We can also execute an instruction inside a certain registry by using the =in= command.
 
    #+BEGIN_SRC
-   ... in my-registry ( print [ concat hello " Goodbye!" . ] . ) .
+   ... in my-registry ( print [ string-append hello " Goodbye!" . ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
 
@@ -492,9 +492,9 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
-- =count-characters STRING= --- sets the =/ans= register to the number of characters in =STRING=.
+- =string-length STRING= --- sets the =/ans= register to the number of characters in =STRING=.
 
-- =concat STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
+- =string-append STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
 
 - =string-eq STRING1 STRING2= --- sets the =/ans= Register to =True= if the two strings are equal and to =False= otherwise.
 
