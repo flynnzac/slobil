@@ -1573,15 +1573,20 @@ op_to_real (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(Integer|Real)'@
+  #type=`(Integer|Real|String)'@
   ##GETARG~$;
 
   data* d;
   if (arg1->type == Integer)
     assign_real(&d, *((int*) arg1->data));
-  else
+  else if (arg1->type == Real)
     d = copy_data(arg1);
-  
+  else
+    {
+      double result = atof((char*) arg1->data);
+      assign_real(&d, result);
+    }
+    
   ret_ans(reg,d);
   
 }

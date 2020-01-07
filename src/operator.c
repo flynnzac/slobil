@@ -2453,9 +2453,9 @@ if (true)
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real|String))))
   {
-    do_error("Argument 1 of <to-real> should be of type (Integer|Real).");
+    do_error("Argument 1 of <to-real> should be of type (Integer|Real|String).");
     return ;
   }
 
@@ -2464,9 +2464,14 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   data* d;
   if (arg1->type == Integer)
     assign_real(&d, *((int*) arg1->data));
-  else
+  else if (arg1->type == Real)
     d = copy_data(arg1);
-  
+  else
+    {
+      double result = atof((char*) arg1->data);
+      assign_real(&d, result);
+    }
+    
   ret_ans(reg,d);
   
 }
