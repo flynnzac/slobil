@@ -1,0 +1,30 @@
+set /?-present
+    (
+      string-append "\n*Name*: " object:/name .
+      string-append ans "\n" .
+      string-append ans "*Description*:" .
+      string-append ans "\n" .
+      string-append ans object:/description .
+      move /ans /header .
+      set /usage [ string-append object:/name " " . ] .
+      set /loc /#1 .
+      while ( exist loc object:/reqd-env . )
+            (
+              set /par object:/reqd-env:loc .
+              set /usage [
+                    collapse ( string-append t1 t2 . )
+                             [ list usage
+                                    "/" par:/name
+                                    " "
+                                    par:/type . ] . ] .
+              set /loc [ next loc . ] .
+            ) .
+      string-append header "\n*Usage*:\n" .
+      string-append ans usage .
+    ) .
+
+set /help
+    (
+      get object ? .
+      print [ ?-present /object ans . ] .
+    ) .

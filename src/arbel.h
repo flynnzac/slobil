@@ -63,7 +63,6 @@ struct data
 {
   void* data;
   data_type type;
-  struct registry* document;
 };
 typedef struct data data;
 
