@@ -380,9 +380,11 @@ x_2 = second element, etc
 
 words-are-separated-with-dashes
 
-* DONE op_last should error if no value found with prefix or return an error code (i.e. a register like /0 which could not normally be used).  Currently returns prefix0.
+* CANCELLED op_last should error if no value found with prefix or return an error code (i.e. a register like /0 which could not normally be used).  Currently returns prefix0.
   CLOSED: [2020-01-05 Sun 18:39]
 
+  - State "CANCELLED"  from "DONE"       [2020-01-08 Wed 14:01] \\
+    Actually decided this behavior is useful
 * DONE Not a huge fan of the Lisp/Scheme like naming convention I have now for the objects.  Just visually with the kind of punctuation I am using.  Will experiment.
   CLOSED: [2019-12-01 Sun 18:39]
 
@@ -477,3 +479,11 @@ In UTF-8
 One idea is to attach a documentation object to data.
 
 Another idea is to add a document to some cache.
+
+Let's go with the cache.  Should be able to do it in ARBEL itself.
+* TODO Let ARBEL take a command-line registry like so:
+
+./arbel -s script.arb -r "/x 10 /y \"hello\" ... "
+
+* TODO Add "where" command to return all elements of a registry in a list
+

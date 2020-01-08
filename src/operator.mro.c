@@ -169,16 +169,22 @@ op_arithmetic (arg a, registry* reg, const int code)
   data_type result_type = Integer;
   int int_value = 0;
   double dbl_value = 0.0;
+
+  #op=arithmetic@
   for (int i = 1; i < a.length; i++)
     {
-      data* cur = resolve(a.arg_array[i], reg);
-      if (cur == NULL || !is_numeric(cur))
-        {
-          do_error("Arithmetic requires at least two numeric arguments.");
-          return;
-        }
+      #num=i@
+      #type=`(Real|Integer)'@
+      ##GETARG~$;
 
-      if (cur->type == Real && result_type == Integer)
+      /* data* cur = resolve(a.arg_array[i], reg); */
+      /* if (cur == NULL || !is_numeric(cur)) */
+      /*   { */
+      /*     do_error("Arithmetic requires at least two numeric arguments."); */
+      /*     return; */
+      /*   } */
+
+      if (argi->type == Real && result_type == Integer)
         {
           dbl_value = (double) int_value;
           result_type = Real;
@@ -187,31 +193,31 @@ op_arithmetic (arg a, registry* reg, const int code)
       if (result_type == Integer)
         {
           if (i == 1)
-            int_value = *((int*) cur->data);
+            int_value = *((int*) argi->data);
           else
             switch (code)
               {
               case 1:
-                int_value += *((int*) cur->data);
+                int_value += *((int*) argi->data);
                 break;
               case 2:
-                int_value *= *((int*) cur->data);
+                int_value *= *((int*) argi->data);
                 break;
               case 3:
-                int_value -= *((int*) cur->data);
+                int_value -= *((int*) argi->data);
                 break;
               case 4:
-                int_value /= *((int*) cur->data);
+                int_value /= *((int*) argi->data);
                 break;
               }
         }
       else
         {
           double val;
-          if (cur->type == Integer)
-            val = (double) (*((int*) cur->data));
+          if (argi->type == Integer)
+            val = (double) (*((int*) argi->data));
           else
-            val = *((double*) cur->data);
+            val = *((double*) argi->data);
 	    
           if (i == 1)
             dbl_value = val;
@@ -701,17 +707,23 @@ op_string_append (arg a, registry* reg)
   #length=2@
   ##CHECK_ARGS~$;
 
-  #num=1@
-  #type=String@
-  ##GETARG~$;
+  size_t sz = 0;
+  data* args[a.length-1];
+  for (int i = 1; i < a.length; i++)
+    {
+      #num=i@
+      #type=String@
+      ##GETARG~$;
+      args[i-1] = argi;
+      sz += strlen((char*) argi->data);
+    }
+  char* result = malloc(sizeof(char)*(sz+1));
 
-  #num=2@
-  ##GETARG~$;
-
-  char* result = malloc(sizeof(char)*(strlen(arg1->data) +
-                                      strlen(arg2->data) + 1));
-  strcpy(result, (char*) arg1->data);
-  strcat(result, (char*) arg2->data);
+  strcpy(result, (char*) args[0]->data);
+  for (int i=2; i < a.length; i++)
+    {
+      strcat(result, (char*) args[i-1]->data);
+    }
 
   data* d = new_data();
   d->type = String;
@@ -980,11 +992,7 @@ op_last (arg a, registry* reg)
       hash_name = hash_str(name);
     }
   free(name);
-  if (i == 1)
-    {
-      do_error("No such register in given registry.");
-      return;
-    }
+
   name = vector_name((char*) arg2->data, i-1);
 
   d = new_data();

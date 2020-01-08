@@ -34,7 +34,7 @@ print_data (data* d, int print_cmd)
       printf("%d", *((int*) d->data));
       break;
     case String:
-      printf("\"%s\"", (const char*) d->data);
+      printf("%s", (const char*) d->data);
       break;
     case Real:
       printf("%f", *((double*) d->data));

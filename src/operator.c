@@ -204,16 +204,39 @@ op_arithmetic (arg a, registry* reg, const int code)
   data_type result_type = Integer;
   int int_value = 0;
   double dbl_value = 0.0;
+
+  
   for (int i = 1; i < a.length; i++)
     {
-      data* cur = resolve(a.arg_array[i], reg);
-      if (cur == NULL || !is_numeric(cur))
-        {
-          do_error("Arithmetic requires at least two numeric arguments.");
-          return;
-        }
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
 
-      if (cur->type == Real && result_type == Integer)
+if (true)
+  {
+    if (argi == NULL)
+      {
+        do_error("<arithmetic> requires at least i arguments.");
+        return ;
+      }
+  }
+if (argi != NULL && true && (!(argi->type & (Real|Integer))))
+  {
+    do_error("Argument i of <arithmetic> should be of type (Real|Integer).");
+    return ;
+  }
+
+;
+
+      /* data* cur = resolve(a.arg_array[i], reg); */
+      /* if (cur == NULL || !is_numeric(cur)) */
+      /*   { */
+      /*     do_error("Arithmetic requires at least two numeric arguments."); */
+      /*     return; */
+      /*   } */
+
+      if (argi->type == Real && result_type == Integer)
         {
           dbl_value = (double) int_value;
           result_type = Real;
@@ -222,31 +245,31 @@ op_arithmetic (arg a, registry* reg, const int code)
       if (result_type == Integer)
         {
           if (i == 1)
-            int_value = *((int*) cur->data);
+            int_value = *((int*) argi->data);
           else
             switch (code)
               {
               case 1:
-                int_value += *((int*) cur->data);
+                int_value += *((int*) argi->data);
                 break;
               case 2:
-                int_value *= *((int*) cur->data);
+                int_value *= *((int*) argi->data);
                 break;
               case 3:
-                int_value -= *((int*) cur->data);
+                int_value -= *((int*) argi->data);
                 break;
               case 4:
-                int_value /= *((int*) cur->data);
+                int_value /= *((int*) argi->data);
                 break;
               }
         }
       else
         {
           double val;
-          if (cur->type == Integer)
-            val = (double) (*((int*) cur->data));
+          if (argi->type == Integer)
+            val = (double) (*((int*) argi->data));
           else
-            val = *((double*) cur->data);
+            val = *((double*) argi->data);
 	    
           if (i == 1)
             dbl_value = val;
@@ -1057,51 +1080,40 @@ op_string_append (arg a, registry* reg)
   check_length(&a, 2+1, "string-append");
 if (is_error(-1)) return ;;
 
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
+  size_t sz = 0;
+  data* args[a.length-1];
+  for (int i = 1; i < a.length; i++)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
 
 if (true)
   {
-    if (arg1 == NULL)
+    if (argi == NULL)
       {
-        do_error("<string-append> requires at least 1 arguments.");
+        do_error("<string-append> requires at least i arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & String)))
+if (argi != NULL && true && (!(argi->type & String)))
   {
-    do_error("Argument 1 of <string-append> should be of type String.");
+    do_error("Argument i of <string-append> should be of type String.");
     return ;
   }
 
 ;
+      args[i-1] = argi;
+      sz += strlen((char*) argi->data);
+    }
+  char* result = malloc(sizeof(char)*(sz+1));
 
-  
-  
-data* arg2 = resolve(a.arg_array[2], reg);
-
-if (true)
-  {
-    if (arg2 == NULL)
-      {
-        do_error("<string-append> requires at least 2 arguments.");
-        return ;
-      }
-  }
-if (arg2 != NULL && true && (!(arg2->type & String)))
-  {
-    do_error("Argument 2 of <string-append> should be of type String.");
-    return ;
-  }
-
-;
-
-  char* result = malloc(sizeof(char)*(strlen(arg1->data) +
-                                      strlen(arg2->data) + 1));
-  strcpy(result, (char*) arg1->data);
-  strcat(result, (char*) arg2->data);
+  strcpy(result, (char*) args[0]->data);
+  for (int i=2; i < a.length; i++)
+    {
+      strcat(result, (char*) args[i-1]->data);
+    }
 
   data* d = new_data();
   d->type = String;
@@ -1442,11 +1454,7 @@ if (arg2 != NULL && true && (!(arg2->type & String)))
       hash_name = hash_str(name);
     }
   free(name);
-  if (i == 1)
-    {
-      do_error("No such register in given registry.");
-      return;
-    }
+
   name = vector_name((char*) arg2->data, i-1);
 
   d = new_data();
