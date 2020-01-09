@@ -4410,6 +4410,76 @@ if (is_error(-1)) return ;;
   _op_call(a,reg,1);
 }
 
+void
+op_push_through (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "push-through");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<push-through> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <push-through> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  int stop_thresh = arbel_stop_error_threshold;
+  arbel_stop_error_threshold = 0;
+  execute_0(arg1, reg);
+  arbel_stop_error_threshold = stop_thresh;
+}
+
+void
+op_error_messages (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "error-messages");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<error-messages> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
+  {
+    do_error("Argument 1 of <error-messages> should be of type Boolean.");
+    return ;
+  }
+
+;
+
+  if (*((bool*) arg1->data))
+    arbel_print_error_messages = true;
+  else
+    arbel_print_error_messages = false;
+
+}
 
 void
 add_basic_ops (registry* reg)
@@ -4664,6 +4734,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_range);
   set(reg,d,"range",1);
+
+  assign_op(&d, op_push_through);
+  set(reg,d,"push-through",1);
+
+  assign_op(&d, op_error_messages);
+  set(reg,d,"error-messages",1);
+
 
 }
   

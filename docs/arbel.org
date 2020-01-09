@@ -489,6 +489,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-error INSTRUCTION= --- sets the =/ans= Register to the error code of INSTRUCTION (=0= is no error).
 
+- =push-through INSTRUCTION= --- execute each statement in =INSTRUCTION= even if there is one of the statements has an error.
+
 ** String operations
 
 - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.

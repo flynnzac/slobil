@@ -1,15 +1,17 @@
-source "src/library/testing.arb" .
+source "../../src/library/assert.arb" .
+error-messages False .
 
+print "Start <list> test." .
 ' Tests with correct usage
 
 set /x [ list 1 2 3 . ] .
 assert /test ( eq x:/#1 1 . ) .
 assert /test ( eq x:/#2 2 . ) .
 assert /test ( eq x:/#3 3 . ) .
-assert /test ( reg-eq [ last x "#" . ] /#3 . ) .
+assert /test ( register-eq [ last x "#" . ] /#3 . ) .
 
 set /y [ list . ] .
-assert /test ( not [ exist-in /#0 y . ] . ) .
+assert /test ( not [ exist /#0 y . ] . ) .
 
 ' Test with wrong argument type
 ' - Not Appliable
@@ -17,4 +19,4 @@ assert /test ( not [ exist-in /#0 y . ] . ) .
 ' Test with incorrect number of arguments
 ' - Not Applicable
 
-print "Finished `list` test." .
+print "Finished <list> test." .

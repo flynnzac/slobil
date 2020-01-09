@@ -477,6 +477,7 @@ unsigned long arbel_hash_up;
 unsigned long arbel_hash_class;
 
 size_t arbel_stop_error_threshold;
+bool arbel_print_error_messages;
 
 data* last_ans;
 

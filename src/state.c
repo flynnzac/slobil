@@ -35,7 +35,9 @@ is_error (int e)
 void
 do_error (const char* msg)
 {
-  fprintf(stderr, "Error: %s\n", msg);
+  if (arbel_print_error_messages)
+    fprintf(stderr, "Error: %s\n", msg);
+  
   (void) is_error(1);
 }
 
