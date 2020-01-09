@@ -1,0 +1,20 @@
+set /assert
+    (
+      push-through
+	   (
+	     test .
+	     if [ eq error-code 0 . ]
+		{
+		  print [ string-append
+				 [ code test . ]
+				 ".... SUCCESS." . ] .
+		  error "" 0 .
+		}
+		{
+		  print [ string-append
+				 [ code test . ]
+				 ".... FAILED." . ] .
+		  error "" 1 .
+		} .
+	   ) .
+    ) .

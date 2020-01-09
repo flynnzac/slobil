@@ -8,9 +8,7 @@ else
 	SUFFIX=so
 endif
 
-.FORCE:
-
-arbel: .FORCE pushmac
+arbel: src/*.c src/arbel.h pushmac
 	make -C src
 
 pushmac:
