@@ -6,19 +6,32 @@ For a manual see: http://www.zflynn.com/arbel/arbel.html
 
 # Installation
 
-I have tested that the interpreter works on GNU/Linux and under MSYS on Windows. GNU Readline is a required depedency. Other than the standard GNU C Library, nothing else is required to build.
+I have tested that the interpreter works on GNU/Linux and under MSYS
+on Windows. The required dependencies are:
 
-To build, do:
+- GNU Readline 
+- libunistring
+- libgc
+
+The current build system uses GNU Autotools. If that is installed,
+then to build and install, do:
 
 ```
-make
+$ ./init_build.sh
+$ ./configure ...
+$ make
 ```
 
-from the source directory. The make process is extremely simple (a one-line compilation command) so nothing else should be required.  If you do not have a Make program, you can just copy the compilation command from the Makefile and execute it. 
+The `configure` script takes all the usual options (`--prefix`, for example).
 
 The program is built in the current directory. To start the interpreter, type:
 ```
-./arbel
+$ ./arbel
+```
+
+To install the program, type:
+```
+$ sudo make install
 ```
 
 # Command-line Switches
