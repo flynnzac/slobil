@@ -12,6 +12,7 @@ on Windows. The required dependencies are:
 - GNU Readline 
 - libunistring
 - libgc
+- pushmac (a macro system I wrote, included as a submodule, also from https://github.com/flynnzac/pushmac)
 
 The current build system uses GNU Autotools. If that is installed,
 then to build and install, do:
