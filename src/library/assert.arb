@@ -8,12 +8,14 @@ set /assert
 		              print [ string-append
 				                         [ code test . ]
 				                         ".... SUCCESS." . ] .
+                  answer True .
 		              error "" 0 .
 		            }
 		            {
 		              print [ string-append
 				                         [ code test . ]
 				                         ".... FAILED." . ] .
+                  answer False .
 		              error "" 1 .
 		            } .
 	         ) .
