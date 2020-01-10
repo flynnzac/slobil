@@ -10,15 +10,23 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
+# Check if we are using the garbage collector or not
+AC_ARG_ENABLE([gc], AS_HELP_STRING([--enable-gc], [Enable automatic garbage with libgc instead of greedy malloc-free pairs]))
+AS_IF([test "x$enable_gc" = "xyes"], [
+	    AC_CHECK_LIB([gc], [GC_malloc])
+	    AC_DEFINE([GARBAGE])
+	    ])
+
 # Checks for libraries.
 AC_CHECK_LIB([dl], [dlopen])
-AC_CHECK_LIB([gc], [GC_malloc])
 AC_CHECK_LIB([m], [floor])
 AC_CHECK_LIB([readline], [readline])
 AC_CHECK_LIB([unistring], [u8_next])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
+
+
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
