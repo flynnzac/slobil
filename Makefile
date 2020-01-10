@@ -9,7 +9,7 @@ else
 endif
 
 arbel: src/*.c src/arbel.h pushmac
-	make -C src
+	make -C src GARBAGE=$(GARBAGE)
 
 pushmac:
 	make -C pushmac
