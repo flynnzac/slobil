@@ -270,10 +270,10 @@ execute_code (statement* s, registry* reg)
       execute_statement(stmt, reg);
       error = is_error(-1) > error ? is_error(-1) : error;
       if (arbel_stop_error_threshold > 0 &&
-	  (error >= arbel_stop_error_threshold))
+          (error >= arbel_stop_error_threshold))
         break;
       else
-	is_error(0);
+        is_error(0);
 
       stmt = stmt->right;
     }

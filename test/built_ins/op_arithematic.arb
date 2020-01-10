@@ -16,12 +16,12 @@ assert /test ( eq [ div 10.0 2.5 . ] 4.0 . ) .
 
 ' Test with wrong argument type
 
-assert /test ( add "hello" 1 . ) /eq gt . 
+assert /test ( is-error ( add "hello" 1 . ) . ) .
 
 
 ' Test with incorrect number of arguments
 
-assert /test ( add 1 . ) /eq gt .
+assert /test ( is-error ( add 1 . ) . ) .
 
 print "Finished <arithmetic> test." .
 

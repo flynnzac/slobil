@@ -1,21 +1,23 @@
-source "src/library/testing.arb" .
+source "../../src/library/assert.arb" .
+error-messages False .
+
+print "Start <registry> test." .
 
 ' Tests with correct usage
-
-set /x [ reg /hello "hello" /x 1 /z 20 /ans 5 . ] .
+set /x [ registry /hello "hello" /x 1 /z 20 /ans 5 . ] .
 assert /test ( string-eq x:/hello "hello" . ) .
 assert /test ( eq x:/x 1 . ) .
 assert /test ( eq x:/z 20 . ) .
 assert /test ( eq x:/ans 5 . ) .
 
-
 ' Test with wrong argument type
-
-assert /test ( is-error ( reg "hello" 1 2 3 . ) . ) .
+assert /test ( is-error ( registry "hello" 1 2 3 . ) . ) .
 
 ' Test with incorrect number of arguments
 
-assert /test ( is-error ( reg /hello . ) . ) .
+assert /test ( is-error ( registry /hello . ) . )  .
 
-print "Finished `reg` test." .
+
+
+print "Finished <registry> test." .
 

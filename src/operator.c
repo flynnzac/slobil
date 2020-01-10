@@ -4390,9 +4390,12 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 
 ;
 
+  int stop_thresh = arbel_stop_error_threshold;
+  arbel_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
-  assign_int(&d, is_error(-1));
+  assign_boolean(&d, is_error(-1) > 0 ? true : false);
+  arbel_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
   is_error(0);
