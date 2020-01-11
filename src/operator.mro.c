@@ -1836,15 +1836,24 @@ op_or (arg a, registry* reg)
   #length=2@
   ##CHECK_ARGS~$;
 
+  bool check = false;
   #num=1@
   #type=Boolean@
   ##GETARG~$;
-
-  #num=2@
-  ##GETARG~$;
+  if (*((bool*) arg1->data))
+    {
+      bool = true;
+    }
+  else
+    {
+      #num=2@
+      ##GETARG~$;
+      if (*((bool*) arg2->data))
+        bool = true;
+    }
 
   data* d;
-  if (*((bool*) arg1->data) || *((bool*) arg2->data))
+  if (check)
     {
       assign_boolean(&d, true);
     }
