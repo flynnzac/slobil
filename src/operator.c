@@ -2846,6 +2846,7 @@ op_or (arg a, registry* reg)
   check_length(&a, 2+1, "or");
 if (is_error(-1)) return ;;
 
+  bool check = false;
   
   
   
@@ -2866,9 +2867,14 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   }
 
 ;
-
-  
-  
+  if (*((bool*) arg1->data))
+    {
+      check = true;
+    }
+  else
+    {
+      
+      
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -2886,16 +2892,12 @@ if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   }
 
 ;
+      if (*((bool*) arg2->data))
+        check = true;
+    }
 
   data* d;
-  if (*((bool*) arg1->data) || *((bool*) arg2->data))
-    {
-      assign_boolean(&d, true);
-    }
-  else
-    {
-      assign_boolean(&d, false);
-    }
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
@@ -2929,8 +2931,16 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 
 ;
 
-  
-  
+  bool check = true;
+
+  if (!(*((bool*) arg1->data)))
+    {
+      check = false;
+    }
+  else
+    {
+      
+      
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -2948,16 +2958,12 @@ if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   }
 
 ;
+      if (!(*((bool*) arg2->data)))
+        check = false;
+    }
 
   data* d;
-  if (*((bool*) arg1->data) && *((bool*) arg2->data))
-    {
-      assign_boolean(&d, true);
-    }
-  else
-    {
-      assign_boolean(&d, false);
-    }
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
