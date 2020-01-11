@@ -57,6 +57,9 @@ append_to_source_code (char* source_code, const char* new)
 int
 main (int argc, char** argv)
 {
+  #ifdef GARBAGE
+  GC_INIT();
+  #endif
   source_code = NULL;
   rl_event_hook = dummy_event;
   signal(SIGINT, interrupt_handler);
@@ -156,7 +159,15 @@ main (int argc, char** argv)
       f = fmemopen(code, sizeof(char)*strlen(code), "r");
       complete = interact(f, &state, current_parse_registry);
       fclose(f);
+      #ifdef GARBAGE
+      #undef free
+      #endif
       free(code);
+      #ifdef GARBAGE
+      #define free(x)
+      #endif
+      
+      
       state.print_out = echo;
     }
 

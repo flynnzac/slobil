@@ -21,6 +21,7 @@
 
 #include "arbel.h"
 
+#ifndef GARBAGE
 void
 free_statement (statement* s)
 {
@@ -195,3 +196,4 @@ free_arg (arg* a)
   free(a->arg_array);
 }
   
+#endif

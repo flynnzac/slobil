@@ -25,6 +25,20 @@
 #define _GNU_SOURCE
 #define ARBEL_HASH_SIZE 31
 #define ARBEL_LOAD_FACTOR 0.75
+
+#ifdef GARBAGE
+#include <gc.h>
+#define malloc(x) GC_MALLOC(x)
+#define realloc(x,y) GC_REALLOC(x,y)
+#define free(x)
+#define free_statement(x)
+#define free_instruction(x)
+#define free_data(x)
+#define free_registry(x)
+#define free_arg_array_data(x,n)
+#define free_arg(x)  
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
