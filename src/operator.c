@@ -1028,8 +1028,43 @@ if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
 
 ;
   
+  int nl = 1;
 
-  print_data(arg1,1);
+  if (a.length >= 3)
+    {
+      
+      
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (false)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<print> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && false && (!(arg2->type & Boolean)))
+  {
+    do_error("Argument 2 of <print> should be of type Boolean.");
+    return ;
+  }
+
+;
+      
+      
+
+
+      if (arg2 != NULL && arg2->type == Boolean)
+        {
+          nl = *((bool*) arg2->data) ? 1 : 2;
+        }
+    }
+             
+  print_data(arg1,nl);
 }
 
 void

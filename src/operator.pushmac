@@ -674,8 +674,26 @@ op_print (arg a, registry* reg)
   #checktype=false@
   ##GETARG~$;
   #checktype=true@
+  int nl = 1;
 
-  print_data(arg1,1);
+  if (a.length >= 3)
+    {
+      #num=2@
+      #requireans=false@
+      #checktype=false@
+      #type=Boolean@
+      ##GETARG~$;
+      #requireans=true@
+      #checktype=true@
+
+
+      if (arg2 != NULL && arg2->type == Boolean)
+        {
+          nl = *((bool*) arg2->data) ? 1 : 2;
+        }
+    }
+             
+  print_data(arg1,nl);
 }
 
 void
