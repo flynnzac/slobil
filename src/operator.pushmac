@@ -2792,6 +2792,14 @@ op_push_through (arg a, registry* reg)
 }
 
 void
+op_version (arg a, registry* reg)
+{
+  data* d;
+  assign_str(&d, PACKAGE_VERSION, 1);
+  ret_ans(reg, d);
+}
+
+void
 op_error_messages (arg a, registry* reg)
 {
   #op=error-messages@
@@ -3068,6 +3076,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_error_messages);
   set(reg,d,"error-messages",1);
+
+    assign_op(&d, op_version);
+  set(reg,d,"version",1);
 
 
 }

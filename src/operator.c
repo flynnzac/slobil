@@ -4489,6 +4489,14 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 }
 
 void
+op_version (arg a, registry* reg)
+{
+  data* d;
+  assign_str(&d, PACKAGE_VERSION, 1);
+  ret_ans(reg, d);
+}
+
+void
 op_error_messages (arg a, registry* reg)
 {
   
@@ -4783,6 +4791,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_error_messages);
   set(reg,d,"error-messages",1);
+
+    assign_op(&d, op_version);
+  set(reg,d,"version",1);
 
 
 }
