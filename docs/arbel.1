@@ -1,0 +1,47 @@
+.\" Copyright (C) Zach Flynn, 2020  
+.\" You may distribute this file under the terms of the GNU Free
+.\" Documentation License.
+.TH arbel 1 2020-01-13 
+.SH NAME
+arbel \- A Registry Based Language and Environment
+.SH SYNOPSIS
+.B arbel [-l FILE] [-s FILE] [-n] [-m] [-d]
+
+.SH DESCRIPTION
+
+Arbel is an programming language and environment for manipulating data
+in registries.  For full documentation on the language itself, see
+the manual at: http://zflynn.com/arbel/arbel.html . This manpage
+describes the options for the interpreter.
+.SH OPTIONS
+.TP
+.BR \-l " " FILE
+Execute the Arbel code in FILE before starting the Arbel interpreter
+.TP
+.BR \-s " " FILE
+Execute the Arbel code in FILE after any code was loaded by the
+.BR \-l
+option and exit afterwards (i.e. this is the non-interactive option
+for Arbel)
+.TP
+.BR \-n
+Do not start the interpreter.  Only useful with an
+.BR \-l
+option
+.TP
+.BR \-m
+Do not print any information (the results of a command, etc) unless
+there is an explicit call to Arbel's
+.B print
+operation.
+.TP
+.BR \-d
+Do not save the code that you enter in the interpreter.
+
+.SH FILES
+.SH "SEE ALSO"
+.SH BUGS
+Please report any bugs at http://github.com/flynnzac/arbel
+
+.SH AUTHOR
+Zach Flynn <zlflynn@gmail.com>

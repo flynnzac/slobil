@@ -5,6 +5,11 @@ AC_PREREQ([2.69])
 AC_INIT([arbel], [0.0.1], [github.com/flynnzac/arbel])
 AC_CONFIG_SRCDIR([src/arbel.c])
 
+# Checks for pushmac
+
+AC_CHECK_PROG([pushmac_avail], [pushmac], [true], [false])
+AM_CONDITIONAL([PUSHMAC], [test x$pushmac_avail = xtrue])
+
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
