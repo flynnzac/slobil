@@ -674,8 +674,26 @@ op_print (arg a, registry* reg)
   #checktype=false@
   ##GETARG~$;
   #checktype=true@
+  int nl = 1;
 
-  print_data(arg1,1);
+  if (a.length >= 3)
+    {
+      #num=2@
+      #requireans=false@
+      #checktype=false@
+      #type=Boolean@
+      ##GETARG~$;
+      #requireans=true@
+      #checktype=true@
+
+
+      if (arg2 != NULL && arg2->type == Boolean)
+        {
+          nl = *((bool*) arg2->data) ? 1 : 2;
+        }
+    }
+             
+  print_data(arg1,nl);
 }
 
 void
@@ -1835,22 +1853,24 @@ op_or (arg a, registry* reg)
   #length=2@
   ##CHECK_ARGS~$;
 
+  bool check = false;
   #num=1@
   #type=Boolean@
   ##GETARG~$;
-
-  #num=2@
-  ##GETARG~$;
-
-  data* d;
-  if (*((bool*) arg1->data) || *((bool*) arg2->data))
+  if (*((bool*) arg1->data))
     {
-      assign_boolean(&d, true);
+      check = true;
     }
   else
     {
-      assign_boolean(&d, false);
+      #num=2@
+      ##GETARG~$;
+      if (*((bool*) arg2->data))
+        check = true;
     }
+
+  data* d;
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
@@ -1866,18 +1886,22 @@ op_and (arg a, registry* reg)
   #type=Boolean@
   ##GETARG~$;
 
-  #num=2@
-  ##GETARG~$;
+  bool check = true;
 
-  data* d;
-  if (*((bool*) arg1->data) && *((bool*) arg2->data))
+  if (!(*((bool*) arg1->data)))
     {
-      assign_boolean(&d, true);
+      check = false;
     }
   else
     {
-      assign_boolean(&d, false);
+      #num=2@
+      ##GETARG~$;
+      if (!(*((bool*) arg2->data)))
+        check = false;
     }
+
+  data* d;
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
@@ -2768,6 +2792,14 @@ op_push_through (arg a, registry* reg)
 }
 
 void
+op_version (arg a, registry* reg)
+{
+  data* d;
+  assign_str(&d, PACKAGE_VERSION, 1);
+  ret_ans(reg, d);
+}
+
+void
 op_error_messages (arg a, registry* reg)
 {
   #op=error-messages@
@@ -3044,6 +3076,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_error_messages);
   set(reg,d,"error-messages",1);
+
+    assign_op(&d, op_version);
+  set(reg,d,"version",1);
 
 
 }

@@ -1028,8 +1028,43 @@ if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
 
 ;
   
+  int nl = 1;
 
-  print_data(arg1,1);
+  if (a.length >= 3)
+    {
+      
+      
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (false)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<print> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && false && (!(arg2->type & Boolean)))
+  {
+    do_error("Argument 2 of <print> should be of type Boolean.");
+    return ;
+  }
+
+;
+      
+      
+
+
+      if (arg2 != NULL && arg2->type == Boolean)
+        {
+          nl = *((bool*) arg2->data) ? 1 : 2;
+        }
+    }
+             
+  print_data(arg1,nl);
 }
 
 void
@@ -2846,6 +2881,7 @@ op_or (arg a, registry* reg)
   check_length(&a, 2+1, "or");
 if (is_error(-1)) return ;;
 
+  bool check = false;
   
   
   
@@ -2866,9 +2902,14 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   }
 
 ;
-
-  
-  
+  if (*((bool*) arg1->data))
+    {
+      check = true;
+    }
+  else
+    {
+      
+      
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -2886,16 +2927,12 @@ if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   }
 
 ;
+      if (*((bool*) arg2->data))
+        check = true;
+    }
 
   data* d;
-  if (*((bool*) arg1->data) || *((bool*) arg2->data))
-    {
-      assign_boolean(&d, true);
-    }
-  else
-    {
-      assign_boolean(&d, false);
-    }
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
@@ -2929,8 +2966,16 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 
 ;
 
-  
-  
+  bool check = true;
+
+  if (!(*((bool*) arg1->data)))
+    {
+      check = false;
+    }
+  else
+    {
+      
+      
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -2948,16 +2993,12 @@ if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   }
 
 ;
+      if (!(*((bool*) arg2->data)))
+        check = false;
+    }
 
   data* d;
-  if (*((bool*) arg1->data) && *((bool*) arg2->data))
-    {
-      assign_boolean(&d, true);
-    }
-  else
-    {
-      assign_boolean(&d, false);
-    }
+  assign_boolean(&d, check);
 
   ret_ans(reg,d);
 }
@@ -4448,6 +4489,14 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 }
 
 void
+op_version (arg a, registry* reg)
+{
+  data* d;
+  assign_str(&d, PACKAGE_VERSION, 1);
+  ret_ans(reg, d);
+}
+
+void
 op_error_messages (arg a, registry* reg)
 {
   
@@ -4742,6 +4791,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_error_messages);
   set(reg,d,"error-messages",1);
+
+    assign_op(&d, op_version);
+  set(reg,d,"version",1);
 
 
 }
