@@ -237,9 +237,9 @@ execute_statement (statement* s, registry* reg)
     compute(s->arg.arg_array[0], reg, s->arg);
   else
     {
-      printf("Error at statement: ");
-      print_statement(s);
-      printf("\n");
+      /* printf("-> At statement: "); */
+      /* print_statement(s); */
+      /* printf("\n"); */
     }
   
   free_arg_array_data(&s->arg, arg_n);
@@ -271,7 +271,12 @@ execute_code (statement* s, registry* reg)
       error = is_error(-1) > error ? is_error(-1) : error;
       if (arbel_stop_error_threshold > 0 &&
           (error >= arbel_stop_error_threshold))
-        break;
+	{
+	  printf("-> ");
+	  print_statement(stmt);
+	  printf("\n");
+	  break;
+	}
       else
         is_error(0);
 

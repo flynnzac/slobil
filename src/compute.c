@@ -89,6 +89,7 @@ _op_call (arg a, registry* reg, const int explicit)
   ((instruction*) arg1->data)->being_called = true;
   execute_code(((instruction*) arg1->data)->stmt, r_new);
   ((instruction*) arg1->data)->being_called = false;
+
   data* ans;
 
   if (!is_error(-1))
@@ -100,7 +101,6 @@ _op_call (arg a, registry* reg, const int explicit)
           ret_ans(reg, ans);
         }
     }
-  
   free_registry(r_new);
   
 }

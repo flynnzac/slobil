@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([arbel], [0.0.1], [github.com/flynnzac/arbel])
+AC_INIT([Arbel], [0.0.1], [github.com/flynnzac/arbel])
 AC_CONFIG_SRCDIR([src/arbel.c])
 
 # Checks for pushmac

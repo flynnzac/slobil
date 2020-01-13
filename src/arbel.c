@@ -97,7 +97,7 @@ main (int argc, char** argv)
   int echo = 1;
   char* script = NULL;
   int save_code = 1;
-  while ((k = getopt(argc, argv, "l:s:nm")) != -1)
+  while ((k = getopt(argc, argv, "l:s:nmv")) != -1)
     {
       switch (k)
         {
@@ -121,6 +121,10 @@ main (int argc, char** argv)
         case 'd':
           save_code = 0;
           break;
+	case 'v':
+	  printf("%s\n", PACKAGE_STRING);
+	  is_exit(1);
+	  break;
         default:
           fprintf(stderr, "Option not recognized.");
           is_exit(1);
