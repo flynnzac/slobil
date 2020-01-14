@@ -6,7 +6,7 @@ set /tokenize
       set /cur-reg /#1 .
       set /tokened [ list . ] .
       set /init 1 .
-      while ( lteq i len . )
+      while ( lt-eq i len . )
             (
               set /d [ substring line i i . ] .
               if [ string-eq d sep . ]

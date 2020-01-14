@@ -966,7 +966,7 @@ op_eq (arg a, registry* reg)
 }
 
 void
-op_gteq (arg a, registry* reg)
+op_gt_eq (arg a, registry* reg)
 {
   data* d = NULL;
   int is_gteq = op_comparison(a, reg);
@@ -984,7 +984,7 @@ op_gteq (arg a, registry* reg)
 
 
 void
-op_lteq (arg a, registry* reg)
+op_lt_eq (arg a, registry* reg)
 {
   data* d = NULL;
   int is_lteq = op_comparison(a, reg);
@@ -4589,11 +4589,11 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_eq);
   set(reg,d,"eq",1);
 
-  assign_op(&d, op_lteq);
-  set(reg,d,"lteq",1);
+  assign_op(&d, op_lt_eq);
+  set(reg,d,"lt-eq",1);
 
-  assign_op(&d, op_gteq);
-  set(reg,d,"gteq",1);
+  assign_op(&d, op_gt_eq);
+  set(reg,d,"gt-eq",1);
   
   assign_op(&d, op_print);
   set(reg,d,"print",1);

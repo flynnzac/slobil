@@ -206,7 +206,7 @@
           (
             set /i 2 .
             set /prod 1 .
-            while ( lteq i t . )
+            while ( lt-eq i t . )
                   (
                     set /prod [ multiply i prod . ] .
                     set /i [ add i 1 . ] .
@@ -433,9 +433,9 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =eq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is equal to =NUMBER2= and to =False= otherwise.
 
-- =lteq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is less than or equal to =NUMBER2= and to =False= otherwise.
+- =lt-eq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is less than or equal to =NUMBER2= and to =False= otherwise.
 
-- =gteq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
+- =gt-eq NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
 
 - =to-number STRING|REGISTER= --- if the argument is a String, try to convert to a number and set the =/ans= Register to the result.  If the argument is a Register and ends in a number, set the =/ans= Register to the result.
 
