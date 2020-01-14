@@ -759,7 +759,7 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
       to_use = (registry*) arg2->data;
     }
 
-  data* obj = get(to_use, ((regstr*) arg1->data)->key, 0);
+  data* obj = get(to_use, ((regstr*) arg1->data)->key, a.length < 3 ? 1 : 0);
   data* d;
   if (obj == NULL)
     {
@@ -4792,7 +4792,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_error_messages);
   set(reg,d,"error-messages",1);
 
-    assign_op(&d, op_version);
+  assign_op(&d, op_version);
   set(reg,d,"version",1);
 
 
