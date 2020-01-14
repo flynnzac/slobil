@@ -492,7 +492,8 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
       to_look = (registry*) arg2->data;
     }
 
-  data* ans = lookup(to_look, ((regstr*) arg1->data)->key, 0);
+  data* ans = lookup(to_look, ((regstr*) arg1->data)->key,
+		     a.length==2);
   if (ans != NULL)
     {
       ans = copy_data(ans);

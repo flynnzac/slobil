@@ -9,7 +9,7 @@ set /x [ registry /hello "hello" /z 5 /x 10.3 . ] .
 assert /test ( eq [ get /z x . ] 5 . ) .
 assert /test ( eq [ get /x x . ] 10.3 . ) .
 assert /test ( string-eq [ get /hello x . ] "hello" . ) .
-assert /test ( is-registry [ get x . ] . ) .
+assert /test ( is-registry [ get /x . ] . ) .
 
 ' Test with wrong argument type
 
