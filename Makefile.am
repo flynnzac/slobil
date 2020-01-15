@@ -13,3 +13,4 @@ endif
 
 man1_MANS = docs/arbel.1
 
+TESTS=test/test_ops.sh

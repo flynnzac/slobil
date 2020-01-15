@@ -452,7 +452,17 @@ op_delete (arg a, registry* reg)
 void
 op_exit (arg a, registry* reg)
 {
-  is_exit(1);
+  int err = 0;
+  if (a.length >= 2)
+    {
+      #op=exit@
+      #num=1@
+      #type=Integer@
+      ##GETARG~$;
+
+      err = *((int*) arg1->data);
+    }
+  is_exit(err+1);
   is_error(1);
 }
 

@@ -700,7 +700,34 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 void
 op_exit (arg a, registry* reg)
 {
-  is_exit(1);
+  int err = 0;
+  if (a.length >= 2)
+    {
+      
+      
+      
+      
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<exit> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <exit> should be of type Integer.");
+    return ;
+  }
+
+;
+
+      err = *((int*) arg1->data);
+    }
+  is_exit(err+1);
   is_error(1);
 }
 

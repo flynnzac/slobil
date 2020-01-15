@@ -1,13 +1,27 @@
 print "Start built-in operation tests..." .
+set /test-files
+    [
+      list
+        "op_arithematic.arb"
+        "op_list.arb"
+        "op_registry.arb"
+        "op_set.arb"
+        "op_if.arb"
+        "op_get.arb"
+        "op_move.arb"
+        "op_delete.arb"
+        "op_answer.arb"
+        "op_exist.arb"
+        "op_comparison.arb" .
+    ] .
 
-source "op_arithematic.arb" .
-source "op_list.arb" .
-source "op_registry.arb" .
-source "op_set.arb" .
-source "op_if.arb" .
-source "op_get.arb" .
-source "op_move.arb" .
-source "op_delete.arb" .
-source "op_answer.arb" .
-source "op_exist.arb" .
-source "op_comparison.arb" .
+set /test /#1 .
+set /success True .
+while ( and success { exist test test-files . } . )
+      (
+        source test-files:test .
+        set /success ans .
+        set /test [ next test . ] .
+      ) .
+
+if success { exit . } { exit 1 . } .

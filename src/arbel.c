@@ -189,7 +189,7 @@ main (int argc, char** argv)
       free(arbel_ll);
     }
 
-  return 0;
+  return (is_exit(-1)-1) >= 0 ? (is_exit(-1)-1) : 0;
   
 }
 
