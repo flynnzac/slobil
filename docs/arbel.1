@@ -5,7 +5,7 @@
 .SH NAME
 Arbel \- A Registry Based Language and Environment
 .SH SYNOPSIS
-.B arbel [-l FILE] [-s FILE] [-n] [-m] [-d]
+.B arbel [-l FILE] [-s FILE] [-c FILE] [-n] [-m] [-d] [-v]
 
 .SH DESCRIPTION
 
@@ -21,8 +21,13 @@ Execute the Arbel code in FILE before starting the Arbel interpreter
 .BR \-s " " FILE
 Execute the Arbel code in FILE after any code was loaded by the
 .BR \-l
-option and exit afterwards (i.e. this is the non-interactive option
-for Arbel)
+option and exit afterwards.
+.TP
+.BR \-c " " FILE
+The same as \-s except that the first line of the file is treated as a
+comment no matter what it contains (so the sha-bang shell script
+syntax will work).  Start files with #!/path/to/arbel -c and make them
+executable to run as a script.
 .TP
 .BR \-n
 Do not start the interpreter.  Only useful with an

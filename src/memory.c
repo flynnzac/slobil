@@ -20,8 +20,18 @@
 */
 
 #include "arbel.h"
+#ifdef GARBAGE
+#undef malloc
+#undef realloc
+#undef free
+#undef free_statement
+#undef free_instruction
+#undef free_data
+#undef free_registry
+#undef free_arg_array_data
+#undef free_arg
+#endif
 
-#ifndef GARBAGE
 void
 free_statement (statement* s)
 {
@@ -196,4 +206,4 @@ free_arg (arg* a)
   free(a->arg_array);
 }
   
-#endif
+

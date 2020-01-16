@@ -62,7 +62,7 @@ content*
 set (registry* reg, data* d, const char* name, int rehash_flag)
 {
   unsigned long hash_name = hash_str(name);
-  content* c = del(reg,hash_name,-1);
+  content* c = del(reg,hash_name,-1,false);
 
   if (d != NULL && d->type == Registry)
     {
@@ -181,10 +181,10 @@ mov (registry* reg, regstr* old, regstr* new)
     {
       if (cur->key == old->key)
         {
-          del(reg, new->key,1);
+          del(reg, new->key, 1, false);
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
-          del(reg, old->key, 0);
+          del(reg, old->key, 0, false);
           content* c = set(reg, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
@@ -195,7 +195,7 @@ mov (registry* reg, regstr* old, regstr* new)
 }
 
 content*
-del (registry* reg, unsigned long hash_name, int del_data)
+del (registry* reg, unsigned long hash_name, int del_data, bool hard_free)
 {
   content* cur = reg->objects[hash_name % reg->hash_size];
   
@@ -225,6 +225,14 @@ del (registry* reg, unsigned long hash_name, int del_data)
 
           if (del_data && cur->value != NULL && (!cur->do_not_free_data))
             {
+	      #ifdef GARBAGE
+	      if (hard_free)
+		{
+		  #undef free_data
+		  free_data(cur->value);
+		  #define free_data(x)
+		}
+	      #endif
               free_data(cur->value);
               cur->value = NULL;
             }
@@ -284,7 +292,7 @@ mark_do_not_free (registry* reg, unsigned long hash_name)
 data*
 get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
 {
-  data* d = lookup(reg, hash_name[0], 1);
+  data* d = get(reg, hash_name[0], 1);
   if (d == NULL)
     {
       char* msg = malloc(sizeof(char)*
@@ -316,11 +324,11 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 
           if (is_regstr[i])
             {
-              d = lookup((registry*) d->data, hash_name[i], 0);
+              d = get((registry*) d->data, hash_name[i], 0);
             }
           else
             {
-              data* d1 = lookup(reg, hash_name[i], 1);
+              data* d1 = get(reg, hash_name[i], 1);
               if (d1 == NULL || d1->type != Register)
                 {
                   do_error("Cannot use `:` with non-register.");
@@ -328,7 +336,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
                 }
               else
                 {
-                  d = lookup((registry*) d->data,
+                  d = get((registry*) d->data,
                              ((regstr*) d1->data)->key,
                              0);
                 }

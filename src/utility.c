@@ -123,7 +123,7 @@ shift_list_down (registry* reg)
   regstr old;
   regstr new;
 
-  del(shifted_reg, arbel_hash_0, 1);
+  del(shifted_reg, arbel_hash_0, 1, false);
 
   old.name = NULL;
   new.name = NULL;

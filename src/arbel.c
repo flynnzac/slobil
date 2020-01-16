@@ -97,10 +97,17 @@ main (int argc, char** argv)
   int echo = 1;
   char* script = NULL;
   int save_code = 1;
-  while ((k = getopt(argc, argv, "l:s:nmv")) != -1)
+  while ((k = getopt(argc, argv, "l:s:nmvc:")) != -1)
     {
       switch (k)
         {
+	case 'c':
+	  state.in_comment = 1;
+	  is_exit(1);
+	  script = malloc(sizeof(char)*(strlen(optarg)+1));
+          strcpy(script, optarg);
+          save_code = 0;
+	  break;
         case 'n':
           is_exit(1);
           break;

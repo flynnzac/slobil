@@ -1,4 +1,5 @@
-source "../../src/library/assert.arb" .
+#!./arbel -c
+source "src/library/assert.arb" .
 error-messages False .
 
 print "Start <arithmetic> test." .
@@ -22,6 +23,7 @@ assert /test ( is-error ( add "hello" 1 . ) . ) .
 ' Test with incorrect number of arguments
 
 assert /test ( is-error ( add 1 . ) . ) .
+
 
 print "Finished <arithmetic> test." .
 

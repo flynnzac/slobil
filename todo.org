@@ -483,7 +483,14 @@ Another idea is to add a document to some cache.
 Let's go with the cache.  Should be able to do it in ARBEL itself.
 * TODO Let ARBEL take a command-line registry like so:
 
+  - State "TODO"       from "CANCELLED"  [2020-01-16 Thu 12:58]
 ./arbel -s script.arb -r "/x 10 /y \"hello\" ... "
+
+I think something like this would be cleaner (and is do-able).
+
+./arbel /x 10 /y "hello" -s script.arb
+
+
 
 * TODO Add "where" command to return all elements of a registry in a list
 
@@ -493,10 +500,18 @@ Let's go with the cache.  Should be able to do it in ARBEL itself.
   CLOSED: [2020-01-11 Sat 00:20]
 >>>>>>> 02e2ac80e26925e83a0e93f4654fd298512fe631
 
-* TODO Sales Pitch on ARBEL
+* DONE Sales Pitch on ARBEL
+  CLOSED: [2020-01-16 Thu 12:57]
 
 ** Naturally generic
 
 ** Can control when substatements are evaluated so <or> can both short-circuit and execute both substatements.
 
-** 
+* DONE Make sure {}'s can be used in user-defined instructions without being effectively []'s
+  CLOSED: [2020-01-16 Thu 12:25]
+
+* DONE Find a solution for shebang #!
+  CLOSED: [2020-01-16 Thu 12:57]
+
+I think the easiest way is to add a command line option which skips
+first line...
