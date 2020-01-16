@@ -26,18 +26,6 @@
 #define ARBEL_HASH_SIZE 31
 #define ARBEL_LOAD_FACTOR 0.75
 
-#ifdef GARBAGE
-#include <gc.h>
-#define malloc(x) GC_MALLOC(x)
-#define realloc(x,y) GC_REALLOC(x,y)
-#define free(x)
-#define free_statement(x)
-#define free_instruction(x)
-#define free_data(x)
-#define free_registry(x)
-#define free_arg_array_data(x,n)
-#define free_arg(x)  
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -266,7 +254,7 @@ content*
 mov (registry* reg, regstr* old, regstr* new);
 
 content*
-del (registry* reg, unsigned long hash_name, int del_data);
+del (registry* reg, unsigned long hash_name, int del_data, bool hard_free);
 
 data*
 get_data_in_registry (registry* reg, const regstr name);
@@ -496,5 +484,18 @@ bool arbel_print_error_messages;
 data* last_ans;
 
 int arbel_error;
+
+#ifdef GARBAGE
+#include <gc.h>
+#define malloc(x) GC_MALLOC(x)
+#define realloc(x,y) GC_REALLOC(x,y)
+#define free(x)
+#define free_statement(x)
+#define free_instruction(x)
+#define free_data(x)
+#define free_registry(x)
+#define free_arg_array_data(x,n)
+#define free_arg(x)  
+#endif
 
 #endif

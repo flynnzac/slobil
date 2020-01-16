@@ -694,7 +694,39 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 
 ;
   
-  del(reg, ((regstr*) arg1->data)->key, 1);
+  del(reg, ((regstr*) arg1->data)->key, 1, false);
+}
+
+void
+op_free (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "free");
+if (is_error(-1)) return ;;
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<free> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Register)))
+  {
+    do_error("Argument 1 of <free> should be of type Register.");
+    return ;
+  }
+
+;
+  
+  del(reg, ((regstr*) arg1->data)->key, 1, true);
 }
 
 void
@@ -1934,7 +1966,7 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
       ret_ans(reg, copy_data(d));
     }
 
-  del(r, arbel_hash_0, 0);
+  del(r, arbel_hash_0, 0, false);
 
   free_registry(r);
   free(second_name);
@@ -2897,7 +2929,7 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
       fclose((FILE*) f->data);
     }
 
-  del(reg, ((regstr*) arg1->data)->key, 1);
+  del(reg, ((regstr*) arg1->data)->key, 1, false);
   
 }
 
@@ -4822,6 +4854,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_version);
   set(reg,d,"version",1);
+
+  assign_op(&d, op_free);
+  set(reg,d,"free",1);
 
 
 }

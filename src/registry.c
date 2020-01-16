@@ -62,7 +62,7 @@ content*
 set (registry* reg, data* d, const char* name, int rehash_flag)
 {
   unsigned long hash_name = hash_str(name);
-  content* c = del(reg,hash_name,-1);
+  content* c = del(reg,hash_name,-1,false);
 
   if (d != NULL && d->type == Registry)
     {
@@ -181,10 +181,10 @@ mov (registry* reg, regstr* old, regstr* new)
     {
       if (cur->key == old->key)
         {
-          del(reg, new->key,1);
+          del(reg, new->key, 1, false);
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
-          del(reg, old->key, 0);
+          del(reg, old->key, 0, false);
           content* c = set(reg, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
@@ -195,7 +195,7 @@ mov (registry* reg, regstr* old, regstr* new)
 }
 
 content*
-del (registry* reg, unsigned long hash_name, int del_data)
+del (registry* reg, unsigned long hash_name, int del_data, bool hard_free)
 {
   content* cur = reg->objects[hash_name % reg->hash_size];
   
@@ -225,6 +225,14 @@ del (registry* reg, unsigned long hash_name, int del_data)
 
           if (del_data && cur->value != NULL && (!cur->do_not_free_data))
             {
+	      #ifdef GARBAGE
+	      if (hard_free)
+		{
+		  #undef free_data
+		  free_data(cur->value);
+		  #define free_data(x)
+		}
+	      #endif
               free_data(cur->value);
               cur->value = NULL;
             }

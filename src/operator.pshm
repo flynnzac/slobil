@@ -446,7 +446,21 @@ op_delete (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
   
-  del(reg, ((regstr*) arg1->data)->key, 1);
+  del(reg, ((regstr*) arg1->data)->key, 1, false);
+}
+
+void
+op_free (arg a, registry* reg)
+{
+  #op=free@
+  #length=1@
+  ##CHECK_ARGS~$;
+  
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+  
+  del(reg, ((regstr*) arg1->data)->key, 1, true);
 }
 
 void
@@ -1263,7 +1277,7 @@ op_collapse (arg a, registry* reg)
       ret_ans(reg, copy_data(d));
     }
 
-  del(r, arbel_hash_0, 0);
+  del(r, arbel_hash_0, 0, false);
 
   free_registry(r);
   free(second_name);
@@ -1853,7 +1867,7 @@ op_close (arg a, registry* reg)
       fclose((FILE*) f->data);
     }
 
-  del(reg, ((regstr*) arg1->data)->key, 1);
+  del(reg, ((regstr*) arg1->data)->key, 1, false);
   
 }
 
@@ -3090,6 +3104,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_version);
   set(reg,d,"version",1);
+
+  assign_op(&d, op_free);
+  set(reg,d,"free",1);
 
 
 }
