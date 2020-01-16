@@ -1,20 +1,21 @@
 set /assert
     (
       push-through
-	         (
-	           test .
-	           if ans
-		            {
-		              print [ string-append
-				                         [ code test . ]
-				                         ".... SUCCESS." . ] .
-                  answer True .
-		            }
-		            {
-		              print [ string-append
-				                         [ code test . ]
-				                         ".... FAILED." . ] .
-                  answer False .
-		            } .
-	         ) .
+	   (
+	     test .
+	     if ans
+		{
+		  print [ string-append
+				 [ code test . ]
+				 ".... SUCCESS." . ] .
+		  answer True .
+		}
+		{
+		  print [ string-append
+				 [ code test . ]
+				 ".... FAILED." . ] .
+		  answer False .
+		  exit 1 .
+		} .
+	   ) .
     ) .
