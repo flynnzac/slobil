@@ -16,8 +16,8 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
 # Check if we are using the garbage collector or not
-AC_ARG_ENABLE([gc], AS_HELP_STRING([--disable-gc], [Disable automatic garbage with libgc and instead use malloc-free pairs]))
-AS_IF([test "x$disable_gc" = "xyes"], [],[
+AC_ARG_ENABLE([greedy-gc], AS_HELP_STRING([--enable-greedy-gc], [Disable automatic garbage with libgc and instead use greedy malloc-free pairs]))
+AS_IF([test "x$enable_greedy_gc" = "xyes"], [],[
 	    AC_CHECK_LIB([gc], [GC_malloc])
 	    AC_DEFINE([GARBAGE])
 	    ])

@@ -70,7 +70,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
   for (i=(explicit+1); i < a.length; i=i+2)
     {
-      d = a.arg_array[i];
+      d = resolve(a.arg_array[i], reg);
 
       if (d->type != Register)
         {
