@@ -16,18 +16,18 @@ endif
 
 man1_MANS = docs/arbel.1
 
-TESTS = test/built_ins/op_arithmetic.arb
-TESTS += test/built_ins/op_answer.arb
-TESTS += test/built_ins/op_comparison.arb
-TESTS += test/built_ins/op_delete.arb
-TESTS += test/built_ins/op_exist.arb
-TESTS += test/built_ins/op_get.arb
-TESTS += test/built_ins/op_if.arb
-TESTS += test/built_ins/op_list.arb
-TESTS += test/built_ins/op_move.arb
-TESTS += test/built_ins/op_registry.arb
-TESTS += test/built_ins/op_set.arb
-TESTS += test/built_ins/op_string_append.arb
-TESTS += test/built_ins/op_string_length.arb
+TESTS = test/ops/op_arithmetic.arb
+TESTS += test/ops/op_answer.arb
+TESTS += test/ops/op_comparison.arb
+TESTS += test/ops/op_delete.arb
+TESTS += test/ops/op_exist.arb
+TESTS += test/ops/op_get.arb
+TESTS += test/ops/op_if.arb
+TESTS += test/ops/op_list.arb
+TESTS += test/ops/op_move.arb
+TESTS += test/ops/op_registry.arb
+TESTS += test/ops/op_set.arb
+TESTS += test/ops/op_string_append.arb
+TESTS += test/ops/op_string_length.arb
 
 
