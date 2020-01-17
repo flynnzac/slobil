@@ -1,4 +1,5 @@
-source "../../src/library/assert.arb" .
+#!./arbel -c
+source "src/library/assert.arb" .
 error-messages False .
 
 print "Start <next> test." .
@@ -6,7 +7,7 @@ print "Start <next> test." .
 ' Tests with correct usage
 
 assert /test ( register-eq [ next /#1 . ] /#2 . ) .
-assert /test ( register-eq [ next /#-1 . ] /#0 . ) .
+assert /test ( register-eq [ next /#0 . ] /#1 . ) .
 
 ' Test with wrong argument type
 

@@ -1,0 +1,23 @@
+#!./arbel -c
+source "src/library/assert.arb" .
+error-messages False .
+
+print "Start <last> test." .
+
+
+' Tests with correct usage
+set /x [ list 1 2 3 . ] .
+assert /test ( register-eq [ last x "#" . ] /#3 . ) .
+assert /test ( register-eq [ last x "a" . ] /a0 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( last x /# . ) . ) .
+assert /test ( is-error ( last 1 "#" . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( last x . ) . ) .
+
+print "Finished <last> test." .
+
