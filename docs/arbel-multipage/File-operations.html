@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>File operations (ARBEL)</title>
+
+<meta name="description" content="File operations (ARBEL)">
+<meta name="keywords" content="File operations (ARBEL)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reference.html#Reference" rel="up" title="Reference">
+<link href="Boolean-operations.html#Boolean-operations" rel="next" title="Boolean operations">
+<link href="Instruction-operations.html#Instruction-operations" rel="prev" title="Instruction operations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="File-operations"></a>
+<div class="header">
+<p>
+Next: <a href="Boolean-operations.html#Boolean-operations" accesskey="n" rel="next">Boolean operations</a>, Previous: <a href="Instruction-operations.html#Instruction-operations" accesskey="p" rel="prev">Instruction operations</a>, Up: <a href="Reference.html#Reference" accesskey="u" rel="up">Reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<a name="File-operations-1"></a>
+<h3 class="section">4.8 File operations</h3>
+
+<ul>
+<li> &lsquo;<samp>is-file VALUE</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to &lsquo;<samp>True</samp>&rsquo; if the &lsquo;<samp>Value</samp>&rsquo; is a File and to &lsquo;<samp>False</samp>&rsquo; otherwise.
+
+</li><li> &lsquo;<samp>open-text-file STRING</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to a File object corresponding to the file named STRING.
+
+</li><li> &lsquo;<samp>read FILE</samp>&rsquo; &mdash; read a single character from a File object and set the &lsquo;<samp>/ans</samp>&rsquo; Register to that character.
+
+</li><li> &lsquo;<samp>close REGISTER</samp>&rsquo; &mdash; if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
+
+</li><li> &lsquo;<samp>read-line FILE</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to the next line from FILE.
+
+</li><li> &lsquo;<samp>write STRING FILE</samp>&rsquo; &mdash; write a given STRING to FILE.
+</li></ul>
+
+
+
+
+</body>
+</html>

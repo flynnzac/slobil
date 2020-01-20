@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Example Split a String (ARBEL)</title>
+
+<meta name="description" content="Example Split a String (ARBEL)">
+<meta name="keywords" content="Example Split a String (ARBEL)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Examples.html#Examples" rel="up" title="Examples">
+<link href="Reference.html#Reference" rel="next" title="Reference">
+<link href="Example-Basic-Linear-Algebra.html#Example-Basic-Linear-Algebra" rel="prev" title="Example Basic Linear Algebra">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Example-Split-a-String"></a>
+<div class="header">
+<p>
+Previous: <a href="Example-Basic-Linear-Algebra.html#Example-Basic-Linear-Algebra" accesskey="p" rel="prev">Example Basic Linear Algebra</a>, Up: <a href="Examples.html#Examples" accesskey="u" rel="up">Examples</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<a name="Example_003a-Split-a-String"></a>
+<h3 class="section">3.7 Example: Split a String</h3>
+
+<div class="example">
+<pre class="example">' Tokenize a string /line by splitting on string /sep
+set /tokenize
+    (
+      set /i 1 .
+      set /len [ string-length line . ] .
+      set /cur-reg /#1 .
+      set /tokened [ list . ] .
+      set /init 1 .
+      while ( lt-eq i len . )
+            (
+              set /d [ substring line i i . ] .
+              if [ string-eq d sep . ]
+                 {
+                   in tokened ( set cur-reg buffer . ) .
+                   set /cur-reg [ next cur-reg . ] .
+                   set /init 1 .
+                 }
+                 {
+                   if [ eq init 1 . ] { set /buffer d . set /init 0 . }
+                      { set /buffer [ string-append buffer d . ] . } .
+                 } .
+              set /i [ add i 1 . ] .
+            ) .
+      in tokened ( set cur-reg buffer . ) .
+      answer tokened .
+    )  .
+</pre></div>
+
+<p>Examples of use:
+</p><div class="example">
+<pre class="example">... tokenize /line &quot;1,2,3&quot; /sep &quot;,&quot; .
+ans = a registry with:
+#1 of type String, value: 1
+#2 of type String, value: 2
+#3 of type String, value: 3
+</pre></div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Example Basic Linear Algebra (ARBEL)</title>
+
+<meta name="description" content="Example Basic Linear Algebra (ARBEL)">
+<meta name="keywords" content="Example Basic Linear Algebra (ARBEL)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Examples.html#Examples" rel="up" title="Examples">
+<link href="Example-Split-a-String.html#Example-Split-a-String" rel="next" title="Example Split a String">
+<link href="Example-Numerical-Integration.html#Example-Numerical-Integration" rel="prev" title="Example Numerical Integration">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Example-Basic-Linear-Algebra"></a>
+<div class="header">
+<p>
+Next: <a href="Example-Split-a-String.html#Example-Split-a-String" accesskey="n" rel="next">Example Split a String</a>, Previous: <a href="Example-Numerical-Integration.html#Example-Numerical-Integration" accesskey="p" rel="prev">Example Numerical Integration</a>, Up: <a href="Examples.html#Examples" accesskey="u" rel="up">Examples</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<a name="Example_003a-Basic-Linear-Algebra"></a>
+<h3 class="section">3.6 Example: Basic Linear Algebra</h3>
+
+<div class="example">
+<pre class="example">' Computes v^T w for a vector 
+set /dotproduct
+    (
+      do-to-all ( mul t1 t2 . ) v w .
+      collapse ( add t1 t2 . ) ans &quot;#&quot; .
+    ) .
+
+' matrix-multiply A B computes A^T B 
+set /matrix-multiply
+    (
+      set /i /#1 .
+      set /out [ list . ] .
+      while ( exist i B . )
+            (
+              do-to-all ( dotproduct /v t1 /w B:i . ) A .
+              move /ans /res .
+              in out ( set i res . ) .
+              next i .
+              move /ans /i .
+            ) .
+      answer out .
+    ) .
+
+' Computes A^T 
+set /transpose
+    (
+      set /i /#1 .
+      set /out [ list . ] .
+      while ( exist i A:/#1 . )
+            (
+              do-to-all ( answer t1:i . ) A .
+              move /ans /res .
+              in out ( set i res . ) .
+              next i .
+              move /ans /i .
+            ) .
+      answer out .
+    ) .
+</pre></div>
+
+<p>Example of use:
+</p><div class="example">
+<pre class="example">... set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+... transpose /A A .
+ans = a registry with:
+#1 of type Registry, value: a registry with:
+#1 of type Integer, value: 1
+#2 of type Integer, value: 3
+#2 of type Registry, value: a registry with:
+#1 of type Integer, value: 2
+#2 of type Integer, value: 4
+... matrix-multiply /A A /B B .
+ans = a registry with:
+#1 of type Registry, value: a registry with:
+#1 of type Integer, value: 10
+#2 of type Integer, value: 26
+#2 of type Registry, value: a registry with:
+#1 of type Integer, value: 11
+#2 of type Integer, value: 25
+</pre></div>
+
+
+
+
+</body>
+</html>

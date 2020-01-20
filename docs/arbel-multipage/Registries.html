@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Registries (ARBEL)</title>
+
+<meta name="description" content="Registries (ARBEL)">
+<meta name="keywords" content="Registries (ARBEL)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="The-Basics.html#The-Basics" rel="up" title="The Basics">
+<link href="Additional-details-about-colon-notation.html#Additional-details-about-colon-notation" rel="next" title="Additional details about colon notation">
+<link href="Statements-and-syntax.html#Statements-and-syntax" rel="prev" title="Statements and syntax">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Registries"></a>
+<div class="header">
+<p>
+Next: <a href="Registers.html#Registers" accesskey="n" rel="next">Registers</a>, Previous: <a href="Statements-and-syntax.html#Statements-and-syntax" accesskey="p" rel="prev">Statements and syntax</a>, Up: <a href="The-Basics.html#The-Basics" accesskey="u" rel="up">The Basics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<a name="Registries-1"></a>
+<h3 class="section">2.2 Registries</h3>
+
+<p>In ARBEL, most of the action happens inside <em>registries</em>.  Registries are both data structures and define what registers (variables) are in scope.  Because they are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the &lsquo;<samp>registry</samp>&rsquo; operation,
+</p>
+<div class="example">
+<pre class="example">... registry /hello &quot;Hello, world!&quot; /x 10 .
+</pre></div>
+
+<p>This &lsquo;<samp>registry</samp>&rsquo; operation puts a new registry in the &lsquo;<samp>/ans</samp>&rsquo; register.  The registry has a &lsquo;<samp>/hello</samp>&rsquo; register bound to the value &lsquo;<samp>&quot;Hello, world!&quot;</samp>&rsquo; and with the &lsquo;<samp>/x</samp>&rsquo; register bound to the value &lsquo;<samp>10</samp>&rsquo;.  Usually, you will want to bind the value to another register besides &lsquo;<samp>/ans</samp>&rsquo; which will be overwritten by subsequent statements. You can do either of:
+</p>
+<div class="example">
+<pre class="example">... registry /hello &quot;Hello, world!&quot; /x 10 .
+... move /ans /my-registry .
+... print my-registry .
+... ' Or:
+... set /my-registry [ registry /hello &quot;Hello, world!&quot; /x 10 . ] .
+... print my-registry .
+</pre></div>
+
+<p>To access values in a registry, you can either use the &lsquo;<samp>get</samp>&rsquo; operation or the &quot;colon notation&quot;:
+</p>
+<div class="example">
+<pre class="example">... get /hello my-registry .
+ans = Hello, world!
+... print my-registry:/hello
+Hello, world!
+... print hello .
+Error: Value at `/hello` not found.
+</pre></div>
+
+<p>From the last line, we can see that the value &lsquo;<samp>hello</samp>&rsquo; exists only in the registry located at &lsquo;<samp>/my-registry</samp>&rsquo; which we are not currently in.  So we cannot access its &lsquo;<samp>/hello</samp>&rsquo; register directly.  We can change which registry we are in with the &lsquo;<samp>go-in</samp>&rsquo; operation.
+</p>
+<div class="example">
+<pre class="example">... go-in hello .
+... print hello .
+Hello, world!
+</pre></div>
+
+<p>We can go back to the registry we were in previously by using the &lsquo;<samp>go-out</samp>&rsquo; operation.
+</p>
+<div class="example">
+<pre class="example">... go-out .
+... print hello 
+Error: Value at `/hello` not found.
+</pre></div>
+
+<p>We can import values from one registry into their corresponding registers in the current registry by using the &lsquo;<samp>import</samp>&rsquo; operation.
+</p>
+<div class="example">
+<pre class="example">... import my-registry .
+... print hello
+Hello, world!
+</pre></div>
+
+<p>We can also execute an instruction inside a certain registry by using the &lsquo;<samp>in</samp>&rsquo; command.
+</p>
+<div class="example">
+<pre class="example">... in my-registry ( print [ string-append hello &quot; Goodbye!&quot; . ] . ) .
+Hello, world! Goodbye!
+</pre></div>
+
+
+
+<p>Aside from being a useful data structure, registries are also how ARBEL does <em>namespaces</em>.  For example,
+</p>
+<div class="example">
+<pre class="example">... set /math [ registry . ] .
+... set /factorial
+       (
+         set /i 2 .
+         set /prod 1 .
+         while ( lt-eq i t . )
+               (
+                 set /prod [ multiply i prod . ] .
+                 set /i [ add i 1 . ] .
+               ) .
+         answer prod .
+       ) math .
+... math:/factorial /t 5 .
+ans = 120
+</pre></div>
+
+<p>You can assign Instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the &lsquo;<samp>set</samp>&rsquo; operation takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry as we have seen above.
+</p>
+<p>Of course, if you don&rsquo;t need to worry about name collisions, you can just &lsquo;<samp>import</samp>&rsquo; it.
+</p>
+<div class="example">
+<pre class="example">... import math .
+... factorial /t 5 .
+ans = 120
+</pre></div>
+
+
+
+<p>Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like &lsquo;<samp>struct</samp>&rsquo; in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Additional-details-about-colon-notation.html#Additional-details-about-colon-notation" accesskey="1">Additional details about colon notation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Registers.html#Registers" accesskey="n" rel="next">Registers</a>, Previous: <a href="Statements-and-syntax.html#Statements-and-syntax" accesskey="p" rel="prev">Statements and syntax</a>, Up: <a href="The-Basics.html#The-Basics" accesskey="u" rel="up">The Basics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+
+
+
+</body>
+</html>
