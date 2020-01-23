@@ -1,0 +1,29 @@
+
+set /edit-buffer
+    (
+      if [ not [ exist /buffer . ] . ]
+         { set /buffer [ list . ] . } .
+
+      set /cur-line [ next [ last buffer "#" . ] . ] .
+      set /cmd "" .
+      while ( not [ string-eq cmd "q!" . ] . )
+            (
+              print "? " False .
+              input /cmd .
+              if [ string-eq cmd "i" . ]
+                 {
+                   input /line .
+                   set cur-line line buffer .
+                 } .
+              if [ string-eq cmd "n" . ]
+                 {
+                   set /cur-line [ next cur-line . ] .
+                 } .
+              if [ string-eq cmd "d" . ]
+                 {
+                   in buffer ( delete cur-line . ) .
+                   set /cur-line [ previous cur-line . ] .
+                 } .
+            ) .
+      answer buffer .
+    ) .
