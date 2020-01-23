@@ -22,9 +22,9 @@
 #include "arbel.h"
 
 void
-print_data (data* d, int print_cmd)
+print_data (data* d, print_settings settings)
 {
-  if (!print_cmd)
+  if (settings & PRINT_ANSWER)
     {
       printf("ans = ");
     }
@@ -34,7 +34,10 @@ print_data (data* d, int print_cmd)
       printf("%d", *((int*) d->data));
       break;
     case String:
-      printf("%s", (const char*) d->data);
+      if (settings & PRINT_QUOTES)
+        printf("\"%s\"", (const char*) d->data);
+      else
+        printf("%s", (const char*) d->data);
       break;
     case Real:
       printf("%f", *((double*) d->data));
@@ -65,7 +68,7 @@ print_data (data* d, int print_cmd)
       break;
     }
 
-  if (print_cmd <= 1 && (d->type != Registry))
+  if ((settings & PRINT_NEWLINE) && (d->type != Registry))
     printf("\n");
 }
 
@@ -87,7 +90,7 @@ print_registry (registry* reg)
           s = str_type(cur->value->type);
           printf("%s of type %s", (const char*) cur->name, s);
           printf(", value: ");
-          print_data(cur->value,1);
+          print_data(cur->value,PRINT_NEWLINE | PRINT_QUOTES);
           cur = cur->right;
         }
     }
@@ -101,7 +104,7 @@ print_statement (statement* s)
     {
       if (e->literal)
         {
-          print_data(e->data, 2);
+          print_data(e->data, PRINT_QUOTES);
         }
       else if (e->statement)
         {

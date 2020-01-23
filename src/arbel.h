@@ -175,22 +175,14 @@ struct instruction
 
 typedef struct instruction instruction;
 
-enum trash_type
+typedef enum
   {
-   TRASH_C,
-   TRASH_DATA,
-   TRASH_REGISTRY
-  };
+   PRINT_PLAIN = 0,
+   PRINT_ANSWER = 1,
+   PRINT_NEWLINE = 2,
+   PRINT_QUOTES = 4
+  } print_settings;
 
-struct trash_heap
-{
-  void* garbage;
-  size_t sz;
-  struct trash_heap* right;
-  enum trash_type type;
-};
-
-typedef struct trash_heap trash_heap;
 
 char*
 argument_name (int n);
@@ -266,7 +258,7 @@ void
 null_ans (registry* reg);
 
 void
-print_data (data* d, int print_cmd);
+print_data (data* d, print_settings settings);
 
 bool
 is_register (const char* str);

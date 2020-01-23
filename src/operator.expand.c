@@ -1088,7 +1088,7 @@ if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
 
 ;
   
-  int nl = 1;
+  print_settings settings = PRINT_NEWLINE;
 
   if (a.length >= 3)
     {
@@ -1120,11 +1120,12 @@ if (arg2 != NULL && false && (!(arg2->type & Boolean)))
 
       if (arg2 != NULL && arg2->type == Boolean)
         {
-          nl = *((bool*) arg2->data) ? 1 : 2;
+          if (*((bool*) arg2->data))
+            settings = PRINT_PLAIN;
         }
     }
              
-  print_data(arg1,nl);
+  print_data(arg1,settings);
 }
 
 void

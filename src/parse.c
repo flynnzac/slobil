@@ -422,7 +422,7 @@ interact (FILE* f, parser_state* state, registry* reg)
               d = get(reg, arbel_hash_ans, 0);
               if (d != NULL && d != last_ans)
                 {
-                  print_data(d,0);
+                  print_data(d, (PRINT_ANSWER | PRINT_QUOTES | PRINT_NEWLINE));
                   last_ans = d;
                 }
             }
