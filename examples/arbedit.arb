@@ -1,4 +1,3 @@
-
 set /edit-buffer
     (
       if [ not [ exist /buffer . ] . ]
@@ -19,11 +18,63 @@ set /edit-buffer
                  {
                    set /cur-line [ next cur-line . ] .
                  } .
+	      if [ string-eq cmd "p" . ]
+                 {
+                   set /cur-line [ previous cur-line . ] .
+                 } .
+	      if [ string-eq cmd "o" . ]
+		 {
+		   if [ exist cur-line buffer . ]
+		      { print buffer:cur-line . } .
+                 } .
               if [ string-eq cmd "d" . ]
                  {
                    in buffer ( delete cur-line . ) .
                    set /cur-line [ previous cur-line . ] .
                  } .
+	      if [ string-eq cmd "w" . ]
+		 {
+		   print "File: " False .
+		   input /f .
+		   set /ff [ open-text-file f . ] .
+		   write [ buffer-to-string /buffer buffer . ] ff .
+		   close /ff .
+		 } .
+	      if [ string-eq cmd "r" . ]
+		 {
+		   print "File: " False .
+		   input /f .
+		   set /ff [ open-text-file f . ] .
+		   set /buffer [ read-buffer-from-file /file ff . ] .
+		   close /ff .
+		 } .
+	      if [ string-eq cmd "s" . ]
+		 {
+		   print "Regular Expression: " False .
+		   input /regex .
+		   print "Replace: " False .
+		   input /new .
+		   set cur-line [ replace regex new buffer:cur-line . ]
+		       buffer .
+		 } .
             ) .
+      answer buffer .
+    ) .
+
+set /buffer-to-string
+    (
+      collapse ( string-append t1 "\n" t2 . ) buffer .
+    ) .
+
+set /read-buffer-from-file
+    (
+      set /buffer [ list . ] .
+      set /cur /#1 .
+      while ( set /line [ read-line file . ] .
+	      not [ is-nothing line . ] . )
+	    (
+	      set cur line buffer .
+	      set /cur [ next cur . ] .
+	    ) .
       answer buffer .
     ) .

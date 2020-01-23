@@ -801,6 +801,7 @@ op_source (arg a, registry* reg)
 
   struct parser_state state = fresh_state(0);
   interact(f, &state, reg);
+  free_state(&state);
   fclose(f);
 
 }
@@ -951,6 +952,49 @@ op_do_to_all (arg a, registry* reg)
   
 }
 
+data*
+register_arithmetic (regstr* rg, int diff)
+{
+  char* cur_name = malloc(sizeof(char)*(strlen(rg->name)+1));
+  strcpy(cur_name, rg->name);
+
+  int i = strlen(cur_name)-1;
+  int j;
+  while (i >= 0 && isdigit((int) cur_name[i]))
+    i--;
+
+  if (i == (strlen(cur_name)-1))
+    {
+      do_error("Register does not end in integer.");
+      return NULL;
+    }
+  
+  i++;
+  
+  char* cur_num = malloc(sizeof(char)*(strlen(cur_name)-i + 1));
+  for (j = i; j < strlen(cur_name); j++)
+    {
+      cur_num[j-i] = cur_name[j];
+    }
+  cur_num[strlen(cur_name)-i] = '\0';
+  cur_name[i] = '\0';
+  int num = atoi(cur_num)+diff;
+  if (num < 1) num = 1;
+
+  free(cur_num);
+
+  char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
+  sprintf(new_name, "%s%d", cur_name, num);
+  data* d = new_data();
+  d->type = Register;
+  d->data = malloc(sizeof(regstr));
+  ((regstr*) d->data)->name = new_name;
+  ((regstr*) d->data)->key = hash_str(new_name);
+  free(cur_name);
+  
+  return d;
+}
+  
 
 void
 op_next (arg a, registry* reg)
@@ -963,48 +1007,27 @@ op_next (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  char* cur_name = malloc(sizeof(char)*
-                          (strlen(((regstr*) arg1->data)->name)+1));
-  strcpy(cur_name, ((regstr*) arg1->data)->name);
-
-  int i = strlen(cur_name)-1;
-  int j;
-  while (i >= 0 && isdigit((int) cur_name[i]))
-    i--;
-
-  if (i == (strlen(cur_name)-1))
-    {
-      do_error("Register does not end in integer.");
-      return;
-    }
-  
-  i++;
-
-  
-  char* cur_num = malloc(sizeof(char)*(strlen(cur_name)-i + 1));
-  for (j = i; j < strlen(cur_name); j++)
-    {
-      cur_num[j-i] = cur_name[j];
-    }
-  cur_num[strlen(cur_name)-i] = '\0';
-  cur_name[i] = '\0';
-  int num = atoi(cur_num)+1;
-  free(cur_num);
-
-  char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
-  sprintf(new_name, "%s%d", cur_name, num);
-
-  data* d = new_data();
-  d->type = Register;
-  d->data = malloc(sizeof(regstr));
-  ((regstr*) d->data)->name = new_name;
-  ((regstr*) d->data)->key = hash_str(new_name);
-  
-  free(cur_name);
-  ret_ans(reg,d);
-
-  
+  data* d = register_arithmetic((regstr*) arg1->data, 1);
+  if (d != NULL)
+    ret_ans(reg,d);
 }
+
+void
+op_previous (arg a, registry* reg)
+{
+  #op=previous@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+
+  data* d = register_arithmetic((regstr*) arg1->data, -1);
+  if (d != NULL)
+    ret_ans(reg,d);
+}
+
 
 void
 op_last (arg a, registry* reg)
@@ -3109,6 +3132,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_free);
   set(reg,d,"free",1);
 
+  assign_op(&d, op_previous);
+  set(reg,d,"previous",1);
 
 }
   

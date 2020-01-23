@@ -114,7 +114,8 @@ struct statement;
 struct element;
 struct parser_state
 {
-  char buffer[1024];
+  char* buffer;
+  size_t buffer_sz;
   int arg_n; /* argument number */
   int i; /* location in buffer */
   int in_instr; /* whether in command */
@@ -312,6 +313,9 @@ assign_instr (data** d, statement* s, const char* code);
 
 struct parser_state
 fresh_state ();
+
+void
+free_state (struct parser_state* state);
 
 registry*
 copy_registry(registry* r0);

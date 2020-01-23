@@ -182,6 +182,7 @@ main (int argc, char** argv)
       state.print_out = echo;
     }
 
+  free_state(&state);
   free(source_code);
   free_registry(reg);
 

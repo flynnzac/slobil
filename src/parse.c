@@ -4,7 +4,9 @@ struct parser_state
 fresh_state (int print) 
 {
   struct parser_state state;
+  state.buffer = malloc(sizeof(char)*1024);
   state.buffer[0] = '\0';
+  state.buffer_sz = 1024;
   state.arg_n = 0;
   state.i = 0;
   state.in_instr = 0;
@@ -21,6 +23,13 @@ fresh_state (int print)
 }
 
 void
+free_state (struct parser_state* state)
+{
+  if (state->buffer != NULL)
+    free(state->buffer);
+}
+
+void
 clear_state_buffer (struct parser_state* state)
 {
   state->buffer[0] = '\0';
@@ -28,10 +37,17 @@ clear_state_buffer (struct parser_state* state)
 }
 
 void
-add_to_state_buffer (struct parser_state* state, const char c)
+add_to_state_buffer (struct parser_state* state, const char c, bool incr)
 {
+  if (state->i >= state->buffer_sz)
+    {
+      state->buffer = realloc(state->buffer,
+			      sizeof(char)*(state->buffer_sz +1024));
+      state->buffer_sz += 1024;
+    }
   state->buffer[state->i] = c;
-  state->i++;
+  
+  if (incr) state->i++;
 }
 
 
@@ -124,7 +140,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
-          state->buffer[state->i] = '\0';
+	  add_to_state_buffer(state, '\0', false);
           if ((strlen(state->buffer) != 0 || state->after_quote) && !state->in_quote)
             {
               if (state->after_instr)
@@ -137,6 +153,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   sub_stmt = NULL;
                   sub_complete = parse(f_sub, &sub_state, &sub_stmt);
                   fclose(f_sub);
+		  free_state(&sub_state);
                   free(str);
                   
                   if (sub_complete)
@@ -245,7 +262,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              add_to_state_buffer(state, c);
+              add_to_state_buffer(state, c,true);
             }
 
           state->in_instr++;
@@ -265,7 +282,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c,true);
             }
         }
       else if (c == '{' && !state->in_quote)
@@ -276,7 +293,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c,true);
             }
           
           state->in_instr++;
@@ -295,7 +312,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c,true);
             }
 
         }
@@ -307,7 +324,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              add_to_state_buffer(state,c);
+              add_to_state_buffer(state,c,true);
             }
           state->in_instr++;
         }
@@ -325,8 +342,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-              state->buffer[state->i] = c;
-              state->i++;
+	      add_to_state_buffer(state, c, true);
             }
         }
       else if (c == '"' && !state->in_instr)
@@ -343,7 +359,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       else
         {
-          add_to_state_buffer(state,c);
+          add_to_state_buffer(state,c,true);
           *complete = 0;
         }
 
@@ -384,7 +400,8 @@ parse (FILE* f, parser_state* state, statement** s)
       if (complete && !state->in_comment)
         {
           stmt = append_statement(stmt, state->cur_elem);
-          
+
+	  if (state != NULL) free_state(state);
           *state = fresh_state(state->print_out);
           if (*s == NULL)
             {
@@ -393,6 +410,7 @@ parse (FILE* f, parser_state* state, statement** s)
         }
       else if (state->in_comment)
         {
+	  if (state != NULL) free_state(state);
           *state = fresh_state(state->print_out);
         }
       else if (state->cur_elem != NULL)
@@ -429,6 +447,7 @@ interact (FILE* f, parser_state* state, registry* reg)
 
         }
 
+      if (state != NULL) free_state(state);
       *state = fresh_state(state->print_out);
       
     }
