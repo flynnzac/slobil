@@ -31,7 +31,7 @@ argument_name (int n)
     }
   else if (n < 0)
     {
-      n_digits = floor(log10(n)) + 2;
+      n_digits = floor(log10(abs(n))) + 2;
     }
   else
     {

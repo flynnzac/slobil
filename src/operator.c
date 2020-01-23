@@ -21,6 +21,8 @@
 
 #include "arbel.h"
 
+#include <errno.h>
+
 
 
 ;
@@ -2864,7 +2866,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
 ;
   
-  FILE* f = fopen((char*) arg1->data, "ab+");
+  FILE* f = fopen((char*) arg1->data, "r+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -2872,6 +2874,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
     }
 
   data* d;
+
   assign_file(&d,f);
   ret_ans(reg,d);
 
@@ -3178,11 +3181,13 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
 
   char* line  = NULL;
   size_t len = 0;
-  ssize_t ret = getline(&line, &len, (FILE*) arg1->data);
-  line[strlen(line)-1] = '\0';
+  ssize_t ret = getdelim(&line, &len, '\n', (FILE*) arg1->data);
+
   data* d;
   if (ret >= 0)
     {
+      if (!feof((FILE*) arg1->data))
+	line[strlen(line)-1] = '\0';
       assign_str(&d, line, 0);
       ret_ans(reg,d);
     }
@@ -3190,7 +3195,14 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
     {
       assign_nothing(&d);
       ret_ans(reg,d);
-      free(line);
+      #ifdef GARBAGE
+	#undef free
+	#endif
+	free(line);
+      #ifdef GARBAGE
+      #define free(x)
+      #endif
+
     }
 }
 

@@ -21,6 +21,8 @@
 
 `#include "arbel.h"'
 
+`#include <errno.h>'
+
 #CHECK_ARGS=`check_length(&#a~, #length~+1, "#op~");
 if (is_error(-1)) return #retcheck~;'@
 
@@ -1820,7 +1822,7 @@ op_open_text_file (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
   
-  FILE* f = fopen((char*) arg1->data, "ab+");
+  FILE* f = fopen((char*) arg1->data, "r+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -1828,6 +1830,7 @@ op_open_text_file (arg a, registry* reg)
     }
 
   data* d;
+
   assign_file(&d,f);
   ret_ans(reg,d);
 
@@ -1992,11 +1995,13 @@ op_read_line (arg a, registry* reg)
 
   char* line  = NULL;
   size_t len = 0;
-  ssize_t ret = getline(&line, &len, (FILE*) arg1->data);
-  line[strlen(line)-1] = '\0';
+  ssize_t ret = getdelim(&line, &len, '\n', (FILE*) arg1->data);
+
   data* d;
   if (ret >= 0)
     {
+      if (!feof((FILE*) arg1->data))
+	line[strlen(line)-1] = '\0';
       assign_str(&d, line, 0);
       ret_ans(reg,d);
     }
@@ -2004,7 +2009,14 @@ op_read_line (arg a, registry* reg)
     {
       assign_nothing(&d);
       ret_ans(reg,d);
-      free(line);
+      `#ifdef GARBAGE
+	#undef free
+	#endif
+	free(line);
+      #ifdef GARBAGE
+      #define free(x)
+      #endif'
+
     }
 }
 

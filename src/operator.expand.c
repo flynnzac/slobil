@@ -21,6 +21,8 @@
 
 #include "arbel.h"
 
+#include <errno.h>
+
 
 
 ;
@@ -1120,7 +1122,7 @@ if (arg2 != NULL && false && (!(arg2->type & Boolean)))
 
       if (arg2 != NULL && arg2->type == Boolean)
         {
-          if (*((bool*) arg2->data))
+          if (!*((bool*) arg2->data))
             settings = PRINT_PLAIN;
         }
     }
@@ -1261,6 +1263,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
   struct parser_state state = fresh_state(0);
   interact(f, &state, reg);
+  free_state(&state);
   fclose(f);
 
 }
@@ -1412,6 +1415,49 @@ if (is_error(-1)) return ;;
   
 }
 
+data*
+register_arithmetic (regstr* rg, int diff)
+{
+  char* cur_name = malloc(sizeof(char)*(strlen(rg->name)+1));
+  strcpy(cur_name, rg->name);
+
+  int i = strlen(cur_name)-1;
+  int j;
+  while (i >= 0 && isdigit((int) cur_name[i]))
+    i--;
+
+  if (i == (strlen(cur_name)-1))
+    {
+      do_error("Register does not end in integer.");
+      return NULL;
+    }
+  
+  i++;
+  
+  char* cur_num = malloc(sizeof(char)*(strlen(cur_name)-i + 1));
+  for (j = i; j < strlen(cur_name); j++)
+    {
+      cur_num[j-i] = cur_name[j];
+    }
+  cur_num[strlen(cur_name)-i] = '\0';
+  cur_name[i] = '\0';
+  int num = atoi(cur_num)+diff;
+  if (num < 1) num = 1;
+
+  free(cur_num);
+
+  char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
+  sprintf(new_name, "%s%d", cur_name, num);
+  data* d = new_data();
+  d->type = Register;
+  d->data = malloc(sizeof(regstr));
+  ((regstr*) d->data)->name = new_name;
+  ((regstr*) d->data)->key = hash_str(new_name);
+  free(cur_name);
+  
+  return d;
+}
+  
 
 void
 op_next (arg a, registry* reg)
@@ -1442,48 +1488,45 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 
 ;
 
-  char* cur_name = malloc(sizeof(char)*
-                          (strlen(((regstr*) arg1->data)->name)+1));
-  strcpy(cur_name, ((regstr*) arg1->data)->name);
-
-  int i = strlen(cur_name)-1;
-  int j;
-  while (i >= 0 && isdigit((int) cur_name[i]))
-    i--;
-
-  if (i == (strlen(cur_name)-1))
-    {
-      do_error("Register does not end in integer.");
-      return;
-    }
-  
-  i++;
-
-  
-  char* cur_num = malloc(sizeof(char)*(strlen(cur_name)-i + 1));
-  for (j = i; j < strlen(cur_name); j++)
-    {
-      cur_num[j-i] = cur_name[j];
-    }
-  cur_num[strlen(cur_name)-i] = '\0';
-  cur_name[i] = '\0';
-  int num = atoi(cur_num)+1;
-  free(cur_num);
-
-  char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
-  sprintf(new_name, "%s%d", cur_name, num);
-
-  data* d = new_data();
-  d->type = Register;
-  d->data = malloc(sizeof(regstr));
-  ((regstr*) d->data)->name = new_name;
-  ((regstr*) d->data)->key = hash_str(new_name);
-  
-  free(cur_name);
-  ret_ans(reg,d);
-
-  
+  data* d = register_arithmetic((regstr*) arg1->data, 1);
+  if (d != NULL)
+    ret_ans(reg,d);
 }
+
+void
+op_previous (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "previous");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<previous> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Register)))
+  {
+    do_error("Argument 1 of <previous> should be of type Register.");
+    return ;
+  }
+
+;
+
+  data* d = register_arithmetic((regstr*) arg1->data, -1);
+  if (d != NULL)
+    ret_ans(reg,d);
+}
+
 
 void
 op_last (arg a, registry* reg)
@@ -2823,7 +2866,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
 ;
   
-  FILE* f = fopen((char*) arg1->data, "ab+");
+  FILE* f = fopen((char*) arg1->data, "r+");
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -2831,6 +2874,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
     }
 
   data* d;
+
   assign_file(&d,f);
   ret_ans(reg,d);
 
@@ -3137,11 +3181,13 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
 
   char* line  = NULL;
   size_t len = 0;
-  ssize_t ret = getline(&line, &len, (FILE*) arg1->data);
-  line[strlen(line)-1] = '\0';
+  ssize_t ret = getdelim(&line, &len, '\n', (FILE*) arg1->data);
+
   data* d;
   if (ret >= 0)
     {
+      if (!feof((FILE*) arg1->data))
+	line[strlen(line)-1] = '\0';
       assign_str(&d, line, 0);
       ret_ans(reg,d);
     }
@@ -3149,7 +3195,14 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
     {
       assign_nothing(&d);
       ret_ans(reg,d);
-      free(line);
+      #ifdef GARBAGE
+	#undef free
+	#endif
+	free(line);
+      #ifdef GARBAGE
+      #define free(x)
+      #endif
+
     }
 }
 
@@ -4859,6 +4912,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_free);
   set(reg,d,"free",1);
 
+  assign_op(&d, op_previous);
+  set(reg,d,"previous",1);
 
 }
   

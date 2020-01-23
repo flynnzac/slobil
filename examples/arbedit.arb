@@ -1,3 +1,66 @@
+' Tokenize a string /line by splitting on string /sep
+set /tokenize
+    (
+      set /i 1 .
+      set /len [ string-length line . ] .
+      set /cur-reg /#1 .
+      set /tokened [ list . ] .
+      set /init 1 .
+      while ( lt-eq i len . )
+            (
+              set /d [ substring line i i . ] .
+              if [ string-eq d sep . ]
+                 {
+                   in tokened ( set cur-reg buffer . ) .
+                   set /cur-reg [ next cur-reg . ] .
+                   set /init 1 .
+                 }
+                 {
+                   if [ eq init 1 . ] { set /buffer d . set /init 0 . }
+                      { set /buffer [ string-append buffer d . ] . } .
+                 } .
+              set /i [ add i 1 . ] .
+            ) .
+      in tokened ( set cur-reg buffer . ) .
+      answer tokened .
+    )  .
+
+set /get-locations
+    (
+      set /result [ registry . ] .
+      set /start-loc
+	  [
+	    if [ string-eq cmd-in:/#1 "." . ]
+	       1
+	       {
+		 sub [ to-number cur-line . ]
+		     [ to-number cmd-in:/#1 . ] .
+		 move /ans /tmp .
+		 if [ lt tmp 1 . ] 1 { answer tmp . } .
+	       } .
+	  ] result .
+
+      set /end-loc
+	  [
+	    if [ string-eq cmd-in:/#2 "." . ]
+	       {
+		 to-number [ last buffer "#" . ] .
+	       }
+	       {
+		 add [ to-number cur-line . ]
+		     [ to-number cmd-in:/#2 . ] .
+		 move /ans /tmp .
+		 set /end [ to-number [ last buffer "#" . ] . ] .
+		 if [ gt tmp end . ]
+		    end
+		    tmp .
+	       } .
+	  ] result .
+
+      answer result .
+    ) .
+
+
 set /edit-buffer
     (
       if [ not [ exist /buffer . ] . ]
@@ -5,59 +68,110 @@ set /edit-buffer
 
       set /cur-line [ next [ last buffer "#" . ] . ] .
       set /cmd "" .
-      while ( not [ string-eq cmd "q!" . ] . )
-            (
-              print "? " False .
-              input /cmd .
-              if [ string-eq cmd "i" . ]
-                 {
-                   input /line .
-                   set cur-line line buffer .
-                 } .
-              if [ string-eq cmd "n" . ]
-                 {
-                   set /cur-line [ next cur-line . ] .
-                 } .
-	      if [ string-eq cmd "p" . ]
-                 {
-                   set /cur-line [ previous cur-line . ] .
-                 } .
-	      if [ string-eq cmd "o" . ]
+      while ( or { not [ is-string cmd . ] . } { not [ string-eq cmd "q!" . ] . } . )
+	    (
+	      print "? " False .
+	      input /cmd-in .
+	      set /cmd-in [ tokenize /line cmd-in /sep "," . ] .
+	      set /cmd-loc [ last cmd-in "#" . ] .
+	      set /cmd cmd-in:cmd-loc .
+	      in cmd-in ( delete cmd-loc . ) .
+	      if [ is-string cmd . ]
 		 {
-		   if [ exist cur-line buffer . ]
-		      { print buffer:cur-line . } .
-                 } .
-              if [ string-eq cmd "d" . ]
-                 {
-                   in buffer ( delete cur-line . ) .
-                   set /cur-line [ previous cur-line . ] .
-                 } .
-	      if [ string-eq cmd "w" . ]
-		 {
-		   print "File: " False .
-		   input /f .
-		   set /ff [ open-text-file f . ] .
-		   write [ buffer-to-string /buffer buffer . ] ff .
-		   close /ff .
+
+		   if [ string-eq cmd "i" . ]
+		      {
+			input /line .
+			set cur-line line buffer .
+		      } .
+		   if [ string-eq cmd "n" . ]
+		      {
+			if [ exist /#1 cmd-in . ]
+			   {
+			     add [ to-number cmd-in:/#1 . ]
+				 [ to-number cur-line . ] .
+			     set /cur-line [ to-register ans . ] .
+			   }
+			   {
+			     set /cur-line [ next cur-line . ] .
+			   } .
+		      } .
+		   if [ string-eq cmd "p" . ]
+		      {
+			if [ exist /#1 cmd-in . ]
+			   {
+			     set /new-loc
+				 [ sub [ to-number cur-line . ]
+				       [ to-number cmd-in:/#1 . ] . ] .
+			     if [ lt new-loc 1 . ]
+				{ set /cur-line /#1 . }
+				{
+				  set /cur-line [ to-register new-loc . ] .
+				} .
+			   }
+			   {
+			     set /cur-line [ previous cur-line . ] .
+			   } .
+		      } .
+		   if [ string-eq cmd "o" . ]
+		      {
+			if [ and { exist /#1 cmd-in . } { exist /#2 cmd-in . } . ]
+			   {
+			     set /locs [ get-locations /cmd-in cmd-in . ] .
+			     set /tmp locs:/start-loc .
+			     while ( lt-eq tmp locs:/end-loc . )
+				   (
+				     to-register tmp .
+				     print buffer:ans .
+				     set /tmp [ add tmp 1 . ] .
+				   ) .
+			   }
+			   {
+			     if [ exist cur-line buffer . ]
+				{ print buffer:cur-line . } .
+			   } .
+		      } .
+		   if [ string-eq cmd "d" . ]
+		      {
+			set /at-end [ register-eq cur-line [ last buffer "#" . ] . ] .
+			in buffer ( delete cur-line . ) .
+			set /tmp [ next cur-line . ] .
+			while ( exist tmp buffer . )
+			      (
+				set [ previous tmp . ] buffer:tmp buffer .
+				set /tmp [ next tmp . ] .
+			      ) .
+			if at-end
+			   { set /cur-line [ previous cur-line . ] . }
+			   { in buffer ( delete [ last buffer "#" . ] . ) . } .
+		      } .
+		   if [ string-eq cmd "w" . ]
+		      {
+			print "File: " False .
+			input /f .
+			set /ff [ open-text-file f . ] .
+			write [ buffer-to-string /buffer buffer . ] ff .
+			close /ff .
+		      } .
+		   if [ string-eq cmd "r" . ]
+		      {
+			print "File: " False .
+			input /f .
+			set /ff [ open-text-file f . ] .
+			set /buffer [ read-buffer-from-file /file ff . ] .
+			close /ff .
+		      } .
+		   if [ string-eq cmd "s" . ]
+		      {
+			print "Regular Expression: " False .
+			input /regex .
+			print "Replace: " False .
+			input /new .
+			set cur-line [ replace regex new buffer:cur-line . ]
+			    buffer .
+		      } .
 		 } .
-	      if [ string-eq cmd "r" . ]
-		 {
-		   print "File: " False .
-		   input /f .
-		   set /ff [ open-text-file f . ] .
-		   set /buffer [ read-buffer-from-file /file ff . ] .
-		   close /ff .
-		 } .
-	      if [ string-eq cmd "s" . ]
-		 {
-		   print "Regular Expression: " False .
-		   input /regex .
-		   print "Replace: " False .
-		   input /new .
-		   set cur-line [ replace regex new buffer:cur-line . ]
-		       buffer .
-		 } .
-            ) .
+	    ) .
       answer buffer .
     ) .
 
