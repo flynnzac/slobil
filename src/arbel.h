@@ -41,6 +41,7 @@
 #include <stdbool.h>
 #include <unistr.h>
 #include <unistdio.h>
+
 enum data_type
   {
    Integer = 1,
@@ -175,14 +176,15 @@ struct instruction
 
 typedef struct instruction instruction;
 
-typedef enum
+enum print_settings
   {
    PRINT_PLAIN = 0,
    PRINT_ANSWER = 1,
    PRINT_NEWLINE = 2,
    PRINT_QUOTES = 4
-  } print_settings;
+  };
 
+typedef enum print_settings print_settings;
 
 char*
 argument_name (int n);

@@ -1120,7 +1120,7 @@ if (arg2 != NULL && false && (!(arg2->type & Boolean)))
 
       if (arg2 != NULL && arg2->type == Boolean)
         {
-          if (*((bool*) arg2->data))
+          if (!*((bool*) arg2->data))
             settings = PRINT_PLAIN;
         }
     }

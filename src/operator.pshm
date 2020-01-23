@@ -714,7 +714,7 @@ op_print (arg a, registry* reg)
 
       if (arg2 != NULL && arg2->type == Boolean)
         {
-          if (*((bool*) arg2->data))
+          if (!*((bool*) arg2->data))
             settings = PRINT_PLAIN;
         }
     }
