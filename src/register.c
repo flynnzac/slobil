@@ -66,6 +66,7 @@ vector_name (const char* lead, int n)
 unsigned long
 hash_str(const char *str)
 {
+  if (str==NULL) return 0;
   unsigned long hash = 5381;
   int c;
 
