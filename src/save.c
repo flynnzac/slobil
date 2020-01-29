@@ -148,8 +148,7 @@ read_registry (FILE* f, registry* reg)
         case Registry:
           r = new_registry(reg, ARBEL_HASH_SIZE);
           read_registry(f, r);
-          assign_registry(&d, r);
-          free_registry(r);
+          assign_registry(&d, r, false);
           break;
         case Instruction:
           cache = malloc(sizeof(int));

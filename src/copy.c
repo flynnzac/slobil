@@ -89,7 +89,7 @@ assign_op (data** d, const operation op)
 }
 
 void
-assign_registry (data** d, registry* r)
+assign_registry (data** d, registry* r, bool copy)
 {
   *d = new_data();
   (*d)->type = Registry;
@@ -97,9 +97,13 @@ assign_registry (data** d, registry* r)
     {
       (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
     }
-  else
+  else if (copy)
     {
       (*d)->data = copy_registry(r);
+    }
+  else
+    {
+      (*d)->data  = r;
     }
 }
 
@@ -264,7 +268,7 @@ copy_data (data* d_in)
                     ((regstr*) d_in->data)->key);
       break;
     case Registry:
-      assign_registry(&d, (registry*) d_in->data);
+      assign_registry(&d, (registry*) d_in->data, true);
       break;
     case Operation:
       assign_op(&d, (operation) d_in->data);

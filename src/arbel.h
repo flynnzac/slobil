@@ -206,7 +206,7 @@ void
 assign_op (data** d, const operation op);
 
 void
-assign_registry (data** d, registry* r);
+assign_registry (data** d, registry* r, bool copy);
 
 void
 assign_regstr (data** d, const char* name, unsigned long key);
@@ -475,6 +475,7 @@ unsigned long arbel_hash_4;
 unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
 unsigned long arbel_hash_class;
+unsigned long arbel_hash_t;
 
 size_t arbel_stop_error_threshold;
 bool arbel_print_error_messages;

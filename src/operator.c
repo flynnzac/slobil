@@ -3551,7 +3551,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 
 
   data* d;
-  assign_registry(&d, NULL);
+  assign_registry(&d, NULL, true);
   int i;
   int j;
   char* to_add;
@@ -3567,7 +3567,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
       error = regexec(&regex, cursor, n_groups, matches, 0);
       if (!error)
         {
-          assign_registry(&d_reg, NULL);
+          assign_registry(&d_reg, NULL, true);
           offset = 0;
           for (i=0; i < n_groups; i++)
             {
@@ -3717,7 +3717,7 @@ if (arg4 != NULL && true && (!(arg4->type & Integer)))
   regmatch_t* matches = malloc(sizeof(regmatch_t));
 
   data* d;
-  assign_registry(&d, NULL);
+  assign_registry(&d, NULL, true);
 
 
   char* cursor = (char*) arg3->data;
@@ -4647,6 +4647,101 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 }
 
 void
+op_where (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "where");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<where> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
+  {
+    do_error("Argument 1 of <where> should be of type Registry.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<where> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
+  {
+    do_error("Argument 2 of <where> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  registry* r = (registry*) arg1->data;
+  registry* result = new_registry(reg, r->hash_size);
+  arg a1;
+  a1.length = 3;
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  for (int i = 0; i < a1.length; i++)
+    a1.free_data[i] = 0;
+
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
+  a1.arg_array[0] = arg2;
+  assign_regstr(&a1.arg_array[1], "t", arbel_hash_t);
+  a1.arg_array[2] = NULL;
+  
+  for (int i = 0; i < r->hash_size; i++)
+    {
+      content* c = r->objects[i];
+      if (c == NULL)
+        continue;
+
+      if (is_init_reg(c))
+        continue;
+
+      c = tail(c);
+      while (c != NULL)
+        {
+          if (c->value != NULL)
+            {
+              a1.arg_array[2] = c->value;
+              compute(arg2, reg, a1);
+              data* d = lookup(reg, arbel_hash_ans, 0);
+              if ((d != NULL) && (d->type == Boolean) &&
+                  *((bool*) d->data))
+                {
+                  set(result, copy_data(c->value), c->name, 0);
+                }
+            }
+          c = c->right;
+        }
+    }
+
+  data* d;
+  assign_registry(&d, result, false);
+  ret_ans(reg, d);
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -4915,5 +5010,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_previous);
   set(reg,d,"previous",1);
 
+  assign_op(&d, op_where);
+  set(reg,d,"where",1);
+  
 }
   
