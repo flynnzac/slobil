@@ -177,7 +177,7 @@ main (int argc, char** argv)
       int opt = 1;
       addr.sin_family = AF_INET;
       addr.sin_addr.s_addr = INADDR_ANY;
-      addr.sin_port = htons(4120);
+      addr.sin_port = htons(port);
       setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
                  &opt, sizeof(opt));
       bind(sock, (struct sockaddr*) &addr,
