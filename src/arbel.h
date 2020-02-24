@@ -54,7 +54,8 @@ enum data_type
    Operation = 128,
    File = 256,
    Boolean = 512,
-   Nothing = 1024
+   Nothing = 1024,
+   Array = 2048
   };
 
 typedef enum data_type data_type;
@@ -68,6 +69,16 @@ struct data
   data_type type;
 };
 typedef struct data data;
+
+
+struct array
+{
+  data_type type;
+  void* data;
+  size_t length;
+};
+
+typedef struct array array;
 
 
 struct content

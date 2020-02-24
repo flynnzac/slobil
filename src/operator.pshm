@@ -2939,6 +2939,27 @@ op_where (arg a, registry* reg)
 }
 
 void
+op_make_array (registry* reg)
+{
+  #op=make-array@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Integer@
+  ##GETARG~$;
+
+  #num=2@
+  #checktype=false@
+  ##GETARG~$;
+  #checktype=true@
+
+  data* d;
+  /* assign_array()*/
+  
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
