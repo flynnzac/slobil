@@ -115,7 +115,10 @@ free_data (data* d)
     }
   else if (d->type == Array)
     {
-      free(((array*) d->data)->data);
+      for (int i=0; i < ((array*) d->data)->length; i++)
+        {
+          free_data(((array*) d->data)->data[i]);
+        }
       free(d->data);
       free(d);
     }

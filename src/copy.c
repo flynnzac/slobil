@@ -139,7 +139,7 @@ assign_boolean (data** d, bool val)
 
 void
 assign_array (data** d, const data_type type,
-              void* data, const size_t length,
+              data** content, const size_t length,
               bool copy)
 {
   *d = new_data();
@@ -149,12 +149,17 @@ assign_array (data** d, const data_type type,
   ((array*) (*d)->data)->type = type;
   if (copy)
     {
-      ((array*) (*d)->data)->data = malloc(sizeof(data));
-      memcpy(((array*) (*d)->data)->data, data, sizeof(data));
+      ((array*) (*d)->data)->data = malloc(sizeof(data*)*length);
+      for (int i = 0; i < length; i++)
+        {
+          ((data**) ((array*) (*d)->data)->data)[i] =
+            copy_data(content[i]);
+      
+        }
     }
   else
     {
-      ((array*) (*d)->data)->data = data;
+      ((array*) (*d)->data)->data = content;
     }
 }
 

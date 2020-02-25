@@ -2557,16 +2557,9 @@ op_substring (arg a, registry* reg)
   int byte_length = strlen((char*) str)+1;
   int length = u8_mbsnlen((unsigned char*) str,
                           byte_length-1);
-  
-  if (start <= 0)
-    {
-      start += length;
-    }
 
-  if (end <= 0)
-    {
-      end += length;
-    }
+  start = arbel_location(start, length);
+  end = arbel_location(end, length);
 
   if ((start > length) || (start <= 0))
     {
@@ -2939,7 +2932,7 @@ op_where (arg a, registry* reg)
 }
 
 void
-op_make_array (registry* reg)
+op_make_array (arg a, registry* reg)
 {
   #op=make-array@
   #length=2@
@@ -2960,23 +2953,79 @@ op_make_array (registry* reg)
       return;
     }
 
-  void* content = malloc(sizeof(arg2->data)*n);
-  switch (arg2->type)
+  data** content = malloc(sizeof(data*)*n);
+  for (int i=0; i < n; i++)
     {
-    case Integer:
-      for (int i = 0; i < n; i++)
-        {
-          ((int*) content)[i] = *((int*) arg2->data);
-        }
-    default:
-      break;
+      ((data**) content)[i] = copy_data(arg2);
     }
 
   data* d;
-  assign_array(&d, arg2->data_type, content, n, false);
+  assign_array(&d, arg2->type, content, n, false);
   ret_ans(reg, d);
   
 }
+
+void
+op_element (arg a, registry* reg)
+{
+  #op=element@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Array@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Integer@
+  ##GETARG~$;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((array*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid location.");
+      return;
+    }
+
+  data* d = copy_data(((array*) arg1->data)->data[location-1]);
+  ret_ans(reg, d);
+}
+
+void
+op_modify (arg a, registry* reg)
+{
+  #op=modify@
+  #length=3@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Array@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Integer@
+  ##GETARG~$;
+
+  #num=3@
+  #type=((array*) arg1->data)->type@
+  ##GETARG~$;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((array*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid element.");
+      return;
+    }
+
+  free_data(((array*) arg1->data)->data[location-1]);
+  ((array*) arg1->data)->data[location-1] = copy_data(arg3);
+  
+}
+  
 
 void
 add_basic_ops (registry* reg)
@@ -3249,6 +3298,16 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_where);
   set(reg,d,"where",1);
+
+  assign_op(&d, op_make_array);
+  set(reg,d,"make-array",1);
+
+  assign_op(&d, op_element);
+  set(reg,d,"element",1);
+
+  assign_op(&d, op_modify);
+  set(reg,d,"modify",1);
+  
   
 }
   

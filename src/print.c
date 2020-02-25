@@ -65,7 +65,20 @@ print_data (data* d, print_settings settings)
         printf("False.");
       break;
     case Array:
-      printf("An array.\n");
+      printf("%lu-Array containing: \n", ((array*) d->data)->length);
+      for (int i = 0; i < ((array*) d->data)->length; i++)
+        {
+          if (i < (((array*) d->data)->length-1))
+            {
+              print_data(((array*) d->data)->data[i],
+                         PRINT_NEWLINE | PRINT_QUOTES);
+            }
+          else
+            {
+              print_data(((array*) d->data)->data[i],
+                         PRINT_QUOTES);
+            }
+        }
       break;
     default:
       break;

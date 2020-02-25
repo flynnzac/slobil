@@ -4146,16 +4146,9 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   int byte_length = strlen((char*) str)+1;
   int length = u8_mbsnlen((unsigned char*) str,
                           byte_length-1);
-  
-  if (start <= 0)
-    {
-      start += length;
-    }
 
-  if (end <= 0)
-    {
-      end += length;
-    }
+  start = arbel_location(start, length);
+  end = arbel_location(end, length);
 
   if ((start > length) || (start <= 0))
     {
@@ -4742,6 +4735,224 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 }
 
 void
+op_make_array (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "make-array");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<make-array> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <make-array> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<make-array> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && false && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <make-array> should be of type Integer.");
+    return ;
+  }
+
+;
+  
+  int n = *((int*) arg1->data);
+  if (n <= 0)
+    {
+      do_error("First argument to <make-array> must be strictly positive.");
+      return;
+    }
+
+  data** content = malloc(sizeof(data*)*n);
+  for (int i=0; i < n; i++)
+    {
+      ((data**) content)[i] = copy_data(arg2);
+    }
+
+  data* d;
+  assign_array(&d, arg2->type, content, n, false);
+  ret_ans(reg, d);
+  
+}
+
+void
+op_element (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "element");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<element> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Array)))
+  {
+    do_error("Argument 1 of <element> should be of type Array.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<element> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <element> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((array*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid location.");
+      return;
+    }
+
+  data* d = copy_data(((array*) arg1->data)->data[location-1]);
+  ret_ans(reg, d);
+}
+
+void
+op_modify (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 3+1, "modify");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<modify> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Array)))
+  {
+    do_error("Argument 1 of <modify> should be of type Array.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<modify> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <modify> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg3 = resolve(a.arg_array[3], reg);
+
+if (true)
+  {
+    if (arg3 == NULL)
+      {
+        do_error("<modify> requires at least 3 arguments.");
+        return ;
+      }
+  }
+if (arg3 != NULL && true && (!(arg3->type & ((array*) arg1->data)->type)))
+  {
+    do_error("Argument 3 of <modify> should be of type ((array*) arg1->data)->type.");
+    return ;
+  }
+
+;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((array*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid element.");
+      return;
+    }
+
+  free_data(((array*) arg1->data)->data[location-1]);
+  ((array*) arg1->data)->data[location-1] = copy_data(arg3);
+  
+}
+  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -5012,6 +5223,16 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_where);
   set(reg,d,"where",1);
+
+  assign_op(&d, op_make_array);
+  set(reg,d,"make-array",1);
+
+  assign_op(&d, op_element);
+  set(reg,d,"element",1);
+
+  assign_op(&d, op_modify);
+  set(reg,d,"modify",1);
+  
   
 }
   

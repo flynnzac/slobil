@@ -74,7 +74,7 @@ typedef struct data data;
 struct array
 {
   data_type type;
-  void* data;
+  data** data;
   size_t length;
 };
 
@@ -227,6 +227,11 @@ assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
+
+void
+assign_array (data** d, const data_type type,
+              data** content, const size_t length,
+              bool copy);
 
 void
 assign_file (data** d, FILE* f);
@@ -467,6 +472,9 @@ print_statement (statement* s);
 
 data*
 new_data();
+
+int
+arbel_location(int loc, int n);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
