@@ -113,6 +113,12 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
+  else if (d->type == Array)
+    {
+      free(((array*) d->data)->data);
+      free(d->data);
+      free(d);
+    }
   else if (d->type == Operation)
     {
       free(d);

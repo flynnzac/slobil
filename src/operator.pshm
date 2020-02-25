@@ -2953,9 +2953,28 @@ op_make_array (registry* reg)
   #checktype=false@
   ##GETARG~$;
   #checktype=true@
+  int n = *((int*) arg1->data);
+  if (n <= 0)
+    {
+      do_error("First argument to <make-array> must be strictly positive.");
+      return;
+    }
+
+  void* content = malloc(sizeof(arg2->data)*n);
+  switch (arg2->type)
+    {
+    case Integer:
+      for (int i = 0; i < n; i++)
+        {
+          ((int*) content)[i] = *((int*) arg2->data);
+        }
+    default:
+      break;
+    }
 
   data* d;
-  /* assign_array()*/
+  assign_array(&d, arg2->data_type, content, n, false);
+  ret_ans(reg, d);
   
 }
 

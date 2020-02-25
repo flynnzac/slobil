@@ -64,6 +64,9 @@ print_data (data* d, print_settings settings)
       else
         printf("False.");
       break;
+    case Array:
+      printf("An array.\n");
+      break;
     default:
       break;
     }
