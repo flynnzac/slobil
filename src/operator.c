@@ -4735,11 +4735,11 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 }
 
 void
-op_make_array (arg a, registry* reg)
+op_fill (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "make-array");
+  check_length(&a, 2+1, "fill");
 if (is_error(-1)) return ;;
 
   
@@ -4751,13 +4751,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<make-array> requires at least 1 arguments.");
+        do_error("<fill> requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <make-array> should be of type Integer.");
+    do_error("Argument 1 of <fill> should be of type Integer.");
     return ;
   }
 
@@ -4772,13 +4772,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<make-array> requires at least 2 arguments.");
+        do_error("<fill> requires at least 2 arguments.");
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <make-array> should be of type Integer.");
+    do_error("Argument 2 of <fill> should be of type Integer.");
     return ;
   }
 
@@ -4949,6 +4949,106 @@ if (arg3 != NULL && true && (!(arg3->type & ((array*) arg1->data)->type)))
   free_data(((array*) arg1->data)->data[location-1]);
   ((array*) arg1->data)->data[location-1] = copy_data(arg3);
   
+}
+
+void
+op_transform (arg a, registry* reg)
+{
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<transform> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <transform> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  data* argi = NULL;
+  data** arrays = malloc(sizeof(data*)*(a.length-2));
+  size_t n = -1;
+  for (int i=2; i < a.length; i++)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
+
+if (true)
+  {
+    if (argi == NULL)
+      {
+        do_error("<transform> requires at least i arguments.");
+        return ;
+      }
+  }
+if (argi != NULL && true && (!(argi->type & Array)))
+  {
+    do_error("Argument i of <transform> should be of type Array.");
+    return ;
+  }
+
+;
+
+      n = n < ((array*) argi->data)->length ?
+        n : ((array*) argi->data)->length;
+
+      arrays[i-2] = argi;
+    }
+
+  arg a1;
+  a1.length = 1+2*(a.length-2);
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
+  for (int i=0; i < a1.length; i++)
+    {
+      a1.free_data[i] = i % 2;
+    }
+
+  a1.arg_array[0] = arg1;
+  data* d;
+  for (int i = 0; i < (a.length-2); i++)
+    {
+      size_t ndigits = floor(log10(i+1))+1;
+      char* name = malloc(sizeof(char)*(strlen("t")+ndigits+1));
+      sprintf(name, "t%d", i+1);
+      assign_regstr(&d, name, hash_str(name));
+      a1.arg_array[2*i+1] = d;
+    }
+
+  data** ans = malloc(sizeof(data*)*n);
+  for (size_t j = 0; j < n; j++)
+    {
+      for (int i=0; i < (a.length-2); i++)
+        {
+          a1.arg_array[2*(i+1)] = ((array*) arrays[i]->data)->data[j];
+        }
+
+      compute(arg1, reg, a1);
+      d = lookup(reg, arbel_hash_ans, 0);
+
+      ans[j] = copy_data(d);
+      
+    }
+    
+  free_arg(a1);
+
+  assign_array(&d, ans[0]->type, ans, n, false);
+  ret_ans(reg, d);
+    
 }
   
 
@@ -5224,14 +5324,17 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_where);
   set(reg,d,"where",1);
 
-  assign_op(&d, op_make_array);
-  set(reg,d,"make-array",1);
+  assign_op(&d, op_fill);
+  set(reg,d,"fill",1);
 
   assign_op(&d, op_element);
   set(reg,d,"element",1);
 
   assign_op(&d, op_modify);
   set(reg,d,"modify",1);
+
+  assign_op(&d, op_transform);
+  set(reg,d,"transform",1);
   
   
 }

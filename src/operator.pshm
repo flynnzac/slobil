@@ -2872,9 +2872,9 @@ op_error_messages (arg a, registry* reg)
 }
 
 void
-op_where (arg a, registry* reg)
+op_find (arg a, registry* reg)
 {
-  #op=where@
+  #op=find@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -2932,9 +2932,9 @@ op_where (arg a, registry* reg)
 }
 
 void
-op_make_array (arg a, registry* reg)
+op_fill (arg a, registry* reg)
 {
-  #op=make-array@
+  #op=fill@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -2994,9 +2994,9 @@ op_element (arg a, registry* reg)
 }
 
 void
-op_modify (arg a, registry* reg)
+op_modify_at (arg a, registry* reg)
 {
-  #op=modify@
+  #op=modify-at@
   #length=3@
   ##CHECK_ARGS~$;
 
@@ -3025,7 +3025,80 @@ op_modify (arg a, registry* reg)
   ((array*) arg1->data)->data[location-1] = copy_data(arg3);
   
 }
-  
+
+void
+op_transform (arg a, registry* reg)
+{
+  #op=transform@
+
+  #num=1@
+  #type=Instruction@
+  ##GETARG~$;
+
+  data* argi = NULL;
+  data** arrays = malloc(sizeof(data*)*(a.length-2));
+  size_t n = -1;
+  for (int i=2; i < a.length; i++)
+    {
+      #num=i@
+      #type=Array@
+      ##GETARG~$;
+
+      n = n < ((array*) argi->data)->length ?
+        n : ((array*) argi->data)->length;
+
+      arrays[i-2] = argi;
+    }
+
+  arg a1;
+  a1.length = 1+2*(a.length-2);
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
+  for (int i=0; i < a1.length; i++)
+    {
+      a1.free_data[i] = i % 2;
+    }
+
+  a1.arg_array[0] = arg1;
+  data* d;
+  for (int i = 0; i < (a.length-2); i++)
+    {
+      size_t ndigits = floor(log10(i+1))+1;
+      char* name = malloc(sizeof(char)*(strlen("t")+ndigits+1));
+      sprintf(name, "t%d", i+1);
+      assign_regstr(&d, name, hash_str(name));
+      a1.arg_array[2*i+1] = d;
+    }
+
+  data** ans = malloc(sizeof(data*)*n);
+  for (size_t j = 0; j < n; j++)
+    {
+      for (int i=0; i < (a.length-2); i++)
+        {
+          a1.arg_array[2*(i+1)] = ((array*) arrays[i]->data)->data[j];
+        }
+
+      compute(arg1, reg, a1);
+      d = lookup(reg, arbel_hash_ans, 0);
+
+      ans[j] = copy_data(d);
+      
+    }
+    
+  free_arg(a1);
+
+  assign_array(&d, ans[0]->type, ans, n, false);
+  ret_ans(reg, d);
+    
+}
+
+void
+op_modify (arg a, registry* reg)
+{
+  /* modify Array-to-modify How-to-modify where-Instruction [ Array1 ... ArrayN, args to Instructions ] 
+
+     if the where-instruction evaluates True, then execute how-to-modify and update Array-to-modify */
+}
 
 void
 add_basic_ops (registry* reg)
@@ -3296,17 +3369,23 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_previous);
   set(reg,d,"previous",1);
 
-  assign_op(&d, op_where);
-  set(reg,d,"where",1);
+  assign_op(&d, op_find);
+  set(reg,d,"find",1);
 
-  assign_op(&d, op_make_array);
-  set(reg,d,"make-array",1);
+  /* array operations */
+  assign_op(&d, op_fill);
+  set(reg,d,"fill",1);
 
   assign_op(&d, op_element);
   set(reg,d,"element",1);
 
-  assign_op(&d, op_modify);
-  set(reg,d,"modify",1);
+  assign_op(&d, op_modify_at);
+  set(reg,d,"modify-at",1);
+
+  assign_op(&d, op_transform);
+  set(reg,d,"transform",1);
+
+  
   
   
 }
