@@ -4640,11 +4640,11 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 }
 
 void
-op_where (arg a, registry* reg)
+op_find (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "where");
+  check_length(&a, 2+1, "find");
 if (is_error(-1)) return ;;
 
   
@@ -4656,13 +4656,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<where> requires at least 1 arguments.");
+        do_error("<find> requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <where> should be of type Registry.");
+    do_error("Argument 1 of <find> should be of type Registry.");
     return ;
   }
 
@@ -4677,13 +4677,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<where> requires at least 2 arguments.");
+        do_error("<find> requires at least 2 arguments.");
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <where> should be of type Instruction.");
+    do_error("Argument 2 of <find> should be of type Instruction.");
     return ;
   }
 
@@ -4787,7 +4787,7 @@ if (arg2 != NULL && false && (!(arg2->type & Integer)))
   int n = *((int*) arg1->data);
   if (n <= 0)
     {
-      do_error("First argument to <make-array> must be strictly positive.");
+      do_error("First argument to <fill> must be strictly positive.");
       return;
     }
 
@@ -4798,7 +4798,7 @@ if (arg2 != NULL && false && (!(arg2->type & Integer)))
     }
 
   data* d;
-  assign_array(&d, arg2->type, content, n, false);
+  assign_column(&d, arg2->type, content, n, false);
   ret_ans(reg, d);
   
 }
@@ -4824,9 +4824,9 @@ if (true)
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & Array)))
+if (arg1 != NULL && true && (!(arg1->type & Column)))
   {
-    do_error("Argument 1 of <element> should be of type Array.");
+    do_error("Argument 1 of <element> should be of type Column.");
     return ;
   }
 
@@ -4854,7 +4854,7 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
 ;
 
   int location = arbel_location(*((int*) arg2->data),
-                                ((array*) arg1->data)->length);
+                                ((column*) arg1->data)->length);
 
   if (location < 0)
     {
@@ -4862,16 +4862,16 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
       return;
     }
 
-  data* d = copy_data(((array*) arg1->data)->data[location-1]);
+  data* d = copy_data(((column*) arg1->data)->data[location-1]);
   ret_ans(reg, d);
 }
 
 void
-op_modify (arg a, registry* reg)
+op_modify_at (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "modify");
+  check_length(&a, 3+1, "modify-at");
 if (is_error(-1)) return ;;
 
   
@@ -4883,13 +4883,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<modify> requires at least 1 arguments.");
+        do_error("<modify-at> requires at least 1 arguments.");
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & Array)))
+if (arg1 != NULL && true && (!(arg1->type & Column)))
   {
-    do_error("Argument 1 of <modify> should be of type Array.");
+    do_error("Argument 1 of <modify-at> should be of type Column.");
     return ;
   }
 
@@ -4904,13 +4904,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<modify> requires at least 2 arguments.");
+        do_error("<modify-at> requires at least 2 arguments.");
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <modify> should be of type Integer.");
+    do_error("Argument 2 of <modify-at> should be of type Integer.");
     return ;
   }
 
@@ -4925,20 +4925,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<modify> requires at least 3 arguments.");
+        do_error("<modify-at> requires at least 3 arguments.");
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & ((array*) arg1->data)->type)))
+if (arg3 != NULL && true && (!(arg3->type & ((column*) arg1->data)->type)))
   {
-    do_error("Argument 3 of <modify> should be of type ((array*) arg1->data)->type.");
+    do_error("Argument 3 of <modify-at> should be of type ((column*) arg1->data)->type.");
     return ;
   }
 
 ;
 
   int location = arbel_location(*((int*) arg2->data),
-                                ((array*) arg1->data)->length);
+                                ((column*) arg1->data)->length);
 
   if (location < 0)
     {
@@ -4946,8 +4946,8 @@ if (arg3 != NULL && true && (!(arg3->type & ((array*) arg1->data)->type)))
       return;
     }
 
-  free_data(((array*) arg1->data)->data[location-1]);
-  ((array*) arg1->data)->data[location-1] = copy_data(arg3);
+  free_data(((column*) arg1->data)->data[location-1]);
+  ((column*) arg1->data)->data[location-1] = copy_data(arg3);
   
 }
 
@@ -4978,7 +4978,7 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 ;
 
   data* argi = NULL;
-  data** arrays = malloc(sizeof(data*)*(a.length-2));
+  data** columns = malloc(sizeof(data*)*(a.length-2));
   size_t n = -1;
   for (int i=2; i < a.length; i++)
     {
@@ -4995,18 +4995,18 @@ if (true)
         return ;
       }
   }
-if (argi != NULL && true && (!(argi->type & Array)))
+if (argi != NULL && true && (!(argi->type & Column)))
   {
-    do_error("Argument i of <transform> should be of type Array.");
+    do_error("Argument i of <transform> should be of type Column.");
     return ;
   }
 
 ;
 
-      n = n < ((array*) argi->data)->length ?
-        n : ((array*) argi->data)->length;
+      n = n < ((column*) argi->data)->length ?
+        n : ((column*) argi->data)->length;
 
-      arrays[i-2] = argi;
+      columns[i-2] = argi;
     }
 
   arg a1;
@@ -5034,7 +5034,7 @@ if (argi != NULL && true && (!(argi->type & Array)))
     {
       for (int i=0; i < (a.length-2); i++)
         {
-          a1.arg_array[2*(i+1)] = ((array*) arrays[i]->data)->data[j];
+          a1.arg_array[2*(i+1)] = ((column*) columns[i]->data)->data[j];
         }
 
       compute(arg1, reg, a1);
@@ -5046,11 +5046,16 @@ if (argi != NULL && true && (!(argi->type & Array)))
     
   free_arg(a1);
 
-  assign_array(&d, ans[0]->type, ans, n, false);
+  assign_column(&d, ans[0]->type, ans, n, false);
   ret_ans(reg, d);
     
 }
-  
+
+void
+op_modify (arg a, registry* reg)
+{
+  /* Like a replace command in stata */
+}
 
 void
 add_basic_ops (registry* reg)
@@ -5321,20 +5326,23 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_previous);
   set(reg,d,"previous",1);
 
-  assign_op(&d, op_where);
-  set(reg,d,"where",1);
+  assign_op(&d, op_find);
+  set(reg,d,"find",1);
 
+  /* column operations */
   assign_op(&d, op_fill);
   set(reg,d,"fill",1);
 
   assign_op(&d, op_element);
   set(reg,d,"element",1);
 
-  assign_op(&d, op_modify);
-  set(reg,d,"modify",1);
+  assign_op(&d, op_modify_at);
+  set(reg,d,"modify-at",1);
 
   assign_op(&d, op_transform);
   set(reg,d,"transform",1);
+
+  
   
   
 }

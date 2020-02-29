@@ -113,11 +113,11 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
-  else if (d->type == Array)
+  else if (d->type == Column)
     {
-      for (int i=0; i < ((array*) d->data)->length; i++)
+      for (int i=0; i < ((column*) d->data)->length; i++)
         {
-          free_data(((array*) d->data)->data[i]);
+          free_data(((column*) d->data)->data[i]);
         }
       free(d->data);
       free(d);

@@ -138,28 +138,28 @@ assign_boolean (data** d, bool val)
 }
 
 void
-assign_array (data** d, const data_type type,
+assign_column (data** d, const data_type type,
               data** content, const size_t length,
               bool copy)
 {
   *d = new_data();
-  (*d)->type = Array;
-  (*d)->data = malloc(sizeof(array));
-  ((array*) (*d)->data)->length = length;
-  ((array*) (*d)->data)->type = type;
+  (*d)->type = Column;
+  (*d)->data = malloc(sizeof(column));
+  ((column*) (*d)->data)->length = length;
+  ((column*) (*d)->data)->type = type;
   if (copy)
     {
-      ((array*) (*d)->data)->data = malloc(sizeof(data*)*length);
+      ((column*) (*d)->data)->data = malloc(sizeof(data*)*length);
       for (int i = 0; i < length; i++)
         {
-          ((data**) ((array*) (*d)->data)->data)[i] =
+          ((data**) ((column*) (*d)->data)->data)[i] =
             copy_data(content[i]);
       
         }
     }
   else
     {
-      ((array*) (*d)->data)->data = content;
+      ((column*) (*d)->data)->data = content;
     }
 }
 
@@ -311,10 +311,10 @@ copy_data (data* d_in)
     case Boolean:
       assign_boolean(&d, *((bool*) d_in->data));
       break;
-    case Array:
-      assign_array(&d, ((array*) d_in->data)->type,
-                   ((array*) d_in->data)->data,
-                   ((array*) d_in->data)->length,
+    case Column:
+      assign_column(&d, ((column*) d_in->data)->type,
+                    ((column*) d_in->data)->data,
+                    ((column*) d_in->data)->length,
                    true);
       break;
     case Nothing:

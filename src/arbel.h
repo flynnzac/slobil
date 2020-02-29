@@ -55,7 +55,7 @@ enum data_type
    File = 256,
    Boolean = 512,
    Nothing = 1024,
-   Array = 2048
+   Column = 2048
   };
 
 typedef enum data_type data_type;
@@ -71,14 +71,14 @@ struct data
 typedef struct data data;
 
 
-struct array
+struct column
 {
   data_type type;
   data** data;
   size_t length;
 };
 
-typedef struct array array;
+typedef struct column column;
 
 
 struct content
@@ -229,9 +229,9 @@ void
 assign_nothing (data** d);
 
 void
-assign_array (data** d, const data_type type,
-              data** content, const size_t length,
-              bool copy);
+assign_column (data** d, const data_type type,
+               data** content, const size_t length,
+               bool copy);
 
 void
 assign_file (data** d, FILE* f);

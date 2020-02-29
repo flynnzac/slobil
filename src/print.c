@@ -64,18 +64,18 @@ print_data (data* d, print_settings settings)
       else
         printf("False.");
       break;
-    case Array:
-      printf("%lu-Array containing: \n", ((array*) d->data)->length);
-      for (int i = 0; i < ((array*) d->data)->length; i++)
+    case Column:
+      printf("%lu-Column containing: \n", ((column*) d->data)->length);
+      for (int i = 0; i < ((column*) d->data)->length; i++)
         {
-          if (i < (((array*) d->data)->length-1))
+          if (i < (((column*) d->data)->length-1))
             {
-              print_data(((array*) d->data)->data[i],
+              print_data(((column*) d->data)->data[i],
                          PRINT_NEWLINE | PRINT_QUOTES);
             }
           else
             {
-              print_data(((array*) d->data)->data[i],
+              print_data(((column*) d->data)->data[i],
                          PRINT_QUOTES);
             }
         }
