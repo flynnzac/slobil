@@ -158,6 +158,7 @@
 		            "free"
 		            "previous"
                 "where"
+                "mod"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
 	           (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")

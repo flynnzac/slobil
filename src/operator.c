@@ -4146,16 +4146,9 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   int byte_length = strlen((char*) str)+1;
   int length = u8_mbsnlen((unsigned char*) str,
                           byte_length-1);
-  
-  if (start <= 0)
-    {
-      start += length;
-    }
 
-  if (end <= 0)
-    {
-      end += length;
-    }
+  start = arbel_location(start, length);
+  end = arbel_location(end, length);
 
   if ((start > length) || (start <= 0))
     {
@@ -4647,11 +4640,11 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 }
 
 void
-op_where (arg a, registry* reg)
+op_find (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "where");
+  check_length(&a, 2+1, "find");
 if (is_error(-1)) return ;;
 
   
@@ -4663,13 +4656,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<where> requires at least 1 arguments.");
+        do_error("<find> requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <where> should be of type Registry.");
+    do_error("Argument 1 of <find> should be of type Registry.");
     return ;
   }
 
@@ -4684,13 +4677,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<where> requires at least 2 arguments.");
+        do_error("<find> requires at least 2 arguments.");
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <where> should be of type Instruction.");
+    do_error("Argument 2 of <find> should be of type Instruction.");
     return ;
   }
 
@@ -4739,6 +4732,491 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   data* d;
   assign_registry(&d, result, false);
   ret_ans(reg, d);
+}
+
+void
+op_fill (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "fill");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<fill> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <fill> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<fill> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && false && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <fill> should be of type Integer.");
+    return ;
+  }
+
+;
+  
+  int n = *((int*) arg1->data);
+  if (n <= 0)
+    {
+      do_error("First argument to <fill> must be strictly positive.");
+      return;
+    }
+
+  data** content = malloc(sizeof(data*)*n);
+  for (int i=0; i < n; i++)
+    {
+      ((data**) content)[i] = copy_data(arg2);
+    }
+
+  data* d;
+  assign_column(&d, arg2->type, content, n, false);
+  ret_ans(reg, d);
+  
+}
+
+void
+op_element (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "element");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<element> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Column)))
+  {
+    do_error("Argument 1 of <element> should be of type Column.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<element> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <element> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((column*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid location.");
+      return;
+    }
+
+  data* d = copy_data(((column*) arg1->data)->data[location-1]);
+  ret_ans(reg, d);
+}
+
+void
+op_modify_at (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 3+1, "modify-at");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<modify-at> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Column)))
+  {
+    do_error("Argument 1 of <modify-at> should be of type Column.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<modify-at> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <modify-at> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg3 = resolve(a.arg_array[3], reg);
+
+if (true)
+  {
+    if (arg3 == NULL)
+      {
+        do_error("<modify-at> requires at least 3 arguments.");
+        return ;
+      }
+  }
+if (arg3 != NULL && true && (!(arg3->type & ((column*) arg1->data)->type)))
+  {
+    do_error("Argument 3 of <modify-at> should be of type ((column*) arg1->data)->type.");
+    return ;
+  }
+
+;
+
+  int location = arbel_location(*((int*) arg2->data),
+                                ((column*) arg1->data)->length);
+
+  if (location < 0)
+    {
+      do_error("Invalid element.");
+      return;
+    }
+
+  free_data(((column*) arg1->data)->data[location-1]);
+  ((column*) arg1->data)->data[location-1] = copy_data(arg3);
+  
+}
+
+void
+op_transform (arg a, registry* reg)
+{
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<transform> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <transform> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  data* argi = NULL;
+  data** columns = malloc(sizeof(data*)*(a.length-2));
+  size_t n = -1;
+  for (int i=2; i < a.length; i++)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
+
+if (true)
+  {
+    if (argi == NULL)
+      {
+        do_error("<transform> requires at least i arguments.");
+        return ;
+      }
+  }
+if (argi != NULL && true && (!(argi->type & Column)))
+  {
+    do_error("Argument i of <transform> should be of type Column.");
+    return ;
+  }
+
+;
+
+      n = n < ((column*) argi->data)->length ?
+        n : ((column*) argi->data)->length;
+
+      columns[i-2] = argi;
+    }
+
+  arg a1;
+  a1.length = 1+2*(a.length-2);
+  a1.free_data = malloc(sizeof(int)*a1.length);
+  a1.arg_array = malloc(sizeof(data*)*a1.length);
+  for (int i=0; i < a1.length; i++)
+    {
+      a1.free_data[i] = i % 2;
+    }
+
+  a1.arg_array[0] = arg1;
+  data* d;
+  for (int i = 0; i < (a.length-2); i++)
+    {
+      size_t ndigits = floor(log10(i+1))+1;
+      char* name = malloc(sizeof(char)*(strlen("t")+ndigits+1));
+      sprintf(name, "t%d", i+1);
+      assign_regstr(&d, name, hash_str(name));
+      a1.arg_array[2*i+1] = d;
+    }
+
+  data** ans = malloc(sizeof(data*)*n);
+  for (size_t j = 0; j < n; j++)
+    {
+      for (int i=0; i < (a.length-2); i++)
+        {
+          a1.arg_array[2*(i+1)] = ((column*) columns[i]->data)->data[j];
+        }
+
+      compute(arg1, reg, a1);
+      d = lookup(reg, arbel_hash_ans, 0);
+
+      ans[j] = copy_data(d);
+      
+    }
+    
+  free_arg(a1);
+
+  assign_column(&d, ans[0]->type, ans, n, false);
+  ret_ans(reg, d);
+    
+}
+
+void
+op_height (arg a, registry* reg)
+{
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<height> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Column)))
+  {
+    do_error("Argument 1 of <height> should be of type Column.");
+    return ;
+  }
+
+;
+
+  data* d;
+  assign_int(&d, ((column*) arg1->data)->length);
+
+  ret_ans(reg,d);
+}
+
+void
+op_please (arg a, registry* reg)
+{
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<please> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <please> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<please> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
+  {
+    do_error("Argument 2 of <please> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  execute_0(arg1, reg);
+
+  if (is_error(-1))
+    {
+      is_error(0);
+      execute_0(arg2, reg);
+    }
+}
+
+void
+op_mod (arg a, registry* reg)
+{
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<mod> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & (Real | Integer))))
+  {
+    do_error("Argument 1 of <mod> should be of type (Real | Integer).");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<mod> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
+  {
+    do_error("Argument 2 of <mod> should be of type (Real | Integer).");
+    return ;
+  }
+
+;
+
+  data* d;
+  if (arg1->type == Real)
+    {
+      if (arg2->type == Real)
+        {
+          double res = fmod(*((double*) arg1->data),
+                            *((double*) arg2->data));
+          assign_real(&d, res);
+        }
+      else
+        {
+          double res = fmod(*((double*) arg1->data),
+                            (double) (*((int*) arg2->data)));
+          assign_real(&d, res);
+        }
+    }
+  else
+    {
+      if (arg2->type == Real)
+        {
+          double res = fmod((double) *((int*) arg1->data),
+                            *((double*) arg2->data));
+          assign_real(&d, res);
+        }
+      else
+        {
+          int res = *((int*) arg1->data) % *((int*) arg2->data);
+          assign_int(&d, res);
+        }
+    }
+
+  ret_ans(reg,d);
 }
 
 void
@@ -5010,8 +5488,30 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_previous);
   set(reg,d,"previous",1);
 
-  assign_op(&d, op_where);
-  set(reg,d,"where",1);
+  assign_op(&d, op_find);
+  set(reg,d,"find",1);
+
+  assign_op(&d, op_fill);
+  set(reg,d,"fill",1);
+
+  assign_op(&d, op_element);
+  set(reg,d,"element",1);
+
+  assign_op(&d, op_modify_at);
+  set(reg,d,"modify-at",1);
+
+  assign_op(&d, op_transform);
+  set(reg,d,"transform",1);
+
+  assign_op(&d, op_height);
+  set(reg,d,"height",1);
+
+  assign_op(&d, op_please);
+  set(reg,d,"please",1);
+
+  assign_op(&d, op_mod);
+  set(reg,d,"mod",1);
+  
   
 }
   

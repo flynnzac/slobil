@@ -113,6 +113,15 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
+  else if (d->type == Column)
+    {
+      for (int i=0; i < ((column*) d->data)->length; i++)
+        {
+          free_data(((column*) d->data)->data[i]);
+        }
+      free(d->data);
+      free(d);
+    }
   else if (d->type == Operation)
     {
       free(d);

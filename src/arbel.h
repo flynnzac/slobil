@@ -54,7 +54,8 @@ enum data_type
    Operation = 128,
    File = 256,
    Boolean = 512,
-   Nothing = 1024
+   Nothing = 1024,
+   Column = 2048
   };
 
 typedef enum data_type data_type;
@@ -68,6 +69,16 @@ struct data
   data_type type;
 };
 typedef struct data data;
+
+
+struct column
+{
+  data_type type;
+  data** data;
+  size_t length;
+};
+
+typedef struct column column;
 
 
 struct content
@@ -216,6 +227,11 @@ assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
+
+void
+assign_column (data** d, const data_type type,
+               data** content, const size_t length,
+               bool copy);
 
 void
 assign_file (data** d, FILE* f);
@@ -456,6 +472,9 @@ print_statement (statement* s);
 
 data*
 new_data();
+
+int
+arbel_location(int loc, int n);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
