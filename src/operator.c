@@ -5084,6 +5084,142 @@ if (arg1 != NULL && true && (!(arg1->type & Column)))
 }
 
 void
+op_please (arg a, registry* reg)
+{
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<please> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <please> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<please> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
+  {
+    do_error("Argument 2 of <please> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  execute_0(arg1, reg);
+
+  if (is_error(-1))
+    {
+      is_error(0);
+      execute_0(arg2, reg);
+    }
+}
+
+void
+op_mod (arg a, registry* reg)
+{
+  
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<mod> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & (Real | Integer))))
+  {
+    do_error("Argument 1 of <mod> should be of type (Real | Integer).");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<mod> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
+  {
+    do_error("Argument 2 of <mod> should be of type (Real | Integer).");
+    return ;
+  }
+
+;
+
+  data* d;
+  if (arg1->type == Real)
+    {
+      if (arg2->type == Real)
+        {
+          double res = fmod(*((double*) arg1->data),
+                            *((double*) arg2->data));
+          assign_real(&d, res);
+        }
+      else
+        {
+          double res = fmod(*((double*) arg1->data),
+                            (double) (*((int*) arg2->data)));
+          assign_real(&d, res);
+        }
+    }
+  else
+    {
+      if (arg2->type == Real)
+        {
+          double res = fmod((double) *((int*) arg1->data),
+                            *((double*) arg2->data));
+          assign_real(&d, res);
+        }
+      else
+        {
+          int res = *((int*) arg1->data) % *((int*) arg2->data);
+          assign_int(&d, res);
+        }
+    }
+
+  ret_ans(reg,d);
+}
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -5355,7 +5491,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_find);
   set(reg,d,"find",1);
 
-  /* column operations */
   assign_op(&d, op_fill);
   set(reg,d,"fill",1);
 
@@ -5370,7 +5505,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_height);
   set(reg,d,"height",1);
-    
+
+  assign_op(&d, op_please);
+  set(reg,d,"please",1);
+
+  assign_op(&d, op_mod);
+  set(reg,d,"mod",1);
+  
   
 }
   
