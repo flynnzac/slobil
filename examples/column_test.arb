@@ -1,0 +1,14 @@
+set /x [ fill 100000000 2 . ] .
+set /avg
+    (
+      set /n [ height col . ] .
+      set /i 1 .
+      set /sum 0 .
+      while ( lt-eq i n . )
+            (
+              set /sum [ add sum [ element col i . ] . ] .
+              set /i [ add i 1 . ] .
+            ) .
+
+      div sum [ to-real n . ] .
+    ) .

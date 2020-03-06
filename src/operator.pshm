@@ -3093,9 +3093,18 @@ op_transform (arg a, registry* reg)
 }
 
 void
-op_modify (arg a, registry* reg)
+op_height (arg a, registry* reg)
 {
-  /* Like a replace command in stata */
+  #op=height@
+
+  #num=1@
+  #type=Column@
+  ##GETARG~$;
+
+  data* d;
+  assign_int(&d, ((column*) arg1->data)->length);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -3383,8 +3392,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_transform);
   set(reg,d,"transform",1);
 
-  
-  
+  assign_op(&d, op_height);
+  set(reg,d,"height",1);
+    
   
 }
   

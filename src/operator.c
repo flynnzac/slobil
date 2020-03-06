@@ -5052,9 +5052,35 @@ if (argi != NULL && true && (!(argi->type & Column)))
 }
 
 void
-op_modify (arg a, registry* reg)
+op_height (arg a, registry* reg)
 {
-  /* Like a replace command in stata */
+  
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<height> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Column)))
+  {
+    do_error("Argument 1 of <height> should be of type Column.");
+    return ;
+  }
+
+;
+
+  data* d;
+  assign_int(&d, ((column*) arg1->data)->length);
+
+  ret_ans(reg,d);
 }
 
 void
@@ -5342,8 +5368,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_transform);
   set(reg,d,"transform",1);
 
-  
-  
+  assign_op(&d, op_height);
+  set(reg,d,"height",1);
+    
   
 }
   
