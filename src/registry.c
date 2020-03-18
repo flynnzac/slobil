@@ -114,6 +114,12 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
+  if (hash_name == arbel_hash_underscore)
+    {
+      data* d;
+      assign_registry(&d, reg, false);
+      return d;
+    }
   content* c = reg->objects[hash_name % reg->hash_size];
   if (c == NULL || is_init_reg(c))
     {

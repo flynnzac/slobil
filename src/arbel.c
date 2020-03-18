@@ -80,6 +80,7 @@ main (int argc, char** argv)
   arbel_hash_data = hash_str("data");
   arbel_hash_class = hash_str("--of");
   arbel_hash_t = hash_str("t");
+  arbel_hash_underscore = hash_str("_");
 
   arbel_error = 0;
 
