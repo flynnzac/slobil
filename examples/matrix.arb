@@ -2,13 +2,13 @@
 set /dotproduct
     (
       do-to-all ( mul t1 t2 . ) v w .
-      collapse ( add t1 t2 . ) ans "#" .
+      collapse ( add t1 t2 . ) ans  .
     ) .
 
 ' matrix-multiply A B computes A^T B 
 set /matrix-multiply
     (
-      set /i /#1 .
+      set /i /t1 .
       set /out [ list . ] .
       while ( exist i B . )
             (
