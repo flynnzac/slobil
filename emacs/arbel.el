@@ -159,6 +159,7 @@
 		            "previous"
                 "where"
                 "mod"
+                "is-operation"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
 	           (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")

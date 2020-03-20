@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Column operations (ARBEL)</title>
+
+<meta name="description" content="Column operations (ARBEL)">
+<meta name="keywords" content="Column operations (ARBEL)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Reference.html" rel="up" title="Reference">
+<link href="Boolean-operations.html" rel="prev" title="Boolean operations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<span id="Column-operations"></span><div class="header">
+<p>
+Previous: <a href="Boolean-operations.html" accesskey="p" rel="prev">Boolean operations</a>, Up: <a href="Reference.html" accesskey="u" rel="up">Reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<span id="Column-operations-1"></span><h3 class="section">4.10 Column operations</h3>
+
+<ul>
+<li> &lsquo;<samp>fill INTEGER VALUE</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to a Column of size &lsquo;<samp>INTEGER</samp>&rsquo; where each element is set to &lsquo;<samp>VALUE</samp>&rsquo;.
+
+</li><li> &lsquo;<samp>element COLUMN INTEGER</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to the &lsquo;<samp>INTEGER</samp>&rsquo; element of the Column &lsquo;<samp>COLUMN</samp>&rsquo;.
+
+</li><li> &lsquo;<samp>modify-at COLUMN INTEGER VALUE</samp>&rsquo; &mdash; sets the value in &lsquo;<samp>COLUMN</samp>&rsquo; at location &lsquo;<samp>INTEGER</samp>&rsquo; to &lsquo;<samp>VALUE</samp>&rsquo;.
+
+</li><li> &lsquo;<samp>transform INSTRUCTION COLUMN1 ... COLUMNN</samp>&rsquo; &mdash; sets the &lsquo;<samp>/ans</samp>&rsquo; Register to a Column formed by evaluating &lsquo;<samp>INSTRUCTION</samp>&rsquo; after setting the registers &lsquo;<samp>/t1,.../tN</samp>&rsquo; to each element in &lsquo;<samp>COLUMN1,...,COLUMNN</samp>&rsquo;.
+
+</li><li> &lsquo;<samp>height COLUMN</samp>&rsquo; &mdash; return the number of elements in &lsquo;<samp>COLUMN</samp>&rsquo;.
+</li></ul>
+
+
+
+
+</body>
+</html>

@@ -6,11 +6,6 @@
 @documentlanguage en
 @c %**end of header
 
-@dircategory ARBEL
-@direntry
-* ARBEL: (arbel).       Introduction.
-@end direntry
-
 @finalout
 @titlepage
 @title ARBEL
@@ -51,13 +46,13 @@ Registries
 
 Examples
 
-* Example: Example A Line-Oriented Text Editor. 
-* Example: Example Numerical Differentiation. 
-* Example: Example Dispatch. 
-* Example: Example Compute Factorial. 
-* Example: Example Numerical Integration. 
-* Example: Example Basic Linear Algebra. 
-* Example: Example Split a String. 
+* A Line-Oriented Text Editor::
+* Numerical Differentiation::
+* Dispatch::
+* Compute Factorial::
+* Numerical Integration::
+* Basic Linear Algebra::
+* Split a String::
 
 Reference
 
@@ -70,6 +65,7 @@ Reference
 * Instruction operations::
 * File operations::
 * Boolean operations::
+* Column operations::
 
 Registry operations
 
@@ -110,7 +106,7 @@ String operations
 
 Register operations
 
-* Operations on "list" registers:: 
+* Operations on "list" registers::
 * Convert to register::
 * Register comparison::
 * Test if a Register::
@@ -166,7 +162,7 @@ A single line of ARBEL code is a statement.  The first element of the statement 
 @end example
 
 
-@samp{set} is the ARBEL operation to set a register to a certain value.  Names that have a forward slash (​@emph{) preceeding them are /registers}, like @samp{/hello} above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
+@samp{set} is the ARBEL operation to set a register to a certain value.  Names that have a forward slash (​/) preceeding them are @emph{registers}, like @samp{/hello} above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
 
 @example
 ... set /days-in-week 7 .
@@ -214,7 +210,7 @@ ans = 11
 ans = 9
 @end example
 
-This is a defining feature of ARBEL@. Code is naturally generic. Any object in an instruction can be replaced by any other (except for a literal value like @samp{11} or @samp{"hello"} ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding @samp{/name value} in the call to the Instruction.
+This is a defining feature of ARBEL. Code is naturally generic. Any object in an instruction can be replaced by any other (except for a literal value like @samp{11} or @samp{"hello"} ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding @samp{/name value} in the call to the Instruction.
 
 Because there is no ambiguity, you do not actually need to use the @samp{call} operation directly.  ARBEL will insert it for you if the first argument is an instruction.  So the following would work as well,
 @example
@@ -231,7 +227,7 @@ Closed parenthesis ("[]") execute the statements inside of them immediately and 
 ans = 8
 @end example
 
-You may have noticed the @samp{ans = ...} after entering a lot of these commands.  This tells you the current value of the @samp{/ans} register which is special in ARBEL@.  Operations often write to the @samp{/ans} register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the @samp{/ans} register in the current registry by using the @samp{answer} operation.
+You may have noticed the @samp{ans = ...} after entering a lot of these commands.  This tells you the current value of the @samp{/ans} register which is special in ARBEL.  Operations often write to the @samp{/ans} register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the @samp{/ans} register in the current registry by using the @samp{answer} operation.
 @example
 ... answer 10 .
 ans = 10
@@ -407,7 +403,7 @@ It can also choose the register by referencing the value of another register.
 @node Registers
 @section Registers
 
-Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL@.  For example, you can set other registers to registers and use those values wherever you would use Registers.
+Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
 
 @example
 ... set /x /y .
@@ -442,17 +438,17 @@ ARBEL is not only a programming language. It is also an @emph{environment}.  The
 @chapter Examples
 
 @menu
-* Example: Example A Line-Oriented Text Editor. 
-* Example: Example Numerical Differentiation. 
-* Example: Example Dispatch. 
-* Example: Example Compute Factorial. 
-* Example: Example Numerical Integration. 
-* Example: Example Basic Linear Algebra. 
-* Example: Example Split a String. 
+* A Line-Oriented Text Editor::
+* Numerical Differentiation::
+* Dispatch::
+* Compute Factorial::
+* Numerical Integration::
+* Basic Linear Algebra::
+* Split a String::
 @end menu
 
-@node Example A Line-Oriented Text Editor
-@section Example: A Line-Oriented Text Editor
+@node A Line-Oriented Text Editor
+@section A Line-Oriented Text Editor
 
 @example
 ' Line-oriented text editor
@@ -497,8 +493,8 @@ Goodbye
 Hello
 @end example
 
-@node Example Numerical Differentiation
-@section Example: Numerical Differentiation
+@node Numerical Differentiation
+@section Numerical Differentiation
 
 @example
 ' Compute the numerical derivative of a function
@@ -521,8 +517,8 @@ Example of use:
 ans = 2.0
 @end example
 
-@node Example Dispatch
-@section Example: Dispatch
+@node Dispatch
+@section Dispatch
 
 @example
 ' Demonstrates dispatching to different types
@@ -559,8 +555,8 @@ ans = 20.0
 ans = hellohellohellohellohello
 @end example
 
-@node Example Compute Factorial
-@section Example: Compute Factorial
+@node Compute Factorial
+@section Compute Factorial
 
 @example
 ' compute a factorial using while
@@ -595,8 +591,8 @@ Example of use:
 ans = 120
 @end example
 
-@node Example Numerical Integration
-@section Example: Numerical Integration
+@node Numerical Integration
+@section Numerical Integration
 
 @example
 ' takes a function as an argument and return left hand
@@ -622,8 +618,8 @@ Example of use:
 ans = 0.332834
 @end example
 
-@node Example Basic Linear Algebra
-@section Example: Basic Linear Algebra
+@node Basic Linear Algebra
+@section Basic Linear Algebra
 
 @example
 ' Computes v^T w for a vector 
@@ -672,24 +668,24 @@ Example of use:
 ... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
 ... transpose /A A .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 1
-#2 of type Integer, value: 3
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 2
-#2 of type Integer, value: 4
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 3
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 2
+t2 of type Integer, value: 4
 ... matrix-multiply /A A /B B .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 10
-#2 of type Integer, value: 26
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 11
-#2 of type Integer, value: 25
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 10
+t2 of type Integer, value: 26
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 11
+t2 of type Integer, value: 25
 @end example
 
-@node Example Split a String
-@section Example: Split a String
+@node Split a String
+@section Split a String
 
 @example
 ' Tokenize a string /line by splitting on string /sep
@@ -724,9 +720,9 @@ Examples of use:
 @example
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
-#1 of type String, value: 1
-#2 of type String, value: 2
-#3 of type String, value: 3
+t1 of type String, value: 1
+t2 of type String, value: 2
+t3 of type String, value: 3
 @end example
 
 @node Reference
@@ -744,6 +740,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 * Instruction operations::
 * File operations::
 * Boolean operations::
+* Column operations::
 @end menu
 
 @node Registry operations
@@ -767,7 +764,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...} --- sets the @samp{/ans} register to a registry with @samp{VALUE1} located at @samp{REGISTER1} and so on.
 
 @item
-@samp{list VALUE1 VALUE2 ...} --- set the @samp{/ans} register to a Registry with @samp{VALUE1} at Register @samp{/#1}, @samp{VALUE2} at Register @samp{/#2}, and so on.
+@samp{list VALUE1 VALUE2 ...} --- set the @samp{/ans} register to a Registry with @samp{VALUE1} at Register @samp{/t1}, @samp{VALUE2} at Register @samp{/t2}, and so on.
 @end itemize
 
 @node Insert move and remove data to and from registers
@@ -798,7 +795,10 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{exist REGISTER <REGISTRY>} --- set the @samp{/ans} register to @samp{True} if a value exists at the @samp{REGISTER} in @samp{REGISTRY}.  If the @samp{REGISTRY} argument is omitted, check in the current registry.
 
 @item
-@samp{import REGISTRY} --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY@.
+@samp{import REGISTRY} --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY.
+
+@item
+@samp{where REGISTRY INSTRUCTION} --- set the @samp{/ans} register to a Registry containing all the elements in the registry such that the INSTRUCTION when passed the element of the Registry at Register @samp{/t} sets the @samp{/ans} register to @samp{True}.
 @end itemize
 
 @node Apply Instructions to elements of a Registry
@@ -806,10 +806,10 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN} --- execute @samp{INSTRUCTION} which takes arguments at Registers @samp{/t1}, @samp{/t2}, @dots{}, @samp{/tN} for each element in @samp{REGISTRY1}, @dots{}, @samp{REGISTRYN}.  Set the @samp{/ans} register to a Registry which contains whatever the @samp{INSTRUCTION} evaluates to at the corresponding Registers.  For example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]} sets the @samp{/ans} register to a Registry with elements (5,7,9) at registers @samp{(/#1,/#2,/#3)}.  @samp{do-to-all} will only return results at Registers that exist in all Registries.  So, for example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]} sets the @samp{/ans} Register to @samp{list 5 7}.
+@samp{do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN} --- execute @samp{INSTRUCTION} which takes arguments at Registers @samp{/t1}, @samp{/t2}, @dots{}, @samp{/tN} for each element in @samp{REGISTRY1}, @dots{}, @samp{REGISTRYN}.  Set the @samp{/ans} register to a Registry which contains whatever the @samp{INSTRUCTION} evaluates to at the corresponding Registers.  For example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]} sets the @samp{/ans} register to a Registry with elements (5,7,9) at registers @samp{(/t1,/t2,/t3)}.  @samp{do-to-all} will only return results at Registers that exist in all Registries.  So, for example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]} sets the @samp{/ans} Register to @samp{list 5 7}.
 
 @item
-@samp{collapse INSTRUCTION REGISTRY <STRING>} --- sets the @samp{/ans} register to the value of applying @samp{INSTRUCTION} to the value at Register @samp{/STRING1} and @samp{/STRING2} and then again to the result of that and to the value of  @samp{/STRING3} and so on where the @samp{INSTRUCTION} takes each argument at registers @samp{/t1} and @samp{/t2}. For example, @samp{collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"} sets the @samp{/ans} register to @samp{6}.  If the @samp{STRING} argument is omitted, it is assumed to be @samp{"#"}.
+@samp{collapse INSTRUCTION REGISTRY <STRING>} --- sets the @samp{/ans} register to the value of applying @samp{INSTRUCTION} to the value at Register @samp{/STRING1} and @samp{/STRING2} and then again to the result of that and to the value of  @samp{/STRING3} and so on where the @samp{INSTRUCTION} takes each argument at registers @samp{/t1} and @samp{/t2}. For example, @samp{collapse ( add t1 t2 . ) [ list 1 2 3 . ] "t"} sets the @samp{/ans} register to @samp{6}.  If the @samp{STRING} argument is omitted, it is assumed to be @samp{"t"}.
 @end itemize
 
 @node Execute code in a registry
@@ -849,13 +849,13 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{of STRING REGISTRY} --- declare REGISTRY to be @samp{of} kind STRING@.
+@samp{of STRING REGISTRY} --- declare REGISTRY to be @samp{of} kind STRING.
 
 @item
-@samp{is-of STRING REGISTRY} --- set the @samp{/ans} Register to @samp{True} if REGISTRY is of kind STRING@.
+@samp{is-of STRING REGISTRY} --- set the @samp{/ans} Register to @samp{True} if REGISTRY is of kind STRING.
 
 @item
-@samp{dispatch STRING VALUE} --- set the @samp{/ans} Register to the Instruction called STRING corresponding to VALUE@.  In other words if @samp{dispatch "f" 10}, sets the @samp{/ans} register to Instruction at @samp{/f+Integer}.
+@samp{dispatch STRING VALUE} --- set the @samp{/ans} Register to the Instruction called STRING corresponding to VALUE.  In other words if @samp{dispatch "f" 10}, sets the @samp{/ans} register to Instruction at @samp{/f+Integer}.
 @end itemize
 
 @node Real and Integer operations
@@ -884,6 +884,9 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @item
 @samp{div NUMBER1 NUMBER2 ...} --- divides the first number by the second, the result by the third number, and so on and sets the @samp{/ans} register to the result.
+
+@item
+@samp{mod NUMBER1 NUMBER2} --- return the remainder of dividing the first number by the second.
 @end itemize
 
 @node Comparison operations
@@ -914,7 +917,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{to-number STRING|REGISTER} --- if the argument is a String, try to convert to a number and set the @samp{/ans} Register to the result.  If the argument is a Register and ends in a number, set the @samp{/ans} Register to the result.
 
 @item
-@samp{to-real INTEGER} --- set the @samp{/ans} Register to a Real representing the INTEGER@.
+@samp{to-real INTEGER} --- set the @samp{/ans} Register to a Real representing the INTEGER.
 @end itemize
 
 @node Test if type operations
@@ -933,7 +936,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{log NUMBER} --- set the @samp{/ans} Register to the natural logarithm of NUMBER@.
+@samp{log NUMBER} --- set the @samp{/ans} Register to the natural logarithm of NUMBER.
 
 @item
 @samp{exp NUMBER} --- set the @samp{/ans} Register to the NUMBER power of the natural base.
@@ -984,7 +987,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{exit} --- exit ARBEL@.
+@samp{exit} --- exit ARBEL.
 @end itemize
 
 @node Print output
@@ -1000,7 +1003,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{source STRING} --- executes ARBEL code in the file named by STRING@.
+@samp{source STRING} --- executes ARBEL code in the file named by STRING.
 
 @item
 @samp{save FILENAME} --- save the contents of the current registry to file.
@@ -1009,7 +1012,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{load FILENAME} --- load the contents of a saved file into the environment.
 
 @item
-@samp{output-code STRING} --- outputs the code that has been entered at the prompt so far to the file named STRING@.
+@samp{output-code STRING} --- outputs the code that has been entered at the prompt so far to the file named STRING.
 
 @item
 @samp{clear-code} --- clear code that has been entered so far so that the code that @samp{output-code} outputs will be empty.
@@ -1020,10 +1023,10 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{shell STRING} --- execute the shell command STRING@.
+@samp{shell STRING} --- execute the shell command STRING.
 
 @item
-@samp{change-dir STRING} --- change directory to the location given in STRING@.
+@samp{change-dir STRING} --- change directory to the location given in STRING.
 
 @item
 @samp{current-dir} --- set the @samp{/ans} Register to a String giving the current directory.
@@ -1064,7 +1067,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{substring STRING INTEGER1 INTEGER2} --- sets the @samp{/ans} Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if @samp{INTEGER1} and @samp{INTEGER2} are @samp{0}, then it will set the @samp{/ans} register to the last character in @samp{STRING}.
 
 @item
-@samp{match STRING1 STRING2 <INTEGER>} --- find occurences of regular expression STRING1 in String STRING2.  Sets the @samp{/ans} Register to a Registry with all submatches located at the @samp{/#N} registries.  The optional third argument gives the number of matches to return.  If @samp{0} is provided, return all matches (default).
+@samp{match STRING1 STRING2 <INTEGER>} --- find occurences of regular expression STRING1 in String STRING2.  Sets the @samp{/ans} Register to a Registry with all submatches located at the @samp{/tN} registries.  The optional third argument gives the number of matches to return.  If @samp{0} is provided, return all matches (default).
 
 @item
 @samp{replace STRING1 STRING2 STRING3 <INTEGER>} --- set the @samp{/ans} Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If @samp{0}, replace all (default).
@@ -1142,6 +1145,9 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{next REGISTER} --- if the @samp{REGISTER} ends in a number, return the Register with that number incremented by 1.
 
 @item
+@samp{previous REGISTER} --- if the @samp{REGISTER} ends in a number, return the Register with that number minus 1.  If that would cause the number to be less than 1 set the @samp{/ans} Register to the "first" register with that prefix so that @samp{previous /t1 .} sets @samp{/ans} to @samp{/t1}.
+
+@item
 @samp{last REGISTRY STRING} --- return the last Register in the @samp{REGISTRY} that starts with @samp{STRING}.  So that if you had registers @samp{/x0}, @samp{/x1}, and @samp{/x2} in the Registry, @samp{last REGISTRY "x"} would return @samp{/x2}.
 @end itemize
 
@@ -1150,7 +1156,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @itemize
 @item
-@samp{to-register STRING|INTEGER} --- sets the @samp{/ans} register to a Register named @samp{STRING} or to @samp{/#INTEGER}.
+@samp{to-register STRING|INTEGER} --- sets the @samp{/ans} register to a Register named @samp{STRING} or to @samp{/tINTEGER}.
 @end itemize
 
 @node Register comparison
@@ -1188,19 +1194,19 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{is-file VALUE} --- sets the @samp{/ans} Register to @samp{True} if the @samp{Value} is a File and to @samp{False} otherwise.
 
 @item
-@samp{open-text-file STRING} --- sets the @samp{/ans} Register to a File object corresponding to the file named STRING@.
+@samp{open-text-file STRING} --- sets the @samp{/ans} Register to a File object corresponding to the file named STRING.
 
 @item
 @samp{read FILE} --- read a single character from a File object and set the @samp{/ans} Register to that character.
 
 @item
-@samp{close REGISTER} --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER@.
+@samp{close REGISTER} --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
 
 @item
-@samp{read-line FILE} --- sets the @samp{/ans} Register to the next line from FILE@.
+@samp{read-line FILE} --- sets the @samp{/ans} Register to the next line from FILE.
 
 @item
-@samp{write STRING FILE} --- write a given STRING to FILE@.
+@samp{write STRING FILE} --- write a given STRING to FILE.
 @end itemize
 
 @node Boolean operations
@@ -1218,6 +1224,26 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 @item
 @samp{not BOOLEAN} --- sets the @samp{/ans} Register to @samp{True} if BOOLEAN is @samp{False} and to @samp{False} otherwise.
+@end itemize
+
+@node Column operations
+@section Column operations
+
+@itemize
+@item
+@samp{fill INTEGER VALUE} --- sets the @samp{/ans} Register to a Column of size @samp{INTEGER} where each element is set to @samp{VALUE}.
+
+@item
+@samp{element COLUMN INTEGER} --- sets the @samp{/ans} Register to the @samp{INTEGER} element of the Column @samp{COLUMN}.
+
+@item
+@samp{modify-at COLUMN INTEGER VALUE} --- sets the value in @samp{COLUMN} at location @samp{INTEGER} to @samp{VALUE}.
+
+@item
+@samp{transform INSTRUCTION COLUMN1 ... COLUMNN} --- sets the @samp{/ans} Register to a Column formed by evaluating @samp{INSTRUCTION} after setting the registers @samp{/t1,.../tN} to each element in @samp{COLUMN1,...,COLUMNN}.
+
+@item
+@samp{height COLUMN} --- return the number of elements in @samp{COLUMN}.
 @end itemize
 
 @bye

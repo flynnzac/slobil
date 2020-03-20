@@ -295,7 +295,7 @@ ARBEL is not only a programming language. It is also an /environment/.  The curr
 
 * Examples
 
-** Example: A Line-Oriented Text Editor
+** A Line-Oriented Text Editor
 
 #+INCLUDE: "../examples/arbed.arb" example
 
@@ -314,7 +314,7 @@ Goodbye
 Hello
 #+END_SRC
 
-** Example: Numerical Differentiation
+** Numerical Differentiation
 
 #+INCLUDE: "../examples/deriv.arb" example
 
@@ -325,7 +325,7 @@ Example of use:
 ans = 2.0
 #+END_SRC
 
-** Example: Dispatch
+** Dispatch
 
 #+INCLUDE: "../examples/dispatch.arb" example
 
@@ -339,7 +339,7 @@ ans = 20.0
 ans = hellohellohellohellohello
 #+END_SRC
 
-** Example: Compute Factorial
+** Compute Factorial
 
 #+INCLUDE: "../examples/factorial.arb" example
 
@@ -349,7 +349,7 @@ Example of use:
 ans = 120
 #+END_SRC
 
-** Example: Numerical Integration
+** Numerical Integration
 
 #+INCLUDE: "../examples/integrate.arb" example
 
@@ -359,7 +359,7 @@ Example of use:
 ans = 0.332834
 #+END_SRC
 
-** Example: Basic Linear Algebra
+** Basic Linear Algebra
 
 #+INCLUDE: "../examples/matrix.arb" example
 
@@ -369,23 +369,23 @@ Example of use:
 ... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
 ... transpose /A A .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 1
-#2 of type Integer, value: 3
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 2
-#2 of type Integer, value: 4
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 3
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 2
+t2 of type Integer, value: 4
 ... matrix-multiply /A A /B B .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 10
-#2 of type Integer, value: 26
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 11
-#2 of type Integer, value: 25
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 10
+t2 of type Integer, value: 26
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 11
+t2 of type Integer, value: 25
 #+END_SRC
 
-** Example: Split a String
+** Split a String
 
 #+INCLUDE: "../examples/tokenize.arb" example
 
@@ -393,9 +393,9 @@ Examples of use:
 #+BEGIN_SRC arbel
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
-#1 of type String, value: 1
-#2 of type String, value: 2
-#3 of type String, value: 3
+t1 of type String, value: 1
+t2 of type String, value: 2
+t3 of type String, value: 3
 #+END_SRC
 
 * Reference
@@ -408,7 +408,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- sets the =/ans= register to a registry with =VALUE1= located at =REGISTER1= and so on.
 
-- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/#1=, =VALUE2= at Register =/#2=, and so on.
+- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/t1=, =VALUE2= at Register =/t2=, and so on.
 
 
 *** Insert, move, and remove data to and from registers
@@ -433,9 +433,9 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 *** Apply Instructions to elements of a Registry
 
-- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
+- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
-- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "t"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="t"=.
 
 
 *** Execute code in a registry
@@ -567,7 +567,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
-- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/#N= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
 - =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
@@ -602,16 +602,17 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 ** Register operations
 
-*** Operations on "list" registers: /#1, /#2, ...
+*** Operations on "list" registers
+
 - =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
 
-- =previous REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Register to the "first" register with that prefix so that =previous /#1 .= sets =/ans= to =/#1=.
+- =previous REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Register to the "first" register with that prefix so that =previous /t1 .= sets =/ans= to =/t1=.
 
 - =last REGISTRY STRING= --- return the last Register in the =REGISTRY= that starts with =STRING=.  So that if you had registers =/x0=, =/x1=, and =/x2= in the Registry, =last REGISTRY "x"= would return =/x2=.
 
 *** Convert to register
 
-- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
+- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/tINTEGER=.
 
 *** Register comparison
 - =register-eq REGISTER1 REGISTER2= --- sets the =/ans= Register to =True= if the two Registers are the same and to =False= otherwise.

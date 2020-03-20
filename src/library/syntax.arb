@@ -1,0 +1,22 @@
+' syntax expects /arg to be set to the argument and /check to be set to the
+' test.  Optionally, set /r to be the register to use instead of "t", the
+' default.
+set /syntax
+    (
+      if [ is-operation check . ]
+         {
+           check arg .
+         }
+         {
+           if [ exist /r . ]
+              {
+                check r arg .
+              }
+              {
+                check /t arg .
+              } .
+         } .
+    ) .
+
+
+

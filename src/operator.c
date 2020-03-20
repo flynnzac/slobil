@@ -1907,7 +1907,7 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
 
 ;
 
-  const char* prefix = "#";
+  const char* prefix = "t";
   if (a.length >= 4)
     {
       
@@ -2834,6 +2834,12 @@ void
 op_is_boolean (arg a, registry* reg)
 {
   op_is_type(a, reg, Boolean);
+}
+
+void
+op_is_op (arg a, registry* reg)
+{
+  op_is_type(a, reg, Operation);
 }
 
 
@@ -5382,6 +5388,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_is_boolean);
   set(reg,d,"is-boolean",1);
+
+  assign_op(&d, op_is_op);
+  set(reg,d,"is-operation",1);
   
   assign_op(&d, op_open_text_file);
   set(reg,d,"open-text-file",1);

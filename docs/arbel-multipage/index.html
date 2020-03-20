@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Top (ARBEL)</title>
@@ -12,29 +12,19 @@
 <meta name="Generator" content="makeinfo">
 <link href="#Top" rel="start" title="Top">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="../dir/index.html" rel="up" title="(dir)">
-<link href="Introduction.html#Introduction" rel="next" title="Introduction">
+<link href="Introduction.html" rel="next" title="Introduction">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
 blockquote.indentedblock {margin-right: 0em}
-blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
-blockquote.smallquotation {font-size: smaller}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smalllisp {margin-left: 3.2em}
 kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
 span.nolinebreak {white-space: nowrap}
 span.roman {font-family: initial; font-weight: normal}
 span.sansserif {font-family: sans-serif; font-weight: normal}
@@ -49,110 +39,108 @@ ul.no-bullet {list-style: none}
 <h1 class="settitle" align="center">ARBEL</h1>
 
 
-
-<a name="SEC_Contents"></a>
+<span id="SEC_Contents"></span>
 <h2 class="contents-heading">Table of Contents</h2>
 
 <div class="contents">
 
 <ul class="no-bullet">
-  <li><a name="toc-Introduction-1" href="Introduction.html#Introduction">1 Introduction</a>
+  <li><a id="toc-Introduction-1" href="Introduction.html#Introduction">1 Introduction</a>
   <ul class="no-bullet">
-    <li><a name="toc-ARBEL-is-a-Registry_002dBased-Environment-and-Language-1" href="ARBEL-is-a-Registry_002dBased-Environment-and-Language.html#ARBEL-is-a-Registry_002dBased-Environment-and-Language">1.1 ARBEL is a Registry-Based Environment and Language</a></li>
-    <li><a name="toc-Distinguishing-Features-1" href="Distinguishing-Features.html#Distinguishing-Features">1.2 Distinguishing Features</a></li>
+    <li><a id="toc-ARBEL-is-a-Registry_002dBased-Environment-and-Language-1" href="ARBEL-is-a-Registry_002dBased-Environment-and-Language.html#ARBEL-is-a-Registry_002dBased-Environment-and-Language">1.1 ARBEL is a Registry-Based Environment and Language</a></li>
+    <li><a id="toc-Distinguishing-Features-1" href="Distinguishing-Features.html#Distinguishing-Features">1.2 Distinguishing Features</a></li>
   </ul></li>
-  <li><a name="toc-The-Basics-1" href="The-Basics.html#The-Basics">2 The Basics</a>
+  <li><a id="toc-The-Basics-1" href="The-Basics.html#The-Basics">2 The Basics</a>
   <ul class="no-bullet">
-    <li><a name="toc-Statements-and-syntax-1" href="Statements-and-syntax.html#Statements-and-syntax">2.1 Statements and syntax</a></li>
-    <li><a name="toc-Registries-1" href="Registries.html#Registries">2.2 Registries</a>
+    <li><a id="toc-Statements-and-syntax-1" href="Statements-and-syntax.html#Statements-and-syntax">2.1 Statements and syntax</a></li>
+    <li><a id="toc-Registries-1" href="Registries.html#Registries">2.2 Registries</a>
     <ul class="no-bullet">
-      <li><a name="toc-Additional-details-about-colon-notation-1" href="Additional-details-about-colon-notation.html#Additional-details-about-colon-notation">2.2.1 Additional details about colon notation</a></li>
+      <li><a id="toc-Additional-details-about-colon-notation-1" href="Additional-details-about-colon-notation.html#Additional-details-about-colon-notation">2.2.1 Additional details about colon notation</a></li>
     </ul></li>
-    <li><a name="toc-Registers-1" href="Registers.html#Registers">2.3 Registers</a></li>
-    <li><a name="toc-Environment-1" href="Environment.html#Environment">2.4 Environment</a></li>
+    <li><a id="toc-Registers-1" href="Registers.html#Registers">2.3 Registers</a></li>
+    <li><a id="toc-Environment-1" href="Environment.html#Environment">2.4 Environment</a></li>
   </ul></li>
-  <li><a name="toc-Examples-1" href="Examples.html#Examples">3 Examples</a>
+  <li><a id="toc-Examples-1" href="Examples.html#Examples">3 Examples</a>
   <ul class="no-bullet">
-    <li><a name="toc-Example_003a-A-Line_002dOriented-Text-Editor" href="Example-A-Line_002dOriented-Text-Editor.html#Example-A-Line_002dOriented-Text-Editor">3.1 Example: A Line-Oriented Text Editor</a></li>
-    <li><a name="toc-Example_003a-Numerical-Differentiation" href="Example-Numerical-Differentiation.html#Example-Numerical-Differentiation">3.2 Example: Numerical Differentiation</a></li>
-    <li><a name="toc-Example_003a-Dispatch" href="Example-Dispatch.html#Example-Dispatch">3.3 Example: Dispatch</a></li>
-    <li><a name="toc-Example_003a-Compute-Factorial" href="Example-Compute-Factorial.html#Example-Compute-Factorial">3.4 Example: Compute Factorial</a></li>
-    <li><a name="toc-Example_003a-Numerical-Integration" href="Example-Numerical-Integration.html#Example-Numerical-Integration">3.5 Example: Numerical Integration</a></li>
-    <li><a name="toc-Example_003a-Basic-Linear-Algebra" href="Example-Basic-Linear-Algebra.html#Example-Basic-Linear-Algebra">3.6 Example: Basic Linear Algebra</a></li>
-    <li><a name="toc-Example_003a-Split-a-String" href="Example-Split-a-String.html#Example-Split-a-String">3.7 Example: Split a String</a></li>
+    <li><a id="toc-A-Line_002dOriented-Text-Editor-1" href="A-Line_002dOriented-Text-Editor.html#A-Line_002dOriented-Text-Editor">3.1 A Line-Oriented Text Editor</a></li>
+    <li><a id="toc-Numerical-Differentiation-1" href="Numerical-Differentiation.html#Numerical-Differentiation">3.2 Numerical Differentiation</a></li>
+    <li><a id="toc-Dispatch-1" href="Dispatch.html#Dispatch">3.3 Dispatch</a></li>
+    <li><a id="toc-Compute-Factorial-1" href="Compute-Factorial.html#Compute-Factorial">3.4 Compute Factorial</a></li>
+    <li><a id="toc-Numerical-Integration-1" href="Numerical-Integration.html#Numerical-Integration">3.5 Numerical Integration</a></li>
+    <li><a id="toc-Basic-Linear-Algebra-1" href="Basic-Linear-Algebra.html#Basic-Linear-Algebra">3.6 Basic Linear Algebra</a></li>
+    <li><a id="toc-Split-a-String-1" href="Split-a-String.html#Split-a-String">3.7 Split a String</a></li>
   </ul></li>
-  <li><a name="toc-Reference-1" href="Reference.html#Reference">4 Reference</a>
+  <li><a id="toc-Reference-1" href="Reference.html#Reference">4 Reference</a>
   <ul class="no-bullet">
-    <li><a name="toc-Registry-operations-1" href="Registry-operations.html#Registry-operations">4.1 Registry operations</a>
+    <li><a id="toc-Registry-operations-1" href="Registry-operations.html#Registry-operations">4.1 Registry operations</a>
     <ul class="no-bullet">
-      <li><a name="toc-Creation-1" href="Creation.html#Creation">4.1.1 Creation</a></li>
-      <li><a name="toc-Insert_002c-move_002c-and-remove-data-to-and-from-registers" href="Insert-move-and-remove-data-to-and-from-registers.html#Insert-move-and-remove-data-to-and-from-registers">4.1.2 Insert, move, and remove data to and from registers</a></li>
-      <li><a name="toc-Access-data-in-Registry-1" href="Access-data-in-Registry.html#Access-data-in-Registry">4.1.3 Access data in Registry</a></li>
-      <li><a name="toc-Apply-Instructions-to-elements-of-a-Registry-1" href="Apply-Instructions-to-elements-of-a-Registry.html#Apply-Instructions-to-elements-of-a-Registry">4.1.4 Apply Instructions to elements of a Registry</a></li>
-      <li><a name="toc-Execute-code-in-a-registry-1" href="Execute-code-in-a-registry.html#Execute-code-in-a-registry">4.1.5 Execute code in a registry</a></li>
-      <li><a name="toc-Test-if-a-registry-1" href="Test-if-a-registry.html#Test-if-a-registry">4.1.6 Test if a registry</a></li>
-      <li><a name="toc-Classify-a-registry-1" href="Classify-a-registry.html#Classify-a-registry">4.1.7 Classify a registry</a></li>
+      <li><a id="toc-Creation-1" href="Creation.html#Creation">4.1.1 Creation</a></li>
+      <li><a id="toc-Insert_002c-move_002c-and-remove-data-to-and-from-registers" href="Insert-move-and-remove-data-to-and-from-registers.html#Insert-move-and-remove-data-to-and-from-registers">4.1.2 Insert, move, and remove data to and from registers</a></li>
+      <li><a id="toc-Access-data-in-Registry-1" href="Access-data-in-Registry.html#Access-data-in-Registry">4.1.3 Access data in Registry</a></li>
+      <li><a id="toc-Apply-Instructions-to-elements-of-a-Registry-1" href="Apply-Instructions-to-elements-of-a-Registry.html#Apply-Instructions-to-elements-of-a-Registry">4.1.4 Apply Instructions to elements of a Registry</a></li>
+      <li><a id="toc-Execute-code-in-a-registry-1" href="Execute-code-in-a-registry.html#Execute-code-in-a-registry">4.1.5 Execute code in a registry</a></li>
+      <li><a id="toc-Test-if-a-registry-1" href="Test-if-a-registry.html#Test-if-a-registry">4.1.6 Test if a registry</a></li>
+      <li><a id="toc-Classify-a-registry-1" href="Classify-a-registry.html#Classify-a-registry">4.1.7 Classify a registry</a></li>
     </ul></li>
-    <li><a name="toc-Real-and-Integer-operations-1" href="Real-and-Integer-operations.html#Real-and-Integer-operations">4.2 Real and Integer operations</a>
+    <li><a id="toc-Real-and-Integer-operations-1" href="Real-and-Integer-operations.html#Real-and-Integer-operations">4.2 Real and Integer operations</a>
     <ul class="no-bullet">
-      <li><a name="toc-Arithmetic-operations-1" href="Arithmetic-operations.html#Arithmetic-operations">4.2.1 Arithmetic operations</a></li>
-      <li><a name="toc-Comparison-operations-1" href="Comparison-operations.html#Comparison-operations">4.2.2 Comparison operations</a></li>
-      <li><a name="toc-Conversion-operations-1" href="Conversion-operations.html#Conversion-operations">4.2.3 Conversion operations</a></li>
-      <li><a name="toc-Test-if-type-operations-1" href="Test-if-type-operations.html#Test-if-type-operations">4.2.4 Test if type operations</a></li>
-      <li><a name="toc-Common-mathematical-operations-1" href="Common-mathematical-operations.html#Common-mathematical-operations">4.2.5 Common mathematical operations</a></li>
+      <li><a id="toc-Arithmetic-operations-1" href="Arithmetic-operations.html#Arithmetic-operations">4.2.1 Arithmetic operations</a></li>
+      <li><a id="toc-Comparison-operations-1" href="Comparison-operations.html#Comparison-operations">4.2.2 Comparison operations</a></li>
+      <li><a id="toc-Conversion-operations-1" href="Conversion-operations.html#Conversion-operations">4.2.3 Conversion operations</a></li>
+      <li><a id="toc-Test-if-type-operations-1" href="Test-if-type-operations.html#Test-if-type-operations">4.2.4 Test if type operations</a></li>
+      <li><a id="toc-Common-mathematical-operations-1" href="Common-mathematical-operations.html#Common-mathematical-operations">4.2.5 Common mathematical operations</a></li>
     </ul></li>
-    <li><a name="toc-Control-flow-operations-1" href="Control-flow-operations.html#Control-flow-operations">4.3 Control flow operations</a></li>
-    <li><a name="toc-Environment-operations-1" href="Environment-operations.html#Environment-operations">4.4 Environment operations</a>
+    <li><a id="toc-Control-flow-operations-1" href="Control-flow-operations.html#Control-flow-operations">4.3 Control flow operations</a></li>
+    <li><a id="toc-Environment-operations-1" href="Environment-operations.html#Environment-operations">4.4 Environment operations</a>
     <ul class="no-bullet">
-      <li><a name="toc-Modify-the-_002fans-register-1" href="Modify-the-_002fans-register.html#Modify-the-_002fans-register">4.4.1 Modify the /ans register</a></li>
-      <li><a name="toc-Exit-ARBEL-1" href="Exit-ARBEL.html#Exit-ARBEL">4.4.2 Exit ARBEL</a></li>
-      <li><a name="toc-Print-output-1" href="Print-output.html#Print-output">4.4.3 Print output</a></li>
-      <li><a name="toc-Input-and-output-files-and-state-1" href="Input-and-output-files-and-state.html#Input-and-output-files-and-state">4.4.4 Input and output files and state</a></li>
-      <li><a name="toc-Interacting-with-the-shell-1" href="Interacting-with-the-shell.html#Interacting-with-the-shell">4.4.5 Interacting with the shell</a></li>
-      <li><a name="toc-Error-handling-1" href="Error-handling.html#Error-handling">4.4.6 Error handling</a></li>
+      <li><a id="toc-Modify-the-_002fans-register-1" href="Modify-the-_002fans-register.html#Modify-the-_002fans-register">4.4.1 Modify the /ans register</a></li>
+      <li><a id="toc-Exit-ARBEL-1" href="Exit-ARBEL.html#Exit-ARBEL">4.4.2 Exit ARBEL</a></li>
+      <li><a id="toc-Print-output-1" href="Print-output.html#Print-output">4.4.3 Print output</a></li>
+      <li><a id="toc-Input-and-output-files-and-state-1" href="Input-and-output-files-and-state.html#Input-and-output-files-and-state">4.4.4 Input and output files and state</a></li>
+      <li><a id="toc-Interacting-with-the-shell-1" href="Interacting-with-the-shell.html#Interacting-with-the-shell">4.4.5 Interacting with the shell</a></li>
+      <li><a id="toc-Error-handling-1" href="Error-handling.html#Error-handling">4.4.6 Error handling</a></li>
     </ul></li>
-    <li><a name="toc-String-operations-1" href="String-operations.html#String-operations">4.5 String operations</a>
+    <li><a id="toc-String-operations-1" href="String-operations.html#String-operations">4.5 String operations</a>
     <ul class="no-bullet">
-      <li><a name="toc-Access_002c-search_002c-and-modify-string-elements" href="Access-search-and-modify-string-elements.html#Access-search-and-modify-string-elements">4.5.1 Access, search, and modify string elements</a></li>
-      <li><a name="toc-String-properties-1" href="String-properties.html#String-properties">4.5.2 String properties</a></li>
-      <li><a name="toc-String-comparison-1" href="String-comparison.html#String-comparison">4.5.3 String comparison</a></li>
-      <li><a name="toc-Combine-strings-1" href="Combine-strings.html#Combine-strings">4.5.4 Combine strings</a></li>
-      <li><a name="toc-Convert-to-string-1" href="Convert-to-string.html#Convert-to-string">4.5.5 Convert to string</a></li>
-      <li><a name="toc-Test-if-String-1" href="Test-if-String.html#Test-if-String">4.5.6 Test if String</a></li>
-      <li><a name="toc-Strings-from-User-Input-1" href="Strings-from-User-Input.html#Strings-from-User-Input">4.5.7 Strings from User Input</a></li>
+      <li><a id="toc-Access_002c-search_002c-and-modify-string-elements" href="Access-search-and-modify-string-elements.html#Access-search-and-modify-string-elements">4.5.1 Access, search, and modify string elements</a></li>
+      <li><a id="toc-String-properties-1" href="String-properties.html#String-properties">4.5.2 String properties</a></li>
+      <li><a id="toc-String-comparison-1" href="String-comparison.html#String-comparison">4.5.3 String comparison</a></li>
+      <li><a id="toc-Combine-strings-1" href="Combine-strings.html#Combine-strings">4.5.4 Combine strings</a></li>
+      <li><a id="toc-Convert-to-string-1" href="Convert-to-string.html#Convert-to-string">4.5.5 Convert to string</a></li>
+      <li><a id="toc-Test-if-String-1" href="Test-if-String.html#Test-if-String">4.5.6 Test if String</a></li>
+      <li><a id="toc-Strings-from-User-Input-1" href="Strings-from-User-Input.html#Strings-from-User-Input">4.5.7 Strings from User Input</a></li>
     </ul></li>
-    <li><a name="toc-Register-operations-1" href="Register-operations.html#Register-operations">4.6 Register operations</a>
+    <li><a id="toc-Register-operations-1" href="Register-operations.html#Register-operations">4.6 Register operations</a>
     <ul class="no-bullet">
-      <li><a name="toc-Operations-on-_0022list_0022-registers-1" href="Operations-on-_0022list_0022-registers.html#Operations-on-_0022list_0022-registers">4.6.1 Operations on &quot;list&quot; registers</a></li>
-      <li><a name="toc-Convert-to-register-1" href="Convert-to-register.html#Convert-to-register">4.6.2 Convert to register</a></li>
-      <li><a name="toc-Register-comparison-1" href="Register-comparison.html#Register-comparison">4.6.3 Register comparison</a></li>
-      <li><a name="toc-Test-if-a-Register-1" href="Test-if-a-Register.html#Test-if-a-Register">4.6.4 Test if a Register</a></li>
+      <li><a id="toc-Operations-on-_0022list_0022-registers-1" href="Operations-on-_0022list_0022-registers.html#Operations-on-_0022list_0022-registers">4.6.1 Operations on &quot;list&quot; registers</a></li>
+      <li><a id="toc-Convert-to-register-1" href="Convert-to-register.html#Convert-to-register">4.6.2 Convert to register</a></li>
+      <li><a id="toc-Register-comparison-1" href="Register-comparison.html#Register-comparison">4.6.3 Register comparison</a></li>
+      <li><a id="toc-Test-if-a-Register-1" href="Test-if-a-Register.html#Test-if-a-Register">4.6.4 Test if a Register</a></li>
     </ul></li>
-    <li><a name="toc-Instruction-operations-1" href="Instruction-operations.html#Instruction-operations">4.7 Instruction operations</a></li>
-    <li><a name="toc-File-operations-1" href="File-operations.html#File-operations">4.8 File operations</a></li>
-    <li><a name="toc-Boolean-operations-1" href="Boolean-operations.html#Boolean-operations">4.9 Boolean operations</a></li>
+    <li><a id="toc-Instruction-operations-1" href="Instruction-operations.html#Instruction-operations">4.7 Instruction operations</a></li>
+    <li><a id="toc-File-operations-1" href="File-operations.html#File-operations">4.8 File operations</a></li>
+    <li><a id="toc-Boolean-operations-1" href="Boolean-operations.html#Boolean-operations">4.9 Boolean operations</a></li>
+    <li><a id="toc-Column-operations-1" href="Column-operations.html#Column-operations">4.10 Column operations</a></li>
   </ul></li>
 </ul>
 </div>
 
 
-<a name="Top"></a>
-<div class="header">
+<span id="Top"></span><div class="header">
 <p>
-Next: <a href="Introduction.html#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="Introduction.html" accesskey="n" rel="next">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="ARBEL"></a>
-<h1 class="top">ARBEL</h1>
+<span id="ARBEL"></span><h1 class="top">ARBEL</h1>
 
 <table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="Introduction.html#Introduction" accesskey="1">Introduction</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Introduction.html" accesskey="1">Introduction</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="The-Basics.html#The-Basics" accesskey="2">The Basics</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="The-Basics.html" accesskey="2">The Basics</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Examples.html#Examples" accesskey="3">Examples</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Examples.html" accesskey="3">Examples</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Reference.html#Reference" accesskey="4">Reference</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Reference.html" accesskey="4">Reference</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
@@ -160,145 +148,147 @@ Next: <a href="Introduction.html#Introduction" accesskey="n" rel="next">Introduc
 
 Introduction
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="ARBEL-is-a-Registry_002dBased-Environment-and-Language.html#ARBEL-is-a-Registry_002dBased-Environment-and-Language" accesskey="5">ARBEL is a Registry-Based Environment and Language</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="ARBEL-is-a-Registry_002dBased-Environment-and-Language.html" accesskey="5">ARBEL is a Registry-Based Environment and Language</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Distinguishing-Features.html#Distinguishing-Features" accesskey="6">Distinguishing Features</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Distinguishing-Features.html" accesskey="6">Distinguishing Features</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 The Basics
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Statements-and-syntax.html#Statements-and-syntax" accesskey="7">Statements and syntax</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Statements-and-syntax.html" accesskey="7">Statements and syntax</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Registries.html#Registries" accesskey="8">Registries</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Registries.html" accesskey="8">Registries</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Registers.html#Registers" accesskey="9">Registers</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Registers.html" accesskey="9">Registers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Environment.html#Environment">Environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Environment.html">Environment</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Registries
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Additional-details-about-colon-notation.html#Additional-details-about-colon-notation">Additional details about colon notation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Additional-details-about-colon-notation.html">Additional details about colon notation</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Examples
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Example-A-Line_002dOriented-Text-Editor.html#Example-A-Line_002dOriented-Text-Editor">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="A-Line_002dOriented-Text-Editor.html">A Line-Oriented Text Editor</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Numerical-Differentiation.html#Example-Numerical-Differentiation">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Numerical-Differentiation.html">Numerical Differentiation</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Dispatch.html#Example-Dispatch">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Dispatch.html">Dispatch</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Compute-Factorial.html#Example-Compute-Factorial">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Compute-Factorial.html">Compute Factorial</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Numerical-Integration.html#Example-Numerical-Integration">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Numerical-Integration.html">Numerical Integration</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Basic-Linear-Algebra.html#Example-Basic-Linear-Algebra">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Basic-Linear-Algebra.html">Basic Linear Algebra</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Example-Split-a-String.html#Example-Split-a-String">Example</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Split-a-String.html">Split a String</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Reference
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Registry-operations.html#Registry-operations">Registry operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Registry-operations.html">Registry operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Real-and-Integer-operations.html#Real-and-Integer-operations">Real and Integer operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Real-and-Integer-operations.html">Real and Integer operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Control-flow-operations.html#Control-flow-operations">Control flow operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Control-flow-operations.html">Control flow operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Environment-operations.html#Environment-operations">Environment operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Environment-operations.html">Environment operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="String-operations.html#String-operations">String operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="String-operations.html">String operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Register-operations.html#Register-operations">Register operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Register-operations.html">Register operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Instruction-operations.html#Instruction-operations">Instruction operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Instruction-operations.html">Instruction operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="File-operations.html#File-operations">File operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="File-operations.html">File operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Boolean-operations.html#Boolean-operations">Boolean operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Boolean-operations.html">Boolean operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Column-operations.html">Column operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Registry operations
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Creation.html#Creation">Creation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Creation.html">Creation</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Insert-move-and-remove-data-to-and-from-registers.html#Insert-move-and-remove-data-to-and-from-registers">Insert, move, and remove data to and from registers</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Insert-move-and-remove-data-to-and-from-registers.html">Insert, move, and remove data to and from registers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Access-data-in-Registry.html#Access-data-in-Registry">Access data in Registry</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Access-data-in-Registry.html">Access data in Registry</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Apply-Instructions-to-elements-of-a-Registry.html#Apply-Instructions-to-elements-of-a-Registry">Apply Instructions to elements of a Registry</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Apply-Instructions-to-elements-of-a-Registry.html">Apply Instructions to elements of a Registry</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Execute-code-in-a-registry.html#Execute-code-in-a-registry">Execute code in a registry</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Execute-code-in-a-registry.html">Execute code in a registry</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Test-if-a-registry.html#Test-if-a-registry">Test if a registry</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Test-if-a-registry.html">Test if a registry</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Classify-a-registry.html#Classify-a-registry">Classify a registry</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Classify-a-registry.html">Classify a registry</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Real and Integer operations
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Arithmetic-operations.html#Arithmetic-operations">Arithmetic operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Arithmetic-operations.html">Arithmetic operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Comparison-operations.html#Comparison-operations">Comparison operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Comparison-operations.html">Comparison operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Conversion-operations.html#Conversion-operations">Conversion operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Conversion-operations.html">Conversion operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Test-if-type-operations.html#Test-if-type-operations">Test if type operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Test-if-type-operations.html">Test if type operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Common-mathematical-operations.html#Common-mathematical-operations">Common mathematical operations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Common-mathematical-operations.html">Common mathematical operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Environment operations
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Modify-the-_002fans-register.html#Modify-the-_002fans-register">Modify the /ans register</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Modify-the-_002fans-register.html">Modify the /ans register</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Exit-ARBEL.html#Exit-ARBEL">Exit ARBEL</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Exit-ARBEL.html">Exit ARBEL</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Print-output.html#Print-output">Print output</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Print-output.html">Print output</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Input-and-output-files-and-state.html#Input-and-output-files-and-state">Input and output files and state</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Input-and-output-files-and-state.html">Input and output files and state</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Interacting-with-the-shell.html#Interacting-with-the-shell">Interacting with the shell</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Interacting-with-the-shell.html">Interacting with the shell</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Error-handling.html#Error-handling">Error handling</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Error-handling.html">Error handling</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 String operations
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Access-search-and-modify-string-elements.html#Access-search-and-modify-string-elements">Access, search, and modify string elements</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Access-search-and-modify-string-elements.html">Access, search, and modify string elements</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="String-properties.html#String-properties">String properties</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="String-properties.html">String properties</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="String-comparison.html#String-comparison">String comparison</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="String-comparison.html">String comparison</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Combine-strings.html#Combine-strings">Combine strings</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Combine-strings.html">Combine strings</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Convert-to-string.html#Convert-to-string">Convert to string</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Convert-to-string.html">Convert to string</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Test-if-String.html#Test-if-String">Test if String</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Test-if-String.html">Test if String</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Strings-from-User-Input.html#Strings-from-User-Input">Strings from User Input</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Strings-from-User-Input.html">Strings from User Input</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
 Register operations
 
-</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Operations-on-_0022list_0022-registers.html#Operations-on-_0022list_0022-registers">Operations on &quot;list&quot; registers</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Operations-on-_0022list_0022-registers.html">Operations on &quot;list&quot; registers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Convert-to-register.html#Convert-to-register">Convert to register</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Convert-to-register.html">Convert to register</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Register-comparison.html#Register-comparison">Register comparison</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Register-comparison.html">Register comparison</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Test-if-a-Register.html#Test-if-a-Register">Test if a Register</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Test-if-a-Register.html">Test if a Register</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
 
@@ -307,7 +297,7 @@ Register operations
 <hr>
 <div class="header">
 <p>
-Next: <a href="Introduction.html#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="Introduction.html" accesskey="n" rel="next">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 
