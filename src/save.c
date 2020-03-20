@@ -39,12 +39,13 @@ save_content (FILE* f, content* reg)
 
   reg = tail(reg);
   int size;
+  op_wrapper* op;
 
   while (reg != NULL)
     {
-      if (reg->value->type != Operation &&
-          reg->value->type != Active_Instruction &&
-          reg->value->type != Nothing)
+      if (reg->value->type != Active_Instruction &&
+          reg->value->type != Nothing &&
+          ((reg->value->type != Operation) || ((op_wrapper*) reg->value->data)->instr != NULL))
         {
           fwrite(&reg->value->type, sizeof(data_type), 1, f);
       
@@ -79,6 +80,23 @@ save_content (FILE* f, content* reg)
               fwrite(((instruction*) reg->value->data)->code, sizeof(char),
                      strlen(((instruction*) reg->value->data)->code), f);
               break;
+            case Operation:
+              op = ((op_wrapper*) reg->value->data);
+              if (op->instr == NULL)
+                break;
+              size = strlen(((instruction*) op->instr->data)->code);
+
+              fwrite(&size, sizeof(int), 1, f);
+              fwrite(((instruction*) op->instr->data)->code, sizeof(char), size, f);
+              fwrite(&(op->n_arg), sizeof(int), 1, f);
+
+              for (int i=0; i < op->n_arg; i++)
+                {
+                  size = strlen(((regstr*) op->args[i]->data)->name);
+                  fwrite(&size, sizeof(int), 1, f);
+                  fwrite(((regstr*) op->args[i]->data)->name,
+                         sizeof(char), size, f);
+                }
             default:
               break;
             }
@@ -107,6 +125,7 @@ read_registry (FILE* f, registry* reg)
   statement* stmt = NULL;
   parser_state state;
   FILE* f_sub;
+  char* code;
   while (fread(type_cache, sizeof(data_type), 1, f)
          && (*type_cache != Nothing))
     {
@@ -159,7 +178,7 @@ read_registry (FILE* f, registry* reg)
           cache = malloc(sizeof(char)*(size+1));
           fread(cache, sizeof(char), size, f);
           ((char*) cache)[size] = '\0';
-          char* code = malloc(sizeof(char)*(size+1));
+          code = malloc(sizeof(char)*(size+1));
           strcpy(code, (char*) cache);
           
           f_sub = fmemopen(cache, sizeof(char)*size, "r");
@@ -175,6 +194,61 @@ read_registry (FILE* f, registry* reg)
           ((instruction*) d->data)->code = code;
           stmt = NULL;
           free(cache);
+          break;
+        case Operation:
+          cache = malloc(sizeof(int));
+          fread(cache, sizeof(int), 1, f);
+          size = *((int*) cache);
+          free(cache);
+
+          cache = malloc(sizeof(char)*(size+1));
+          fread(cache, sizeof(char), size, f);
+          ((char*) cache)[size] = '\0';
+          code = malloc(sizeof(char)*(size+1));
+          strcpy(code, (char*) cache);
+
+          f_sub = fmemopen(cache, sizeof(char)*size, "r");
+          state = fresh_state(0);
+          stmt = NULL;
+          parse(f_sub, &state, &stmt);
+          fclose(f_sub);
+
+          op_wrapper* op = malloc(sizeof(op_wrapper));
+          op->instr = new_data();
+          op->instr->type = Instruction;
+          op->instr->data = malloc(sizeof(instruction));
+          ((instruction*) op->instr->data)->stmt = stmt;
+          ((instruction*) op->instr->data)->code = code;
+          stmt = NULL;
+          free(cache);
+
+          cache = malloc(sizeof(int));
+          fread(cache, sizeof(int), 1, f);
+          op->n_arg = *((int*) cache);
+          free(cache);
+
+          op->args = malloc(sizeof(data*)*(op->n_arg));
+
+          for (int i = 0; i < op->n_arg; i++)
+            {
+              cache = malloc(sizeof(int));
+              fread(cache, sizeof(int), 1, f);
+              size = *((int*) cache);
+              free(cache);
+
+              char* name = malloc(sizeof(char)*(size+1));
+              fread(name, sizeof(char), size, f);
+              name[size] = '\0';
+
+              unsigned long hash = hash_str(name);
+
+              assign_regstr(&op->args[i], name, hash);
+              free(name);
+            }
+
+          d = new_data();
+          d->type = Operation;
+          d->data = op;
           break;
         default:
           break;

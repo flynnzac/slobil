@@ -53,7 +53,18 @@ print_data (data* d, print_settings settings)
       printf("/%s", ((regstr*) d->data)->name);
       break;
     case Operation:
-      printf("Built-in instruction.");
+      if (((op_wrapper*) d->data)->instr == NULL)
+        printf("Built-in operation.");
+      else
+        {
+          printf("Arguments: ");
+          for (int i = 0; i < ((op_wrapper*) d->data)->n_arg; i++)
+            {
+              printf("/%s ",
+                     ((regstr*) ((op_wrapper*) d->data)->args[i]->data)->name);
+            }
+          printf("\n( %s )", ((instruction*) ((op_wrapper*) d->data)->instr->data)->code);
+        }
       break;
     case File:
       printf("A file.");
