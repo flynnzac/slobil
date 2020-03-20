@@ -105,6 +105,7 @@ typedef struct registry registry;
 
 typedef void (*operation)(struct arg, registry*);
 
+
 struct regstr
 {
   char* name;
@@ -112,6 +113,16 @@ struct regstr
 };
 
 typedef struct regstr regstr;
+
+struct op_wrapper
+{
+  operation op;
+  data* instr;
+  data** args;
+  int n_arg;
+};
+
+typedef struct op_wrapper op_wrapper;
 
 struct command
 {
@@ -214,7 +225,9 @@ void
 assign_str (data** d, const char* str, int copy);
 
 void
-assign_op (data** d, const operation op);
+assign_op (data** d, const operation op,
+           data* instr, data** args,
+           int n_arg);
 
 void
 assign_registry (data** d, registry* r, bool copy);

@@ -124,6 +124,18 @@ free_data (data* d)
     }
   else if (d->type == Operation)
     {
+      if (((op_wrapper*) d->data)->instr != NULL)
+        free_data(((op_wrapper*) d->data)->instr);
+
+      if (((op_wrapper*) d->data)->args != NULL)
+        {
+          for (int i=0; i < ((op_wrapper*) d->data)->n_arg; i++)
+            {
+              free_data(((op_wrapper*) d->data)->args[i]);
+            }
+          free(((op_wrapper*) d->data)->args);
+        }
+
       free(d);
     }
   else if (d->type == File)

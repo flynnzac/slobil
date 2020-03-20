@@ -2837,7 +2837,7 @@ op_is_boolean (arg a, registry* reg)
 }
 
 void
-op_is_op (arg a, registry* reg)
+op_is_operation (arg a, registry* reg)
 {
   op_is_type(a, reg, Operation);
 }
@@ -3450,7 +3450,7 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
     }
 
   data* d;
-  assign_op(&d, new_op);
+  assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, (char*) arg3->data, 1);
 
   if (arbel_ll == NULL)
@@ -4963,6 +4963,10 @@ op_transform (arg a, registry* reg)
   
 
   
+  check_length(&a, 2+1, "transform");
+if (is_error(-1)) return ;;
+
+  
   
   
 data* arg1 = resolve(a.arg_array[1], reg);
@@ -5063,6 +5067,10 @@ op_height (arg a, registry* reg)
   
 
   
+  check_length(&a, 1+1, "height");
+if (is_error(-1)) return ;;
+
+  
   
   
 data* arg1 = resolve(a.arg_array[1], reg);
@@ -5093,6 +5101,10 @@ void
 op_please (arg a, registry* reg)
 {
   
+
+  
+  check_length(&a, 2+1, "please");
+if (is_error(-1)) return ;;
 
   
   
@@ -5148,6 +5160,12 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 void
 op_mod (arg a, registry* reg)
 {
+
+  
+
+  
+  check_length(&a, 2+1, "mod");
+if (is_error(-1)) return ;;
   
   
   
@@ -5226,300 +5244,402 @@ if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
 }
 
 void
+op_op (arg a, registry* reg)
+{
+  /* design:
+     op instruction /y /x .
+     ans 2 3 .
+     gives ans = whatever instruction /y 2 /x 3 would give
+
+     I think the only reasonable solution is to make operation:
+
+     struct operation
+     {
+       operator op;
+       instruction* instr;
+       char** names;
+       unsigned long* hashes;
+       int n_arg;
+     };
+     
+     if (oper->instr != NULL)
+       call the instruction with order arguments
+     else
+       call the C code in oper->op
+
+     The main payoff here is that you can treat operators and instructions interchangeably.
+
+     The other solution is to add an "instruction" operation which treats each argument of the
+     operator as t1,t2,t3...  This is arguably the more ARBEL-ish way to do it.  Requires less code
+     changes and is more in keeping with the system.
+
+     ... instruction add .
+     ... ans /t1 2 /t2 3 .
+     ans = 5
+  */
+
+  
+
+  
+  check_length(&a, 1+1, "op");
+if (is_error(-1)) return ;;
+    
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<op> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    do_error("Argument 1 of <op> should be of type Instruction.");
+    return ;
+  }
+
+;
+
+  op_wrapper* new_op = malloc(sizeof(op_wrapper));
+  new_op->n_arg = a.length-2;
+  new_op->instr = copy_data(arg1);
+  new_op->args = malloc(sizeof(data*)*new_op->n_arg);
+  for (int i=2; i < a.length; i++)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
+
+if (true)
+  {
+    if (argi == NULL)
+      {
+        do_error("<op> requires at least i arguments.");
+        return ;
+      }
+  }
+if (argi != NULL && true && (!(argi->type & Register)))
+  {
+    do_error("Argument i of <op> should be of type Register.");
+    return ;
+  }
+
+;
+
+      new_op->args[i-2] = copy_data(argi);
+    }
+
+  data* d = malloc(sizeof(data));
+  d->data = new_op;
+  d->type = Operation;
+  ret_ans(reg, d);
+}
+
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
 
-  assign_op(&d, op_set);
+  assign_op(&d, op_set, NULL, NULL, 0);
   set(reg, d, "set",1);
   
-  assign_op(&d, op_add);
+  assign_op(&d, op_add, NULL, NULL, 0);
   set(reg,d,"add",1);
 
-  assign_op(&d, op_mul);
+  assign_op(&d, op_mul, NULL, NULL, 0);
   set(reg,d,"mul",1);
 
-  assign_op(&d, op_sub);
+  assign_op(&d, op_sub, NULL, NULL, 0);
   set(reg,d,"sub",1);
 
-  assign_op(&d, op_div);
+  assign_op(&d, op_div, NULL, NULL, 0);
   set(reg,d,"div",1);
 
-  assign_op(&d, op_if);
+  assign_op(&d, op_if, NULL, NULL, 0);
   set(reg,d,"if",1);
 
-  assign_op(&d, op_registry);
+  assign_op(&d, op_registry, NULL, NULL, 0);
   set(reg,d,"registry",1);
 
-  assign_op(&d, op_get);
+  assign_op(&d, op_get, NULL, NULL, 0);
   set(reg,d,"get",1);
 
-  assign_op(&d, op_move);
+  assign_op(&d, op_move, NULL, NULL, 0);
   set(reg,d,"move",1);
 
-  assign_op(&d, op_delete);
+  assign_op(&d, op_delete, NULL, NULL, 0);
   set(reg,d,"delete",1);
 
-  assign_op(&d, op_exit);
+  assign_op(&d, op_exit, NULL, NULL, 0);
   set(reg,d,"exit",1);
 
-  assign_op(&d, op_answer);
+  assign_op(&d, op_answer, NULL, NULL, 0);
   set(reg,d,"answer",1);
 
-  assign_op(&d, op_sit);
+  assign_op(&d, op_sit, NULL, NULL, 0);
   set(reg,d,"sit",1);
 
-  assign_op(&d, op_exist);
+  assign_op(&d, op_exist, NULL, NULL, 0);
   set(reg,d,"exist",1);
 
-  assign_op(&d, op_gt);
+  assign_op(&d, op_gt, NULL, NULL, 0);
   set(reg,d,"gt",1);
 
-  assign_op(&d, op_lt);
+  assign_op(&d, op_lt, NULL, NULL, 0);
   set(reg,d,"lt",1);
 
-  assign_op(&d, op_eq);
+  assign_op(&d, op_eq, NULL, NULL, 0);
   set(reg,d,"eq",1);
 
-  assign_op(&d, op_lt_eq);
+  assign_op(&d, op_lt_eq, NULL, NULL, 0);
   set(reg,d,"lt-eq",1);
 
-  assign_op(&d, op_gt_eq);
+  assign_op(&d, op_gt_eq, NULL, NULL, 0);
   set(reg,d,"gt-eq",1);
   
-  assign_op(&d, op_print);
+  assign_op(&d, op_print, NULL, NULL, 0);
   set(reg,d,"print",1);
 
-  assign_op(&d, op_string_length);
+  assign_op(&d, op_string_length, NULL, NULL, 0);
   set(reg,d,"string-length",1);
 
-  assign_op(&d, op_string_append);
+  assign_op(&d, op_string_append, NULL, NULL, 0);
   set(reg,d,"string-append",1);
 
-  assign_op(&d, op_source);
+  assign_op(&d, op_source, NULL, NULL, 0);
   set(reg,d,"source",1);
 
-  assign_op(&d, op_do_to_all);
+  assign_op(&d, op_do_to_all, NULL, NULL, 0);
   set(reg,d,"do-to-all",1);
 
-  assign_op(&d, op_next);
+  assign_op(&d, op_next, NULL, NULL, 0);
   set(reg,d,"next",1);
 
-  assign_op(&d, op_last);
+  assign_op(&d, op_last, NULL, NULL, 0);
   set(reg,d,"last",1);
 
-  assign_op(&d, op_in);
+  assign_op(&d, op_in, NULL, NULL, 0);
   set(reg,d,"in",1);
 
-  assign_op(&d, op_while);
+  assign_op(&d, op_while, NULL, NULL, 0);
   set(reg,d,"while",1);
   
-  assign_op(&d, op_list);
+  assign_op(&d, op_list, NULL, NULL, 0);
   set(reg,d,"list",1);
 
-  assign_op(&d, op_to_register);
+  assign_op(&d, op_to_register, NULL, NULL, 0);
   set(reg,d,"to-register",1);
 
-  assign_op(&d, op_collapse);
+  assign_op(&d, op_collapse, NULL, NULL, 0);
   set(reg,d,"collapse",1);
 
-  assign_op(&d, op_string_eq);
+  assign_op(&d, op_string_eq, NULL, NULL, 0);
   set(reg,d,"string-eq",1);
 
-  assign_op(&d, op_string_gt);
+  assign_op(&d, op_string_gt, NULL, NULL, 0);
   set(reg,d,"string-gt",1);
   
-  assign_op(&d, op_string_lt);
+  assign_op(&d, op_string_lt, NULL, NULL, 0);
   set(reg,d,"string-lt",1);
 
-  assign_op(&d, op_register_eq);
+  assign_op(&d, op_register_eq, NULL, NULL, 0);
   set(reg,d,"register-eq",1);
 
-  assign_op(&d, op_go_in);
+  assign_op(&d, op_go_in, NULL, NULL, 0);
   set(reg,d,"go-in",1);
 
-  assign_op(&d, op_go_out);
+  assign_op(&d, op_go_out, NULL, NULL, 0);
   set(reg,d,"go-out",1);
 
-  assign_op(&d, op_save);
+  assign_op(&d, op_save, NULL, NULL, 0);
   set(reg,d,"save",1);
 
-  assign_op(&d, op_load);
+  assign_op(&d, op_load, NULL, NULL, 0);
   set(reg,d,"load",1);
 
-  assign_op(&d, op_to_string);
+  assign_op(&d, op_to_string, NULL, NULL, 0);
   set(reg,d,"to-string",1);
   
-  assign_op(&d, op_to_number);
+  assign_op(&d, op_to_number, NULL, NULL, 0);
   set(reg,d,"to-number",1);
 
-  assign_op(&d, op_output_code);
+  assign_op(&d, op_output_code, NULL, NULL, 0);
   set(reg,d,"output-code",1);
 
-  assign_op(&d, op_clear_code);
+  assign_op(&d, op_clear_code, NULL, NULL, 0);
   set(reg,d,"clear-code",1);
 
-  assign_op(&d, op_error);
+  assign_op(&d, op_error, NULL, NULL, 0);
   set(reg,d,"error",1);
 
-  assign_op(&d, op_is_integer);
+  assign_op(&d, op_is_integer, NULL, NULL, 0);
   set(reg,d,"is-integer",1);
 
-  assign_op(&d, op_is_real);
+  assign_op(&d, op_is_real, NULL, NULL, 0);
   set(reg,d,"is-real",1);
 
-  assign_op(&d, op_is_string);
+  assign_op(&d, op_is_string, NULL, NULL, 0);
   set(reg,d,"is-string",1);
   
-  assign_op(&d, op_is_register);
+  assign_op(&d, op_is_register, NULL, NULL, 0);
   set(reg,d,"is-register",1);
 
-  assign_op(&d, op_is_registry);
+  assign_op(&d, op_is_registry, NULL, NULL, 0);
   set(reg,d,"is-registry",1);
 
-  assign_op(&d, op_is_instruction);
+  assign_op(&d, op_is_instruction, NULL, NULL, 0);
   set(reg,d,"is-instruction",1);
 
-  assign_op(&d, op_is_file);
+  assign_op(&d, op_is_file, NULL, NULL, 0);
   set(reg,d,"is-file",1);
 
-  assign_op(&d, op_is_nothing);
+  assign_op(&d, op_is_nothing, NULL, NULL, 0);
   set(reg,d,"is-nothing",1);
 
-  assign_op(&d, op_is_boolean);
+  assign_op(&d, op_is_boolean, NULL, NULL, 0);
   set(reg,d,"is-boolean",1);
 
-  assign_op(&d, op_is_op);
+  assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(reg,d,"is-operation",1);
   
-  assign_op(&d, op_open_text_file);
+  assign_op(&d, op_open_text_file, NULL, NULL, 0);
   set(reg,d,"open-text-file",1);
 
-  assign_op(&d, op_read);
+  assign_op(&d, op_read, NULL, NULL, 0);
   set(reg,d,"read",1);
 
-  assign_op(&d, op_close);
+  assign_op(&d, op_close, NULL, NULL, 0);
   set(reg,d,"close",1);
 
-  assign_op(&d, op_and);
+  assign_op(&d, op_and, NULL, NULL, 0);
   set(reg,d,"and",1);
 
-  assign_op(&d, op_or);
+  assign_op(&d, op_or, NULL, NULL, 0);
   set(reg,d,"or",1);
 
-  assign_op(&d, op_not);
+  assign_op(&d, op_not, NULL, NULL, 0);
   set(reg,d,"not",1);
 
-  assign_op(&d, op_read_line);
+  assign_op(&d, op_read_line, NULL, NULL, 0);
   set(reg,d,"read-line",1);
   
-  assign_op(&d, op_write);
+  assign_op(&d, op_write, NULL, NULL, 0);
   set(reg,d,"write",1);
   
-  assign_op(&d, op_input);
+  assign_op(&d, op_input, NULL, NULL, 0);
   set(reg,d,"input",1);
 
-  assign_op(&d, op_shell);
+  assign_op(&d, op_shell, NULL, NULL, 0);
   set(reg,d,"shell",1);
 
-  assign_op(&d, op_link);
+  assign_op(&d, op_link, NULL, NULL, 0);
   set(reg,d,"link",1);
 
-  assign_op(&d, op_match);
+  assign_op(&d, op_match, NULL, NULL, 0);
   set(reg,d,"match",1);
 
-  assign_op(&d, op_replace);
+  assign_op(&d, op_replace, NULL, NULL, 0);
   set(reg,d,"replace",1);
 
-  assign_op(&d, op_log);
+  assign_op(&d, op_log, NULL, NULL, 0);
   set(reg,d,"log",1);
 
-  assign_op(&d, op_exp);
+  assign_op(&d, op_exp, NULL, NULL, 0);
   set(reg,d,"exp",1);
 
-  assign_op(&d, op_power);
+  assign_op(&d, op_power, NULL, NULL, 0);
   set(reg,d,"power",1);
 
-  assign_op(&d, op_change_dir);
+  assign_op(&d, op_change_dir, NULL, NULL, 0);
   set(reg,d,"change-dir",1);
 
-  assign_op(&d, op_current_dir);
+  assign_op(&d, op_current_dir, NULL, NULL, 0);
   set(reg,d,"current-dir",1);
 
-  assign_op(&d, op_import);
+  assign_op(&d, op_import, NULL, NULL, 0);
   set(reg,d,"import",1);
   
-  assign_op(&d, op_repeat);
+  assign_op(&d, op_repeat, NULL, NULL, 0);
   set(reg,d,"repeat",1);
 
-  assign_op(&d, op_substring);
+  assign_op(&d, op_substring, NULL, NULL, 0);
   set(reg,d,"substring",1);
 
-  assign_op(&d, op_up);
+  assign_op(&d, op_up, NULL, NULL, 0);
   set(reg,d,"up",1);
   
-  assign_op(&d, op_of);
+  assign_op(&d, op_of, NULL, NULL, 0);
   set(reg,d,"of",1);
 
-  assign_op(&d, op_is_of);
+  assign_op(&d, op_is_of, NULL, NULL, 0);
   set(reg,d,"is-of",1);
 
-  assign_op(&d, op_dispatch);
+  assign_op(&d, op_dispatch, NULL, NULL, 0);
   set(reg,d,"dispatch",1);
 
-  assign_op(&d, op_to_real);
+  assign_op(&d, op_to_real, NULL, NULL, 0);
   set(reg,d,"to-real",1);
 
-  assign_op(&d, op_call);
+  assign_op(&d, op_call, NULL, NULL, 0);
   set(reg,d,"call",1);
 
-  assign_op(&d, op_code);
+  assign_op(&d, op_code, NULL, NULL, 0);
   set(reg,d,"code",1);
 
-  assign_op(&d, op_is_error);
+  assign_op(&d, op_is_error, NULL, NULL, 0);
   set(reg,d,"is-error",1);
 
-  assign_op(&d, op_range);
+  assign_op(&d, op_range, NULL, NULL, 0);
   set(reg,d,"range",1);
 
-  assign_op(&d, op_push_through);
+  assign_op(&d, op_push_through, NULL, NULL, 0);
   set(reg,d,"push-through",1);
 
-  assign_op(&d, op_error_messages);
+  assign_op(&d, op_error_messages, NULL, NULL, 0);
   set(reg,d,"error-messages",1);
 
-  assign_op(&d, op_version);
+  assign_op(&d, op_version, NULL, NULL, 0);
   set(reg,d,"version",1);
 
-  assign_op(&d, op_free);
+  assign_op(&d, op_free, NULL, NULL, 0);
   set(reg,d,"free",1);
 
-  assign_op(&d, op_previous);
+  assign_op(&d, op_previous, NULL, NULL, 0);
   set(reg,d,"previous",1);
 
-  assign_op(&d, op_find);
+  assign_op(&d, op_find, NULL, NULL, 0);
   set(reg,d,"find",1);
 
-  assign_op(&d, op_fill);
+  assign_op(&d, op_fill, NULL, NULL, 0);
   set(reg,d,"fill",1);
 
-  assign_op(&d, op_element);
+  assign_op(&d, op_element, NULL, NULL, 0);
   set(reg,d,"element",1);
 
-  assign_op(&d, op_modify_at);
+  assign_op(&d, op_modify_at, NULL, NULL, 0);
   set(reg,d,"modify-at",1);
 
-  assign_op(&d, op_transform);
+  assign_op(&d, op_transform, NULL, NULL, 0);
   set(reg,d,"transform",1);
 
-  assign_op(&d, op_height);
+  assign_op(&d, op_height, NULL, NULL, 0);
   set(reg,d,"height",1);
 
-  assign_op(&d, op_please);
+  assign_op(&d, op_please, NULL, NULL, 0);
   set(reg,d,"please",1);
 
-  assign_op(&d, op_mod);
+  assign_op(&d, op_mod, NULL, NULL, 0);
   set(reg,d,"mod",1);
+
+  assign_op(&d, op_op, NULL, NULL, 0);
+  set(reg,d,"op",1);
   
   
 }
