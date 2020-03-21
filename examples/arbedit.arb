@@ -178,7 +178,7 @@ set /edit-buffer
 
 set /buffer-to-string
     (
-      collapse ( string-append t1 "\n" t2 . ) buffer .
+      collapse < ( string-append t1 "\n" t2 . ) /t1 /t2 > buffer .
     ) .
 
 set /read-buffer-from-file
