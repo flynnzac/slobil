@@ -1302,9 +1302,9 @@ if (is_error(-1)) return ;;
     }
   
 
-  if (arg1->type != Instruction)
+  if (arg1->type != Operation)
     {
-      do_error("First argument to *do-to-all* must be an instruction.");
+      do_error("First argument to <do-to-all> must be an operation.");
       return;
     }
 
@@ -1312,7 +1312,7 @@ if (is_error(-1)) return ;;
     {
       if (arg_registries[i]->type != Registry)
         {
-          do_error("Arguments to *do-to-all* must be registries.");
+          do_error("Arguments to <do-to-all> must be registries.");
           free(arg_registries);
           return;
         }
@@ -1327,7 +1327,7 @@ if (is_error(-1)) return ;;
   data* d;
   arg a1;
 
-  a1.length = 1 + 2*(a.length-2);
+  a1.length = 1 + a.length-2;
 
   a1.free_data = malloc(sizeof(int)*a1.length);
   for (int i = 0; i < a1.length; i++)
@@ -1363,18 +1363,7 @@ if (is_error(-1)) return ;;
                 }
               else
                 {
-                  char* tname = malloc(sizeof(char)*
-                                       (strlen("t")+
-                                        floor(log10(j+1))
-                                        + 1+1));
-                  sprintf(tname, "t%d", j+1);
-                  if (a1.arg_array[1+2*j] != NULL)
-                    free_data(a1.arg_array[1+2*j]);
-                  
-                  assign_regstr(&a1.arg_array[1+2*j], tname,
-                                hash_str(tname));
-                  free(tname);
-                  a1.arg_array[2+2*j] = d;
+                  a1.arg_array[1+j] = d;
                 }
             }
 
@@ -1385,7 +1374,7 @@ if (is_error(-1)) return ;;
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
-              do_error("Instruction in *do-to-all* did not set *ans* register.");
+              do_error("Instruction in <do-to-all> did not set /ans register.");
               break;
             }
           d = copy_data(d);
@@ -1396,13 +1385,6 @@ if (is_error(-1)) return ;;
 
       if (d == NULL)
         break;
-    }
-
-  for (int j = 0; j < (a.length-2); j++)
-    {
-      if (a1.arg_array[2*j+1] == NULL)
-        free_data(a1.arg_array[2*j+1]);
-
     }
 
   if (!is_error(-1))
