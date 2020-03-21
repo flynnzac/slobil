@@ -49,18 +49,18 @@ Next: <a href="Split-a-String.html" accesskey="n" rel="next">Split a String</a>,
 <pre class="example">' Computes v^T w for a vector 
 set /dotproduct
     (
-      do-to-all ( mul t1 t2 . ) v w .
-      collapse ( add t1 t2 . ) ans &quot;#&quot; .
+      do-to-all mul v w .
+      collapse add ans  .
     ) .
 
 ' matrix-multiply A B computes A^T B 
 set /matrix-multiply
     (
-      set /i /#1 .
+      set /i /t1 .
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all ( dotproduct /v t1 /w B:i . ) A .
+              do-to-all &lt; ( dotproduct /v t1 /w B:i . ) /v &gt; A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
@@ -72,11 +72,11 @@ set /matrix-multiply
 ' Computes A^T 
 set /transpose
     (
-      set /i /#1 .
+      set /i /t1 .
       set /out [ list . ] .
-      while ( exist i A:/#1 . )
+      while ( exist i A:/t1 . )
             (
-              do-to-all ( answer t1:i . ) A .
+              do-to-all &lt; ( answer t1:i . ) /t1 &gt; A .
               move /ans /res .
               in out ( set i res . ) .
               next i .

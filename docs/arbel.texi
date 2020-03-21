@@ -72,7 +72,7 @@ Registry operations
 * Creation::
 * Insert, move, and remove data to and from registers: Insert move and remove data to and from registers. 
 * Access data in Registry::
-* Apply Instructions to elements of a Registry::
+* Apply Operations to elements of a Registry::
 * Execute code in a registry::
 * Test if a registry::
 * Classify a registry::
@@ -625,18 +625,18 @@ ans = 0.332834
 ' Computes v^T w for a vector 
 set /dotproduct
     (
-      do-to-all ( mul t1 t2 . ) v w .
-      collapse ( add t1 t2 . ) ans "#" .
+      do-to-all mul v w .
+      collapse add ans  .
     ) .
 
 ' matrix-multiply A B computes A^T B 
 set /matrix-multiply
     (
-      set /i /#1 .
+      set /i /t1 .
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all ( dotproduct /v t1 /w B:i . ) A .
+              do-to-all < ( dotproduct /v t1 /w B:i . ) /v > A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
@@ -648,11 +648,11 @@ set /matrix-multiply
 ' Computes A^T 
 set /transpose
     (
-      set /i /#1 .
+      set /i /t1 .
       set /out [ list . ] .
-      while ( exist i A:/#1 . )
+      while ( exist i A:/t1 . )
             (
-              do-to-all ( answer t1:i . ) A .
+              do-to-all < ( answer t1:i . ) /t1 > A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
@@ -750,7 +750,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 * Creation::
 * Insert, move, and remove data to and from registers: Insert move and remove data to and from registers. 
 * Access data in Registry::
-* Apply Instructions to elements of a Registry::
+* Apply Operations to elements of a Registry::
 * Execute code in a registry::
 * Test if a registry::
 * Classify a registry::
@@ -801,15 +801,15 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 @samp{where REGISTRY INSTRUCTION} --- set the @samp{/ans} register to a Registry containing all the elements in the registry such that the INSTRUCTION when passed the element of the Registry at Register @samp{/t} sets the @samp{/ans} register to @samp{True}.
 @end itemize
 
-@node Apply Instructions to elements of a Registry
-@subsection Apply Instructions to elements of a Registry
+@node Apply Operations to elements of a Registry
+@subsection Apply Operations to elements of a Registry
 
 @itemize
 @item
-@samp{do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN} --- execute @samp{INSTRUCTION} which takes arguments at Registers @samp{/t1}, @samp{/t2}, @dots{}, @samp{/tN} for each element in @samp{REGISTRY1}, @dots{}, @samp{REGISTRYN}.  Set the @samp{/ans} register to a Registry which contains whatever the @samp{INSTRUCTION} evaluates to at the corresponding Registers.  For example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]} sets the @samp{/ans} register to a Registry with elements (5,7,9) at registers @samp{(/t1,/t2,/t3)}.  @samp{do-to-all} will only return results at Registers that exist in all Registries.  So, for example, @samp{do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]} sets the @samp{/ans} Register to @samp{list 5 7}.
+@samp{do-to-all OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN} --- execute @samp{OPERATION} which takes arguments its arguments (1@dots{}N) from each element in @samp{REGISTRY1}, @dots{}, @samp{REGISTRYN}.  Sets the @samp{/ans} register to a Registry which contains whatever the @samp{OPERATION} evaluates to at the corresponding Registers.  For example, @samp{do-to-all add [ list 1 2 3 . ] [ list 4 5 6 . ]} sets the @samp{/ans} register to a Registry with elements (5,7,9) at registers @samp{(/t1,/t2,/t3)}.  @samp{do-to-all} will only return results at Registers that exist in all Registries.  So, for example, @samp{do-to-all add [ list 1 2 3 . ] [ list 4 5 . ]} sets the @samp{/ans} Register to @samp{list 5 7}.
 
 @item
-@samp{collapse INSTRUCTION REGISTRY <STRING>} --- sets the @samp{/ans} register to the value of applying @samp{INSTRUCTION} to the value at Register @samp{/STRING1} and @samp{/STRING2} and then again to the result of that and to the value of  @samp{/STRING3} and so on where the @samp{INSTRUCTION} takes each argument at registers @samp{/t1} and @samp{/t2}. For example, @samp{collapse ( add t1 t2 . ) [ list 1 2 3 . ] "t"} sets the @samp{/ans} register to @samp{6}.  If the @samp{STRING} argument is omitted, it is assumed to be @samp{"t"}.
+@samp{collapse OPERATION REGISTRY <STRING>} --- sets the @samp{/ans} register to the value of applying @samp{OPERATION} to the value in the @samp{REGISTRY} at Register @samp{/STRING1} and @samp{/STRING2} and then again to the result of that and to the value of  @samp{/STRING3} and so on. For example, @samp{collapse add [ list 1 2 3 . ] "t"} sets the @samp{/ans} register to @samp{6}.  If the @samp{STRING} argument is omitted, it is assumed to be @samp{"t"}.
 @end itemize
 
 @node Execute code in a registry
