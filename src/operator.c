@@ -1878,9 +1878,9 @@ if (true)
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+if (arg1 != NULL && true && (!(arg1->type & Operation)))
   {
-    do_error("Argument 1 of <collapse> should be of type Instruction.");
+    do_error("Argument 1 of <collapse> should be of type Operation.");
     return ;
   }
 
@@ -1949,24 +1949,15 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
   registry* r = new_registry(to_walk, ARBEL_HASH_SIZE);
 
   arg a1;
-  a1.length = 5;
+  a1.length = 3;
   a1.free_data = malloc(sizeof(int)*a1.length);
   a1.arg_array = malloc(sizeof(data*)*a1.length);
   for (int j = 0; j < a1.length; j++)
     {
-      if (j==1 || j == 3)
-        {
-          a1.free_data[j] = 1;
-        }
-      else
-        {
-          a1.free_data[j] = 0;
-        }
+      a1.free_data[j] = 0;
     }
 
   a1.arg_array[0] = arg1;
-  assign_regstr(&a1.arg_array[1], "t1", hash_str("t1"));
-  assign_regstr(&a1.arg_array[3], "t2", hash_str("t2"));
   
   data* d1;
   data* d2;
@@ -1981,15 +1972,15 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
       
       d2 = lookup(to_walk, second_hash, 0);
 
-      a1.arg_array[2] = d1;
-      a1.arg_array[4] = d2;
+      a1.arg_array[1] = d1;
+      a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
       d1 = lookup(r, arbel_hash_ans, 0);
 
       if (d1 == NULL)
         {
-          do_error("Instruction did not set /ans register.");
+          do_error("Operation did not set /ans register.");
           break;
         }
       

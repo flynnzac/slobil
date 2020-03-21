@@ -1,20 +1,13 @@
-' syntax expects /arg to be set to the argument and /check to be set to the
-' test.  Optionally, set /r to be the register to use instead of "t", the
-' default.
+' syntax expects /arg to be set to the argument and /check to be set to the test.
+' Ex.
+' syntax /arg x /check is-integer .
+' You could potentially do something like:
+
 set /syntax
     (
-      if [ is-operation check . ]
+      if [ check arg . ] True
          {
-           check arg .
-         }
-         {
-           if [ exist /r . ]
-              {
-                check r arg .
-              }
-              {
-                check /t arg .
-              } .
+           error "Argument is not in the domain of the instruction." .
          } .
     ) .
 
