@@ -140,20 +140,35 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
-	  add_to_state_buffer(state, '\0', false);
+          add_to_state_buffer(state, '\0', false);
           if ((strlen(state->buffer) != 0 || state->after_quote) && !state->in_quote)
             {
               if (state->after_instr)
                 {
                   str = malloc(sizeof(char)*(strlen(state->buffer)+2));
                   strcpy(str, state->buffer);
+
+                  if (state->open_paren == '<')
+                    {
+                      int new_size = strlen(str) + strlen("op ") + strlen(" . ");
+                      char* old_str = malloc(sizeof(char)*(strlen(str)+1));
+                      strcpy(old_str, str);
+                      
+                      str = realloc(str, sizeof(char)*(new_size+1));
+                      strcpy(str, "op ");
+                      strcat(str, old_str);
+                      strcat(str, " . ");
+                      free(old_str);
+                      state->open_paren = '[';
+                    }
+                  
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
                   sub_state = fresh_state(0);
                   sub_stmt = NULL;
                   sub_complete = parse(f_sub, &sub_state, &sub_stmt);
                   fclose(f_sub);
-		  free_state(&sub_state);
+                  free_state(&sub_state);
                   free(str);
                   
                   if (sub_complete)
@@ -342,7 +357,36 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             }
           else
             {
-	      add_to_state_buffer(state, c, true);
+              add_to_state_buffer(state, c, true);
+            }
+        }
+      else if (c == '<' && !state->in_quote)
+        {
+          if (state->in_instr == 0)
+            {
+              state->open_paren = '<';
+            }
+          else
+            {
+              add_to_state_buffer(state,c,true);
+            }
+          state->in_instr++;
+        }
+      else if (c == '>' && !state->in_quote)
+        {
+          state->in_instr--;
+          if (state->in_instr == 0)
+            {
+              state->after_instr = 1;
+              if (state->open_paren != '<')
+                {
+                  do_error("Parenthesis do not match.");
+                  break;
+                }
+            }
+          else
+            {
+              add_to_state_buffer(state, c, true);
             }
         }
       else if (c == '"' && !state->in_instr)
