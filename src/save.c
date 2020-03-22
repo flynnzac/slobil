@@ -263,7 +263,7 @@ read_registry (FILE* f, registry* reg)
 
       if (d != NULL)
         set(reg, d, (char*) cache, 1);
-      
+
       free(cache);
     }
 

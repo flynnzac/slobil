@@ -6,17 +6,21 @@
 * Introduction
 ** ARBEL is a Registry-Based Environment and Language
 
-   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate /within/ a certain registry.  The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to create a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
+   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  
 
-   From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs.  It's goal is to be easy to use interactively for building /personal/ programs (programs primarily for the user's own use) which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+   ARBEL /instructions/ are like procedures in other languages, but they operate within a programmer-supplied registry and have no environment or context themselves.  This enables the programmer calling the instruction to decide which arguments it has, not the author of the instruction. The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  
+
+   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the programmer. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
+
+   The interactive nature of ARBEL is reflected in its syntax and environment. The syntax is very similar to entering commands on the command line (it has a bit of a TCL flavor visually, but the semantics of the language are very different). The enviroment is focused on being easy to save and load state.   There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
 
 ** Distinguishing Features
 
-   ARBEL's first distinguishing feature is that it is /naturally generic/.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over code that other's have written.  This works because instructions in ARBEL do not really take "arguments" like in other languages, they take "environments" (registries) that put different values at different registers.  Because every aspect of the environment can be replaced, instructions are naturally generic.
+   ARBEL's first distinguishing feature is that it is as generic as the caller of the instruction wants it to be, not the programmer of the instruction.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over code that other's have written.  This works because instructions in ARBEL do not really take "arguments" like in other languages, they take "environments" (registries) that put different values at different registers.  Because every aspect of the environment can be replaced, instructions are naturally generic.
 
    ARBEL's second main distinguishing feature is that it uses different parenthesis types (=()=, ={}=, and =[]=) to control when substatements are evaluated.  Open parenthesis (=()=) quote a set of instructions so that they can be executed in another registry besides the one that is currently being used.  Closed parenthesis (=[]=) execute the substatement immediately, as if it were entered as a previous statement.  Curly parenthesis (={}=) execute the substatement only if the instructruction containing it, tries to access its value.
 
-   The other feature of Arbel is that it is not only a /language/, it is also an /environment/. It can be used interactively and its state can be written to disk so you can pick up where your left off or store commonly used instructions for later use.  This was one of my main motivations for writing the language: to create a general purpose language that is easy to use interactively and where it is easy to save state so that it can be used to do personal programming: interact with the computer with the power of a full programming language.  
+   The other feature of Arbel is that it is not only a /language/, it is also an /environment/. It can be used interactively and its state can be written to disk so you can pick up where your left off or store commonly used instructions for later use.  This was one of my main motivations for writing the language: to create a general purpose language that is easy to use interactively and where it is easy to save state.
 
    The language is dynamically-typed (registers do not have types, only the values entered in the registries do), and it is strongly typed (values have a certain type and cannot be coerced to other types except explicitly).
 
@@ -61,7 +65,7 @@
 
    There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
-   There are three parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), and curly parenthesis ("{}").  All contain statements, but they differ in /when/ the statements they contain are executed.
+   There are four parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
    
    - Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
      #+BEGIN_SRC arbel
@@ -103,7 +107,9 @@
 
      The =/ans= register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
      #+BEGIN_SRC arbel
-     ... set /add-one ( answer [ add t 1 . ] . ) .
+     ... add 10 12 .
+     ans = 22
+     ... set /add-one ( add t 1 . ) .
      ... add-one /t 10 .
      ans = 11
      ... print ans .
@@ -131,7 +137,7 @@
 
      If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
 
-   - Angle brackets (<>) transform an Instruction into an Operation.  Instructions are code blocks formed using open parenthesis () that operate within whatever registry the caller of the instruction defines.  They are more flexible than Operation which executes with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are Operations, but most programmer-defined code are Instructions.  Occasionally, it is useful to transform the Instructions into a fixed set of arguments.  Angle brackets or the =op= operation provide two alternative ways of doing this.
+   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis () that operate within whatever registry the caller of the instruction defines.  They are more flexible than operations. Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  Angle brackets or the =op= operation provide two alternative ways of doing this.
      #+BEGIN_SRC arbel
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
@@ -164,15 +170,13 @@
    ... registry /hello "Hello, world!" /x 10 .
    #+END_SRC
 
-   This =registry= operation puts a new registry in the =/ans= register.  The registry has a =/hello= register bound to the value ="Hello, world!"= and with the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
+   The =registry= operation puts a new registry in the =/ans= register.  This registry has a =/hello= register bound to the value ="Hello, world!"= and with the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
    
    #+BEGIN_SRC arbel
    ... registry /hello "Hello, world!" /x 10 .
    ... move /ans /my-registry .
-   ... print my-registry .
    ... ' Or:
    ... set /my-registry [ registry /hello "Hello, world!" /x 10 . ] .
-   ... print my-registry .
    #+END_SRC
 
    To access values in a registry, you can either use the =get= operation or the "colon notation":
@@ -238,7 +242,7 @@
    ans = 120
    #+END_SRC       
 
-   You can assign Instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the =set= operation takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry as we have seen above.
+   You can assign instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the =set= operation optionally takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry.
 
    Of course, if you don't need to worry about name collisions, you can just =import= it.
 
@@ -248,8 +252,6 @@
    ans = 120
    #+END_SRC
 
-
-   
    Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
 
 *** Additional details about colon notation
@@ -278,7 +280,7 @@
 
 ** Registers   
 
-Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
+Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use registers.
 
 #+BEGIN_SRC arbel
 ... set /x /y .
@@ -306,7 +308,25 @@ Registers are data denoting locations so they are often useful ways to manipulat
 
 ** Environment
 
-ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on.
+ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
+
+To save the current registry to a file called /state.arb/,
+#+BEGIN_SRC arbel
+... save "state.sarb" .
+#+END_SRC
+
+To load the registry back in:
+#+BEGIN_SRC arbel
+... load "state.sarb" .
+#+END_SRC
+
+Optionally, a second argument can be provided to =load= to load the data into a specific registry, not just the current one.
+
+#+BEGIN_SRC arbel
+... load "state.sarb" old-stuff .
+#+END_SRC
+
+Where =old-stuff= is a registry.
 
 * Examples
 
@@ -412,6 +432,33 @@ t1 of type String, value: 1
 t2 of type String, value: 2
 t3 of type String, value: 3
 #+END_SRC
+
+** Linking C code
+
+It is possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+
+The following is an example of C code.
+
+#+INCLUDE: "../examples/link.c" src c
+
+We then compile it into a shared object file, linking against =libarbel=.
+
+#+INCLUDE: "../examples/link_compile.sh" src sh
+
+The code then can be loaded into ARBEL with the =link= operation like so:
+
+#+INCLUDE: "../examples/link.arb" src arbel
+
+The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
+
+Now, the operation can be called in the following way:
+#+BEGIN_SRC arbel
+... log1 1 .
+ans = 0.693147
+#+END_SRC
+
+
+
 
 * Reference
 

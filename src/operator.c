@@ -2366,7 +2366,35 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
-  read_registry(f, reg);
+  if (a.length >= 3)
+    {
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<load> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Registry)))
+  {
+    do_error("Argument 2 of <load> should be of type Registry.");
+    return ;
+  }
+
+;
+
+      read_registry(f, (registry*) arg2->data);
+    }
+  else
+    {
+      read_registry(f, reg);
+    }
   fclose(f);
 
 }

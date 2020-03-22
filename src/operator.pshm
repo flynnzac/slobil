@@ -1465,7 +1465,18 @@ op_load (arg a, registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
-  read_registry(f, reg);
+  if (a.length >= 3)
+    {
+      #num=2@
+      #type=Registry@
+      ##GETARG~$;
+
+      read_registry(f, (registry*) arg2->data);
+    }
+  else
+    {
+      read_registry(f, reg);
+    }
   fclose(f);
 
 }
