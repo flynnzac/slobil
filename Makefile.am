@@ -7,6 +7,7 @@ SUFFIXES = .pshm .arb
 
 bin_PROGRAMS = arbel
 arbel_SOURCES = src/arbel.c src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c
+arbel_CFLAGS = $(AM_CFLAGS)
 
 if PUSHMAC
 arbel_SOURCES += src/operator.pshm
@@ -32,5 +33,15 @@ TESTS += test/ops/op_string_length.arb
 TESTS += test/ops/op_do_to_all.arb
 TESTS += test/ops/op_next.arb
 TESTS += test/ops/op_last.arb
+
+
+lib_LTLIBRARIES = libarbel.la
+libarbel_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c
+
+if PUSHMAC
+libarbel_la_SOURCES += src/operator.pshm
+else
+libarbel_la_SOURCES += src/operator.expand.c
+endif
 
 

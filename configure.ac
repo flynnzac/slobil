@@ -5,6 +5,7 @@ AC_PREREQ([2.69])
 AC_INIT([Arbel], [0.0.1], [github.com/flynnzac/arbel])
 AC_CONFIG_SRCDIR([src/arbel.c])
 
+LT_INIT
 # Checks for pushmac
 
 AC_CHECK_PROG([pushmac_avail], [pushmac], [true], [false])
@@ -32,7 +33,6 @@ AC_CHECK_LIB([unistring], [u8_next])
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
 
 
-
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_TYPE_SIZE_T
@@ -45,5 +45,6 @@ AC_CHECK_FUNCS([floor pow regcomp])
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_FILES([Makefile])
+
 
 AC_OUTPUT
