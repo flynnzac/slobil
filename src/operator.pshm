@@ -1465,6 +1465,12 @@ op_load (arg a, registry* reg)
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
+  if (f == NULL)
+    {
+      do_error("File cannot be opened.");
+      return;
+    }
+  
   if (a.length >= 3)
     {
       #num=2@
@@ -3242,6 +3248,36 @@ op_op (arg a, registry* reg)
   ret_ans(reg, d);
 }
 
+void
+op_data (arg a, registry* reg)
+{
+  #op=data@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=String@
+  ##GETARG~$;
+
+  char* home = getenv("HOME");
+  char* fname = malloc(sizeof(char)*(strlen(home)+
+                                     strlen((char*) arg1->data)+
+                                     strlen(".darbs/")+
+                                     strlen("/.darb")+1));
+  sprintf(fname, "%s/.darbs/%s.darb", home, (char*) arg1->data);
+  FILE* f = fopen(fname, "rb");
+  if (f == NULL)
+    {
+      do_error("File cannot be opened.");
+      free(fname);
+      return;
+    }
+
+  read_registry(f, reg);
+  fclose(f);
+  free(fname);
+}
+
 
 void
 add_basic_ops (registry* reg)
@@ -3541,6 +3577,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_op, NULL, NULL, 0);
   set(reg,d,"op",1);
+
+  assign_op(&d, op_data, NULL, NULL, 0);
+  set(reg,d,"data",1);
   
   
 }

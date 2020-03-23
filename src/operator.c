@@ -2366,6 +2366,12 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "rb");
+  if (f == NULL)
+    {
+      do_error("File cannot be opened.");
+      return;
+    }
+  
   if (a.length >= 3)
     {
       
@@ -5342,6 +5348,54 @@ if (argi != NULL && true && (!(argi->type & Register)))
   ret_ans(reg, d);
 }
 
+void
+op_data (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "data");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<data> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & String)))
+  {
+    do_error("Argument 1 of <data> should be of type String.");
+    return ;
+  }
+
+;
+
+  char* home = getenv("HOME");
+  char* fname = malloc(sizeof(char)*(strlen(home)+
+                                     strlen((char*) arg1->data)+
+                                     strlen(".darbs/")+
+                                     strlen("/.darb")+1));
+  sprintf(fname, "%s/.darbs/%s.darb", home, (char*) arg1->data);
+  FILE* f = fopen(fname, "rb");
+  if (f == NULL)
+    {
+      do_error("File cannot be opened.");
+      free(fname);
+      return;
+    }
+
+  read_registry(f, reg);
+  fclose(f);
+  free(fname);
+}
+
 
 void
 add_basic_ops (registry* reg)
@@ -5641,6 +5695,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_op, NULL, NULL, 0);
   set(reg,d,"op",1);
+
+  assign_op(&d, op_data, NULL, NULL, 0);
+  set(reg,d,"data",1);
   
   
 }

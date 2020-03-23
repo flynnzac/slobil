@@ -37,6 +37,12 @@ interrupt_handler (int status)
 }
 
 char*
+get_library_dir ()
+{
+  return NULL;
+}
+
+char*
 append_to_source_code (char* source_code, const char* new)
 {
   if (source_code == NULL)
@@ -184,7 +190,6 @@ main (int argc, char** argv)
       bind(sock, (struct sockaddr*) &addr,
            sizeof(addr));
     }
-        
 
   while (!is_exit(-1))
     {
