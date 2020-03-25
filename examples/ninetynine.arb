@@ -4,7 +4,8 @@ set /bottles-of-beer
     (
       print [ to-string n-bottle . ] False .
       print " Bottle" False .
-      if [ not [ eq n-bottle 1 . ] . ] { print "s" False . } .
+      if [ not [ eq n-bottle 1 . ] . ]
+         { print "s" False . } .
       print " of beer on the wall." .
     ) .
 
