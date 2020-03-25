@@ -529,6 +529,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called STRING corresponding to VALUE.  In other words if =dispatch "f" 10=, sets the =/ans= register to Instruction at =/f+Integer=.
 
+
 ** Real and Integer operations
 
 *** Arithmetic operations
@@ -578,6 +579,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
 
 - =repeat INTEGER INSTRUCTION= --- call INSTRUCTION INTEGER times.
+
+- =please INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1=.  If there is an error, then call =INSTRUCTION2=.
 
 ** Environment operations
 
@@ -688,6 +691,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
 
+- =op INSTRUCTION REGISTER1 ... REGISTERN= --- set the =/ans= register to an operation that calls =INSTRUCTION= after binding =REGISTER1= to the first argument, and so on.
+
 ** File operations
 
 - =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
@@ -701,6 +706,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =read-line FILE= --- sets the =/ans= Register to the next line from FILE.
 
 - =write STRING FILE= --- write a given STRING to FILE.
+
+- =data STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
 
 ** Boolean operations
 
