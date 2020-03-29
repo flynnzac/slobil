@@ -82,7 +82,10 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
 
 ;
 
-  int by = 1;
+  mpz_t by;
+  mpz_init(by);
+  mpz_set_ui(by, 1);
+  
   if (a.length >= 4)
     {
       
@@ -104,27 +107,34 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   }
 
 ;
-      by = *((int*) arg3->data);
+      mpz_set(by, *((mpz_t*) arg3->data));
     }
 
-  int lb = *((int*) arg1->data);
-  int ub = *((int*) arg2->data);
+  mpz_t* lb = (mpz_t*) arg1->data;
+  mpz_t* ub = (mpz_t*) arg2->data;
 
+  mpz_t elements;
+  mpz_init(elements);
+  mpz_sub(elements, *ub, *lb);
+  mpz_cdiv_q(elements, elements, by);
+  
+  registry* r_new = new_registry
+    (reg,new_hash_size(mpz_get_ui(elements)));
 
-  registry* r_new = new_registry(reg, new_hash_size(ceil((ub-lb)/by)));
-
-  int cur = lb;
+  mpz_t cur;
+  mpz_init_set(cur, *lb);
+  
   int i = 1;
   char* r = NULL;
   data* d_tmp;
-  while (cur <= ub)
+  while (mpz_cmp(cur,ub) <= 0)
     {
       r = argument_name(i);
       assign_int(&d_tmp, cur);
       set(r_new, d_tmp, r, 0);
       free(r);
       i++;
-      cur += by;
+      mpz_add(cur, cur, by);
     }
 
   d_tmp = new_data();
@@ -203,7 +213,8 @@ op_arithmetic (arg a, registry* reg, const int code)
 {
   data* d;
   data_type result_type = Integer;
-  int int_value = 0;
+  mpz_t int_value;
+  mpz_init_set_si(int_value, 0);
   double dbl_value = 0.0;
 
   
@@ -230,37 +241,31 @@ if (argi != NULL && true && (!(argi->type & (Real|Integer))))
 
 ;
 
-      /* data* cur = resolve(a.arg_array[i], reg); */
-      /* if (cur == NULL || !is_numeric(cur)) */
-      /*   { */
-      /*     do_error("Arithmetic requires at least two numeric arguments."); */
-      /*     return; */
-      /*   } */
-
       if (argi->type == Real && result_type == Integer)
         {
-          dbl_value = (double) int_value;
+          dbl_value = mpz_get_d(int_value);
           result_type = Real;
         }
 
       if (result_type == Integer)
         {
           if (i == 1)
-            int_value = *((int*) argi->data);
+            mpz_set(int_value, *((mpz_t*) argi->data));
           else
             switch (code)
               {
               case 1:
-                int_value += *((int*) argi->data);
+                mpz_add(int_value, int_value, *((mpz_t*) argi->data));
                 break;
               case 2:
-                int_value *= *((int*) argi->data);
+                mpz_mul(int_value, int_value, *((mpz_t*) argi->data));
                 break;
               case 3:
-                int_value -= *((int*) argi->data);
+                mpz_sub(int_value, int_value, *((mpz_t*) argi->data));
                 break;
               case 4:
-                int_value /= *((int*) argi->data);
+                mpz_fdiv_q(int_value,
+                           int_value, *((mpz_t*) argi->data));
                 break;
               }
         }
@@ -268,7 +273,7 @@ if (argi != NULL && true && (!(argi->type & (Real|Integer))))
         {
           double val;
           if (argi->type == Integer)
-            val = (double) (*((int*) argi->data));
+            val = mpz_get_d(*((mpz_t*) argi->data));
           else
             val = *((double*) argi->data);
 	    
@@ -759,7 +764,7 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
 
 ;
 
-      err = *((int*) arg1->data);
+      err = mpz_get_si(*((mpz_t*) arg1->data));
     }
   is_exit(err+1);
   is_error(1);
@@ -925,18 +930,7 @@ if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
 
   if (arg1->type == Integer && arg2->type == Integer)
     {
-      if (*((int*) arg1->data) > *((int*) arg2->data))
-        {
-          return 1;
-        }
-      else if (*((int*) arg1->data) < *((int*) arg2->data))
-        {
-          return -1;
-        }
-      else
-        {
-          return 0;
-        }
+      return mpz_cmp(*((mpz_t*) arg1->data), *((mpz_t*) arg2->data));
     }
   else
     {
@@ -944,13 +938,13 @@ if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
       double dval2;
       if (arg1->type == Integer)
         {
-          dval1 = *((int*) arg1->data);
+          dval1 = mpz_get_d(*((mpz_t*) arg1->data));
           dval2 = *((double*) arg2->data);
         }
       else if (arg2->type == Integer)
         {
           dval1 = *((double*) arg1->data);
-          dval2 = *((int*) arg2->data);
+          dval2 = mpz_get_d(*((mpz_t*) arg2->data));
         }
       else
         {
@@ -1159,11 +1153,13 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
 ;
 
-  int len = u8_mbsnlen((unsigned char*) arg1->data,
-                       strlen((char*) arg1->data));
+  size_t len = u8_mbsnlen((unsigned char*) arg1->data,
+                          strlen((char*) arg1->data));
 
+  mpz_t len_z;
+  mpz_init_set_ui(len_z, len);
   data* d;
-  assign_int(&d, len);
+  assign_int(&d, len_z);
 
   ret_ans(reg, d);
   
@@ -1783,10 +1779,13 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
 ;
 
-  for (int i = 0; i < *((int*) arg1->data); i++)
+  mpz_t i;
+  mpz_init_set_si(i, 0);
+  while (mpz_cmp(i, *((mpz_t*) arg1->data)) <= 0)
     {
       execute_0(arg2, reg);
       if (is_error(-1)) break;
+      mpz_add_ui(i, i, 1);
     }
 }
 
@@ -1828,7 +1827,8 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Integer))))
     }
   else
     {
-      char* name = argument_name(*((int*) arg1->data));
+      int val = mpz_get_si(*((mpz_t*) arg1->data));
+      char* name = argument_name(val);
       unsigned long hash_name = hash_str(name);
       assign_regstr(&d, name, hash_name);
       free(name);
@@ -2437,17 +2437,7 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
   char* result;
   if (arg1->type == Integer)
     {
-      int n_digits;
-      if ((*(int*) arg1->data) == 0)
-        {
-          n_digits = 1;
-        }
-      else
-        {
-          n_digits = floor(log10(*((int*) arg1->data))) + 1;
-        }
-      result = malloc(sizeof(char)*(n_digits+1));
-      sprintf(result, "%d", *((int*) arg1->data));
+      result = mpz_get_str(NULL, 10, *((mpz_t*) arg1->data));
     }
   else if (arg1->type == Real)
     {
@@ -2548,7 +2538,8 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
       data* d;
       if (is_integer(value))
         {
-          int result = atoi(value);
+          mpz_t result;
+          mpz_init_set_str(result, value, 10);
           assign_int(&d, result);
           ret_ans(reg, d);
         }
@@ -2620,7 +2611,7 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer|Real|String))))
 
   data* d;
   if (arg1->type == Integer)
-    assign_real(&d, *((int*) arg1->data));
+    assign_real(&d, mpz_get_d(*((mpz_t*) arg1->data)));
   else if (arg1->type == Real)
     d = copy_data(arg1);
   else
@@ -2741,7 +2732,7 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
       
       if (arg2 != NULL)
         {
-          is_error(*((int*) arg2->data));
+          is_error(mpz_get_si(*((mpz_t*) arg2->data)));
         }
     }
 }
@@ -3548,7 +3539,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   }
 
 ;
-      max_matches = *((int*) arg3->data);
+      max_matches = mpz_get_ui(*((mpz_t*) arg3->data));
     }
 
   regex_t regex;
@@ -3716,7 +3707,7 @@ if (arg4 != NULL && true && (!(arg4->type & Integer)))
   }
 
 ;
-      max_replace = *((int*) arg4->data);
+      max_replace = mpz_get_ui(*((mpz_t*) arg4->data));
     }
 
   regex_t regex;
@@ -3844,7 +3835,7 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   data* d;
   if (arg1->type == Integer)
     {
-      assign_real(&d, log((double) (*((int*) arg1->data))));
+      assign_real(&d, log(mpz_get_d((*((mpz_t*) arg1->data)))));
     }
   else
     {
@@ -3887,7 +3878,7 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   data* d;
   if (arg1->type == Integer)
     {
-      assign_real(&d, exp((double) (*((int*) arg1->data))));
+      assign_real(&d, exp(mpz_get_d(*((mpz_t*) arg1->data))));
     }
   else
     {
@@ -3951,7 +3942,7 @@ if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   data* d;
   if (arg1->type == Integer)
     {
-      base = (double) (*((int*) arg1->data));
+      base = mpz_get_d(*((mpz_t*) arg1->data));
     }
   else
     {
@@ -3960,7 +3951,7 @@ if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
 
   if (arg2->type == Integer)
     {
-      power = (double) (*((int*) arg2->data));
+      power = mpz_get_d(*((mpz_t*) arg2->data));
     }
   else
     {
@@ -4154,11 +4145,12 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 ;
 
   unsigned char* str = (unsigned char*) arg1->data;
-  int start = *((int*) arg2->data);
-  int end = *((int*) arg3->data);
-  int byte_length = strlen((char*) str)+1;
-  int length = u8_mbsnlen((unsigned char*) str,
-                          byte_length-1);
+  size_t start = mpz_get_ui(*((mpz_t*) arg2->data));
+  size_t end = mpz_get_ui(*((mpz_t*) arg3->data));
+
+  size_t byte_length = strlen((char*) str)+1;
+  size_t length = u8_mbsnlen((unsigned char*) str,
+                             byte_length-1);
 
   start = arbel_location(start, length);
   end = arbel_location(end, length);
@@ -4748,363 +4740,6 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 }
 
 void
-op_fill (arg a, registry* reg)
-{
-  
-  
-  check_length(&a, 2+1, "fill");
-if (is_error(-1)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        do_error("<fill> requires at least 1 arguments.");
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Integer)))
-  {
-    do_error("Argument 1 of <fill> should be of type Integer.");
-    return ;
-  }
-
-;
-
-  
-  
-  
-data* arg2 = resolve(a.arg_array[2], reg);
-
-if (true)
-  {
-    if (arg2 == NULL)
-      {
-        do_error("<fill> requires at least 2 arguments.");
-        return ;
-      }
-  }
-if (arg2 != NULL && false && (!(arg2->type & Integer)))
-  {
-    do_error("Argument 2 of <fill> should be of type Integer.");
-    return ;
-  }
-
-;
-  
-  int n = *((int*) arg1->data);
-  if (n <= 0)
-    {
-      do_error("First argument to <fill> must be strictly positive.");
-      return;
-    }
-
-  data** content = malloc(sizeof(data*)*n);
-  for (int i=0; i < n; i++)
-    {
-      ((data**) content)[i] = copy_data(arg2);
-    }
-
-  data* d;
-  assign_column(&d, arg2->type, content, n, false);
-  ret_ans(reg, d);
-  
-}
-
-void
-op_element (arg a, registry* reg)
-{
-  
-  
-  check_length(&a, 2+1, "element");
-if (is_error(-1)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        do_error("<element> requires at least 1 arguments.");
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Column)))
-  {
-    do_error("Argument 1 of <element> should be of type Column.");
-    return ;
-  }
-
-;
-
-  
-  
-  
-data* arg2 = resolve(a.arg_array[2], reg);
-
-if (true)
-  {
-    if (arg2 == NULL)
-      {
-        do_error("<element> requires at least 2 arguments.");
-        return ;
-      }
-  }
-if (arg2 != NULL && true && (!(arg2->type & Integer)))
-  {
-    do_error("Argument 2 of <element> should be of type Integer.");
-    return ;
-  }
-
-;
-
-  int location = arbel_location(*((int*) arg2->data),
-                                ((column*) arg1->data)->length);
-
-  if (location < 0)
-    {
-      do_error("Invalid location.");
-      return;
-    }
-
-  data* d = copy_data(((column*) arg1->data)->data[location-1]);
-  ret_ans(reg, d);
-}
-
-void
-op_modify_at (arg a, registry* reg)
-{
-  
-  
-  check_length(&a, 3+1, "modify-at");
-if (is_error(-1)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        do_error("<modify-at> requires at least 1 arguments.");
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Column)))
-  {
-    do_error("Argument 1 of <modify-at> should be of type Column.");
-    return ;
-  }
-
-;
-
-  
-  
-  
-data* arg2 = resolve(a.arg_array[2], reg);
-
-if (true)
-  {
-    if (arg2 == NULL)
-      {
-        do_error("<modify-at> requires at least 2 arguments.");
-        return ;
-      }
-  }
-if (arg2 != NULL && true && (!(arg2->type & Integer)))
-  {
-    do_error("Argument 2 of <modify-at> should be of type Integer.");
-    return ;
-  }
-
-;
-
-  
-  
-  
-data* arg3 = resolve(a.arg_array[3], reg);
-
-if (true)
-  {
-    if (arg3 == NULL)
-      {
-        do_error("<modify-at> requires at least 3 arguments.");
-        return ;
-      }
-  }
-if (arg3 != NULL && true && (!(arg3->type & ((column*) arg1->data)->type)))
-  {
-    do_error("Argument 3 of <modify-at> should be of type ((column*) arg1->data)->type.");
-    return ;
-  }
-
-;
-
-  int location = arbel_location(*((int*) arg2->data),
-                                ((column*) arg1->data)->length);
-
-  if (location < 0)
-    {
-      do_error("Invalid element.");
-      return;
-    }
-
-  free_data(((column*) arg1->data)->data[location-1]);
-  ((column*) arg1->data)->data[location-1] = copy_data(arg3);
-  
-}
-
-void
-op_transform (arg a, registry* reg)
-{
-  
-
-  
-  check_length(&a, 2+1, "transform");
-if (is_error(-1)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        do_error("<transform> requires at least 1 arguments.");
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Instruction)))
-  {
-    do_error("Argument 1 of <transform> should be of type Instruction.");
-    return ;
-  }
-
-;
-
-  data* argi = NULL;
-  data** columns = malloc(sizeof(data*)*(a.length-2));
-  size_t n = -1;
-  for (int i=2; i < a.length; i++)
-    {
-      
-      
-      
-data* argi = resolve(a.arg_array[i], reg);
-
-if (true)
-  {
-    if (argi == NULL)
-      {
-        do_error("<transform> requires at least i arguments.");
-        return ;
-      }
-  }
-if (argi != NULL && true && (!(argi->type & Column)))
-  {
-    do_error("Argument i of <transform> should be of type Column.");
-    return ;
-  }
-
-;
-
-      n = n < ((column*) argi->data)->length ?
-        n : ((column*) argi->data)->length;
-
-      columns[i-2] = argi;
-    }
-
-  arg a1;
-  a1.length = 1+2*(a.length-2);
-  a1.free_data = malloc(sizeof(int)*a1.length);
-  a1.arg_array = malloc(sizeof(data*)*a1.length);
-  for (int i=0; i < a1.length; i++)
-    {
-      a1.free_data[i] = i % 2;
-    }
-
-  a1.arg_array[0] = arg1;
-  data* d;
-  for (int i = 0; i < (a.length-2); i++)
-    {
-      size_t ndigits = floor(log10(i+1))+1;
-      char* name = malloc(sizeof(char)*(strlen("t")+ndigits+1));
-      sprintf(name, "t%d", i+1);
-      assign_regstr(&d, name, hash_str(name));
-      a1.arg_array[2*i+1] = d;
-    }
-
-  data** ans = malloc(sizeof(data*)*n);
-  for (size_t j = 0; j < n; j++)
-    {
-      for (int i=0; i < (a.length-2); i++)
-        {
-          a1.arg_array[2*(i+1)] = ((column*) columns[i]->data)->data[j];
-        }
-
-      compute(arg1, reg, a1);
-      d = lookup(reg, arbel_hash_ans, 0);
-
-      ans[j] = copy_data(d);
-      
-    }
-    
-  free_arg(a1);
-
-  assign_column(&d, ans[0]->type, ans, n, false);
-  ret_ans(reg, d);
-    
-}
-
-void
-op_height (arg a, registry* reg)
-{
-  
-
-  
-  check_length(&a, 1+1, "height");
-if (is_error(-1)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        do_error("<height> requires at least 1 arguments.");
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Column)))
-  {
-    do_error("Argument 1 of <height> should be of type Column.");
-    return ;
-  }
-
-;
-
-  data* d;
-  assign_int(&d, ((column*) arg1->data)->length);
-
-  ret_ans(reg,d);
-}
-
-void
 op_please (arg a, registry* reg)
 {
   
@@ -5228,7 +4863,7 @@ if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
       else
         {
           double res = fmod(*((double*) arg1->data),
-                            (double) (*((int*) arg2->data)));
+                            mpz_get_d(*((mpz_t*) arg2->data)));
           assign_real(&d, res);
         }
     }
@@ -5242,7 +4877,10 @@ if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
         }
       else
         {
-          int res = *((int*) arg1->data) % *((int*) arg2->data);
+          mpz_t res;
+          mpz_init(res);
+          mpz_fdiv_r(res, *((mpz_t*) arg1->data),
+                     *((mpz_t*) arg2->data));
           assign_int(&d, res);
         }
     }
@@ -5671,21 +5309,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_find, NULL, NULL, 0);
   set(reg,d,"find",1);
-
-  assign_op(&d, op_fill, NULL, NULL, 0);
-  set(reg,d,"fill",1);
-
-  assign_op(&d, op_element, NULL, NULL, 0);
-  set(reg,d,"element",1);
-
-  assign_op(&d, op_modify_at, NULL, NULL, 0);
-  set(reg,d,"modify-at",1);
-
-  assign_op(&d, op_transform, NULL, NULL, 0);
-  set(reg,d,"transform",1);
-
-  assign_op(&d, op_height, NULL, NULL, 0);
-  set(reg,d,"height",1);
 
   assign_op(&d, op_please, NULL, NULL, 0);
   set(reg,d,"please",1);

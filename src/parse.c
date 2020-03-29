@@ -218,8 +218,12 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (is_integer(state->buffer))
                 {
-                  assign_int(&d, atoi(state->buffer));
+                  mpz_t mz;
+                  mpz_init(mz);
+                  mpz_set_str(mz, state->buffer, 10);
+                  assign_int(&d, mz);
                   e = add_literal_argument(&head, e, d);
+                  mpz_clear(mz);
                 }
               else if (is_real(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)

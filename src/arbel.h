@@ -41,6 +41,7 @@
 #include <stdbool.h>
 #include <unistr.h>
 #include <unistdio.h>
+#include <gmp.h>
 
 enum data_type
   {
@@ -54,8 +55,7 @@ enum data_type
    Operation = 128,
    File = 256,
    Boolean = 512,
-   Nothing = 1024,
-   Column = 2048
+   Nothing = 1024
   };
 
 typedef enum data_type data_type;
@@ -219,7 +219,7 @@ void
 assign_real (data** d, const double num);
 
 void
-assign_int (data** d, const int num);
+assign_int (data** d, const mpz_t num);
 
 void
 assign_str (data** d, const char* str, int copy);

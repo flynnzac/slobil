@@ -4,6 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([Arbel], [0.0.1], [github.com/flynnzac/arbel])
 AC_CONFIG_SRCDIR([src/arbel.c])
+AC_CONFIG_MACRO_DIRS([m4])
 
 LT_INIT
 # Checks for pushmac
@@ -28,6 +29,7 @@ AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([m], [floor])
 AC_CHECK_LIB([readline], [readline])
 AC_CHECK_LIB([unistring], [u8_next])
+AC_CHECK_LIB([gmp], [__gmpz_init])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])

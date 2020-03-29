@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS=-I m4
+
 SUFFIXES = .pshm .arb
 .pshm.c:
 	cat $< | pushmac > $@

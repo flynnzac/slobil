@@ -113,15 +113,6 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
-  else if (d->type == Column)
-    {
-      for (int i=0; i < ((column*) d->data)->length; i++)
-        {
-          free_data(((column*) d->data)->data[i]);
-        }
-      free(d->data);
-      free(d);
-    }
   else if (d->type == Operation)
     {
       if (((op_wrapper*) d->data)->instr != NULL)
@@ -150,6 +141,12 @@ free_data (data* d)
   else if (d->type == Active_Instruction)
     {
       free_statement(((instruction*) d->data)->stmt);
+      free(d->data);
+      free(d);
+    }
+  else if (d->type == Integer)
+    {
+      mpz_clear(*((mpz_t*) d->data));
       free(d->data);
       free(d);
     }

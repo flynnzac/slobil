@@ -33,12 +33,15 @@ assign_real (data** d, const double num)
 }
           
 void
-assign_int (data** d, const int num)
+assign_int (data** d, const mpz_t num)
 {
   *d = new_data();
   (*d)->type = Integer;
-  (*d)->data = malloc(sizeof(int));
-  *((int*) (*d)->data) = num;
+  (*d)->data = malloc(sizeof(mpz_t));
+  
+  mpz_init(*((mpz_t*) (*d)->data));
+  mpz_set(*((mpz_t*) (*d)->data), num);
+  
 }
 
 void
@@ -160,31 +163,6 @@ assign_boolean (data** d, bool val)
   *((bool*) (*d)->data) = val;
 }
 
-void
-assign_column (data** d, const data_type type,
-              data** content, const size_t length,
-              bool copy)
-{
-  *d = new_data();
-  (*d)->type = Column;
-  (*d)->data = malloc(sizeof(column));
-  ((column*) (*d)->data)->length = length;
-  ((column*) (*d)->data)->type = type;
-  if (copy)
-    {
-      ((column*) (*d)->data)->data = malloc(sizeof(data*)*length);
-      for (int i = 0; i < length; i++)
-        {
-          ((data**) ((column*) (*d)->data)->data)[i] =
-            copy_data(content[i]);
-      
-        }
-    }
-  else
-    {
-      ((column*) (*d)->data)->data = content;
-    }
-}
 
 void
 assign_nothing (data** d)
@@ -303,7 +281,7 @@ copy_data (data* d_in)
   switch (d_in->type)
     {
     case Integer:
-      assign_int(&d, *((int*) d_in->data));
+      assign_int(&d, *((mpz_t*) d_in->data));
       break;
     case Real:
       assign_real(&d, *((double*) d_in->data));
@@ -336,12 +314,6 @@ copy_data (data* d_in)
       break;
     case Boolean:
       assign_boolean(&d, *((bool*) d_in->data));
-      break;
-    case Column:
-      assign_column(&d, ((column*) d_in->data)->type,
-                    ((column*) d_in->data)->data,
-                    ((column*) d_in->data)->length,
-                   true);
       break;
     case Nothing:
       assign_nothing(&d);

@@ -67,6 +67,12 @@ main (int argc, char** argv)
   #ifdef GARBAGE
   GC_INIT();
   #endif
+  #ifdef GARBAGE
+  mp_set_memory_functions(GC_malloc, GC_realloc, GC_free);
+  #else
+  mp_set_memory_functions(malloc, realloc, free);
+  #endif
+  
   rl_event_hook = dummy_event;
   source_code = NULL;
   registry* reg = new_registry(NULL, ARBEL_HASH_SIZE);

@@ -31,7 +31,7 @@ print_data (data* d, print_settings settings)
   switch (d->type)
     {
     case Integer:
-      printf("%d", *((int*) d->data));
+      gmp_printf("%Zd", *((mpz_t*) d->data));
       break;
     case String:
       if (settings & PRINT_QUOTES)
@@ -74,22 +74,6 @@ print_data (data* d, print_settings settings)
         printf("True.");
       else
         printf("False.");
-      break;
-    case Column:
-      printf("%lu-Column containing: \n", ((column*) d->data)->length);
-      for (int i = 0; i < ((column*) d->data)->length; i++)
-        {
-          if (i < (((column*) d->data)->length-1))
-            {
-              print_data(((column*) d->data)->data[i],
-                         PRINT_NEWLINE | PRINT_QUOTES);
-            }
-          else
-            {
-              print_data(((column*) d->data)->data[i],
-                         PRINT_QUOTES);
-            }
-        }
       break;
     default:
       break;
