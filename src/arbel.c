@@ -160,7 +160,9 @@ main (int argc, char** argv)
     }
 
   state.print_out = echo;
-
+  #ifndef SO_REUSEPORT
+  listen_socket = false;
+  #endif
   if (!listen_socket)
     {
 
@@ -172,6 +174,7 @@ main (int argc, char** argv)
   struct sockaddr_in addr;  
   if (listen_socket)
     {
+      #ifdef SO_REUSEPORT
       sock = socket(AF_INET, SOCK_STREAM, 0);
 
       int opt = 1;
@@ -182,6 +185,7 @@ main (int argc, char** argv)
                  &opt, sizeof(opt));
       bind(sock, (struct sockaddr*) &addr,
            sizeof(addr));
+      #endif
     }
         
 
