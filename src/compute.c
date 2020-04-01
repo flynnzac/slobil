@@ -116,7 +116,8 @@ do_operation (op_wrapper* op, registry* reg, arg a)
     {
       registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
       data* d;
-      for (int i=1; i < a.length; i++)
+      size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
+      for (int i=1; i < len; i++)
         {
           d = resolve(a.arg_array[i], reg);
           content* c = set(r_new, d,
