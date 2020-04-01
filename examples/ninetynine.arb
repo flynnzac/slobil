@@ -1,0 +1,17 @@
+' Ninety-nine bottles of beer on the wall
+
+set /bottles-of-beer
+    (
+      print [ to-string n-bottle . ] False .
+      print " Bottle" False .
+      if [ not [ eq n-bottle 1 . ] . ]
+         { print "s" False . } .
+      print " of beer on the wall." .
+    ) .
+
+set /i 99 .
+while ( gt-eq i 0 . )
+      (
+        bottles-of-beer /n-bottle i .
+        set /i [ sub i 1 . ] .
+      ) ,

@@ -153,6 +153,21 @@ shift_list_down (registry* reg)
 
 }
 
-
+int
+arbel_location (int loc, const int n)
+{
+  if (loc <= 0)
+    {
+      loc += n;
+    }
+  if ((loc > 0) && (loc <= n))
+    {
+      return loc;
+    }
+  else
+    {
+      return -1;
+    }
+}
 
 

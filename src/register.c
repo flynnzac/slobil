@@ -38,7 +38,7 @@ argument_name (int n)
       n_digits = floor(log10(n)) + 1;
     }
   char* name = malloc(sizeof(char)*(n_digits+2));
-  sprintf(name, "#%d", n);
+  sprintf(name, "t%d", n);
   return name;
 }
 

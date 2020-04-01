@@ -105,6 +105,45 @@ _op_call (arg a, registry* reg, const int explicit)
   
 }
 
+void
+do_operation (op_wrapper* op, registry* reg, arg a)
+{
+  if (op->instr == NULL)
+    {
+      op->op(a, reg);
+    }
+  else
+    {
+      registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
+      data* d;
+      size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
+      for (int i=1; i < len; i++)
+        {
+          d = resolve(a.arg_array[i], reg);
+          content* c = set(r_new, d,
+                           ((regstr*) op->args[i-1]->data)->name,
+                           1);
+          c->do_not_free_data = 1;
+        }
+
+      ((instruction*) op->instr->data)->being_called = true;
+      execute_code(((instruction*) op->instr->data)->stmt, r_new);
+      ((instruction*) op->instr->data)->being_called = false;
+
+      data* ans;
+      if (!is_error(-1))
+        {
+          ans = get(r_new, arbel_hash_ans, 0);
+          if (ans != NULL)
+            {
+              mark_do_not_free(r_new, arbel_hash_ans);
+              ret_ans(reg, ans);
+            }
+        }
+
+      free_registry(r_new);
+    }
+}
 
 void
 compute (data* cmd, registry* reg, arg a)
@@ -120,7 +159,7 @@ compute (data* cmd, registry* reg, arg a)
     case Operation:
       if (is_error(-1))
         return;
-      ((operation) cmd->data)(a, reg);
+      do_operation((op_wrapper*) cmd->data, reg,a);
       break;
     case Instruction:
       _op_call(a, reg, 0);

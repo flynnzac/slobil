@@ -247,13 +247,17 @@ execute_statement (statement* s, registry* reg)
   if (is_error(-1))
     {
       data* err;
-      assign_int(&err, is_error(-1));
+      mpz_t err_z;
+      mpz_init_set_si(err_z, is_error(-1));
+      assign_int(&err, err_z);
       set(reg, err, "error-code", 0);
     }
   else
     {
       data* err;
-      assign_int(&err, 0);
+      mpz_t err_z;
+      mpz_init_set_si(err_z, 0);
+      assign_int(&err, err_z);
       set(reg, err, "error-code", 0);
     }
 	

@@ -1,0 +1,29 @@
+set /make-c-op
+    (
+      set /i /arg1 .
+      set /n 0 .
+      set /checks "" .
+      while ( exist i . )
+            (
+              set /n [ add n 1 . ] .
+              set /checks
+                  [ string-append checks
+                           "data* arg"
+                           [ to-string i . ]
+                           "_d = resolve(a.arg_array[1], reg);\n" . ] .
+              set /checks
+                  [
+                    string-append checks
+                           "if (arg"
+                           [ to-string i . ]
+                           "_d == NULL)
+{
+  do_error('<" op-name "> requires at least "
+                           [ to-string i . ]
+                           " arguments.');\n return;"
+                  ] .
+            ) .
+
+      print checks .
+
+    ) .

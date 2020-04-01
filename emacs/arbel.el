@@ -58,7 +58,10 @@
                              (modify-syntax-entry ?] ")[" st)
         (modify-syntax-entry ?\{ "(}" st)
         (modify-syntax-entry ?\} "){" st)
-        (modify-syntax-entry ?- "-" st)
+        (modify-syntax-entry ?\{ "(>" st)
+        (modify-syntax-entry ?\} ")<" st)
+
+        (modify-syntax-entry ?- "w" st)
         (modify-syntax-entry ?# "w" st)
         (modify-syntax-entry ?/ "_" st)
         (modify-syntax-entry ?\\ "_" st)
@@ -158,15 +161,24 @@
 		            "free"
 		            "previous"
                 "where"
+                "mod"
+                "is-operation"
+                "op"
+                "height"
+                "transform"
+                "modify-at"
+                "please"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
 	           (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
 	           (boolean-regexp (regexp-opt '("True" "False") 'words))
+             (op-def-regexp (regexp-opt '("<" ">") 'symbols))
              )
 	      `(
-	        (,register-regexp . (1 font-lock-function-name-face))
+	        (,register-regexp . (1 font-lock-reference-face))
 	        (,boolean-regexp . (1 font-lock-constant-face))
 	        (,functions-regexp . font-lock-builtin-face)
+          (,op-def-regexp . font-lock-function-name-face)
 	        )))
 
 (define-derived-mode arbel-mode prog-mode "arbel"

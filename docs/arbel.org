@@ -6,17 +6,21 @@
 * Introduction
 ** ARBEL is a Registry-Based Environment and Language
 
-   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  ARBEL instructions operate /within/ a certain registry.  The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  Instructions themselves are nothing more than a way to create a new (temporary) registry, execute some code inside of it, and write results to the current registry.  
+   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code.  It is what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data type of ARBEL and the language provides many operations to manipulate and recover values from the registries.  
 
-   From this basic, but flexible, data type ARBEL builds up a useful system for interactively constructing programs.  It's goal is to be easy to use interactively for building /personal/ programs (programs primarily for the user's own use) which is why the syntax is very similar to entering commands on the command line.  There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+   ARBEL /instructions/ are like procedures in other languages, but they operate within a programmer-supplied registry and have no environment or context themselves.  This enables the programmer calling the instruction to decide which arguments it has, not the author of the instruction. The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  
+
+   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the programmer. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
+
+   The interactive nature of ARBEL is reflected in its syntax and environment. The syntax is very similar to entering commands on the command line (it has a bit of a TCL flavor visually, but the semantics of the language are very different). The enviroment is focused on being easy to save and load state.   There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
 
 ** Distinguishing Features
 
-   ARBEL's first distinguishing feature is that it is /naturally generic/.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over code that other's have written.  This works because instructions in ARBEL do not really take "arguments" like in other languages, they take "environments" (registries) that put different values at different registers.  Because every aspect of the environment can be replaced, instructions are naturally generic.
+   ARBEL's first distinguishing feature is that it is as generic as the caller of the instruction wants it to be, not the programmer of the instruction.  What this means is that any non-literal in an instruction can be replaced by the user without the author of the instruction anticipating that it would be useful for the user to replace that part of the instruction.  This allows the user a large degree of control over code that other's have written.  This works because instructions in ARBEL do not really take "arguments" like in other languages, they take "environments" (registries) that put different values at different registers.  Because every aspect of the environment can be replaced, instructions are naturally generic.
 
    ARBEL's second main distinguishing feature is that it uses different parenthesis types (=()=, ={}=, and =[]=) to control when substatements are evaluated.  Open parenthesis (=()=) quote a set of instructions so that they can be executed in another registry besides the one that is currently being used.  Closed parenthesis (=[]=) execute the substatement immediately, as if it were entered as a previous statement.  Curly parenthesis (={}=) execute the substatement only if the instructruction containing it, tries to access its value.
 
-   The other feature of Arbel is that it is not only a /language/, it is also an /environment/. It can be used interactively and its state can be written to disk so you can pick up where your left off or store commonly used instructions for later use.  This was one of my main motivations for writing the language: to create a general purpose language that is easy to use interactively and where it is easy to save state so that it can be used to do personal programming: interact with the computer with the power of a full programming language.  
+   The other feature of Arbel is that it is not only a /language/, it is also an /environment/. It can be used interactively and its state can be written to disk so you can pick up where your left off or store commonly used instructions for later use.  This was one of my main motivations for writing the language: to create a general purpose language that is easy to use interactively and where it is easy to save state.
 
    The language is dynamically-typed (registers do not have types, only the values entered in the registries do), and it is strongly typed (values have a certain type and cannot be coerced to other types except explicitly).
 
@@ -61,7 +65,7 @@
 
    There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
-   There are three parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), and curly parenthesis ("{}").  All contain statements, but they differ in /when/ the statements they contain are executed.
+   There are four parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
    
    - Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
      #+BEGIN_SRC arbel
@@ -103,7 +107,9 @@
 
      The =/ans= register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
      #+BEGIN_SRC arbel
-     ... set /add-one ( answer [ add t 1 . ] . ) .
+     ... add 10 12 .
+     ans = 22
+     ... set /add-one ( add t 1 . ) .
      ... add-one /t 10 .
      ans = 11
      ... print ans .
@@ -131,6 +137,21 @@
 
      If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
 
+   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis () that operate within whatever registry the caller of the instruction defines.  They are more flexible than operations. Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  Angle brackets or the =op= operation provide two alternative ways of doing this.
+     #+BEGIN_SRC arbel
+     ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
+     ... fraction /t1 1 /t2 3.0 .
+     ans = 0.25
+     ... [ op fraction /t1 /t2 . ] 1 3.0 .
+     ans = 0.25
+     ... < fraction /t1 /t2 > 1 3.0 .
+     ans = 0.25
+     ... set /op-fraction < fraction /t1 /t2 > .
+     ... op-fraction 1 3.0 .
+     ans = 0.25
+     #+END_SRC
+
+     Note that there is no period used to end an operation definition in the angle brackets. The brackets call the instruction =fraction= and sets the register =/t1= to the value of the first argument and the register =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
 
    The last syntax element is the comment.  To write a comment in ARBEL, use a single quote (='=) as the first character in a statement.  You can think about this quote as an a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
    #+BEGIN_SRC arbel
@@ -149,15 +170,13 @@
    ... registry /hello "Hello, world!" /x 10 .
    #+END_SRC
 
-   This =registry= operation puts a new registry in the =/ans= register.  The registry has a =/hello= register bound to the value ="Hello, world!"= and with the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
+   The =registry= operation puts a new registry in the =/ans= register.  This registry has a =/hello= register bound to the value ="Hello, world!"= and with the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
    
    #+BEGIN_SRC arbel
    ... registry /hello "Hello, world!" /x 10 .
    ... move /ans /my-registry .
-   ... print my-registry .
    ... ' Or:
    ... set /my-registry [ registry /hello "Hello, world!" /x 10 . ] .
-   ... print my-registry .
    #+END_SRC
 
    To access values in a registry, you can either use the =get= operation or the "colon notation":
@@ -223,7 +242,7 @@
    ans = 120
    #+END_SRC       
 
-   You can assign Instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the =set= operation takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry as we have seen above.
+   You can assign instructions inside registries and then they can be called from that registry using the colon notation.  This code block also demonstrates that the =set= operation optionally takes a third argument: the registry in which to set the register.  When omitted, it sets the register in the current registry.
 
    Of course, if you don't need to worry about name collisions, you can just =import= it.
 
@@ -233,8 +252,6 @@
    ans = 120
    #+END_SRC
 
-
-   
    Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
 
 *** Additional details about colon notation
@@ -263,7 +280,7 @@
 
 ** Registers   
 
-Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use Registers.
+Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use registers.
 
 #+BEGIN_SRC arbel
 ... set /x /y .
@@ -291,13 +308,31 @@ Registers are data denoting locations so they are often useful ways to manipulat
 
 ** Environment
 
-ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on.
+ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
+
+To save the current registry to a file called /state.arb/,
+#+BEGIN_SRC arbel
+... save "state.sarb" .
+#+END_SRC
+
+To load the registry back in:
+#+BEGIN_SRC arbel
+... load "state.sarb" .
+#+END_SRC
+
+Optionally, a second argument can be provided to =load= to load the data into a specific registry, not just the current one.
+
+#+BEGIN_SRC arbel
+... load "state.sarb" old-stuff .
+#+END_SRC
+
+Where =old-stuff= is a registry.
 
 * Examples
 
-** Example: A Line-Oriented Text Editor
+** A Line-Oriented Text Editor
 
-#+INCLUDE: "../examples/arbed.arb" example
+#+INCLUDE: "../examples/arbed.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -314,9 +349,9 @@ Goodbye
 Hello
 #+END_SRC
 
-** Example: Numerical Differentiation
+** Numerical Differentiation
 
-#+INCLUDE: "../examples/deriv.arb" example
+#+INCLUDE: "../examples/deriv.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -325,9 +360,9 @@ Example of use:
 ans = 2.0
 #+END_SRC
 
-** Example: Dispatch
+** Dispatch
 
-#+INCLUDE: "../examples/dispatch.arb" example
+#+INCLUDE: "../examples/dispatch.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -339,9 +374,9 @@ ans = 20.0
 ans = hellohellohellohellohello
 #+END_SRC
 
-** Example: Compute Factorial
+** Compute Factorial
 
-#+INCLUDE: "../examples/factorial.arb" example
+#+INCLUDE: "../examples/factorial.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -349,9 +384,9 @@ Example of use:
 ans = 120
 #+END_SRC
 
-** Example: Numerical Integration
+** Numerical Integration
 
-#+INCLUDE: "../examples/integrate.arb" example
+#+INCLUDE: "../examples/integrate.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -359,9 +394,9 @@ Example of use:
 ans = 0.332834
 #+END_SRC
 
-** Example: Basic Linear Algebra
+** Basic Linear Algebra
 
-#+INCLUDE: "../examples/matrix.arb" example
+#+INCLUDE: "../examples/matrix.arb" src arbel
 
 Example of use:
 #+BEGIN_SRC arbel
@@ -369,34 +404,61 @@ Example of use:
 ... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
 ... transpose /A A .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 1
-#2 of type Integer, value: 3
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 2
-#2 of type Integer, value: 4
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 3
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 2
+t2 of type Integer, value: 4
 ... matrix-multiply /A A /B B .
 ans = a registry with:
-#1 of type Registry, value: a registry with:
-#1 of type Integer, value: 10
-#2 of type Integer, value: 26
-#2 of type Registry, value: a registry with:
-#1 of type Integer, value: 11
-#2 of type Integer, value: 25
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 10
+t2 of type Integer, value: 26
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 11
+t2 of type Integer, value: 25
 #+END_SRC
 
-** Example: Split a String
+** Split a String
 
-#+INCLUDE: "../examples/tokenize.arb" example
+#+INCLUDE: "../examples/tokenize.arb" src arbel
 
 Examples of use:
 #+BEGIN_SRC arbel
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
-#1 of type String, value: 1
-#2 of type String, value: 2
-#3 of type String, value: 3
+t1 of type String, value: 1
+t2 of type String, value: 2
+t3 of type String, value: 3
 #+END_SRC
+
+** Linking C code
+
+It is possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+
+The following is an example of C code.
+
+#+INCLUDE: "../examples/link.c" src c
+
+We then compile it into a shared object file, linking against =libarbel=.
+
+#+INCLUDE: "../examples/link_compile.sh" src sh
+
+The code then can be loaded into ARBEL with the =link= operation like so:
+
+#+INCLUDE: "../examples/link.arb" src arbel
+
+The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
+
+Now, the operation can be called in the following way:
+#+BEGIN_SRC arbel
+... log1 1 .
+ans = 0.693147
+#+END_SRC
+
+
+
 
 * Reference
 
@@ -408,7 +470,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- sets the =/ans= register to a registry with =VALUE1= located at =REGISTER1= and so on.
 
-- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/#1=, =VALUE2= at Register =/#2=, and so on.
+- =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/t1=, =VALUE2= at Register =/t2=, and so on.
 
 
 *** Insert, move, and remove data to and from registers
@@ -431,11 +493,11 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =where REGISTRY INSTRUCTION= --- set the =/ans= register to a Registry containing all the elements in the registry such that the INSTRUCTION when passed the element of the Registry at Register =/t= sets the =/ans= register to =True=.
 
-*** Apply Instructions to elements of a Registry
+*** Apply Operations to elements of a Registry
 
-- =do-to-all INSTRUCTION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =INSTRUCTION= which takes arguments at Registers =/t1=, =/t2=, ..., =/tN= for each element in =REGISTRY1=, ..., =REGISTRYN=.  Set the =/ans= register to a Registry which contains whatever the =INSTRUCTION= evaluates to at the corresponding Registers.  For example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/#1,/#2,/#3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all ( add t1 t2 . ) [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
+- =do-to-all OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes arguments its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do-to-all add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
-- =collapse INSTRUCTION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =INSTRUCTION= to the value at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on where the =INSTRUCTION= takes each argument at registers =/t1= and =/t2=. For example, =collapse ( add t1 t2 . ) [ list 1 2 3 . ] "#"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="#"=.
+- =collapse OPERATION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =OPERATION= to the value in the =REGISTRY= at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on. For example, =collapse add [ list 1 2 3 . ] "t"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="t"=.
 
 
 *** Execute code in a registry
@@ -467,6 +529,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called STRING corresponding to VALUE.  In other words if =dispatch "f" 10=, sets the =/ans= register to Instruction at =/f+Integer=.
 
+
 ** Real and Integer operations
 
 *** Arithmetic operations
@@ -477,6 +540,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =sub NUMBER1 NUMBER2 ...= --- subtracts the second number from the first and the third number from that and so on and sets the =/ans= register to the result. 
 
 - =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
+
+- =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
 
 *** Comparison operations
 - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
@@ -514,6 +579,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
 
 - =repeat INTEGER INSTRUCTION= --- call INSTRUCTION INTEGER times.
+
+- =please INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1=.  If there is an error, then call =INSTRUCTION2=.
 
 ** Environment operations
 
@@ -565,7 +632,7 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
-- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/#N= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+- =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
 - =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
@@ -600,16 +667,17 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 ** Register operations
 
-*** Operations on "list" registers: /#1, /#2, ...
+*** Operations on "list" registers
+
 - =next REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number incremented by 1.
 
-- =previous REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Register to the "first" register with that prefix so that =previous /#1 .= sets =/ans= to =/#1=.
+- =previous REGISTER= --- if the =REGISTER= ends in a number, return the Register with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Register to the "first" register with that prefix so that =previous /t1 .= sets =/ans= to =/t1=.
 
 - =last REGISTRY STRING= --- return the last Register in the =REGISTRY= that starts with =STRING=.  So that if you had registers =/x0=, =/x1=, and =/x2= in the Registry, =last REGISTRY "x"= would return =/x2=.
 
 *** Convert to register
 
-- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/#INTEGER=.
+- =to-register STRING|INTEGER= --- sets the =/ans= register to a Register named =STRING= or to =/tINTEGER=.
 
 *** Register comparison
 - =register-eq REGISTER1 REGISTER2= --- sets the =/ans= Register to =True= if the two Registers are the same and to =False= otherwise.
@@ -622,6 +690,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.
 
 - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
+
+- =op INSTRUCTION REGISTER1 ... REGISTERN= --- set the =/ans= register to an operation that calls =INSTRUCTION= after binding =REGISTER1= to the first argument, and so on.
 
 ** File operations
 
@@ -637,6 +707,8 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =write STRING FILE= --- write a given STRING to FILE.
 
+- =data STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
+
 ** Boolean operations
 
 - =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Boolean and to =False= otherwise.
@@ -647,3 +719,487 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =not BOOLEAN= --- sets the =/ans= Register to =True= if BOOLEAN is =False= and to =False= otherwise.
 
+
+* GNU Free Documentation License
+
+#+BEGIN_EXPORT html
+
+<h3 style="text-align: center;">GNU Free Documentation License</h3>
+
+<p style="text-align: center;">Version 1.3, 3 November 2008</p>
+
+<p> Copyright &copy; 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+     &lt;<a href="https://fsf.org/">https://fsf.org/</a>&gt;
+ </p><p>Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.</p>
+
+<h4><a name="section0"></a>0. PREAMBLE</h4>
+
+<p>The purpose of this License is to make a manual, textbook, or other
+functional and useful document &quot;free&quot; in the sense of freedom: to
+assure everyone the effective freedom to copy and redistribute it,
+with or without modifying it, either commercially or noncommercially.
+Secondarily, this License preserves for the author and publisher a way
+to get credit for their work, while not being considered responsible
+for modifications made by others.</p>
+
+<p>This License is a kind of &quot;copyleft&quot;, which means that derivative
+works of the document must themselves be free in the same sense.  It
+complements the GNU General Public License, which is a copyleft
+license designed for free software.</p>
+
+<p>We have designed this License in order to use it for manuals for free
+software, because free software needs free documentation: a free
+program should come with manuals providing the same freedoms that the
+software does.  But this License is not limited to software manuals;
+it can be used for any textual work, regardless of subject matter or
+whether it is published as a printed book.  We recommend this License
+principally for works whose purpose is instruction or reference.</p>
+
+<h4><a name="section1"></a>1. APPLICABILITY AND DEFINITIONS</h4>
+
+<p>This License applies to any manual or other work, in any medium, that
+contains a notice placed by the copyright holder saying it can be
+distributed under the terms of this License.  Such a notice grants a
+world-wide, royalty-free license, unlimited in duration, to use that
+work under the conditions stated herein.  The &quot;Document&quot;, below,
+refers to any such manual or work.  Any member of the public is a
+licensee, and is addressed as &quot;you&quot;.  You accept the license if you
+copy, modify or distribute the work in a way requiring permission
+under copyright law.</p>
+
+<p>A &quot;Modified Version&quot; of the Document means any work containing the
+Document or a portion of it, either copied verbatim, or with
+modifications and/or translated into another language.</p>
+
+<p>A &quot;Secondary Section&quot; is a named appendix or a front-matter section of
+the Document that deals exclusively with the relationship of the
+publishers or authors of the Document to the Document's overall
+subject (or to related matters) and contains nothing that could fall
+directly within that overall subject.  (Thus, if the Document is in
+part a textbook of mathematics, a Secondary Section may not explain
+any mathematics.)  The relationship could be a matter of historical
+connection with the subject or with related matters, or of legal,
+commercial, philosophical, ethical or political position regarding
+them.</p>
+
+<p>The &quot;Invariant Sections&quot; are certain Secondary Sections whose titles
+are designated, as being those of Invariant Sections, in the notice
+that says that the Document is released under this License.  If a
+section does not fit the above definition of Secondary then it is not
+allowed to be designated as Invariant.  The Document may contain zero
+Invariant Sections.  If the Document does not identify any Invariant
+Sections then there are none.</p>
+
+<p>The &quot;Cover Texts&quot; are certain short passages of text that are listed,
+as Front-Cover Texts or Back-Cover Texts, in the notice that says that
+the Document is released under this License.  A Front-Cover Text may
+be at most 5 words, and a Back-Cover Text may be at most 25 words.</p>
+
+<p>A &quot;Transparent&quot; copy of the Document means a machine-readable copy,
+represented in a format whose specification is available to the
+general public, that is suitable for revising the document
+straightforwardly with generic text editors or (for images composed of
+pixels) generic paint programs or (for drawings) some widely available
+drawing editor, and that is suitable for input to text formatters or
+for automatic translation to a variety of formats suitable for input
+to text formatters.  A copy made in an otherwise Transparent file
+format whose markup, or absence of markup, has been arranged to thwart
+or discourage subsequent modification by readers is not Transparent.
+An image format is not Transparent if used for any substantial amount
+of text.  A copy that is not &quot;Transparent&quot; is called &quot;Opaque&quot;.</p>
+
+<p>Examples of suitable formats for Transparent copies include plain
+ASCII without markup, Texinfo input format, LaTeX input format, SGML
+or XML using a publicly available DTD, and standard-conforming simple
+HTML, PostScript or PDF designed for human modification.  Examples of
+transparent image formats include PNG, XCF and JPG.  Opaque formats
+include proprietary formats that can be read and edited only by
+proprietary word processors, SGML or XML for which the DTD and/or
+processing tools are not generally available, and the
+machine-generated HTML, PostScript or PDF produced by some word
+processors for output purposes only.</p>
+
+<p>The &quot;Title Page&quot; means, for a printed book, the title page itself,
+plus such following pages as are needed to hold, legibly, the material
+this License requires to appear in the title page.  For works in
+formats which do not have any title page as such, &quot;Title Page&quot; means
+the text near the most prominent appearance of the work's title,
+preceding the beginning of the body of the text.</p>
+
+<p>The &quot;publisher&quot; means any person or entity that distributes copies of
+the Document to the public.</p>
+
+<p>A section &quot;Entitled XYZ&quot; means a named subunit of the Document whose
+title either is precisely XYZ or contains XYZ in parentheses following
+text that translates XYZ in another language.  (Here XYZ stands for a
+specific section name mentioned below, such as &quot;Acknowledgements&quot;,
+&quot;Dedications&quot;, &quot;Endorsements&quot;, or &quot;History&quot;.)  To &quot;Preserve the Title&quot;
+of such a section when you modify the Document means that it remains a
+section &quot;Entitled XYZ&quot; according to this definition.</p>
+
+<p>The Document may include Warranty Disclaimers next to the notice which
+states that this License applies to the Document.  These Warranty
+Disclaimers are considered to be included by reference in this
+License, but only as regards disclaiming warranties: any other
+implication that these Warranty Disclaimers may have is void and has
+no effect on the meaning of this License.</p>
+
+<h4><a name="section2"></a>2. VERBATIM COPYING</h4>
+
+<p>You may copy and distribute the Document in any medium, either
+commercially or noncommercially, provided that this License, the
+copyright notices, and the license notice saying this License applies
+to the Document are reproduced in all copies, and that you add no
+other conditions whatsoever to those of this License.  You may not use
+technical measures to obstruct or control the reading or further
+copying of the copies you make or distribute.  However, you may accept
+compensation in exchange for copies.  If you distribute a large enough
+number of copies you must also follow the conditions in section 3.</p>
+
+<p>You may also lend copies, under the same conditions stated above, and
+you may publicly display copies.</p>
+
+<h4><a name="section3"></a>3. COPYING IN QUANTITY</h4>
+
+<p>If you publish printed copies (or copies in media that commonly have
+printed covers) of the Document, numbering more than 100, and the
+Document's license notice requires Cover Texts, you must enclose the
+copies in covers that carry, clearly and legibly, all these Cover
+Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
+the back cover.  Both covers must also clearly and legibly identify
+you as the publisher of these copies.  The front cover must present
+the full title with all words of the title equally prominent and
+visible.  You may add other material on the covers in addition.
+Copying with changes limited to the covers, as long as they preserve
+the title of the Document and satisfy these conditions, can be treated
+as verbatim copying in other respects.</p>
+
+<p>If the required texts for either cover are too voluminous to fit
+legibly, you should put the first ones listed (as many as fit
+reasonably) on the actual cover, and continue the rest onto adjacent
+pages.</p>
+
+<p>If you publish or distribute Opaque copies of the Document numbering
+more than 100, you must either include a machine-readable Transparent
+copy along with each Opaque copy, or state in or with each Opaque copy
+a computer-network location from which the general network-using
+public has access to download using public-standard network protocols
+a complete Transparent copy of the Document, free of added material.
+If you use the latter option, you must take reasonably prudent steps,
+when you begin distribution of Opaque copies in quantity, to ensure
+that this Transparent copy will remain thus accessible at the stated
+location until at least one year after the last time you distribute an
+Opaque copy (directly or through your agents or retailers) of that
+edition to the public.</p>
+
+<p>It is requested, but not required, that you contact the authors of the
+Document well before redistributing any large number of copies, to
+give them a chance to provide you with an updated version of the
+Document.</p>
+
+<h4><a name="section4"></a>4. MODIFICATIONS</h4>
+
+<p>You may copy and distribute a Modified Version of the Document under
+the conditions of sections 2 and 3 above, provided that you release
+the Modified Version under precisely this License, with the Modified
+Version filling the role of the Document, thus licensing distribution
+and modification of the Modified Version to whoever possesses a copy
+of it.  In addition, you must do these things in the Modified Version:</p>
+
+<ul>
+
+
+<li>A. Use in the Title Page (and on the covers, if any) a title distinct
+   from that of the Document, and from those of previous versions
+   (which should, if there were any, be listed in the History section
+   of the Document).  You may use the same title as a previous version
+   if the original publisher of that version gives permission.
+</li>
+
+<li>B. List on the Title Page, as authors, one or more persons or entities
+   responsible for authorship of the modifications in the Modified
+   Version, together with at least five of the principal authors of the
+   Document (all of its principal authors, if it has fewer than five),
+   unless they release you from this requirement.
+</li>
+
+<li>C. State on the Title page the name of the publisher of the
+   Modified Version, as the publisher.
+</li>
+
+<li>D. Preserve all the copyright notices of the Document.
+</li>
+
+<li>E. Add an appropriate copyright notice for your modifications
+   adjacent to the other copyright notices.
+</li>
+
+<li>F. Include, immediately after the copyright notices, a license notice
+   giving the public permission to use the Modified Version under the
+   terms of this License, in the form shown in the Addendum below.
+</li>
+
+<li>G. Preserve in that license notice the full lists of Invariant Sections
+   and required Cover Texts given in the Document's license notice.
+</li>
+
+<li>H. Include an unaltered copy of this License.
+</li>
+
+<li>I. Preserve the section Entitled &quot;History&quot;, Preserve its Title, and add
+   to it an item stating at least the title, year, new authors, and
+   publisher of the Modified Version as given on the Title Page.  If
+   there is no section Entitled &quot;History&quot; in the Document, create one
+   stating the title, year, authors, and publisher of the Document as
+   given on its Title Page, then add an item describing the Modified
+   Version as stated in the previous sentence.
+</li>
+
+<li>J. Preserve the network location, if any, given in the Document for
+   public access to a Transparent copy of the Document, and likewise
+   the network locations given in the Document for previous versions
+   it was based on.  These may be placed in the &quot;History&quot; section.
+   You may omit a network location for a work that was published at
+   least four years before the Document itself, or if the original
+   publisher of the version it refers to gives permission.
+</li>
+
+<li>K. For any section Entitled &quot;Acknowledgements&quot; or &quot;Dedications&quot;,
+   Preserve the Title of the section, and preserve in the section all
+   the substance and tone of each of the contributor acknowledgements
+   and/or dedications given therein.
+</li>
+
+<li>L. Preserve all the Invariant Sections of the Document,
+   unaltered in their text and in their titles.  Section numbers
+   or the equivalent are not considered part of the section titles.
+</li>
+
+<li>M. Delete any section Entitled &quot;Endorsements&quot;.  Such a section
+   may not be included in the Modified Version.
+</li>
+
+<li>N. Do not retitle any existing section to be Entitled &quot;Endorsements&quot;
+   or to conflict in title with any Invariant Section.
+</li>
+
+<li>O. Preserve any Warranty Disclaimers.</li>
+
+</ul>
+
+<p>If the Modified Version includes new front-matter sections or
+appendices that qualify as Secondary Sections and contain no material
+copied from the Document, you may at your option designate some or all
+of these sections as invariant.  To do this, add their titles to the
+list of Invariant Sections in the Modified Version's license notice.
+These titles must be distinct from any other section titles.</p>
+
+<p>You may add a section Entitled &quot;Endorsements&quot;, provided it contains
+nothing but endorsements of your Modified Version by various
+parties&mdash;for example, statements of peer review or that the text has
+been approved by an organization as the authoritative definition of a
+standard.</p>
+
+<p>You may add a passage of up to five words as a Front-Cover Text, and a
+passage of up to 25 words as a Back-Cover Text, to the end of the list
+of Cover Texts in the Modified Version.  Only one passage of
+Front-Cover Text and one of Back-Cover Text may be added by (or
+through arrangements made by) any one entity.  If the Document already
+includes a cover text for the same cover, previously added by you or
+by arrangement made by the same entity you are acting on behalf of,
+you may not add another; but you may replace the old one, on explicit
+permission from the previous publisher that added the old one.</p>
+
+<p>The author(s) and publisher(s) of the Document do not by this License
+give permission to use their names for publicity for or to assert or
+imply endorsement of any Modified Version.</p>
+
+<h4><a name="section5"></a>5. COMBINING DOCUMENTS</h4>
+
+<p>You may combine the Document with other documents released under this
+License, under the terms defined in section 4 above for modified
+versions, provided that you include in the combination all of the
+Invariant Sections of all of the original documents, unmodified, and
+list them all as Invariant Sections of your combined work in its
+license notice, and that you preserve all their Warranty Disclaimers.</p>
+
+<p>The combined work need only contain one copy of this License, and
+multiple identical Invariant Sections may be replaced with a single
+copy.  If there are multiple Invariant Sections with the same name but
+different contents, make the title of each such section unique by
+adding at the end of it, in parentheses, the name of the original
+author or publisher of that section if known, or else a unique number.
+Make the same adjustment to the section titles in the list of
+Invariant Sections in the license notice of the combined work.</p>
+
+<p>In the combination, you must combine any sections Entitled &quot;History&quot;
+in the various original documents, forming one section Entitled
+&quot;History&quot;; likewise combine any sections Entitled &quot;Acknowledgements&quot;,
+and any sections Entitled &quot;Dedications&quot;.  You must delete all sections
+Entitled &quot;Endorsements&quot;.</p>
+
+<h4><a name="section6"></a>6. COLLECTIONS OF DOCUMENTS</h4>
+
+<p>You may make a collection consisting of the Document and other
+documents released under this License, and replace the individual
+copies of this License in the various documents with a single copy
+that is included in the collection, provided that you follow the rules
+of this License for verbatim copying of each of the documents in all
+other respects.</p>
+
+<p>You may extract a single document from such a collection, and
+distribute it individually under this License, provided you insert a
+copy of this License into the extracted document, and follow this
+License in all other respects regarding verbatim copying of that
+document.</p>
+
+<h4><a name="section7"></a>7. AGGREGATION WITH INDEPENDENT WORKS</h4>
+
+<p>A compilation of the Document or its derivatives with other separate
+and independent documents or works, in or on a volume of a storage or
+distribution medium, is called an &quot;aggregate&quot; if the copyright
+resulting from the compilation is not used to limit the legal rights
+of the compilation's users beyond what the individual works permit.
+When the Document is included in an aggregate, this License does not
+apply to the other works in the aggregate which are not themselves
+derivative works of the Document.</p>
+
+<p>If the Cover Text requirement of section 3 is applicable to these
+copies of the Document, then if the Document is less than one half of
+the entire aggregate, the Document's Cover Texts may be placed on
+covers that bracket the Document within the aggregate, or the
+electronic equivalent of covers if the Document is in electronic form.
+Otherwise they must appear on printed covers that bracket the whole
+aggregate.</p>
+
+<h4><a name="section8"></a>8. TRANSLATION</h4>
+
+<p>Translation is considered a kind of modification, so you may
+distribute translations of the Document under the terms of section 4.
+Replacing Invariant Sections with translations requires special
+permission from their copyright holders, but you may include
+translations of some or all Invariant Sections in addition to the
+original versions of these Invariant Sections.  You may include a
+translation of this License, and all the license notices in the
+Document, and any Warranty Disclaimers, provided that you also include
+the original English version of this License and the original versions
+of those notices and disclaimers.  In case of a disagreement between
+the translation and the original version of this License or a notice
+or disclaimer, the original version will prevail.</p>
+
+<p>If a section in the Document is Entitled &quot;Acknowledgements&quot;,
+&quot;Dedications&quot;, or &quot;History&quot;, the requirement (section 4) to Preserve
+its Title (section 1) will typically require changing the actual
+title.</p>
+
+<h4><a name="section9"></a>9. TERMINATION</h4>
+
+<p>You may not copy, modify, sublicense, or distribute the Document
+except as expressly provided under this License.  Any attempt
+otherwise to copy, modify, sublicense, or distribute it is void, and
+will automatically terminate your rights under this License.</p>
+
+<p>However, if you cease all violation of this License, then your license
+from a particular copyright holder is reinstated (a) provisionally,
+unless and until the copyright holder explicitly and finally
+terminates your license, and (b) permanently, if the copyright holder
+fails to notify you of the violation by some reasonable means prior to
+60 days after the cessation.</p>
+
+<p>Moreover, your license from a particular copyright holder is
+reinstated permanently if the copyright holder notifies you of the
+violation by some reasonable means, this is the first time you have
+received notice of violation of this License (for any work) from that
+copyright holder, and you cure the violation prior to 30 days after
+your receipt of the notice.</p>
+
+<p>Termination of your rights under this section does not terminate the
+licenses of parties who have received copies or rights from you under
+this License.  If your rights have been terminated and not permanently
+reinstated, receipt of a copy of some or all of the same material does
+not give you any rights to use it.</p>
+
+<h4><a name="section10"></a>10. FUTURE REVISIONS OF THIS LICENSE</h4>
+
+<p>The Free Software Foundation may publish new, revised versions of the
+GNU Free Documentation License from time to time.  Such new versions
+will be similar in spirit to the present version, but may differ in
+detail to address new problems or concerns.  See
+<a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.</p>
+
+<p>Each version of the License is given a distinguishing version number.
+If the Document specifies that a particular numbered version of this
+License &quot;or any later version&quot; applies to it, you have the option of
+following the terms and conditions either of that specified version or
+of any later version that has been published (not as a draft) by the
+Free Software Foundation.  If the Document does not specify a version
+number of this License, you may choose any version ever published (not
+as a draft) by the Free Software Foundation.  If the Document
+specifies that a proxy can decide which future versions of this
+License can be used, that proxy's public statement of acceptance of a
+version permanently authorizes you to choose that version for the
+Document.</p>
+
+<h4><a name="section11"></a>11. RELICENSING</h4>
+
+<p>&quot;Massive Multiauthor Collaboration Site&quot; (or &quot;MMC Site&quot;) means any
+World Wide Web server that publishes copyrightable works and also
+provides prominent facilities for anybody to edit those works.  A
+public wiki that anybody can edit is an example of such a server.  A
+&quot;Massive Multiauthor Collaboration&quot; (or &quot;MMC&quot;) contained in the site
+means any set of copyrightable works thus published on the MMC site.</p>
+
+<p>&quot;CC-BY-SA&quot; means the Creative Commons Attribution-Share Alike 3.0 
+license published by Creative Commons Corporation, a not-for-profit 
+corporation with a principal place of business in San Francisco, 
+California, as well as future copyleft versions of that license 
+published by that same organization.</p>
+
+<p>&quot;Incorporate&quot; means to publish or republish a Document, in whole or in 
+part, as part of another Document.</p>
+
+<p>An MMC is &quot;eligible for relicensing&quot; if it is licensed under this 
+License, and if all works that were first published under this License 
+somewhere other than this MMC, and subsequently incorporated in whole or 
+in part into the MMC, (1) had no cover texts or invariant sections, and 
+(2) were thus incorporated prior to November 1, 2008.</p>
+
+<p>The operator of an MMC Site may republish an MMC contained in the site
+under CC-BY-SA on the same site at any time before August 1, 2009,
+provided the MMC is eligible for relicensing.</p>
+
+<h3><a name="addendum"></a>ADDENDUM: How to use this License for your documents</h3>
+
+<p>To use this License in a document you have written, include a copy of
+the License in the document and put the following copyright and
+license notices just after the title page:</p>
+
+<pre>    Copyright (C)  YEAR  YOUR NAME.
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.3
+    or any later version published by the Free Software Foundation;
+    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    A copy of the license is included in the section entitled &quot;GNU
+    Free Documentation License&quot;.
+</pre>
+
+<p>If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
+replace the &quot;with &hellip; Texts.&quot; line with this:</p>
+
+<pre>    with the Invariant Sections being LIST THEIR TITLES, with the
+    Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
+</pre>
+
+<p>If you have Invariant Sections without Cover Texts, or some other
+combination of the three, merge those two alternatives to suit the
+situation.</p>
+
+<p>If your document contains nontrivial examples of program code, we
+recommend releasing these examples in parallel under your choice of
+free software license, such as the GNU General Public License,
+to permit their use in free software.
+</p>
+
+
+#+END_EXPORT

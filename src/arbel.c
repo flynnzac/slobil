@@ -37,6 +37,12 @@ interrupt_handler (int status)
 }
 
 char*
+get_library_dir ()
+{
+  return NULL;
+}
+
+char*
 append_to_source_code (char* source_code, const char* new)
 {
   if (source_code == NULL)
@@ -61,6 +67,12 @@ main (int argc, char** argv)
   #ifdef GARBAGE
   GC_INIT();
   #endif
+  #ifdef GARBAGE
+  mp_set_memory_functions(GC_malloc, GC_realloc, GC_free);
+  #else
+  mp_set_memory_functions(malloc, realloc, free);
+  #endif
+  
   rl_event_hook = dummy_event;
   source_code = NULL;
   registry* reg = new_registry(NULL, ARBEL_HASH_SIZE);
@@ -80,6 +92,7 @@ main (int argc, char** argv)
   arbel_hash_data = hash_str("data");
   arbel_hash_class = hash_str("--of");
   arbel_hash_t = hash_str("t");
+  arbel_hash_underscore = hash_str("_");
 
   arbel_error = 0;
 
@@ -187,7 +200,6 @@ main (int argc, char** argv)
            sizeof(addr));
       #endif
     }
-        
 
   while (!is_exit(-1))
     {

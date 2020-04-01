@@ -33,12 +33,15 @@ assign_real (data** d, const double num)
 }
           
 void
-assign_int (data** d, const int num)
+assign_int (data** d, const mpz_t num)
 {
   *d = new_data();
   (*d)->type = Integer;
-  (*d)->data = malloc(sizeof(int));
-  *((int*) (*d)->data) = num;
+  (*d)->data = malloc(sizeof(mpz_t));
+  
+  mpz_init(*((mpz_t*) (*d)->data));
+  mpz_set(*((mpz_t*) (*d)->data), num);
+  
 }
 
 void
@@ -81,11 +84,34 @@ assign_active (data** d, statement* s)
 }
 
 void
-assign_op (data** d, const operation op)
+assign_op (data** d, const operation op,
+           data* instr, data** args,
+           int n_arg)
 {
   *d = new_data();
   (*d)->type = Operation;
-  (*d)->data = op;
+  (*d)->data = malloc(sizeof(op_wrapper));
+  ((op_wrapper*) (*d)->data)->op = op;
+  ((op_wrapper*) (*d)->data)->instr = NULL;
+  ((op_wrapper*) (*d)->data)->args = NULL;
+  ((op_wrapper*) (*d)->data)->n_arg = n_arg;
+
+  if (args != NULL)
+    {
+      ((op_wrapper*) (*d)->data)->args =
+        malloc(sizeof(data*)*n_arg);
+
+      for (int i = 0; i < n_arg; i++)
+        {
+          ((op_wrapper*) (*d)->data)->args[i] =
+            copy_data(args[i]);
+        }
+    }
+
+  if (instr != NULL)
+    {
+      ((op_wrapper*) (*d)->data)->instr = copy_data(instr);
+    }
 }
 
 void
@@ -255,7 +281,7 @@ copy_data (data* d_in)
   switch (d_in->type)
     {
     case Integer:
-      assign_int(&d, *((int*) d_in->data));
+      assign_int(&d, *((mpz_t*) d_in->data));
       break;
     case Real:
       assign_real(&d, *((double*) d_in->data));
@@ -271,7 +297,10 @@ copy_data (data* d_in)
       assign_registry(&d, (registry*) d_in->data, true);
       break;
     case Operation:
-      assign_op(&d, (operation) d_in->data);
+      assign_op(&d, ((op_wrapper*) d_in->data)->op,
+                ((op_wrapper*) d_in->data)->instr,
+                ((op_wrapper*) d_in->data)->args,
+                ((op_wrapper*) d_in->data)->n_arg);
       break;
     case Instruction:
       assign_instr(&d, ((instruction*) d_in->data)->stmt,

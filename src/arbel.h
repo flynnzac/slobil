@@ -41,6 +41,7 @@
 #include <stdbool.h>
 #include <unistr.h>
 #include <unistdio.h>
+#include <gmp.h>
 
 enum data_type
   {
@@ -70,6 +71,16 @@ struct data
 typedef struct data data;
 
 
+struct column
+{
+  data_type type;
+  data** data;
+  size_t length;
+};
+
+typedef struct column column;
+
+
 struct content
 {
   data* value;
@@ -94,6 +105,7 @@ typedef struct registry registry;
 
 typedef void (*operation)(struct arg, registry*);
 
+
 struct regstr
 {
   char* name;
@@ -101,6 +113,16 @@ struct regstr
 };
 
 typedef struct regstr regstr;
+
+struct op_wrapper
+{
+  operation op;
+  data* instr;
+  data** args;
+  int n_arg;
+};
+
+typedef struct op_wrapper op_wrapper;
 
 struct command
 {
@@ -197,13 +219,15 @@ void
 assign_real (data** d, const double num);
 
 void
-assign_int (data** d, const int num);
+assign_int (data** d, const mpz_t num);
 
 void
 assign_str (data** d, const char* str, int copy);
 
 void
-assign_op (data** d, const operation op);
+assign_op (data** d, const operation op,
+           data* instr, data** args,
+           int n_arg);
 
 void
 assign_registry (data** d, registry* r, bool copy);
@@ -216,6 +240,11 @@ assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
+
+void
+assign_column (data** d, const data_type type,
+               data** content, const size_t length,
+               bool copy);
 
 void
 assign_file (data** d, FILE* f);
@@ -457,6 +486,9 @@ print_statement (statement* s);
 data*
 new_data();
 
+int
+arbel_location(int loc, int n);
+
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
 /* global variables */
@@ -476,6 +508,7 @@ unsigned long arbel_hash_data;
 unsigned long arbel_hash_up;
 unsigned long arbel_hash_class;
 unsigned long arbel_hash_t;
+unsigned long arbel_hash_underscore;
 
 size_t arbel_stop_error_threshold;
 bool arbel_print_error_messages;

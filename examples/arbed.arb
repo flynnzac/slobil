@@ -7,15 +7,18 @@ in arbed
      set /n ( up set /cur-line [ add cur-line 1 . ] . ) .
      set /p ( up set /cur-line [ sub cur-line 1 . ] . ) .
      set /i
-         (
-           set /arbed-str s buffer .
-           in buffer
-              (
-                to-register [ string-append
-                                     "#" [ to-string cur-line . ] . ] .
-                set ans arbed-str .
-              ) .
-         ) .
+         [ op
+             (
+               set /arbed-str s buffer .
+               in buffer
+                  (
+                    to-register
+                       [ string-append
+                                "#" [ to-string cur-line . ] . ] .
+                    set ans arbed-str .
+                  ) .
+             )
+             /s . ] .
      set /o
          (
            to-register [ string-append
