@@ -1781,7 +1781,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
   mpz_t i;
   mpz_init_set_si(i, 0);
-  while (mpz_cmp(i, *((mpz_t*) arg1->data)) <= 0)
+  while (mpz_cmp(i, *((mpz_t*) arg1->data)) < 0)
     {
       execute_0(arg2, reg);
       if (is_error(-1)) break;
