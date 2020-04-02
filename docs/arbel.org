@@ -137,7 +137,9 @@
 
      If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
 
-   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis () that operate within whatever registry the caller of the instruction defines.  They are more flexible than operations. Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  Angle brackets or the =op= operation provide two alternative ways of doing this.
+   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever registry the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the =op= operation provide two alternative ways of doing this.
+
+     For example:
      #+BEGIN_SRC arbel
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
@@ -149,6 +151,8 @@
      ... set /op-fraction < fraction /t1 /t2 > .
      ... op-fraction 1 3.0 .
      ans = 0.25
+     ... < fraction /t2 /t1 > 1 3.0 .
+     ans = 0.75
      #+END_SRC
 
      Note that there is no period used to end an operation definition in the angle brackets. The brackets call the instruction =fraction= and sets the register =/t1= to the value of the first argument and the register =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
@@ -160,11 +164,10 @@
    #+END_SRC
 
    That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
-     
 
 ** Registries
 
-   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Because they are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Code is always execute "inside" a registry. Because registries are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
    #+BEGIN_SRC arbel
    ... registry /hello "Hello, world!" /x 10 .
