@@ -4149,8 +4149,8 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 ;
 
   unsigned char* str = (unsigned char*) arg1->data;
-  size_t start = mpz_get_ui(*((mpz_t*) arg2->data));
-  size_t end = mpz_get_ui(*((mpz_t*) arg3->data));
+  int start = mpz_get_si(*((mpz_t*) arg2->data));
+  int end = mpz_get_si(*((mpz_t*) arg3->data));
 
   size_t byte_length = strlen((char*) str)+1;
   size_t length = u8_mbsnlen((unsigned char*) str,
