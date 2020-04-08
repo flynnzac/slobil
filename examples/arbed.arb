@@ -12,17 +12,14 @@ in arbed
                set /arbed-str s buffer .
                in buffer
                   (
-                    to-register
-                       [ string-append
-                                "#" [ to-string cur-line . ] . ] .
+                    to-register cur-line .
                     set ans arbed-str .
                   ) .
              )
              /s . ] .
      set /o
          (
-           to-register [ string-append
-                                "#" [ to-string cur-line . ] . ] .
+           to-register cur-line . 
            print [ get ans buffer . ] .
          ) .
    ) .

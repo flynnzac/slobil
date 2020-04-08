@@ -93,7 +93,7 @@ op_range (arg a, registry* reg)
   int i = 1;
   char* r = NULL;
   data* d_tmp;
-  while (mpz_cmp(cur,ub) <= 0)
+  while (mpz_cmp(cur,*ub) <= 0)
     {
       r = argument_name(i);
       assign_int(&d_tmp, cur);
@@ -1587,6 +1587,7 @@ op_to_number (arg a, registry* reg)
           mpz_t result;
           mpz_init_set_str(result, value, 10);
           assign_int(&d, result);
+          mpz_clear(result);
           ret_ans(reg, d);
         }
       else if (is_real(value) && (strcmp(value, ".") != 0))
@@ -1620,7 +1621,10 @@ op_to_number (arg a, registry* reg)
       name += i + 1;
 
       data* d;
-      assign_int(&d, atoi(name));
+      mpz_t m;
+      mpz_init_set_str(m, name, 10);
+      assign_int(&d, m);
+      mpz_clear(m);
       ret_ans(reg,d);
     }
   
@@ -3091,6 +3095,69 @@ op_data (arg a, registry* reg)
   free(fname);
 }
 
+static void
+incr (data* d, mpz_t* shift)
+{
+  mpz_add(*((mpz_t*) d->data),
+          *((mpz_t*) d->data),
+          *shift);
+}
+
+void
+op_incr (arg a, registry* reg)
+{
+  #op=incr@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Integer@
+  ##GETARG~$;
+
+  if (a.length >= 3)
+    {
+      #num=2@
+      #type=Integer@
+      ##GETARG~$;
+      incr(arg1, (mpz_t*) arg2->data);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, 1);
+      incr(arg1, &m);
+    }
+}
+
+void
+op_decr (arg a, registry* reg)
+{
+  #op=decr@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Integer@
+  ##GETARG~$;
+
+  if (a.length >= 3)
+    {
+      #num=2@
+      #type=Integer@
+      ##GETARG~$;
+      mpz_t m;
+      mpz_init_set(m, *((mpz_t*) arg2->data));
+      mpz_neg(m, m);
+      incr(arg1, &m);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, -1);
+      incr(arg1, &m);
+    }
+}
+
 
 void
 add_basic_ops (registry* reg)
@@ -3378,6 +3445,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_data, NULL, NULL, 0);
   set(reg,d,"data",1);
+
+  assign_op(&d, op_incr, NULL, NULL, 0);
+  set(reg,d,"incr",1);
+
+  assign_op(&d, op_decr, NULL, NULL, 0);
+  set(reg,d,"decr",1);
   
   
 }

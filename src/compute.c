@@ -150,7 +150,7 @@ compute (data* cmd, registry* reg, arg a)
 {
   if (cmd == NULL)
     {
-      do_error("Cannot compute without an operation or instruction at #0.");
+      do_error("Cannot compute a statement that does not start with an operation or instruction.");
       return;
     }
 

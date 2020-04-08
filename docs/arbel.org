@@ -10,9 +10,17 @@
 
    ARBEL /instructions/ are like procedures in other languages, but they operate within a programmer-supplied registry and have no environment or context themselves.  This enables the programmer calling the instruction to decide which arguments it has, not the author of the instruction. The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  
 
-   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the programmer. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
+   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the user that are easy to read. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
 
    The interactive nature of ARBEL is reflected in its syntax and environment. The syntax is very similar to entering commands on the command line (it has a bit of a TCL flavor visually, but the semantics of the language are very different). The enviroment is focused on being easy to save and load state.   There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+
+   The syntax of ARBEL allows for a style of programming that may be easier to read for non-programmers.  For example, the following is a valid block of ARBEL code using a user-defined instruction called =prepare= presumably defined elsewhere:
+   #+BEGIN_SRC arbel
+   ... prepare /document "report" /from "2020-01-01" /to "2020-03-31" .
+   #+END_SRC
+
+   The reader of the code does not need to understand the order the arguments are in.  The writer of this code may in fact be a non-programmer just 
+using the =prepare= instruction written by someone else, in much the same way as a command-line program.  The reader of the code can be pretty sure what the line of code does without any programming knowledge.  For this reason, ARBEL may also be useful for producing business programs that are readable by people who are not primarily programmers.  
 
 ** Distinguishing Features
 
@@ -545,6 +553,10 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
 
 - =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
+
+- =incr INTEGER1 <INTEGER2>= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.
+
+- =decr INTEGER1 <INTEGER2>= --- decrement =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =sub= is that it modifies =INTEGER1= in place.
 
 *** Comparison operations
 - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
