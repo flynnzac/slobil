@@ -127,7 +127,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   int i = 1;
   char* r = NULL;
   data* d_tmp;
-  while (mpz_cmp(cur,ub) <= 0)
+  while (mpz_cmp(cur,*ub) <= 0)
     {
       r = argument_name(i);
       assign_int(&d_tmp, cur);
@@ -1781,7 +1781,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
   mpz_t i;
   mpz_init_set_si(i, 0);
-  while (mpz_cmp(i, *((mpz_t*) arg1->data)) <= 0)
+  while (mpz_cmp(i, *((mpz_t*) arg1->data)) < 0)
     {
       execute_0(arg2, reg);
       if (is_error(-1)) break;
@@ -2541,6 +2541,7 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
           mpz_t result;
           mpz_init_set_str(result, value, 10);
           assign_int(&d, result);
+          mpz_clear(result);
           ret_ans(reg, d);
         }
       else if (is_real(value) && (strcmp(value, ".") != 0))
@@ -2574,7 +2575,10 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
       name += i + 1;
 
       data* d;
-      assign_int(&d, atoi(name));
+      mpz_t m;
+      mpz_init_set_str(m, name, 10);
+      assign_int(&d, m);
+      mpz_clear(m);
       ret_ans(reg,d);
     }
   
@@ -4145,8 +4149,8 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 ;
 
   unsigned char* str = (unsigned char*) arg1->data;
-  size_t start = mpz_get_ui(*((mpz_t*) arg2->data));
-  size_t end = mpz_get_ui(*((mpz_t*) arg3->data));
+  int start = mpz_get_si(*((mpz_t*) arg2->data));
+  int end = mpz_get_si(*((mpz_t*) arg3->data));
 
   size_t byte_length = strlen((char*) str)+1;
   size_t length = u8_mbsnlen((unsigned char*) str,
@@ -5034,6 +5038,139 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   free(fname);
 }
 
+static void
+incr (data* d, mpz_t* shift)
+{
+  mpz_add(*((mpz_t*) d->data),
+          *((mpz_t*) d->data),
+          *shift);
+}
+
+void
+op_incr (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "incr");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<incr> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <incr> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  if (a.length >= 3)
+    {
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<incr> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <incr> should be of type Integer.");
+    return ;
+  }
+
+;
+      incr(arg1, (mpz_t*) arg2->data);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, 1);
+      incr(arg1, &m);
+    }
+}
+
+void
+op_decr (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "decr");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<decr> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <decr> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  if (a.length >= 3)
+    {
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<decr> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Integer)))
+  {
+    do_error("Argument 2 of <decr> should be of type Integer.");
+    return ;
+  }
+
+;
+      mpz_t m;
+      mpz_init_set(m, *((mpz_t*) arg2->data));
+      mpz_neg(m, m);
+      incr(arg1, &m);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, -1);
+      incr(arg1, &m);
+    }
+}
+
 
 void
 add_basic_ops (registry* reg)
@@ -5321,6 +5458,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_data, NULL, NULL, 0);
   set(reg,d,"data",1);
+
+  assign_op(&d, op_incr, NULL, NULL, 0);
+  set(reg,d,"incr",1);
+
+  assign_op(&d, op_decr, NULL, NULL, 0);
+  set(reg,d,"decr",1);
   
   
 }

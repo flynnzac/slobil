@@ -13,9 +13,8 @@ set /matrix-multiply
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all < ( dotproduct /v t1 /w B:i . ) /v > A .
-              move /ans /res .
-              in out ( set i res . ) .
+              do-to-all < ( dotproduct /v t1 /w B:i . ) /t1 > A .
+              in out ( set i ans . ) .
               next i .
               move /ans /i .
             ) .

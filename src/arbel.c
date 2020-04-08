@@ -24,6 +24,9 @@
 #include <signal.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+
+static bool reading; 
+
 int
 dummy_event ()
 {
@@ -33,7 +36,16 @@ dummy_event ()
 void
 interrupt_handler (int status)
 {
-  is_error(2);
+  signal(SIGINT, interrupt_handler);
+  if (reading)
+    {
+      rl_replace_line("",0);
+      rl_done = 1;
+    }
+  else
+    {
+      is_error(2);
+    }
 }
 
 char*
@@ -59,19 +71,18 @@ append_to_source_code (char* source_code, const char* new)
 
   return source_code;
 }
-  
 
 int
 main (int argc, char** argv)
 {
-  #ifdef GARBAGE
+#ifdef GARBAGE
   GC_INIT();
-  #endif
-  #ifdef GARBAGE
+#endif
+#ifdef GARBAGE
   mp_set_memory_functions(GC_malloc, GC_realloc, GC_free);
-  #else
+#else
   mp_set_memory_functions(malloc, realloc, free);
-  #endif
+#endif
   
   rl_event_hook = dummy_event;
   source_code = NULL;
@@ -93,8 +104,8 @@ main (int argc, char** argv)
   arbel_hash_class = hash_str("--of");
   arbel_hash_t = hash_str("t");
   arbel_hash_underscore = hash_str("_");
-
   arbel_error = 0;
+  reading = true;
 
   arbel_ll = NULL;
   arbel_ll_cnt = 0;
@@ -208,10 +219,12 @@ main (int argc, char** argv)
           /* remove gc garbage collection because later code assumes readline
              string which is stdlib malloc'd */
 
-          #ifdef GARBAGE
-          #undef realloc
-          #undef malloc
-          #endif
+          reading = false;
+
+#ifdef GARBAGE
+#undef realloc
+#undef malloc
+#endif
 
           listen(sock, 3);
           size_t sz_addr = sizeof(addr);
@@ -240,10 +253,10 @@ main (int argc, char** argv)
               code = realloc(code, sizeof(char)*(cur_size+1));
             }
           code[i] = '\0';
-          #ifdef GARBAGE
-          #define realloc(x,y) GC_REALLOC(x,y)
-          #define malloc(x) GC_MALLOC(x)
-          #endif
+#ifdef GARBAGE
+#define realloc(x,y) GC_REALLOC(x,y)
+#define malloc(x) GC_MALLOC(x)
+#endif
 
         }
       else
@@ -267,15 +280,17 @@ main (int argc, char** argv)
         }
       
       f = fmemopen(code, sizeof(char)*strlen(code), "r");
+      reading = false;
       complete = interact(f, &state, current_parse_registry);
+      reading = true;
       fclose(f);
-      #ifdef GARBAGE
-      #undef free
-      #endif
+#ifdef GARBAGE
+#undef free
+#endif
       free(code);
-      #ifdef GARBAGE
-      #define free(x)
-      #endif
+#ifdef GARBAGE
+#define free(x)
+#endif
       
       
       state.print_out = echo;

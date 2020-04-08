@@ -10,9 +10,17 @@
 
    ARBEL /instructions/ are like procedures in other languages, but they operate within a programmer-supplied registry and have no environment or context themselves.  This enables the programmer calling the instruction to decide which arguments it has, not the author of the instruction. The /environment/ (which registers you can access, and so, which objects and instructions are available) is determined by which registry ARBEL is currently operating within.  
 
-   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the programmer. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
+   The ARBEL system's goal is to be easy to use for interactively constructing /personal/ programs for the user that are easy to read. For this reason, as much as possible, design decisions such as how generic an instruction is left to the person calling an instruction, not the person writing it. 
 
    The interactive nature of ARBEL is reflected in its syntax and environment. The syntax is very similar to entering commands on the command line (it has a bit of a TCL flavor visually, but the semantics of the language are very different). The enviroment is focused on being easy to save and load state.   There are commands to save the code you have already entered so that you can interactively build scripts.  It also has commands that make it easy to save state and the registries that you have created to disk so that you can pick up where you left off.  
+
+   The syntax of ARBEL allows for a style of programming that may be easier to read for non-programmers.  For example, the following is a valid block of ARBEL code using a user-defined instruction called =prepare= presumably defined elsewhere:
+   #+BEGIN_SRC arbel
+   ... prepare /document "report" /from "2020-01-01" /to "2020-03-31" .
+   #+END_SRC
+
+   The reader of the code does not need to understand the order the arguments are in.  The writer of this code may in fact be a non-programmer just 
+using the =prepare= instruction written by someone else, in much the same way as a command-line program.  The reader of the code can be pretty sure what the line of code does without any programming knowledge.  For this reason, ARBEL may also be useful for producing business programs that are readable by people who are not primarily programmers.  
 
 ** Distinguishing Features
 
@@ -137,7 +145,9 @@
 
      If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
 
-   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis () that operate within whatever registry the caller of the instruction defines.  They are more flexible than operations. Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  Angle brackets or the =op= operation provide two alternative ways of doing this.
+   - Angle brackets (<>) transform an instruction into an operation.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever registry the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the =op= operation provide two alternative ways of doing this.
+
+     For example:
      #+BEGIN_SRC arbel
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
@@ -149,6 +159,8 @@
      ... set /op-fraction < fraction /t1 /t2 > .
      ... op-fraction 1 3.0 .
      ans = 0.25
+     ... < fraction /t2 /t1 > 1 3.0 .
+     ans = 0.75
      #+END_SRC
 
      Note that there is no period used to end an operation definition in the angle brackets. The brackets call the instruction =fraction= and sets the register =/t1= to the value of the first argument and the register =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
@@ -160,11 +172,10 @@
    #+END_SRC
 
    That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
-     
 
 ** Registries
 
-   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Because they are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Code is always execute "inside" a registry. Because registries are full fledged data structures, you can switch scope easily or even pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
    #+BEGIN_SRC arbel
    ... registry /hello "Hello, world!" /x 10 .
@@ -542,6 +553,10 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 - =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= register to the result.
 
 - =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
+
+- =incr INTEGER1 <INTEGER2>= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.
+
+- =decr INTEGER1 <INTEGER2>= --- decrement =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =sub= is that it modifies =INTEGER1= in place.
 
 *** Comparison operations
 - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.

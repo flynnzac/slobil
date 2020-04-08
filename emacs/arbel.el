@@ -164,10 +164,10 @@
                 "mod"
                 "is-operation"
                 "op"
-                "height"
-                "transform"
-                "modify-at"
                 "please"
+                "data"
+                "incr"
+                "decr"
 		            ))
 	           (functions-regexp (regexp-opt functions 'words))
 	           (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
