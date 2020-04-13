@@ -7,10 +7,10 @@ set /integrate
       set /x lb .
       set /int 0.0 .
       repeat n
-            (
-              set /int [ add int [ f x . ] . ] .
-              set /x [ add x delta . ] .
-            ) .
+             (
+               incr int [ f x . ] .
+               incr x delta .
+             ) .
       mul int delta .
     ) .
 

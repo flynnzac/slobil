@@ -3111,21 +3111,50 @@ op_incr (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Integer@
+  #type=`(Integer|Real)'@
   ##GETARG~$;
 
-  if (a.length >= 3)
+  if (arg1->type == Integer)
     {
-      #num=2@
-      #type=Integer@
-      ##GETARG~$;
-      incr(arg1, (mpz_t*) arg2->data);
+
+      if (a.length >= 3)
+        {
+          #num=2@
+          #type=Integer@
+          ##GETARG~$;
+          incr(arg1, (mpz_t*) arg2->data);
+        }
+      else
+        {
+          mpz_t m;
+          mpz_init_set_si(m, 1);
+          incr(arg1, &m);
+        }
     }
   else
     {
-      mpz_t m;
-      mpz_init_set_si(m, 1);
-      incr(arg1, &m);
+      double inc;
+      if (a.length >= 3)
+        {
+          #num=2@
+          #type=`(Real|Integer)'@
+          ##GETARG~$;
+
+
+          if (arg2->type == Integer)
+            {
+              inc = mpz_get_d(*((mpz_t*) arg2->data));
+            }
+          else
+            {
+              inc = *((double*) arg2->data);
+            }
+        }
+      else
+        {
+          inc = 1;
+        }
+      *((double*) arg1->data) += inc;
     }
 }
 

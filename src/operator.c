@@ -5067,19 +5067,22 @@ if (true)
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & Integer)))
+if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <incr> should be of type Integer.");
+    do_error("Argument 1 of <incr> should be of type (Integer|Real).");
     return ;
   }
 
 ;
 
-  if (a.length >= 3)
+  if (arg1->type == Integer)
     {
-      
-      
-      
+
+      if (a.length >= 3)
+        {
+          
+          
+          
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -5097,13 +5100,56 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
   }
 
 ;
-      incr(arg1, (mpz_t*) arg2->data);
+          incr(arg1, (mpz_t*) arg2->data);
+        }
+      else
+        {
+          mpz_t m;
+          mpz_init_set_si(m, 1);
+          incr(arg1, &m);
+        }
     }
   else
     {
-      mpz_t m;
-      mpz_init_set_si(m, 1);
-      incr(arg1, &m);
+      double inc;
+      if (a.length >= 3)
+        {
+          
+          
+          
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<incr> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & (Real|Integer))))
+  {
+    do_error("Argument 2 of <incr> should be of type (Real|Integer).");
+    return ;
+  }
+
+;
+
+
+          if (arg2->type == Integer)
+            {
+              inc = mpz_get_d(*((mpz_t*) arg2->data));
+            }
+          else
+            {
+              inc = *((double*) arg2->data);
+            }
+        }
+      else
+        {
+          inc = 1;
+        }
+      *((double*) arg1->data) += inc;
     }
 }
 
