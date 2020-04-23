@@ -34,18 +34,17 @@ using the =prepare= instruction written by someone else, in much the same way as
 
    The best way to get a feel for the language and environment is by example so...
 
-* The Basics
-
+* The Language
 ** Statements and syntax
 
-   A single line of ARBEL code is a statement.  The first element of the statement is one of ARBEL's operators and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
+   A single line of ARBEL code is called a statement.  The first element of the statement is one of ARBEL's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
   
    #+BEGIN_SRC arbel
    ... set /hello "Hello, world!" .
    #+END_SRC
     
 
-   =set= is the ARBEL operation to set a register to a certain value.  Names that have a forward slash (​/) preceeding them are /registers/, like =/hello= above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
+   =set= is the default location of the ARBEL operation to set a register to a certain value.  The above code sets the register =/hello= to the String value ="Hello, world!=. Names that have a forward slash (​/) preceeding them are /registers/, like =/hello= above. Strings are words enclosed in double quotation marks.  The following demonstrates the other data types in ARBEL:
 
    #+BEGIN_SRC arbel
    ... set /days-in-week 7 .

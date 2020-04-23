@@ -2891,7 +2891,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 void
 op_read (arg a, registry* reg)
 {
-    
+  
   
   check_length(&a, 1+1, "read");
 if (is_error(-1)) return ;;
@@ -2912,6 +2912,51 @@ if (true)
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
     do_error("Argument 1 of <read> should be of type File.");
+    return ;
+  }
+
+;
+
+  int c = fgetc((FILE*) arg1->data);
+  data* d;
+
+  if (c == EOF || c == '\0')
+    {
+      assign_nothing(&d);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, c);
+      assign_int(&d, m);
+    }
+  ret_ans(reg, d);
+}
+
+void
+op_read_char (arg a, registry* reg)
+{
+    
+  
+  check_length(&a, 1+1, "read-char");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<read-char> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & File)))
+  {
+    do_error("Argument 1 of <read-char> should be of type File.");
     return ;
   }
 
@@ -5387,6 +5432,9 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_open_text_file, NULL, NULL, 0);
   set(reg,d,"open-text-file",1);
+
+  assign_op(&d, op_read_char, NULL, NULL, 0);
+  set(reg,d,"read-char",1);
 
   assign_op(&d, op_read, NULL, NULL, 0);
   set(reg,d,"read",1);

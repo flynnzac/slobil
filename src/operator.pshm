@@ -1830,7 +1830,34 @@ op_open_text_file (arg a, registry* reg)
 void
 op_read (arg a, registry* reg)
 {
-  #op=read@  
+  #op=read@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=File@
+  ##GETARG~$;
+
+  int c = fgetc((FILE*) arg1->data);
+  data* d;
+
+  if (c == EOF || c == '\0')
+    {
+      assign_nothing(&d);
+    }
+  else
+    {
+      mpz_t m;
+      mpz_init_set_si(m, c);
+      assign_int(&d, m);
+    }
+  ret_ans(reg, d);
+}
+
+void
+op_read_char (arg a, registry* reg)
+{
+  #op=read-char@  
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -3357,6 +3384,9 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_open_text_file, NULL, NULL, 0);
   set(reg,d,"open-text-file",1);
+
+  assign_op(&d, op_read_char, NULL, NULL, 0);
+  set(reg,d,"read-char",1);
 
   assign_op(&d, op_read, NULL, NULL, 0);
   set(reg,d,"read",1);
