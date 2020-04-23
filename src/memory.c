@@ -30,7 +30,11 @@
 #undef free_registry
 #undef free_arg_array_data
 #undef free_arg
+#define free(x) GC_FREE(x)
 #endif
+
+
+
 
 void
 free_statement (statement* s)
