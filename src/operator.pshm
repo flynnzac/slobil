@@ -2902,7 +2902,7 @@ op_find (arg a, registry* reg)
   ##GETARG~$;
 
   #num=2@
-  #type=Instruction@
+  #type=Operation@
   ##GETARG~$;
 
   registry* r = (registry*) arg1->data;
@@ -2915,8 +2915,7 @@ op_find (arg a, registry* reg)
 
   a1.arg_array = malloc(sizeof(data*)*a1.length);
   a1.arg_array[0] = arg2;
-  assign_regstr(&a1.arg_array[1], "t", arbel_hash_t);
-  a1.arg_array[2] = NULL;
+  a1.arg_array[1] = NULL;
   
   for (int i = 0; i < r->hash_size; i++)
     {
@@ -2932,7 +2931,7 @@ op_find (arg a, registry* reg)
         {
           if (c->value != NULL)
             {
-              a1.arg_array[2] = c->value;
+              a1.arg_array[1] = c->value;
               compute(arg2, reg, a1);
               data* d = lookup(reg, arbel_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
@@ -3032,38 +3031,6 @@ op_mod (arg a, registry* reg)
 void
 op_op (arg a, registry* reg)
 {
-  /* design:
-     op instruction /y /x .
-     ans 2 3 .
-     gives ans = whatever instruction /y 2 /x 3 would give
-
-     I think the only reasonable solution is to make operation:
-
-     struct operation
-     {
-       operator op;
-       instruction* instr;
-       char** names;
-       unsigned long* hashes;
-       int n_arg;
-     };
-     
-     if (oper->instr != NULL)
-       call the instruction with order arguments
-     else
-       call the C code in oper->op
-
-     The main payoff here is that you can treat operators and instructions interchangeably.
-
-     The other solution is to add an "instruction" operation which treats each argument of the
-     operator as t1,t2,t3...  This is arguably the more ARBEL-ish way to do it.  Requires less code
-     changes and is more in keeping with the system.
-
-     ... instruction add .
-     ... ans /t1 2 /t2 3 .
-     ans = 5
-  */
-
   #op=op@
 
   #length=1@

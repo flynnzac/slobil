@@ -134,9 +134,9 @@ The =get= operation returns the data located at a given register.  Usually, you 
 
 ** Registers
 
-Registers in ARBEL are symbols and locations.  Registers are locations in a registry. Because all data is stored in a registry, they identify data and variables in ARBEL.  
+Registers are the locations of data in a registry. Because all data is stored in a registry, they identify data and variables in ARBEL.  
 
-Registers are themselves a type of data.  You can assign a register to a register value.  For example,
+Registers are themselves a type of data and can be stored in other registers.  For example,
 #+BEGIN_SRC arbel
 ... set /x /y .
 ... set x 10 .
@@ -191,9 +191,9 @@ There are other operations that can be used with registers, see the reference se
 
 ** Registries
 
-Registers are the location of data in /registries/.  When you start up ARBEL, you are in the top-level registry, but you can, and likely will, create your own registries to structure your data.  Registries are also used to determine "scope".  Which registry you are inside, determines which values are assigned to which registers.
+Registers are the location of data in /registries/.  When you start up ARBEL, you are in the top-level registry, but you can, and likely will, create your own registries to structure your data.  Registries are also used to determine "scope".  Which registry you are inside, determines which values are assigned to which registers.  This section discusses the basics of using registries.
 
-To create a registry, use the =registry= operation.  The =registry= operation sets the =/ans= register in the current registry to a new registry.  The =/ans= register is a special register.  Many operations and user-written operations set the =/ans= register to a result.  This will be discussed in more detail later on in this section.
+To create a registry, use the =registry= operation.  The =registry= operation sets the =/ans= register in the current registry to a new registry.  The =/ans= register is a special register.  Many operations set the =/ans= register in the current registry to a result.  This will be discussed in more detail later on in this section.
 
 For an example of using the =registry= operation,
 #+BEGIN_SRC arbel
@@ -282,7 +282,7 @@ It then evaluates the outer statement.
 
 The important thing to remember about statements inside square brackets is that they are /always/ executed, even if the operation does not end up using that argument.  They are executed before the outer statement.  
 
-An important corner case: statements in square brackets are always evaluated in the order they appear in the outer statement.  It is probably bad practice to depend on this feature or to use substatements that might affect state in other ways, but hey, if it solves your problem quickly, then you can write whatever you'd like in the substatement.
+An important corner case: statements in square brackets are always evaluated in the order they appear in the outer statement.  It is probably bad practice to depend on this feature or to use substatements that might affect the evaluation of other substatements in the same line of code.
 
 Substatements in ARBEL are not necessarily single lines of code.  You can include very long substatements with complicated logic. 
 
@@ -291,9 +291,7 @@ The second type of substatement is enclosed in open parenthesis =()=.  Open pare
 ... set /add-one ( add t 1 . ) .
 #+END_SRC
 
-The register =/add-one= is set to hold the quoted code/instruction.  This code can be executed later in a different context, in another registry.
-
-Instructions can be "called" using the =call= operation.  For example:
+The register =/add-one= is set to hold the quoted code/instruction. Instructions can then be "called" using the =call= operation.  For example:
 
 #+BEGIN_SRC arbel
 ... set /add-one ( add t 1 . ) .
@@ -303,10 +301,11 @@ ans = 11
 ans = 9
 #+END_SRC
 
-Calling an instruction creates a new temporary registry in which the instruction's code is executed.  After the code finishes whatever the =/ans= register is set to in the temporary registry is the new value of the =/ans= register in the calling registry.
+Calling an instruction creates a new temporary registry in which the instruction's code is executed.  The arguments following the instruction in the =call= operation determine the initial state of this temporary registry.  The caller has complete freedom in determining the initial state of the registry.  In the above code, the author of the =add-one= instruction likely had in mind that the user would supply the argument =/t=.  But there is nothing stopping the user from replacing the =add= operation with another operation of their choosing like =sub= to subtract one instead of adding it.  The instruction is as generic as the caller of the instruction would like it to be.  The only part of the instruction that cannot be replaced by the caller is literal data (like =1=).
 
-Also: notice that while the argument likely expected by the =add-one= instruction above is =/t=, the caller of the instruction can specify whatever environment they would like the code to be executed in.  So they can change the =/add= register to refer to what is located at the =/sub= register in the calling registry.  This is a useful tool. It allows the caller to make other code as generic as they would like.  To see the code used in an instruction so that you know what is possible to replace, you can =print= the instruction.
+After the code finishes whatever the =/ans= register is set to in the temporary registry is the new value of the =/ans= register in the calling registry.  This is the sense in which the =/ans= register is special because this will not happen with the other data in the temporary registry.
 
+To see the code used in an instruction, you can =print= the instruction.
 #+BEGIN_SRC arbel
 ... print add-one .
 (  add t 1 .  )

@@ -4735,9 +4735,9 @@ if (true)
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & Instruction)))
+if (arg2 != NULL && true && (!(arg2->type & Operation)))
   {
-    do_error("Argument 2 of <find> should be of type Instruction.");
+    do_error("Argument 2 of <find> should be of type Operation.");
     return ;
   }
 
@@ -4753,8 +4753,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
   a1.arg_array = malloc(sizeof(data*)*a1.length);
   a1.arg_array[0] = arg2;
-  assign_regstr(&a1.arg_array[1], "t", arbel_hash_t);
-  a1.arg_array[2] = NULL;
+  a1.arg_array[1] = NULL;
   
   for (int i = 0; i < r->hash_size; i++)
     {
@@ -4770,7 +4769,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
         {
           if (c->value != NULL)
             {
-              a1.arg_array[2] = c->value;
+              a1.arg_array[1] = c->value;
               compute(arg2, reg, a1);
               data* d = lookup(reg, arbel_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
