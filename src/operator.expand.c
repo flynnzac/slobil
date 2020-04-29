@@ -2874,9 +2874,12 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
 ;
 
-  
-  
-  
+  FILE* f;
+  if (a.length >= 3)
+    {
+      
+      
+      
 data* arg2 = resolve(a.arg_array[2], reg);
 
 if (true)
@@ -2895,7 +2898,13 @@ if (arg2 != NULL && true && (!(arg2->type & String)))
 
 ;
   
-  FILE* f = fopen((char*) arg1->data, (char*) arg2->data);
+      f = fopen((char*) arg1->data, (char*) arg2->data);
+    }
+  else
+    {
+      f = fopen((char*) arg1->data, "r+");
+    }
+  
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -3382,8 +3391,17 @@ if (arg2 != NULL && true && (!(arg2->type & File)))
 
 ;
 
-  long int i = mpz_get_si(*((mpz_t*) arg1->data));
-  fwrite(&i, sizeof(long int), 1, (FILE*) arg2->data);
+  int i = mpz_get_ui(*((mpz_t*) arg1->data));
+  if ((i >= 255) || (i < 0))
+    {
+      do_error("Value should be in range [0,255].");
+      return;
+    }
+  else
+    {
+      char c = (char) i;
+      fwrite(&c, sizeof(char), 1, (FILE*) arg2->data);
+    }
 }
 
 void

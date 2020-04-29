@@ -720,15 +720,19 @@ Arguments that are optional are enclosed in angle brackets (<>).  Operations are
 
 - =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
 
-- =open-text-file STRING= --- sets the =/ans= Register to a File object corresponding to the file named STRING.
+- =open-file STRING1 <STRING2>= --- sets the =/ans= Register to a File object corresponding to the file named STRING1 with mode STRING2 (default: "r+").
 
-- =read FILE= --- read a single character from a File object and set the =/ans= Register to that character.
+- =read FILE= --- read a byte from a file and set the =/ans= register to the result (an Integer).
 
-- =close REGISTER= --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
+- =read-char FILE= --- read a single character from a File object and set the =/ans= Register to that character (a String).
 
 - =read-line FILE= --- sets the =/ans= Register to the next line from FILE.
 
-- =write STRING FILE= --- write a given STRING to FILE.
+- =write INTEGER FILE= --- =INTEGER= must be in [0,255].  Directly writes a byte to =FILE=.
+
+- =write-string STRING FILE= --- Write a =STRING= to =FILE= using UTF-8 encoding. 
+
+- =close REGISTER= --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
 
 - =data STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
 
