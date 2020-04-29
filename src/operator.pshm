@@ -1803,17 +1803,21 @@ op_is_operation (arg a, registry* reg)
 
 
 void
-op_open_text_file (arg a, registry* reg)
+op_open_file (arg a, registry* reg)
 {
-  #op=open-text-file@
+  #op=open-file@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=1@
   #type=String@
   ##GETARG~$;
+
+  #num=2@
+  #type=String@
+  ##GETARG~$;
   
-  FILE* f = fopen((char*) arg1->data, "r+");
+  FILE* f = fopen((char*) arg1->data, (char*) arg2->data);
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -2039,9 +2043,9 @@ op_read_line (arg a, registry* reg)
 }
 
 void
-op_write (arg a, registry* reg)
+op_write_string (arg a, registry* reg)
 {
-  #op=write@
+  #op=write-string@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -2055,6 +2059,24 @@ op_write (arg a, registry* reg)
 
   fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
 
+}
+
+void
+op_write (arg a, registry* reg)
+{
+  #op=write@
+  #length=2@
+
+  #num=1@
+  #type=Integer@
+  ##GETARG~$;
+
+  #num=2@
+  #type=File@
+  ##GETARG~$;
+
+  long int i = mpz_get_si(*((mpz_t*) arg1->data));
+  fwrite(&i, sizeof(long int), 1, (FILE*) arg2->data);
 }
 
 void
@@ -3349,8 +3371,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(reg,d,"is-operation",1);
   
-  assign_op(&d, op_open_text_file, NULL, NULL, 0);
-  set(reg,d,"open-text-file",1);
+  assign_op(&d, op_open_file, NULL, NULL, 0);
+  set(reg,d,"open-file",1);
 
   assign_op(&d, op_read_char, NULL, NULL, 0);
   set(reg,d,"read-char",1);
@@ -3375,6 +3397,9 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_write, NULL, NULL, 0);
   set(reg,d,"write",1);
+
+  assign_op(&d, op_write_string, NULL, NULL, 0);
+  set(reg,d,"write-string",1);
   
   assign_op(&d, op_input, NULL, NULL, 0);
   set(reg,d,"input",1);

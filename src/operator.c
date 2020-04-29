@@ -2846,11 +2846,11 @@ op_is_operation (arg a, registry* reg)
 
 
 void
-op_open_text_file (arg a, registry* reg)
+op_open_file (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "open-text-file");
+  check_length(&a, 1+1, "open-file");
 if (is_error(-1)) return ;;
 
   
@@ -2862,19 +2862,40 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<open-text-file> requires at least 1 arguments.");
+        do_error("<open-file> requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <open-text-file> should be of type String.");
+    do_error("Argument 1 of <open-file> should be of type String.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<open-file> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & String)))
+  {
+    do_error("Argument 2 of <open-file> should be of type String.");
     return ;
   }
 
 ;
   
-  FILE* f = fopen((char*) arg1->data, "r+");
+  FILE* f = fopen((char*) arg1->data, (char*) arg2->data);
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.");
@@ -3260,12 +3281,64 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
 }
 
 void
+op_write_string (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "write-string");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<write-string> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & String)))
+  {
+    do_error("Argument 1 of <write-string> should be of type String.");
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        do_error("<write-string> requires at least 2 arguments.");
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & File)))
+  {
+    do_error("Argument 2 of <write-string> should be of type File.");
+    return ;
+  }
+
+;
+
+  fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
+
+}
+
+void
 op_write (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "write");
-if (is_error(-1)) return ;;
 
   
   
@@ -3280,9 +3353,9 @@ if (true)
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & String)))
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <write> should be of type String.");
+    do_error("Argument 1 of <write> should be of type Integer.");
     return ;
   }
 
@@ -3309,8 +3382,8 @@ if (arg2 != NULL && true && (!(arg2->type & File)))
 
 ;
 
-  fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
-
+  long int i = mpz_get_si(*((mpz_t*) arg1->data));
+  fwrite(&i, sizeof(long int), 1, (FILE*) arg2->data);
 }
 
 void
@@ -4939,38 +5012,6 @@ if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
 void
 op_op (arg a, registry* reg)
 {
-  /* design:
-     op instruction /y /x .
-     ans 2 3 .
-     gives ans = whatever instruction /y 2 /x 3 would give
-
-     I think the only reasonable solution is to make operation:
-
-     struct operation
-     {
-       operator op;
-       instruction* instr;
-       char** names;
-       unsigned long* hashes;
-       int n_arg;
-     };
-     
-     if (oper->instr != NULL)
-       call the instruction with order arguments
-     else
-       call the C code in oper->op
-
-     The main payoff here is that you can treat operators and instructions interchangeably.
-
-     The other solution is to add an "instruction" operation which treats each argument of the
-     operator as t1,t2,t3...  This is arguably the more ARBEL-ish way to do it.  Requires less code
-     changes and is more in keeping with the system.
-
-     ... instruction add .
-     ... ans /t1 2 /t2 3 .
-     ans = 5
-  */
-
   
 
   
@@ -5429,8 +5470,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(reg,d,"is-operation",1);
   
-  assign_op(&d, op_open_text_file, NULL, NULL, 0);
-  set(reg,d,"open-text-file",1);
+  assign_op(&d, op_open_file, NULL, NULL, 0);
+  set(reg,d,"open-file",1);
 
   assign_op(&d, op_read_char, NULL, NULL, 0);
   set(reg,d,"read-char",1);
@@ -5455,6 +5496,9 @@ add_basic_ops (registry* reg)
   
   assign_op(&d, op_write, NULL, NULL, 0);
   set(reg,d,"write",1);
+
+  assign_op(&d, op_write_string, NULL, NULL, 0);
+  set(reg,d,"write-string",1);
   
   assign_op(&d, op_input, NULL, NULL, 0);
   set(reg,d,"input",1);
