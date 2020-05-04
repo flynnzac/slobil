@@ -6,9 +6,9 @@
 * Introduction
 ** ARBEL is a Registry-Based Environment and Language
 
-   ARBEL is a Registry-Based Environment and Language. A /registry/ is a data structure where data is located at "registers".  The data in the registers can be other registries or numbers or strings or code or even other registers.  They are what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data structure in ARBEL and the language provides many operations to manipulate and recover values from the registries.  
+   ARBEL is a Registry-Based Environment and Language. A /registry/ is a table where data is entered in to /registers/.  The data in the registers can be other registries or numbers or strings or code or even other registers.  They are what other languages might call a /map/ or a (hash) /table/.  Registries are the fundamental data structure in ARBEL and the language provides many operations to manipulate and recover values from the registries.  
 
-   But registries are more than a data structure in ARBEL.  Registries also define the /scope/ of code.  
+   But registries are more than a data structure.  Registries also define the /scope/ of code in ARBEL. Code is executed inside registries.  The registers available to code changes with which registry it runs in.
 
    ARBEL /instructions/ are like procedures in other languages, but they operate within a registry specified by the caller of the instruction. They have no environment or context themselves.  The programmer calling the instruction decides which "arguments" the instruction has, not the author of the instruction. Effectively, this makes instructions naturally /generic/ because any non-literal value in the instruction can be replaced with arbitrary data by the caller of the instruction.
 
