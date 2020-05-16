@@ -355,6 +355,9 @@ is_retval (const int r);
 bool
 is_real (const char* str);
 
+bool
+is_nothing (const char* str);
+
 void
 assign_active (data** d, statement* s);
 

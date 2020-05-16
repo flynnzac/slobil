@@ -110,6 +110,9 @@ add_statement_argument (element** head, element* e, statement* s)
 
 }
 
+/* Every program is allowed one long, inscrutable, mess of a function.  parse_stmt is ARBEL's.  It
+   Works.  Believe. */
+
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete)
 {
@@ -123,6 +126,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
   parser_state sub_state;
   char* str;
 
+
+  /* Go to end of current element list. */
   while (e != NULL)
     {
       if (e->right == NULL) break;
@@ -131,6 +136,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
 
   while (!(*complete) && (((c = fgetc(f)) != EOF) && c != '\0'))
     {
+      /* Handle comment */
       if (state->in_comment && (c != '\n'))
         continue;
       if (state->in_comment && (c == '\n'))
@@ -138,6 +144,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
           *complete = 1;
           continue;
         }
+
+      /* Once we reach whitespace, it is time to interpret what we have in the buffer. */
       if (is_whitespace(c) && !state->in_instr && !state->in_quote)
         {
           add_to_state_buffer(state, '\0', false);
@@ -145,11 +153,13 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
             {
               if (state->after_instr)
                 {
+                  /* We have a sub expression of some kind. */
                   str = malloc(sizeof(char)*(strlen(state->buffer)+2));
                   strcpy(str, state->buffer);
 
                   if (state->open_paren == '<')
                     {
+                      /* Angle brackets are just sugar for the <op> operation */
                       int new_size = strlen(str) + strlen("op ") + strlen(" . ");
                       char* old_str = malloc(sizeof(char)*(strlen(str)+1));
                       strcpy(old_str, str);
@@ -161,7 +171,9 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                       free(old_str);
                       state->open_paren = '[';
                     }
-                  
+
+                  /* Stream the sub expression into parse so we can make it a segquence of
+                     statements itself. */
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
                   sub_state = fresh_state(0);
@@ -173,6 +185,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                   
                   if (sub_complete)
                     {
+                      /* We have a complete substatement.  React accordingly. */
                       switch (state->open_paren)
                         {
                         case '(':
@@ -204,6 +217,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (state->after_quote)
                 {
+                  /* Handle quoted text.  Create string data from the text. */
                   state->after_quote = 0;
                   if (strlen(state->buffer)==0)
                     {
@@ -218,6 +232,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (is_integer(state->buffer))
                 {
+                  /* Create Integer data if a literal integer. */
                   mpz_t mz;
                   mpz_init(mz);
                   mpz_set_str(mz, state->buffer, 10);
@@ -228,17 +243,25 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               else if (is_real(state->buffer) &&
                        strcmp(state->buffer, ".")!=0)
                 {
+                  /* Create Real data if a literal real. */
                   assign_real(&d, atof(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
               else if (is_register(state->buffer))
                 {
+                  /* Create Register data if a literal register. */
                   assign_regstr(&d, state->buffer+1,
                                 hash_str(state->buffer+1));
                   e = add_literal_argument(&head, e, d);
                 }
+              else if (is_nothing(state->buffer))
+                {
+                  assign_nothing(&d);
+                  e = add_literal_argument(&head, e, d);
+                }
               else if (is_boolean(state->buffer))
                 {
+                  /* Create Boolean data if a literal boolean. */ 
                   if (strcmp(state->buffer, "True")==0)
                     assign_boolean(&d, true);
                   else
@@ -247,22 +270,26 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                 }
               else if (strcmp(state->buffer,".")==0)
                 {
+                  /* Terminate statement. */
                   *complete = 1;
                   continue;
                 }
               else if (strcmp(state->buffer,",")==0)
                 {
+                  /* Terminate statement, do not print ans= */
                   *complete = 1;
                   state->print_out = 0;
                   continue;
                 }
               else if (strcmp(state->buffer, "'")==0)
                 {
+                  /* Start comment. */
                   state->in_comment = 1;
                   state->arg_n = 0;
                 }
               else 
                 {
+                  /* If not a literal, it must be a reference to a value located at some register. */
                   e = add_lookup_argument(&head, e, state->buffer);
                 }
               clear_state_buffer(state);
@@ -275,6 +302,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       else if (c == '(' && !state->in_quote)
         {
+          /* Start capturing instruction. */
           if (state->in_instr == 0)
             {
               state->open_paren = '(';
@@ -289,6 +317,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
         }
       else if (c == ')' && !state->in_quote)
         {
+          /* End capturing instruction. */
           state->in_instr--;
           if (state->in_instr == 0)
             {

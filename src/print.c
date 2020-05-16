@@ -75,6 +75,9 @@ print_data (data* d, print_settings settings)
       else
         printf("False.");
       break;
+    case Nothing:
+      printf("Nothing.");
+      break;
     default:
       break;
     }
