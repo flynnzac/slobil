@@ -87,10 +87,10 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       reg->elements++;
-      if (rehash_flag &&
-	  (reg->elements > (ARBEL_LOAD_FACTOR*(reg->hash_size))))
+      if (arbel_rehash && rehash_flag &&
+          (reg->elements > (ARBEL_LOAD_FACTOR*(reg->hash_size))))
         {
-	  rehash(reg);
+          rehash(reg);
         }
 
       return new_c;
@@ -231,14 +231,14 @@ del (registry* reg, unsigned long hash_name, int del_data, bool hard_free)
 
           if (del_data && cur->value != NULL && (!cur->do_not_free_data))
             {
-	      #ifdef GARBAGE
-	      if (hard_free)
-		{
-		  #undef free_data
-		  free_data(cur->value);
-		  #define free_data(x)
-		}
-	      #endif
+#ifdef GARBAGE
+              if (hard_free)
+                {
+#undef free_data
+                  free_data(cur->value);
+#define free_data(x)
+                }
+#endif
               free_data(cur->value);
               cur->value = NULL;
             }
@@ -343,8 +343,8 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
               else
                 {
                   d = get((registry*) d->data,
-                             ((regstr*) d1->data)->key,
-                             0);
+                          ((regstr*) d1->data)->key,
+                          0);
                 }
             }
         }
@@ -448,39 +448,39 @@ rehash (registry* r0)
       /* copy */
       content* cur = objects[i];
       if (cur == NULL)
-	continue;
+        continue;
 
       cur = tail(objects[i]);
       while (cur != NULL)
-	{
-	  set(r0, cur->value, cur->name, 0);
-	  if (cur->do_not_free_data)
-	    mark_do_not_free(r0, cur->key);
-	  cur = cur->right;
-	}
+        {
+          set(r0, cur->value, cur->name, 0);
+          if (cur->do_not_free_data)
+            mark_do_not_free(r0, cur->key);
+          cur = cur->right;
+        }
 
       /* clean */
 
       cur = objects[i];
       if (is_init_reg(cur))
-	{
-	  free(cur);
-	  continue;
-	}
+        {
+          free(cur);
+          continue;
+        }
 
       cur = tail(cur);
       if (cur != NULL)
-	free(cur->left);
+        free(cur->left);
 
       content* tmp;
 
       while (cur != NULL)
-	{
-	  free(cur->name);
-	  tmp = cur->right;
-	  free(cur);
-	  cur = tmp;
-	}
+        {
+          free(cur->name);
+          tmp = cur->right;
+          free(cur);
+          cur = tmp;
+        }
 
     }
 

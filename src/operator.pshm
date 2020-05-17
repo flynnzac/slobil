@@ -3192,6 +3192,7 @@ op_incr (arg a, registry* reg)
     }
 }
 
+
 void
 op_decr (arg a, registry* reg)
 {
@@ -3221,6 +3222,35 @@ op_decr (arg a, registry* reg)
     }
 }
 
+
+void
+op_auto_rehash (arg a, registry* reg)
+{
+  #op=auto-rehash@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Boolean@
+  ##GETARG~$;
+
+  arbel_rehash = *((bool*) arg1->data);
+}
+
+void
+op_rehash (arg a, registry* reg)
+{
+  #op=rehash@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Registry@
+  ##GETARG~$;
+
+  rehash((registry*) arg1->data);
+  
+}
 
 void
 add_basic_ops (registry* reg)
@@ -3520,7 +3550,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_decr, NULL, NULL, 0);
   set(reg,d,"decr",1);
-  
-  
+
+  assign_op(&d, op_auto_rehash, NULL, NULL, 0);
+  set(reg,d,"auto-rehash",1);
+
+  assign_op(&d, op_rehash, NULL, NULL, 0);
+  set(reg,d,"rehash",1);
+
 }
   

@@ -5256,6 +5256,7 @@ if (arg2 != NULL && true && (!(arg2->type & (Real|Integer))))
     }
 }
 
+
 void
 op_decr (arg a, registry* reg)
 {
@@ -5320,6 +5321,71 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
     }
 }
 
+
+void
+op_auto_rehash (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "auto-rehash");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<auto-rehash> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Boolean)))
+  {
+    do_error("Argument 1 of <auto-rehash> should be of type Boolean.");
+    return ;
+  }
+
+;
+
+  arbel_rehash = *((bool*) arg1->data);
+}
+
+void
+op_rehash (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "rehash");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<rehash> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
+  {
+    do_error("Argument 1 of <rehash> should be of type Registry.");
+    return ;
+  }
+
+;
+
+  rehash((registry*) arg1->data);
+  
+}
 
 void
 add_basic_ops (registry* reg)
@@ -5619,7 +5685,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_decr, NULL, NULL, 0);
   set(reg,d,"decr",1);
-  
-  
+
+  assign_op(&d, op_auto_rehash, NULL, NULL, 0);
+  set(reg,d,"auto-rehash",1);
+
+  assign_op(&d, op_rehash, NULL, NULL, 0);
+  set(reg,d,"rehash",1);
+
 }
   
