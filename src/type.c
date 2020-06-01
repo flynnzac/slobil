@@ -90,6 +90,12 @@ is_boolean (const char* str)
   return (strcmp(str,"True") == 0) || (strcmp(str, "False") == 0);
 }
 
+bool
+is_nothing (const char* str)
+{
+  return strcmp(str, "Nothing") == 0;
+}
+
 const char*
 str_type (data_type type)
 {

@@ -355,6 +355,9 @@ is_retval (const int r);
 bool
 is_real (const char* str);
 
+bool
+is_nothing (const char* str);
+
 void
 assign_active (data** d, statement* s);
 
@@ -512,6 +515,7 @@ unsigned long arbel_hash_underscore;
 
 size_t arbel_stop_error_threshold;
 bool arbel_print_error_messages;
+bool arbel_rehash;
 
 data* last_ans;
 

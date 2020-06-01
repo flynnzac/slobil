@@ -106,6 +106,7 @@ main (int argc, char** argv)
   arbel_hash_underscore = hash_str("_");
   arbel_error = 0;
   reading = true;
+  arbel_rehash = true;
 
   arbel_ll = NULL;
   arbel_ll_cnt = 0;
