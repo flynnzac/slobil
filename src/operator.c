@@ -5388,6 +5388,29 @@ if (arg1 != NULL && true && (!(arg1->type & Registry)))
 }
 
 void
+op_clock (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 0+1, "clock");
+if (is_error(-1)) return ;;
+
+  struct timespec spec;
+  unsigned int time_since_epoch;
+
+  clock_gettime(CLOCK_REALTIME, &spec);
+  time_since_epoch = floor(spec.tv_nsec / 1000000.0);
+  
+  mpz_t z;
+  mpz_init_set_ui(z, time_since_epoch);
+  data* d;
+
+  assign_int(&d, z);
+  ret_ans(reg, d);  
+}
+  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -5691,6 +5714,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_rehash, NULL, NULL, 0);
   set(reg,d,"rehash",1);
+
+  assign_op(&d, op_clock, NULL, NULL, 0);
+  set(reg,d,"clock",1);
+
 
 }
   
