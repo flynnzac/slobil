@@ -3264,12 +3264,14 @@ op_clock (arg a, registry* reg)
 
   clock_gettime(CLOCK_REALTIME, &spec);
   time_since_epoch = floor(spec.tv_nsec / 1000000.0);
+  time_since_epoch += 1000*spec.tv_sec;
   
   mpz_t z;
   mpz_init_set_ui(z, time_since_epoch);
   data* d;
 
   assign_int(&d, z);
+  mpz_clear(z);
   ret_ans(reg, d);  
 }
   

@@ -52,7 +52,16 @@ save_content (FILE* f, content* reg)
           switch (reg->value->type)
             {
             case Integer:
-              fwrite(reg->value->data, sizeof(int), 1, f);
+              {
+                mpz_t* z = (mpz_t*) reg->value->data;
+                size = mpz_sizeinbase(*z, 10)+2;
+                char* s = malloc(size);
+                mpz_get_str(s, 10, z);
+                size = strlen(s);
+                fwrite(&size, sizeof(int), 1, f);
+                fwrite(s, sizeof(char), strlen(s), f);
+                free(s);
+              }
               break;
             case Real:
               fwrite(reg->value->data, sizeof(double), 1, f);
@@ -132,10 +141,20 @@ read_registry (FILE* f, registry* reg)
       switch (*type_cache)
         {
         case Integer:
-          cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
-          assign_int(&d, *((int*) cache));
-          free(cache);
+          {
+            cache = malloc(sizeof(int));
+            fread(cache, sizeof(int), 1, f);
+            size = *((int*) cache);
+            free(cache);
+            cache = malloc(sizeof(char)*(size+1));
+            fread(cache, sizeof(char), size, f);
+            *((char*) (cache+size)) = '\0';
+            mpz_t z;
+            mpz_init_set_str(z, cache, 10);
+            assign_int(&d, z);
+            mpz_clear(z);
+            free(cache);
+          }
           break;
         case Real:
           cache = malloc(sizeof(double));
