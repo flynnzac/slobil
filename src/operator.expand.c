@@ -5388,6 +5388,114 @@ if (arg1 != NULL && true && (!(arg1->type & Registry)))
 }
 
 void
+op_clock (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 0+1, "clock");
+if (is_error(-1)) return ;;
+
+  struct timespec spec;
+  int time_since_epoch;
+
+  clock_gettime(CLOCK_REALTIME, &spec);
+  time_since_epoch = spec.tv_sec;
+  
+  mpz_t z;
+  mpz_init_set_si(z, time_since_epoch);
+  mpz_mul_si(z, z, 1000);
+  mpz_add_ui(z, z, floor(spec.tv_nsec / 1000000.0));
+
+  data* d;
+
+  assign_int(&d, z);
+  mpz_clear(z);
+  ret_ans(reg, d);  
+}
+
+void
+op_local_time (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "local-time");
+if (is_error(-1)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        do_error("<local-time> requires at least 1 arguments.");
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    do_error("Argument 1 of <local-time> should be of type Integer.");
+    return ;
+  }
+
+;
+
+  mpz_t z;
+  mpz_init_set(z, *((mpz_t*) arg1->data));
+  mpz_fdiv_q_ui(z, z, 1000);
+  time_t t = mpz_get_si(z);
+  mpz_clear(z);
+  struct tm* loc = localtime(&t);
+
+  registry* r = new_registry(reg, ARBEL_HASH_SIZE);
+  data* d;
+
+
+  mpz_init_set_si(z, loc->tm_sec);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "second", 0);
+
+  mpz_init_set_si(z, loc->tm_min);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "minute", 0);
+  
+  mpz_init_set_si(z, loc->tm_hour);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "hour", 0);
+  
+  mpz_init_set_si(z, loc->tm_mday);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "day", 0);
+  
+  mpz_init_set_si(z, loc->tm_mon);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "month", 0);
+
+  mpz_init_set_si(z, loc->tm_year);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "year", 0);
+
+  mpz_init_set_si(z,loc->tm_wday);
+  assign_int(&d, z);
+  mpz_clear(z);
+  set(r, d, "day-of-week", 0);
+
+  assign_registry(&d, r, false);
+  ret_ans(reg, d);
+  
+}
+  
+  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -5691,6 +5799,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_rehash, NULL, NULL, 0);
   set(reg,d,"rehash",1);
+
+  assign_op(&d, op_clock, NULL, NULL, 0);
+  set(reg,d,"clock",1);
+
+  assign_op(&d, op_local_time, NULL, NULL, 0);
+  set(reg,d,"local-time",1);
+  
 
 }
   
