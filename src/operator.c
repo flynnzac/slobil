@@ -2371,7 +2371,6 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
       do_error("File cannot be opened.");
       return;
     }
-  
   if (a.length >= 3)
     {
       

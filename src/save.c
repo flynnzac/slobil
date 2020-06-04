@@ -36,15 +36,14 @@ save_registry (FILE* f, registry* reg)
 int
 save_content (FILE* f, content* reg)
 {
-
   reg = tail(reg);
   int size;
   op_wrapper* op;
 
   while (reg != NULL)
     {
-      if (reg->value->type != Active_Instruction &&
-          reg->value->type != Nothing &&
+      if ((reg->value->type != Active_Instruction) &&
+          (reg->value->type != File) &&
           ((reg->value->type != Operation) || ((op_wrapper*) reg->value->data)->instr != NULL))
         {
           fwrite(&reg->value->type, sizeof(data_type), 1, f);
@@ -56,7 +55,7 @@ save_content (FILE* f, content* reg)
                 mpz_t* z = (mpz_t*) reg->value->data;
                 size = mpz_sizeinbase(*z, 10)+2;
                 char* s = malloc(size);
-                mpz_get_str(s, 10, z);
+                mpz_get_str(s, 10, *z);
                 size = strlen(s);
                 fwrite(&size, sizeof(int), 1, f);
                 fwrite(s, sizeof(char), strlen(s), f);
@@ -80,7 +79,7 @@ save_content (FILE* f, content* reg)
               break;
             case Registry:
               save_registry(f, (registry*) reg->value->data);
-              size = Nothing;
+              size = NotAType;
               fwrite(&size, sizeof(data_type), 1, f);
               break;
             case Instruction:
@@ -106,6 +105,10 @@ save_content (FILE* f, content* reg)
                   fwrite(((regstr*) op->args[i]->data)->name,
                          sizeof(char), size, f);
                 }
+              break;
+            case Boolean:
+              fwrite(reg->value->data, sizeof(bool), 1, f);
+              break;
             default:
               break;
             }
@@ -136,7 +139,7 @@ read_registry (FILE* f, registry* reg)
   FILE* f_sub;
   char* code;
   while (fread(type_cache, sizeof(data_type), 1, f)
-         && (*type_cache != Nothing))
+         && (*type_cache != NotAType))
     {
       switch (*type_cache)
         {
@@ -268,6 +271,15 @@ read_registry (FILE* f, registry* reg)
           d = new_data();
           d->type = Operation;
           d->data = op;
+          break;
+        case Boolean:
+          cache = malloc(sizeof(bool));
+          fread(cache, sizeof(bool), 1, f);
+          assign_boolean(&d, *(bool*) cache);
+          free(cache);
+          break;
+        case Nothing:
+          assign_nothing(&d);
           break;
         default:
           break;

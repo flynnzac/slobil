@@ -55,7 +55,8 @@ enum data_type
    Operation = 128,
    File = 256,
    Boolean = 512,
-   Nothing = 1024
+   Nothing = 1024,
+   NotAType = 2048
   };
 
 typedef enum data_type data_type;
