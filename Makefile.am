@@ -32,7 +32,7 @@ TESTS += test/ops/op_registry.arb
 TESTS += test/ops/op_set.arb
 TESTS += test/ops/op_string_append.arb
 TESTS += test/ops/op_string_length.arb
-TESTS += test/ops/op_do_to_all.arb
+TESTS += test/ops/op_do.arb
 TESTS += test/ops/op_next.arb
 TESTS += test/ops/op_last.arb
 
