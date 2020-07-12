@@ -2,26 +2,26 @@
 source "src/library/assert.arb" .
 error-messages False .
 
-print "Start <do-to-all> test." .
+print "Start <do> test." .
 
 ' Tests with correct usage
 
-set /x [ do-to-all ( add t 1 . ) [ list 1 2 3 . ] . ] .
-assert /test ( eq x:/#1 2 . ) .
-assert /test ( eq x:/#2 3 . ) .
-assert /test ( eq x:/#3 4 . ) .
+set /x [ do < ( add t 1 . ) /t > [ list 1 2 3 . ] . ] .
+assert /test ( eq x:/t1 2 . ) .
+assert /test ( eq x:/t2 3 . ) .
+assert /test ( eq x:/t3 4 . ) .
 
 ' Test with wrong argument type
 
-assert /test ( is-error ( do-to-all ( add s 1 . ) [ list 1 2 3 . ] . ) .
+assert /test ( is-error ( do ( add s 1 . )  [ list 1 2 3 . ] . ) .
              ) .
 
-assert /test ( is-error ( do-to-all add [ list 1 2 3 . ] . ) . ) .
+assert /test ( is-error ( do add 1 . ) . ) .
 
 ' Test with incorrect number of arguments
 
-assert /test ( is-error ( do-to-all . ) . ) .
-assert /test ( is-error ( do-to-all ( add t 1 . ) . ) . ) .
+assert /test ( is-error ( do . ) . ) .
+assert /test ( is-error ( do < ( add t 1 . ) /t > . ) . ) .
 
-print "Finished <do-to-all> test." .
+print "Finished <do> test." .
 

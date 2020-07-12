@@ -2,7 +2,7 @@
 ' Computes v^T w for a vector 
 set /dotproduct
     (
-      do-to-all mul v w .
+      do mul v w .
       collapse add ans  .
     ) .
 
@@ -13,7 +13,7 @@ set /matrix-multiply
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all < ( dotproduct /v t1 /w B:i . ) /t1 > A .
+              do < ( dotproduct /v t1 /w B:i . ) /t1 > A .
               in out ( set i ans . ) .
               next i .
               move /ans /i .
@@ -28,7 +28,7 @@ set /transpose
       set /out [ list . ] .
       while ( exist i A:/t1 . )
             (
-              do-to-all < ( answer t1:i . ) /t1 > A .
+              do < ( answer t1:i . ) /t1 > A .
               move /ans /res .
               in out ( set i res . ) .
               next i .

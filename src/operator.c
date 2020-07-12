@@ -1265,11 +1265,11 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 }
 
 void
-op_do_to_all (arg a, registry* reg)
+op_do (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "do-to-all");
+  check_length(&a, 2+1, "do");
 if (is_error(-1)) return ;;
 
   data* arg1 = resolve(a.arg_array[1], reg);
@@ -1282,7 +1282,7 @@ if (is_error(-1)) return ;;
 
   if (arg1 == NULL)
     {
-      do_error("*do-to-all* requires an argument.");
+      do_error("<do> requires an argument.");
       free(arg_registries);
       return;
     }
@@ -1291,7 +1291,7 @@ if (is_error(-1)) return ;;
     {
       if (arg_registries[i] == NULL)
         {
-          do_error("*do-to-all* requires more than one argument.");
+          do_error("<do> requires more than one argument.");
           free(arg_registries);
           return;
         }
@@ -1300,7 +1300,7 @@ if (is_error(-1)) return ;;
 
   if (arg1->type != Operation)
     {
-      do_error("First argument to <do-to-all> must be an operation.");
+      do_error("First argument to <do> must be an operation.");
       return;
     }
 
@@ -1308,7 +1308,7 @@ if (is_error(-1)) return ;;
     {
       if (arg_registries[i]->type != Registry)
         {
-          do_error("Arguments to <do-to-all> must be registries.");
+          do_error("Arguments to <do> must be registries.");
           free(arg_registries);
           return;
         }
@@ -1370,7 +1370,7 @@ if (is_error(-1)) return ;;
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
-              do_error("Instruction in <do-to-all> did not set /ans register.");
+              do_error("Instruction in <do> did not set /ans register.");
               break;
             }
           d = copy_data(d);
@@ -5413,11 +5413,11 @@ if (is_error(-1)) return ;;
 }
 
 void
-op_local_time (arg a, registry* reg)
+op_make_time (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "local-time");
+  check_length(&a, 1+1, "make-time");
 if (is_error(-1)) return ;;
 
   
@@ -5429,13 +5429,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<local-time> requires at least 1 arguments.");
+        do_error("<make-time> requires at least 1 arguments.");
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <local-time> should be of type Integer.");
+    do_error("Argument 1 of <make-time> should be of type Integer.");
     return ;
   }
 
@@ -5491,8 +5491,6 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
   ret_ans(reg, d);
   
 }
-  
-  
 
 void
 add_basic_ops (registry* reg)
@@ -5568,8 +5566,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_source, NULL, NULL, 0);
   set(reg,d,"source",1);
 
-  assign_op(&d, op_do_to_all, NULL, NULL, 0);
-  set(reg,d,"do-to-all",1);
+  assign_op(&d, op_do, NULL, NULL, 0);
+  set(reg,d,"do",1);
 
   assign_op(&d, op_next, NULL, NULL, 0);
   set(reg,d,"next",1);
@@ -5802,8 +5800,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_clock, NULL, NULL, 0);
   set(reg,d,"clock",1);
 
-  assign_op(&d, op_local_time, NULL, NULL, 0);
-  set(reg,d,"local-time",1);
+  assign_op(&d, op_make_time, NULL, NULL, 0);
+  set(reg,d,"make-time",1);
   
 
 }
