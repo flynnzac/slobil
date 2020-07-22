@@ -495,12 +495,28 @@ arbel_location(int loc, int n);
 
 #define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
 
-/* global variables */
-registry* current_parse_registry;
-char* source_code;
+/* task is an interpreter states */
 
-void** arbel_ll;
-int arbel_ll_cnt;
+struct arbel_task
+{
+  registry* current_parse_registry;
+  char* source_code;
+  void** arbel_ll;
+  int arbel_ll_cnt;
+
+  size_t arbel_stop_error_threshold;
+  bool arbel_print_error_messages;
+  bool arbel_rehash;
+
+  data* last_ans;
+  int arbel_error;
+  struct arbel_task* right;
+  struct arbel_task* left;
+};
+
+typedef struct arbel_task arbel_task;
+
+/* global constants */
 
 unsigned long arbel_hash_ans;
 unsigned long arbel_hash_0;
@@ -514,13 +530,6 @@ unsigned long arbel_hash_class;
 unsigned long arbel_hash_t;
 unsigned long arbel_hash_underscore;
 
-size_t arbel_stop_error_threshold;
-bool arbel_print_error_messages;
-bool arbel_rehash;
-
-data* last_ans;
-
-int arbel_error;
 
 #ifdef GARBAGE
 #include <gc.h>
