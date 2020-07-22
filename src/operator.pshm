@@ -805,9 +805,9 @@ op_source (arg a, registry* reg)
 }
 
 void
-op_do_to_all (arg a, registry* reg)
+op_do (arg a, registry* reg)
 {
-  #op=do-to-all@
+  #op=do@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -821,7 +821,7 @@ op_do_to_all (arg a, registry* reg)
 
   if (arg1 == NULL)
     {
-      do_error("*do-to-all* requires an argument.");
+      do_error("<do> requires an argument.");
       free(arg_registries);
       return;
     }
@@ -830,7 +830,7 @@ op_do_to_all (arg a, registry* reg)
     {
       if (arg_registries[i] == NULL)
         {
-          do_error("*do-to-all* requires more than one argument.");
+          do_error("<do> requires more than one argument.");
           free(arg_registries);
           return;
         }
@@ -839,7 +839,7 @@ op_do_to_all (arg a, registry* reg)
 
   if (arg1->type != Operation)
     {
-      do_error("First argument to <do-to-all> must be an operation.");
+      do_error("First argument to <do> must be an operation.");
       return;
     }
 
@@ -847,7 +847,7 @@ op_do_to_all (arg a, registry* reg)
     {
       if (arg_registries[i]->type != Registry)
         {
-          do_error("Arguments to <do-to-all> must be registries.");
+          do_error("Arguments to <do> must be registries.");
           free(arg_registries);
           return;
         }
@@ -909,7 +909,7 @@ op_do_to_all (arg a, registry* reg)
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
-              do_error("Instruction in <do-to-all> did not set /ans register.");
+              do_error("Instruction in <do> did not set /ans register.");
               break;
             }
           d = copy_data(d);
@@ -3277,9 +3277,9 @@ op_clock (arg a, registry* reg)
 }
 
 void
-op_local_time (arg a, registry* reg)
+op_make_time (arg a, registry* reg)
 {
-  #op=local-time@
+  #op=make-time@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -3337,8 +3337,6 @@ op_local_time (arg a, registry* reg)
   ret_ans(reg, d);
   
 }
-  
-  
 
 void
 add_basic_ops (registry* reg)
@@ -3414,8 +3412,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_source, NULL, NULL, 0);
   set(reg,d,"source",1);
 
-  assign_op(&d, op_do_to_all, NULL, NULL, 0);
-  set(reg,d,"do-to-all",1);
+  assign_op(&d, op_do, NULL, NULL, 0);
+  set(reg,d,"do",1);
 
   assign_op(&d, op_next, NULL, NULL, 0);
   set(reg,d,"next",1);
@@ -3648,8 +3646,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_clock, NULL, NULL, 0);
   set(reg,d,"clock",1);
 
-  assign_op(&d, op_local_time, NULL, NULL, 0);
-  set(reg,d,"local-time",1);
+  assign_op(&d, op_make_time, NULL, NULL, 0);
+  set(reg,d,"make-time",1);
   
 
 }

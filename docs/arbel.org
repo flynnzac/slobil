@@ -527,7 +527,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 
 **** Apply Operations to elements of a Registry
 
- - =do-to-all OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes arguments its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do-to-all add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do-to-all= will only return results at Registers that exist in all Registries.  So, for example, =do-to-all add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
+ - =do OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes arguments its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do= will only return results at Registers that exist in all Registries.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
  - =collapse OPERATION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =OPERATION= to the value in the =REGISTRY= at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on. For example, =collapse add [ list 1 2 3 . ] "t"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="t"=.
 
@@ -825,13 +825,6 @@ Files are like the C FILE type.
 
 - =clear-code= --- clear code that has been entered so far so that the code that =output-code= outputs will be empty.
 
-*** Interacting with the shell
-
-- =shell STRING= --- execute the shell command STRING.
-
-- =change-dir STRING= --- change directory to the location given in STRING.
-
-- =current-dir= --- set the =/ans= Register to a String giving the current directory.
 
 *** Error handling
 
@@ -840,6 +833,24 @@ Files are like the C FILE type.
 - =is-error INSTRUCTION= --- sets the =/ans= Register to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
 
 - =push-through INSTRUCTION= --- execute each statement in =INSTRUCTION= even if there is one of the statements has an error.
+
+
+
+** System operations
+*** Interacting with the shell
+
+- =shell STRING= --- execute the shell command STRING.
+
+- =change-dir STRING= --- change directory to the location given in STRING.
+
+- =current-dir= --- set the =/ans= Register to a String giving the current directory.
+
+*** Time
+
+- =clock= --- set the =/ans= register to the current time in milliseconds from January 1, 1970.
+
+- =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31), 
+
 
 
 * GNU Free Documentation License

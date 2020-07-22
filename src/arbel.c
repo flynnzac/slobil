@@ -125,19 +125,20 @@ main (int argc, char** argv)
   int save_code = 1;
   bool listen_socket = false;
   int port = 0;
+  bool early_stop = false;
   while ((k = getopt(argc, argv, "l:s:nmvc:p:")) != -1)
     {
       switch (k)
         {
         case 'c':
           state.in_comment = 1;
-          is_exit(1);
+          early_stop = true;
           script = malloc(sizeof(char)*(strlen(optarg)+1));
           strcpy(script, optarg);
           save_code = 0;
           break;
         case 'n':
-          is_exit(1);
+          early_stop = true;
           break;
         case 'l':
           f = fopen(optarg, "r");
@@ -145,7 +146,7 @@ main (int argc, char** argv)
           fclose(f);
           break;
         case 's':
-          is_exit(1);
+          early_stop = true;
           script = malloc(sizeof(char)*(strlen(optarg)+1));
           strcpy(script, optarg);
           save_code = 0;
@@ -162,7 +163,7 @@ main (int argc, char** argv)
           if (port <= 0)
             {
               fprintf(stderr, "Invalid port: %s\n", optarg);
-              is_exit(1);
+              is_exit(2);
             }
           break;
         case 'v':
@@ -171,7 +172,7 @@ main (int argc, char** argv)
           break;
         default:
           fprintf(stderr, "Option not recognized.\n");
-          is_exit(1);
+          is_exit(2);
           break;
         }
     }
@@ -213,7 +214,7 @@ main (int argc, char** argv)
       #endif
     }
 
-  while (!is_exit(-1))
+  while (!is_exit(-1) && (!early_stop))
     {
       if (listen_socket)
         {
@@ -312,7 +313,11 @@ main (int argc, char** argv)
       free(arbel_ll);
     }
 
-  return is_exit(-1)-1;
+  printf("is_exit: %d\n", is_exit(-1));
+  if (is_exit(-1)==0)
+    return 0;
+  else
+    return is_exit(-1)-1;
   
 }
 
