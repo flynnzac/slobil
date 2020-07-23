@@ -42,6 +42,9 @@
 #include <unistr.h>
 #include <unistdio.h>
 #include <gmp.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 
 enum data_type
   {
@@ -94,11 +97,33 @@ struct content
 
 typedef struct content content;
 
+struct registry;
+struct arbel_task
+{
+  struct registry* current_parse_registry;
+  char* source_code;
+  void** arbel_ll;
+  int arbel_ll_cnt;
+
+  size_t arbel_stop_error_threshold;
+  bool arbel_print_error_messages;
+  bool arbel_rehash;
+
+  data* last_ans;
+  int arbel_error;
+  int do_exit;
+  struct arbel_task* right;
+  struct arbel_task* left;
+};
+
+typedef struct arbel_task arbel_task;
+
 struct registry
 {
   content** objects;
   size_t hash_size;
   size_t elements;
+  arbel_task* task;
   struct registry* up;
 };
 
@@ -231,7 +256,7 @@ assign_op (data** d, const operation op,
            int n_arg);
 
 void
-assign_registry (data** d, registry* r, bool copy);
+assign_registry (data** d, registry* r, bool copy, arbel_task* task);
 
 void
 assign_regstr (data** d, const char* name, unsigned long key);
@@ -285,7 +310,7 @@ data*
 get_data_in_registry (registry* reg, const regstr name);
 
 void
-do_error (const char* msg);
+do_error (const char* msg, arbel_task* t);
 
 void
 null_ans (registry* reg);
@@ -318,16 +343,16 @@ void
 shift_arguments (registry* reg);
 
 int
-is_error (int e);
+is_error (int e, arbel_task* t);
 
 int
-is_exit (int e);
+is_exit (int e, arbel_task* t);
 
 bool
 is_init_reg (content* r);
 
 registry*
-new_registry (registry* parent, size_t hash_size);
+new_registry (registry* parent, size_t hash_size, arbel_task* t);
 
 void
 ret (registry* reg, data* d, const char* name);
@@ -395,13 +420,13 @@ element*
 append_statement_element (element* current, statement* s);
 
 int
-parse (FILE* f, parser_state* state, statement** s);
+parse (FILE* f, parser_state* state, statement** s, arbel_task* task);
 
 void
 execute_code (statement* s, registry* reg);
 
 element*
-parse_stmt (FILE* f, parser_state* state, int* complete);
+parse_stmt (FILE* f, parser_state* state, int* complete, arbel_task* task);
 
 int
 interact (FILE* f, parser_state* state, registry* reg);
@@ -473,7 +498,7 @@ size_t
 new_hash_size (size_t elements);
 
 void
-check_length (arg* a, int length, char* op);
+check_length (arg* a, int length, char* op, arbel_task* t);
 
 int
 update_hash_size (size_t elements, size_t hash_size);
@@ -493,28 +518,31 @@ new_data();
 int
 arbel_location(int loc, int n);
 
-#define CHECK_ARGS(a,length) check_length(&a, length+1); if (is_error(-1)) return;
-
 /* task is an interpreter states */
 
-struct arbel_task
-{
-  registry* current_parse_registry;
-  char* source_code;
-  void** arbel_ll;
-  int arbel_ll_cnt;
+arbel_task*
+new_task ();
 
-  size_t arbel_stop_error_threshold;
-  bool arbel_print_error_messages;
-  bool arbel_rehash;
+int
+end_task (arbel_task* t);
 
-  data* last_ans;
-  int arbel_error;
-  struct arbel_task* right;
-  struct arbel_task* left;
-};
+void
+run_task_readline (arbel_task* task,
+                   bool save_code,
+                   struct parser_state* state,
+                   int echo);
 
-typedef struct arbel_task arbel_task;
+void
+run_task_socket (arbel_task* task,
+                 int port,
+                 bool save_code,
+                 struct parser_state* state,
+                 int echo);
+
+/* global variables */
+
+arbel_task* task0;
+bool reading;
 
 /* global constants */
 

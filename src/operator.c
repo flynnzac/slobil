@@ -38,8 +38,8 @@ op_range (arg a, registry* reg)
 
   
   
-  check_length(&a, 2+1, "range");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "range", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -50,13 +50,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<range> requires at least 1 arguments.");
+        do_error("<range> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <range> should be of type Integer.");
+    do_error("Argument 1 of <range> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -70,13 +70,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<range> requires at least 2 arguments.");
+        do_error("<range> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <range> should be of type Integer.");
+    do_error("Argument 2 of <range> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -96,13 +96,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<range> requires at least 3 arguments.");
+        do_error("<range> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <range> should be of type Integer.");
+    do_error("Argument 3 of <range> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -119,7 +119,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   mpz_cdiv_q(elements, elements, by);
   
   registry* r_new = new_registry
-    (reg,new_hash_size(mpz_get_ui(elements)));
+    (reg,new_hash_size(mpz_get_ui(elements)), reg->task);
 
   mpz_t cur;
   mpz_init_set(cur, *lb);
@@ -148,7 +148,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 void
 op_list (arg a, registry* reg)
 {
-  registry* r_new = new_registry(reg, new_hash_size(a.length));
+  registry* r_new = new_registry(reg, new_hash_size(a.length), reg->task);
   data* d;
   data* d_new;
   int i = 1;
@@ -176,11 +176,12 @@ op_registry (arg a, registry* reg)
     {
       
       
-      check_length(&a, 2+1, "registry");
-if (is_error(-1)) return ;;
+      check_length(&a, 2+1, "registry", reg->task);
+if (is_error(-1, reg->task)) return ;;
     }
   
-  registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1));
+  registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1),
+                                 reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -191,7 +192,7 @@ if (is_error(-1)) return ;;
       
       if (d->type != Register)
         {
-          do_error("Expected a register");
+          do_error("Expected a register", reg->task);
           free_registry(r_new);
           return;
         }
@@ -229,13 +230,13 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<arithmetic> requires at least i arguments.");
+        do_error("<arithmetic> requires at least i arguments.", reg->task);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & (Real|Integer))))
   {
-    do_error("Argument i of <arithmetic> should be of type (Real|Integer).");
+    do_error("Argument i of <arithmetic> should be of type (Real|Integer).", reg->task);
     return ;
   }
 
@@ -310,8 +311,8 @@ op_add (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "add");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "add", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   op_arithmetic(a, reg, 1);
 }
@@ -321,8 +322,8 @@ op_mul (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "mul");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "mul", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   op_arithmetic(a, reg, 2);
 }
@@ -332,8 +333,8 @@ op_sub (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "sub");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "sub", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   op_arithmetic(a, reg, 3);
 }
@@ -343,8 +344,8 @@ op_div (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "div");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "div", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   op_arithmetic(a, reg, 4);
 }
@@ -355,8 +356,8 @@ op_set (arg a, registry* reg)
   
 
   
-  check_length(&a, 2+1, "set");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "set", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -367,13 +368,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<set> requires at least 1 arguments.");
+        do_error("<set> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <set> should be of type Register.");
+    do_error("Argument 1 of <set> should be of type Register.", reg->task);
     return ;
   }
 
@@ -388,13 +389,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<set> requires at least 2 arguments.");
+        do_error("<set> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <set> should be of type Register.");
+    do_error("Argument 2 of <set> should be of type Register.", reg->task);
     return ;
   }
 
@@ -413,13 +414,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<set> requires at least 3 arguments.");
+        do_error("<set> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Registry)))
   {
-    do_error("Argument 3 of <set> should be of type Registry.");
+    do_error("Argument 3 of <set> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -444,8 +445,8 @@ op_get (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "get");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "get", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -456,13 +457,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<get> requires at least 1 arguments.");
+        do_error("<get> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <get> should be of type Register.");
+    do_error("Argument 1 of <get> should be of type Register.", reg->task);
     return ;
   }
 
@@ -484,13 +485,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<get> requires at least 2 arguments.");
+        do_error("<get> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <get> should be of type Registry.");
+    do_error("Argument 2 of <get> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -513,8 +514,8 @@ op_if (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "if");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "if", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -525,13 +526,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<if> requires at least 1 arguments.");
+        do_error("<if> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <if> should be of type Boolean.");
+    do_error("Argument 1 of <if> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -551,13 +552,13 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<if> requires at least 2 arguments.");
+        do_error("<if> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <if> should be of type Boolean.");
+    do_error("Argument 2 of <if> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -584,13 +585,13 @@ if (false)
   {
     if (arg3 == NULL)
       {
-        do_error("<if> requires at least 3 arguments.");
+        do_error("<if> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && false && (!(arg3->type & Boolean)))
   {
-    do_error("Argument 3 of <if> should be of type Boolean.");
+    do_error("Argument 3 of <if> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -623,8 +624,8 @@ op_move (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "move");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "move", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -635,13 +636,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<move> requires at least 1 arguments.");
+        do_error("<move> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <move> should be of type Register.");
+    do_error("Argument 1 of <move> should be of type Register.", reg->task);
     return ;
   }
 
@@ -655,13 +656,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<move> requires at least 2 arguments.");
+        do_error("<move> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <move> should be of type Register.");
+    do_error("Argument 2 of <move> should be of type Register.", reg->task);
     return ;
   }
 
@@ -677,8 +678,8 @@ op_delete (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "delete");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "delete", reg->task);
+if (is_error(-1, reg->task)) return ;;
   
   
   
@@ -689,13 +690,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<delete> requires at least 1 arguments.");
+        do_error("<delete> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <delete> should be of type Register.");
+    do_error("Argument 1 of <delete> should be of type Register.", reg->task);
     return ;
   }
 
@@ -709,8 +710,8 @@ op_free (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "free");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "free", reg->task);
+if (is_error(-1, reg->task)) return ;;
   
   
   
@@ -721,13 +722,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<free> requires at least 1 arguments.");
+        do_error("<free> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <free> should be of type Register.");
+    do_error("Argument 1 of <free> should be of type Register.", reg->task);
     return ;
   }
 
@@ -752,13 +753,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exit> requires at least 1 arguments.");
+        do_error("<exit> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <exit> should be of type Integer.");
+    do_error("Argument 1 of <exit> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -766,8 +767,8 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
 
       err = mpz_get_si(*((mpz_t*) arg1->data));
     }
-  is_exit(err+1);
-  is_error(1);
+  is_exit(err+1, reg->task);
+  is_error(1, reg->task);
 }
 
 void
@@ -775,8 +776,8 @@ op_exist (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "exist");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "exist", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -787,13 +788,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exist> requires at least 1 arguments.");
+        do_error("<exist> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <exist> should be of type Register.");
+    do_error("Argument 1 of <exist> should be of type Register.", reg->task);
     return ;
   }
 
@@ -811,13 +812,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<exist> requires at least 2 arguments.");
+        do_error("<exist> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <exist> should be of type Registry.");
+    do_error("Argument 2 of <exist> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -845,8 +846,8 @@ op_answer (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "answer");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "answer", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -857,13 +858,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<answer> requires at least 1 arguments.");
+        do_error("<answer> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <answer> should be of type Registry.");
+    do_error("Argument 1 of <answer> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -880,8 +881,8 @@ op_comparison (arg a, registry* reg)
   
   
   
-  check_length(&a, 2+1, "comparison");
-if (is_error(-1)) return -2;;
+  check_length(&a, 2+1, "comparison", reg->task);
+if (is_error(-1, reg->task)) return -2;;
   
 
   
@@ -894,13 +895,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<comparison> requires at least 1 arguments.");
+        do_error("<comparison> requires at least 1 arguments.", reg->task);
         return -2;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <comparison> should be of type (Integer|Real).");
+    do_error("Argument 1 of <comparison> should be of type (Integer|Real).", reg->task);
     return -2;
   }
 
@@ -914,13 +915,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<comparison> requires at least 2 arguments.");
+        do_error("<comparison> requires at least 2 arguments.", reg->task);
         return -2;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of <comparison> should be of type (Integer|Real).");
+    do_error("Argument 2 of <comparison> should be of type (Integer|Real).", reg->task);
     return -2;
   }
 
@@ -975,7 +976,7 @@ op_gt (arg a, registry* reg)
   data* d = NULL;
   int is_gt = op_comparison(a, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     return;
 
   if (is_gt==1)
@@ -992,7 +993,7 @@ op_lt (arg a, registry* reg)
   data* d = NULL;
   int is_lt = op_comparison(a, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     return;
 
   if (is_lt==-1)
@@ -1009,7 +1010,7 @@ op_eq (arg a, registry* reg)
   data* d = NULL;
   int is_eq = op_comparison(a, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     return;
 
   if (is_eq==0)
@@ -1026,7 +1027,7 @@ op_gt_eq (arg a, registry* reg)
   data* d = NULL;
   int is_gteq = op_comparison(a, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     return;
 
   if (is_gteq==1 || is_gteq==0)
@@ -1044,7 +1045,7 @@ op_lt_eq (arg a, registry* reg)
   data* d = NULL;
   int is_lteq = op_comparison(a, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     return;
 
   if (is_lteq==-1 || is_lteq==0)
@@ -1060,8 +1061,8 @@ op_print (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "print");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "print", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1072,13 +1073,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<print> requires at least 1 arguments.");
+        do_error("<print> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <print> should be of type (Integer|Real).");
+    do_error("Argument 1 of <print> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -1099,13 +1100,13 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<print> requires at least 2 arguments.");
+        do_error("<print> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <print> should be of type Boolean.");
+    do_error("Argument 2 of <print> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -1129,8 +1130,8 @@ op_string_length (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "string-length");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "string-length", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1141,13 +1142,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-length> requires at least 1 arguments.");
+        do_error("<string-length> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-length> should be of type String.");
+    do_error("Argument 1 of <string-length> should be of type String.", reg->task);
     return ;
   }
 
@@ -1170,8 +1171,8 @@ op_string_append (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "string-append");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "string-append", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   size_t sz = 0;
   data* args[a.length-1];
@@ -1186,13 +1187,13 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<string-append> requires at least i arguments.");
+        do_error("<string-append> requires at least i arguments.", reg->task);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & String)))
   {
-    do_error("Argument i of <string-append> should be of type String.");
+    do_error("Argument i of <string-append> should be of type String.", reg->task);
     return ;
   }
 
@@ -1221,8 +1222,8 @@ op_source (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "source");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "source", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1233,13 +1234,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<source> requires at least 1 arguments.");
+        do_error("<source> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <source> should be of type String.");
+    do_error("Argument 1 of <source> should be of type String.", reg->task);
     return ;
   }
 
@@ -1252,7 +1253,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
                                        + strlen((char*) arg1->data) +
                                        6));
       sprintf(msg, "File *%s* not found.", (char*) arg1->data);
-      do_error(msg);
+      do_error(msg, reg->task);
       free(msg);
       return;
     }
@@ -1269,8 +1270,8 @@ op_do (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "do");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "do", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   data* arg1 = resolve(a.arg_array[1], reg);
   data** arg_registries = malloc(sizeof(data*)*
@@ -1282,7 +1283,7 @@ if (is_error(-1)) return ;;
 
   if (arg1 == NULL)
     {
-      do_error("<do> requires an argument.");
+      do_error("<do> requires an argument.", reg->task);
       free(arg_registries);
       return;
     }
@@ -1291,7 +1292,7 @@ if (is_error(-1)) return ;;
     {
       if (arg_registries[i] == NULL)
         {
-          do_error("<do> requires more than one argument.");
+          do_error("<do> requires more than one argument.", reg->task);
           free(arg_registries);
           return;
         }
@@ -1300,7 +1301,7 @@ if (is_error(-1)) return ;;
 
   if (arg1->type != Operation)
     {
-      do_error("First argument to <do> must be an operation.");
+      do_error("First argument to <do> must be an operation.", reg->task);
       return;
     }
 
@@ -1308,7 +1309,7 @@ if (is_error(-1)) return ;;
     {
       if (arg_registries[i]->type != Registry)
         {
-          do_error("Arguments to <do> must be registries.");
+          do_error("Arguments to <do> must be registries.", reg->task);
           free(arg_registries);
           return;
         }
@@ -1319,7 +1320,7 @@ if (is_error(-1)) return ;;
     {
       arg_reg[i] = (registry*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE);
+  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
   data* d;
   arg a1;
 
@@ -1370,7 +1371,8 @@ if (is_error(-1)) return ;;
           d = lookup(reg, arbel_hash_ans, 0);
           if (d == NULL)
             {
-              do_error("Instruction in <do> did not set /ans register.");
+              do_error("Instruction in <do> did not set /ans register.",
+                       reg->task);
               break;
             }
           d = copy_data(d);
@@ -1383,7 +1385,7 @@ if (is_error(-1)) return ;;
         break;
     }
 
-  if (!is_error(-1))
+  if (!is_error(-1, reg->task))
     {
       d = new_data();
       d->type = Registry;
@@ -1394,7 +1396,7 @@ if (is_error(-1)) return ;;
 }
 
 data*
-register_arithmetic (regstr* rg, int diff)
+register_arithmetic (regstr* rg, int diff, arbel_task* task)
 {
   char* cur_name = malloc(sizeof(char)*(strlen(rg->name)+1));
   strcpy(cur_name, rg->name);
@@ -1406,7 +1408,8 @@ register_arithmetic (regstr* rg, int diff)
 
   if (i == (strlen(cur_name)-1))
     {
-      do_error("Register does not end in integer.");
+      do_error("Register does not end in integer.",
+               task);
       return NULL;
     }
   
@@ -1442,8 +1445,8 @@ op_next (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "next");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "next", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1454,19 +1457,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<next> requires at least 1 arguments.");
+        do_error("<next> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <next> should be of type Register.");
+    do_error("Argument 1 of <next> should be of type Register.", reg->task);
     return ;
   }
 
 ;
 
-  data* d = register_arithmetic((regstr*) arg1->data, 1);
+  data* d = register_arithmetic((regstr*) arg1->data, 1, reg->task);
   if (d != NULL)
     ret_ans(reg,d);
 }
@@ -1476,8 +1479,8 @@ op_previous (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "previous");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "previous", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1488,19 +1491,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<previous> requires at least 1 arguments.");
+        do_error("<previous> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <previous> should be of type Register.");
+    do_error("Argument 1 of <previous> should be of type Register.", reg->task);
     return ;
   }
 
 ;
 
-  data* d = register_arithmetic((regstr*) arg1->data, -1);
+  data* d = register_arithmetic((regstr*) arg1->data, -1, reg->task);
   if (d != NULL)
     ret_ans(reg,d);
 }
@@ -1511,8 +1514,8 @@ op_last (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "last");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "last", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1523,13 +1526,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<last> requires at least 1 arguments.");
+        do_error("<last> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <last> should be of type Registry.");
+    do_error("Argument 1 of <last> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -1544,13 +1547,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<last> requires at least 2 arguments.");
+        do_error("<last> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <last> should be of type String.");
+    do_error("Argument 2 of <last> should be of type String.", reg->task);
     return ;
   }
 
@@ -1588,8 +1591,8 @@ op_in (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "in");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "in", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1600,13 +1603,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<in> requires at least 1 arguments.");
+        do_error("<in> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <in> should be of type Registry.");
+    do_error("Argument 1 of <in> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -1621,13 +1624,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<in> requires at least 2 arguments.");
+        do_error("<in> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <in> should be of type Instruction.");
+    do_error("Argument 2 of <in> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -1650,8 +1653,8 @@ op_while (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "while");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "while", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1662,13 +1665,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<while> requires at least 1 arguments.");
+        do_error("<while> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <while> should be of type Instruction.");
+    do_error("Argument 1 of <while> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -1682,13 +1685,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<while> requires at least 2 arguments.");
+        do_error("<while> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <while> should be of type Instruction.");
+    do_error("Argument 2 of <while> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -1699,20 +1702,22 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
     {
       execute_0(arg1, reg);
       
-      if (is_error(-1))
+      if (is_error(-1, reg->task))
         break;
           
       d = get(reg, arbel_hash_ans, 0);
 
       if (d == NULL)
         {
-          do_error("Instruction did not set *ans* to a value.");
+          do_error("Instruction did not set *ans* to a value.",
+                   reg->task);
           break;
         }
 
       if (d->type != Boolean)
         {
-          do_error("First instruction should set *ans* to a Boolean.");
+          do_error("First instruction should set *ans* to a Boolean.",
+                   reg->task);
           break;
         }
 
@@ -1722,7 +1727,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
         }
 
       execute_0(arg2, reg);
-      if (is_error(-1))
+      if (is_error(-1, reg->task))
         break;
 
     }
@@ -1734,8 +1739,8 @@ op_repeat (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "repeat");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "repeat", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1746,13 +1751,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<repeat> requires at least 1 arguments.");
+        do_error("<repeat> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <repeat> should be of type Integer.");
+    do_error("Argument 1 of <repeat> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -1767,13 +1772,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<repeat> requires at least 2 arguments.");
+        do_error("<repeat> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <repeat> should be of type Instruction.");
+    do_error("Argument 2 of <repeat> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -1784,7 +1789,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   while (mpz_cmp(i, *((mpz_t*) arg1->data)) < 0)
     {
       execute_0(arg2, reg);
-      if (is_error(-1)) break;
+      if (is_error(-1, reg->task)) break;
       mpz_add_ui(i, i, 1);
     }
 }
@@ -1794,8 +1799,8 @@ op_to_register (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "to-register");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "to-register", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1806,13 +1811,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-register> requires at least 1 arguments.");
+        do_error("<to-register> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (String|Integer))))
   {
-    do_error("Argument 1 of <to-register> should be of type (String|Integer).");
+    do_error("Argument 1 of <to-register> should be of type (String|Integer).", reg->task);
     return ;
   }
 
@@ -1844,8 +1849,8 @@ op_collapse (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "collapse");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "collapse", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -1856,13 +1861,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<collapse> requires at least 1 arguments.");
+        do_error("<collapse> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Operation)))
   {
-    do_error("Argument 1 of <collapse> should be of type Operation.");
+    do_error("Argument 1 of <collapse> should be of type Operation.", reg->task);
     return ;
   }
 
@@ -1877,13 +1882,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<collapse> requires at least 2 arguments.");
+        do_error("<collapse> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <collapse> should be of type Registry.");
+    do_error("Argument 2 of <collapse> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -1901,13 +1906,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<collapse> requires at least 3 arguments.");
+        do_error("<collapse> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <collapse> should be of type String.");
+    do_error("Argument 3 of <collapse> should be of type String.", reg->task);
     return ;
   }
 
@@ -1928,7 +1933,7 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE);
+  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -1962,7 +1967,8 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
 
       if (d1 == NULL)
         {
-          do_error("Operation did not set /ans register.");
+          do_error("Operation did not set /ans register.",
+                   reg->task);
           break;
         }
       
@@ -1997,8 +2003,8 @@ op_string_eq (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "string-eq");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "string-eq", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2009,13 +2015,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-eq> requires at least 1 arguments.");
+        do_error("<string-eq> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-eq> should be of type String.");
+    do_error("Argument 1 of <string-eq> should be of type String.", reg->task);
     return ;
   }
 
@@ -2030,13 +2036,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-eq> requires at least 2 arguments.");
+        do_error("<string-eq> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-eq> should be of type String.");
+    do_error("Argument 2 of <string-eq> should be of type String.", reg->task);
     return ;
   }
 
@@ -2062,8 +2068,8 @@ op_string_lt (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "string-lt");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "string-lt", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2074,13 +2080,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-lt> requires at least 1 arguments.");
+        do_error("<string-lt> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-lt> should be of type String.");
+    do_error("Argument 1 of <string-lt> should be of type String.", reg->task);
     return ;
   }
 
@@ -2095,13 +2101,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-lt> requires at least 2 arguments.");
+        do_error("<string-lt> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-lt> should be of type String.");
+    do_error("Argument 2 of <string-lt> should be of type String.", reg->task);
     return ;
   }
 
@@ -2127,8 +2133,8 @@ op_string_gt (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "string-gt");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "string-gt", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2139,13 +2145,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-gt> requires at least 1 arguments.");
+        do_error("<string-gt> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-gt> should be of type String.");
+    do_error("Argument 1 of <string-gt> should be of type String.", reg->task);
     return ;
   }
 
@@ -2160,13 +2166,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-gt> requires at least 2 arguments.");
+        do_error("<string-gt> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-gt> should be of type String.");
+    do_error("Argument 2 of <string-gt> should be of type String.", reg->task);
     return ;
   }
 
@@ -2193,8 +2199,8 @@ op_register_eq (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "register-eq");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "register-eq", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2205,13 +2211,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<register-eq> requires at least 1 arguments.");
+        do_error("<register-eq> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <register-eq> should be of type Register.");
+    do_error("Argument 1 of <register-eq> should be of type Register.", reg->task);
     return ;
   }
 
@@ -2226,13 +2232,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<register-eq> requires at least 2 arguments.");
+        do_error("<register-eq> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <register-eq> should be of type Register.");
+    do_error("Argument 2 of <register-eq> should be of type Register.", reg->task);
     return ;
   }
 
@@ -2255,8 +2261,8 @@ op_go_in (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "go-in");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "go-in", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2267,13 +2273,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<go-in> requires at least 1 arguments.");
+        do_error("<go-in> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <go-in> should be of type Registry.");
+    do_error("Argument 1 of <go-in> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -2281,20 +2287,21 @@ if (arg1 != NULL && true && (!(arg1->type & Registry)))
 
   ((registry*) arg1->data)->up = reg;
 
-  current_parse_registry = (registry*) arg1->data;
+  reg->task->current_parse_registry = (registry*) arg1->data;
   
 }
 
 void
 op_go_out (arg a, registry* reg)
 {
-  if (current_parse_registry->up == NULL)
+  if (reg->task->current_parse_registry->up == NULL)
     {
-      do_error("Already at top level registry.");
+      do_error("Already at top level registry.",
+               reg->task);
       return;
     }
 
-  current_parse_registry = current_parse_registry->up;
+  reg->task->current_parse_registry = reg->task->current_parse_registry->up;
 }
 
 void
@@ -2302,8 +2309,8 @@ op_save (arg a, registry* reg)
 {
     
   
-  check_length(&a, 1+1, "save");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "save", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2314,13 +2321,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<save> requires at least 1 arguments.");
+        do_error("<save> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <save> should be of type String.");
+    do_error("Argument 1 of <save> should be of type String.", reg->task);
     return ;
   }
 
@@ -2340,8 +2347,8 @@ op_load (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "load");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "load", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2352,13 +2359,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<load> requires at least 1 arguments.");
+        do_error("<load> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <load> should be of type String.");
+    do_error("Argument 1 of <load> should be of type String.", reg->task);
     return ;
   }
 
@@ -2368,7 +2375,8 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   FILE* f = fopen(fname, "rb");
   if (f == NULL)
     {
-      do_error("File cannot be opened.");
+      do_error("File cannot be opened.",
+               reg->task);
       return;
     }
   if (a.length >= 3)
@@ -2382,13 +2390,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<load> requires at least 2 arguments.");
+        do_error("<load> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <load> should be of type Registry.");
+    do_error("Argument 2 of <load> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -2409,8 +2417,8 @@ op_to_string (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "to-string");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "to-string", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2421,13 +2429,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-string> requires at least 1 arguments.");
+        do_error("<to-string> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
   {
-    do_error("Argument 1 of <to-string> should be of type (Integer | Real | Register).");
+    do_error("Argument 1 of <to-string> should be of type (Integer | Real | Register).", reg->task);
     return ;
   }
 
@@ -2449,7 +2457,8 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
       int prec = 6;
       if (arg2 != NULL && arg2->type != Integer)
         {
-          do_error("The second argument to *to-string* should be an integer.");
+          do_error("The second argument to *to-string* should be an integer.",
+                   reg->task);
           return;
         }
       if (arg2 != NULL)
@@ -2457,7 +2466,8 @@ if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
           prec = *((int*) arg2->data);
           if (prec < 0)
             {
-              do_error("The second argument to *to-string* must be non-negative.");
+              do_error("The second argument to *to-string* must be non-negative.",
+                       reg->task);
               return;
             }
         }
@@ -2507,8 +2517,8 @@ op_to_number (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "to-number");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "to-number", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2519,13 +2529,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-number> requires at least 1 arguments.");
+        do_error("<to-number> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
   {
-    do_error("Argument 1 of <to-number> should be of type (String|Register).");
+    do_error("Argument 1 of <to-number> should be of type (String|Register).", reg->task);
     return ;
   }
 
@@ -2551,7 +2561,7 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
         }
       else
         {
-          do_error("String not a number.");
+          do_error("String not a number.", reg->task);
           return;
         }
     }
@@ -2567,7 +2577,7 @@ if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
 
       if (i >= (strlen(name)-1))
         {
-          do_error("Register does not end in a number.");
+          do_error("Register does not end in a number.", reg->task);
           return;
         }
 
@@ -2588,8 +2598,8 @@ op_to_real (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "to-real");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "to-real", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2600,13 +2610,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-real> requires at least 1 arguments.");
+        do_error("<to-real> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real|String))))
   {
-    do_error("Argument 1 of <to-real> should be of type (Integer|Real|String).");
+    do_error("Argument 1 of <to-real> should be of type (Integer|Real|String).", reg->task);
     return ;
   }
 
@@ -2632,8 +2642,8 @@ op_output_code (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "output-code");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "output-code", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2644,27 +2654,28 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<output-code> requires at least 1 arguments.");
+        do_error("<output-code> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <output-code> should be of type String.");
+    do_error("Argument 1 of <output-code> should be of type String.", reg->task);
     return ;
   }
 
 ;
 
-  if (source_code != NULL)
+  if (reg->task->source_code != NULL)
     {
       FILE* f = fopen((char*) arg1->data, "w");
-      fwrite(source_code, sizeof(char), strlen(source_code), f);
+      fwrite(reg->task->source_code, sizeof(char),
+             strlen(reg->task->source_code), f);
       fclose(f);
     }
   else
     {
-      do_error("No source saved yet.");
+      do_error("No source saved yet.", reg->task);
       return;
     }
 }
@@ -2672,10 +2683,10 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 void
 op_clear_code (arg a, registry* reg)
 {
-  if (source_code != NULL)
-    free(source_code);
+  if (reg->task->source_code != NULL)
+    free(reg->task->source_code);
 
-  source_code = NULL;
+  reg->task->source_code = NULL;
 }
 
 void
@@ -2683,8 +2694,8 @@ op_error (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "error");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "error", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2695,19 +2706,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<error> requires at least 1 arguments.");
+        do_error("<error> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <error> should be of type String.");
+    do_error("Argument 1 of <error> should be of type String.", reg->task);
     return ;
   }
 
 ;
 
-  do_error((char*) arg1->data);
+  do_error((char*) arg1->data, reg->task);
 
   if (a.length >= 3)
     {
@@ -2721,13 +2732,13 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<error> requires at least 2 arguments.");
+        do_error("<error> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <error> should be of type Integer.");
+    do_error("Argument 2 of <error> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -2735,7 +2746,7 @@ if (arg2 != NULL && true && (!(arg2->type & Integer)))
       
       if (arg2 != NULL)
         {
-          is_error(mpz_get_si(*((mpz_t*) arg2->data)));
+          is_error(mpz_get_si(*((mpz_t*) arg2->data)), reg->task);
         }
     }
 }
@@ -2745,8 +2756,8 @@ op_is_type (arg a, registry* reg, const data_type type)
 {
   
   
-  check_length(&a, 1+1, "is-Type");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "is-Type", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2757,13 +2768,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-Type> requires at least 1 arguments.");
+        do_error("<is-Type> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <is-Type> should be of type Integer.");
+    do_error("Argument 1 of <is-Type> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -2849,8 +2860,8 @@ op_open_file (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "open-file");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "open-file", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2861,13 +2872,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<open-file> requires at least 1 arguments.");
+        do_error("<open-file> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <open-file> should be of type String.");
+    do_error("Argument 1 of <open-file> should be of type String.", reg->task);
     return ;
   }
 
@@ -2885,13 +2896,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<open-file> requires at least 2 arguments.");
+        do_error("<open-file> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <open-file> should be of type String.");
+    do_error("Argument 2 of <open-file> should be of type String.", reg->task);
     return ;
   }
 
@@ -2906,7 +2917,7 @@ if (arg2 != NULL && true && (!(arg2->type & String)))
   
   if (f == NULL)
     {
-      do_error("File did not open.  Possibly, it does not exist.");
+      do_error("File did not open.  Possibly, it does not exist.", reg->task);
       return;
     }
 
@@ -2922,8 +2933,8 @@ op_read (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "read");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "read", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2934,13 +2945,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read> requires at least 1 arguments.");
+        do_error("<read> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read> should be of type File.");
+    do_error("Argument 1 of <read> should be of type File.", reg->task);
     return ;
   }
 
@@ -2967,8 +2978,8 @@ op_read_char (arg a, registry* reg)
 {
     
   
-  check_length(&a, 1+1, "read-char");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "read-char", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -2979,13 +2990,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read-char> requires at least 1 arguments.");
+        do_error("<read-char> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read-char> should be of type File.");
+    do_error("Argument 1 of <read-char> should be of type File.", reg->task);
     return ;
   }
 
@@ -3013,8 +3024,8 @@ op_close (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "close");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "close", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3025,13 +3036,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<close> requires at least 1 arguments.");
+        do_error("<close> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <close> should be of type Register.");
+    do_error("Argument 1 of <close> should be of type Register.", reg->task);
     return ;
   }
 
@@ -3041,13 +3052,13 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 
   if (f == NULL)
     {
-      do_error("Register does not exist.");
+      do_error("Register does not exist.", reg->task);
       return;
     }
 
   if (f->type != File)
     {
-      do_error("Register does not contain a file.");
+      do_error("Register does not contain a file.", reg->task);
       return;
     }
 
@@ -3065,8 +3076,8 @@ op_or (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "or");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "or", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   bool check = false;
   
@@ -3078,13 +3089,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<or> requires at least 1 arguments.");
+        do_error("<or> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <or> should be of type Boolean.");
+    do_error("Argument 1 of <or> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -3103,13 +3114,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<or> requires at least 2 arguments.");
+        do_error("<or> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <or> should be of type Boolean.");
+    do_error("Argument 2 of <or> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -3129,8 +3140,8 @@ op_and (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "and");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "and", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3141,13 +3152,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<and> requires at least 1 arguments.");
+        do_error("<and> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <and> should be of type Boolean.");
+    do_error("Argument 1 of <and> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -3169,13 +3180,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<and> requires at least 2 arguments.");
+        do_error("<and> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <and> should be of type Boolean.");
+    do_error("Argument 2 of <and> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -3195,8 +3206,8 @@ op_not (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "not");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "not", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3207,13 +3218,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<not> requires at least 1 arguments.");
+        do_error("<not> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <not> should be of type Boolean.");
+    do_error("Argument 1 of <not> should be of type Boolean.", reg->task);
     return ;
   }
 
@@ -3237,8 +3248,8 @@ op_read_line (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "read-line");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "read-line", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3249,13 +3260,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read-line> requires at least 1 arguments.");
+        do_error("<read-line> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read-line> should be of type File.");
+    do_error("Argument 1 of <read-line> should be of type File.", reg->task);
     return ;
   }
 
@@ -3293,8 +3304,8 @@ op_write_string (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "write-string");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "write-string", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3305,13 +3316,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<write-string> requires at least 1 arguments.");
+        do_error("<write-string> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <write-string> should be of type String.");
+    do_error("Argument 1 of <write-string> should be of type String.", reg->task);
     return ;
   }
 
@@ -3326,13 +3337,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<write-string> requires at least 2 arguments.");
+        do_error("<write-string> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & File)))
   {
-    do_error("Argument 2 of <write-string> should be of type File.");
+    do_error("Argument 2 of <write-string> should be of type File.", reg->task);
     return ;
   }
 
@@ -3357,13 +3368,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<write> requires at least 1 arguments.");
+        do_error("<write> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <write> should be of type Integer.");
+    do_error("Argument 1 of <write> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -3378,13 +3389,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<write> requires at least 2 arguments.");
+        do_error("<write> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & File)))
   {
-    do_error("Argument 2 of <write> should be of type File.");
+    do_error("Argument 2 of <write> should be of type File.", reg->task);
     return ;
   }
 
@@ -3393,7 +3404,7 @@ if (arg2 != NULL && true && (!(arg2->type & File)))
   int i = mpz_get_ui(*((mpz_t*) arg1->data));
   if ((i >= 255) || (i < 0))
     {
-      do_error("Value should be in range [0,255].");
+      do_error("Value should be in range [0,255].", reg->task);
       return;
     }
   else
@@ -3407,8 +3418,8 @@ void
 op_input (arg a, registry* reg)
 {
   
-  check_length(&a, 1+1, "write");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "write", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3420,13 +3431,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<input> requires at least 1 arguments.");
+        do_error("<input> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <input> should be of type Register.");
+    do_error("Argument 1 of <input> should be of type Register.", reg->task);
     return ;
   }
 
@@ -3446,8 +3457,8 @@ op_shell (arg a, registry* reg)
 
   
   
-  check_length(&a, 1+1, "shell");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "shell", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3458,13 +3469,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<shell> requires at least 1 arguments.");
+        do_error("<shell> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <shell> should be of type String.");
+    do_error("Argument 1 of <shell> should be of type String.", reg->task);
     return ;
   }
 
@@ -3474,7 +3485,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   
   if (f == NULL)
     {
-      do_error("Command failed.");
+      do_error("Command failed.", reg->task);
       return;
     }
 
@@ -3505,8 +3516,8 @@ op_link (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "link");
-if (is_error(-1)) return ;;
+  check_length(&a, 3+1, "link", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3517,13 +3528,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<link> requires at least 1 arguments.");
+        do_error("<link> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <link> should be of type String.");
+    do_error("Argument 1 of <link> should be of type String.", reg->task);
     return ;
   }
 
@@ -3537,13 +3548,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<link> requires at least 2 arguments.");
+        do_error("<link> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <link> should be of type String.");
+    do_error("Argument 2 of <link> should be of type String.", reg->task);
     return ;
   }
 
@@ -3557,13 +3568,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<link> requires at least 3 arguments.");
+        do_error("<link> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <link> should be of type String.");
+    do_error("Argument 3 of <link> should be of type String.", reg->task);
     return ;
   }
 
@@ -3574,14 +3585,14 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
   if (lib == NULL)
     {
       printf("%s\n", dlerror());
-      do_error("Library failed to open.");
+      do_error("Library failed to open.", reg->task);
       return;
     }
 
   operation new_op = dlsym(lib, (char*) arg2->data);
   if (new_op == NULL)
     {
-      do_error("Error loading function.");
+      do_error("Error loading function.", reg->task);
       dlclose(lib);
       return;
     }
@@ -3590,18 +3601,18 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
   assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, (char*) arg3->data, 1);
 
-  if (arbel_ll == NULL)
+  if (reg->task->arbel_ll == NULL)
     {
       
-      arbel_ll = malloc(sizeof(void*));
+      reg->task->arbel_ll = malloc(sizeof(void*));
     }
   else
     {
-      arbel_ll = realloc(arbel_ll,
-                         sizeof(void*)*(arbel_ll_cnt+1));
+      reg->task->arbel_ll = realloc(reg->task->arbel_ll,
+                                    sizeof(void*)*(reg->task->arbel_ll_cnt+1));
     }
-  arbel_ll[arbel_ll_cnt] = lib;
-  arbel_ll_cnt++;
+  reg->task->arbel_ll[reg->task->arbel_ll_cnt] = lib;
+  reg->task->arbel_ll_cnt++;
 
 }
 
@@ -3610,8 +3621,8 @@ op_match (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "match");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "match", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3622,13 +3633,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<match> requires at least 1 arguments.");
+        do_error("<match> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <match> should be of type String.");
+    do_error("Argument 1 of <match> should be of type String.", reg->task);
     return ;
   }
 
@@ -3642,13 +3653,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<match> requires at least 2 arguments.");
+        do_error("<match> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <match> should be of type String.");
+    do_error("Argument 2 of <match> should be of type String.", reg->task);
     return ;
   }
 
@@ -3667,13 +3678,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<match> requires at least 3 arguments.");
+        do_error("<match> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <match> should be of type Integer.");
+    do_error("Argument 3 of <match> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -3685,7 +3696,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   int error = regcomp(&regex, (char*) arg1->data, REG_EXTENDED);
   if (error)
     {
-      do_error("Error compiling regular expression.");
+      do_error("Error compiling regular expression.", reg->task);
       return;
     }
 
@@ -3694,7 +3705,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 
 
   data* d;
-  assign_registry(&d, NULL, true);
+  assign_registry(&d, NULL, true, reg->task);
   int i;
   int j;
   char* to_add;
@@ -3710,7 +3721,7 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
       error = regexec(&regex, cursor, n_groups, matches, 0);
       if (!error)
         {
-          assign_registry(&d_reg, NULL, true);
+          assign_registry(&d_reg, NULL, true, reg->task);
           offset = 0;
           for (i=0; i < n_groups; i++)
             {
@@ -3759,8 +3770,8 @@ op_replace (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "replace");
-if (is_error(-1)) return ;;
+  check_length(&a, 3+1, "replace", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3771,13 +3782,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<replace> requires at least 1 arguments.");
+        do_error("<replace> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <replace> should be of type String.");
+    do_error("Argument 1 of <replace> should be of type String.", reg->task);
     return ;
   }
 
@@ -3791,13 +3802,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<replace> requires at least 2 arguments.");
+        do_error("<replace> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <replace> should be of type String.");
+    do_error("Argument 2 of <replace> should be of type String.", reg->task);
     return ;
   }
 
@@ -3811,13 +3822,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<replace> requires at least 3 arguments.");
+        do_error("<replace> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <replace> should be of type String.");
+    do_error("Argument 3 of <replace> should be of type String.", reg->task);
     return ;
   }
 
@@ -3835,13 +3846,13 @@ if (true)
   {
     if (arg4 == NULL)
       {
-        do_error("<replace> requires at least 4 arguments.");
+        do_error("<replace> requires at least 4 arguments.", reg->task);
         return ;
       }
   }
 if (arg4 != NULL && true && (!(arg4->type & Integer)))
   {
-    do_error("Argument 4 of <replace> should be of type Integer.");
+    do_error("Argument 4 of <replace> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -3853,14 +3864,14 @@ if (arg4 != NULL && true && (!(arg4->type & Integer)))
   int error = regcomp(&regex, (char*) arg1->data, REG_EXTENDED);
   if (error)
     {
-      do_error("Error compiling regular expression.");
+      do_error("Error compiling regular expression.", reg->task);
       return;
     }
 
   regmatch_t* matches = malloc(sizeof(regmatch_t));
 
   data* d;
-  assign_registry(&d, NULL, true);
+  assign_registry(&d, NULL, true, reg->task);
 
 
   char* cursor = (char*) arg3->data;
@@ -3947,8 +3958,8 @@ op_log (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "log");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "log", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -3959,13 +3970,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<log> requires at least 1 arguments.");
+        do_error("<log> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <log> should be of type (Integer|Real).");
+    do_error("Argument 1 of <log> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -3990,8 +4001,8 @@ op_exp (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "exp");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "exp", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4002,13 +4013,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exp> requires at least 1 arguments.");
+        do_error("<exp> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <exp> should be of type (Integer|Real).");
+    do_error("Argument 1 of <exp> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -4032,8 +4043,8 @@ op_power (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "power");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "power", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4044,13 +4055,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<power> requires at least 1 arguments.");
+        do_error("<power> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <power> should be of type (Integer|Real).");
+    do_error("Argument 1 of <power> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -4064,13 +4075,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<power> requires at least 2 arguments.");
+        do_error("<power> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of <power> should be of type (Integer|Real).");
+    do_error("Argument 2 of <power> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -4107,8 +4118,8 @@ op_change_dir (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "change-dir");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "change-dir", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4119,13 +4130,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<change-dir> requires at least 1 arguments.");
+        do_error("<change-dir> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <change-dir> should be of type String.");
+    do_error("Argument 1 of <change-dir> should be of type String.", reg->task);
     return ;
   }
 
@@ -4134,7 +4145,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   int error = chdir((char*) arg1->data);
   if (error)
     {
-      do_error("Could not change directory.");
+      do_error("Could not change directory.", reg->task);
       return;
     }
 
@@ -4146,8 +4157,8 @@ op_import (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "import");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "import", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4158,13 +4169,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<import> requires at least 1 arguments.");
+        do_error("<import> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <import> should be of type Registry.");
+    do_error("Argument 1 of <import> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -4205,7 +4216,7 @@ op_current_dir (arg a, registry* reg)
   char* dir = get_current_dir_name();
   if (dir == NULL)
     {
-      do_error("Error getting current directory.");
+      do_error("Error getting current directory.", reg->task);
       return;
     }
   data* d;
@@ -4218,8 +4229,8 @@ op_substring (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "substring");
-if (is_error(-1)) return ;;
+  check_length(&a, 3+1, "substring", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4230,13 +4241,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<substring> requires at least 1 arguments.");
+        do_error("<substring> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <substring> should be of type String.");
+    do_error("Argument 1 of <substring> should be of type String.", reg->task);
     return ;
   }
 
@@ -4251,13 +4262,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<substring> requires at least 2 arguments.");
+        do_error("<substring> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <substring> should be of type Integer.");
+    do_error("Argument 2 of <substring> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -4271,13 +4282,13 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<substring> requires at least 3 arguments.");
+        do_error("<substring> requires at least 3 arguments.", reg->task);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <substring> should be of type Integer.");
+    do_error("Argument 3 of <substring> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -4296,20 +4307,20 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
 
   if ((start > length) || (start <= 0))
     {
-      do_error("Index out of range.");
+      do_error("Index out of range.", reg->task);
       return;
     }
 
 
   if ((end > length) || (end <= 0))
     {
-      do_error("Index out of range.");
+      do_error("Index out of range.", reg->task);
       return;
     }
 
   if (start > end)
     {
-      do_error("The starting position of the substring is greater than the ending position.");
+      do_error("The starting position of the substring is greater than the ending position.", reg->task);
       return;
     }
 
@@ -4348,12 +4359,13 @@ op_up (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "up");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "up", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   if (reg->up == NULL)
     {
-      do_error("Cannot use *up* instruction at top-level registry.");
+      do_error("Cannot use *up* instruction at top-level registry.",
+               reg->task);
       return;
     }
 
@@ -4382,8 +4394,8 @@ op_of (arg a, registry* reg)
 {
     
   
-  check_length(&a, 2+1, "of");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "of", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4394,13 +4406,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<of> requires at least 1 arguments.");
+        do_error("<of> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <of> should be of type String.");
+    do_error("Argument 1 of <of> should be of type String.", reg->task);
     return ;
   }
 
@@ -4415,13 +4427,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<of> requires at least 2 arguments.");
+        do_error("<of> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <of> should be of type Registry.");
+    do_error("Argument 2 of <of> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -4437,8 +4449,8 @@ op_is_of (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "is-of");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "is-of", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4449,13 +4461,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-of> requires at least 1 arguments.");
+        do_error("<is-of> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <is-of> should be of type String.");
+    do_error("Argument 1 of <is-of> should be of type String.", reg->task);
     return ;
   }
 
@@ -4470,13 +4482,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<is-of> requires at least 2 arguments.");
+        do_error("<is-of> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <is-of> should be of type Registry.");
+    do_error("Argument 2 of <is-of> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -4486,7 +4498,7 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
 
   if (d == NULL || d->type != String)
     {
-      do_error("*class* register not found.");
+      do_error("*class* register not found.", reg->task);
       return;
     }
 
@@ -4508,8 +4520,8 @@ op_dispatch (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "dispatch");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "dispatch", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4520,13 +4532,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<dispatch> requires at least 1 arguments.");
+        do_error("<dispatch> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <dispatch> should be of type String.");
+    do_error("Argument 1 of <dispatch> should be of type String.", reg->task);
     return ;
   }
 
@@ -4541,13 +4553,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<dispatch> requires at least 2 arguments.");
+        do_error("<dispatch> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <dispatch> should be of type String.");
+    do_error("Argument 2 of <dispatch> should be of type String.", reg->task);
     return ;
   }
 
@@ -4621,8 +4633,8 @@ op_code (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "code");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "code", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4633,13 +4645,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<code> requires at least 1 arguments.");
+        do_error("<code> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <code> should be of type Instruction.");
+    do_error("Argument 1 of <code> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -4657,8 +4669,8 @@ op_is_error (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "is-error");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "is-error", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4669,27 +4681,27 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-error> requires at least 1 arguments.");
+        do_error("<is-error> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <is-error> should be of type Instruction.");
+    do_error("Argument 1 of <is-error> should be of type Instruction.", reg->task);
     return ;
   }
 
 ;
 
-  int stop_thresh = arbel_stop_error_threshold;
-  arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->arbel_stop_error_threshold;
+  reg->task->arbel_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
-  assign_boolean(&d, is_error(-1) > 0 ? true : false);
-  arbel_stop_error_threshold = stop_thresh;
+  assign_boolean(&d, is_error(-1, reg->task) > 0 ? true : false);
+  reg->task->arbel_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
-  is_error(0);
+  is_error(0, reg->task);
 
 }
 
@@ -4699,8 +4711,8 @@ op_call (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "call");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "call", reg->task);
+if (is_error(-1, reg->task)) return ;;
   _op_call(a,reg,1);
 }
 
@@ -4709,8 +4721,8 @@ op_push_through (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "push-through");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "push-through", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4721,22 +4733,22 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<push-through> requires at least 1 arguments.");
+        do_error("<push-through> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <push-through> should be of type Instruction.");
+    do_error("Argument 1 of <push-through> should be of type Instruction.", reg->task);
     return ;
   }
 
 ;
 
-  int stop_thresh = arbel_stop_error_threshold;
-  arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->arbel_stop_error_threshold;
+  reg->task->arbel_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  arbel_stop_error_threshold = stop_thresh;
+  reg->task->arbel_stop_error_threshold = stop_thresh;
 }
 
 void
@@ -4752,8 +4764,8 @@ op_error_messages (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "error-messages");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "error-messages", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4764,22 +4776,22 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<error-messages> requires at least 1 arguments.");
+        do_error("<error-messages> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <error-messages> should be of type Boolean.");
+    do_error("Argument 1 of <error-messages> should be of type Boolean.", reg->task);
     return ;
   }
 
 ;
 
   if (*((bool*) arg1->data))
-    arbel_print_error_messages = true;
+    reg->task->arbel_print_error_messages = true;
   else
-    arbel_print_error_messages = false;
+    reg->task->arbel_print_error_messages = false;
 
 }
 
@@ -4788,8 +4800,8 @@ op_find (arg a, registry* reg)
 {
   
   
-  check_length(&a, 2+1, "find");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "find", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4800,13 +4812,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<find> requires at least 1 arguments.");
+        do_error("<find> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <find> should be of type Registry.");
+    do_error("Argument 1 of <find> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -4821,20 +4833,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<find> requires at least 2 arguments.");
+        do_error("<find> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Operation)))
   {
-    do_error("Argument 2 of <find> should be of type Operation.");
+    do_error("Argument 2 of <find> should be of type Operation.", reg->task);
     return ;
   }
 
 ;
 
   registry* r = (registry*) arg1->data;
-  registry* result = new_registry(reg, r->hash_size);
+  registry* result = new_registry(reg, r->hash_size, reg->task);
   arg a1;
   a1.length = 3;
   a1.free_data = malloc(sizeof(int)*a1.length);
@@ -4873,7 +4885,7 @@ if (arg2 != NULL && true && (!(arg2->type & Operation)))
     }
 
   data* d;
-  assign_registry(&d, result, false);
+  assign_registry(&d, result, false, reg->task);
   ret_ans(reg, d);
 }
 
@@ -4883,8 +4895,8 @@ op_please (arg a, registry* reg)
   
 
   
-  check_length(&a, 2+1, "please");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "please", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -4895,13 +4907,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<please> requires at least 1 arguments.");
+        do_error("<please> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <please> should be of type Instruction.");
+    do_error("Argument 1 of <please> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -4916,13 +4928,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<please> requires at least 2 arguments.");
+        do_error("<please> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <please> should be of type Instruction.");
+    do_error("Argument 2 of <please> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -4930,9 +4942,9 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
   execute_0(arg1, reg);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     {
-      is_error(0);
+      is_error(0, reg->task);
       execute_0(arg2, reg);
     }
 }
@@ -4944,8 +4956,8 @@ op_mod (arg a, registry* reg)
   
 
   
-  check_length(&a, 2+1, "mod");
-if (is_error(-1)) return ;;
+  check_length(&a, 2+1, "mod", reg->task);
+if (is_error(-1, reg->task)) return ;;
   
   
   
@@ -4956,13 +4968,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<mod> requires at least 1 arguments.");
+        do_error("<mod> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Real | Integer))))
   {
-    do_error("Argument 1 of <mod> should be of type (Real | Integer).");
+    do_error("Argument 1 of <mod> should be of type (Real | Integer).", reg->task);
     return ;
   }
 
@@ -4977,13 +4989,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<mod> requires at least 2 arguments.");
+        do_error("<mod> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
   {
-    do_error("Argument 2 of <mod> should be of type (Real | Integer).");
+    do_error("Argument 2 of <mod> should be of type (Real | Integer).", reg->task);
     return ;
   }
 
@@ -5032,8 +5044,8 @@ op_op (arg a, registry* reg)
   
 
   
-  check_length(&a, 1+1, "op");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "op", reg->task);
+if (is_error(-1, reg->task)) return ;;
     
   
   
@@ -5044,13 +5056,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<op> requires at least 1 arguments.");
+        do_error("<op> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <op> should be of type Instruction.");
+    do_error("Argument 1 of <op> should be of type Instruction.", reg->task);
     return ;
   }
 
@@ -5071,13 +5083,13 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<op> requires at least i arguments.");
+        do_error("<op> requires at least i arguments.", reg->task);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & Register)))
   {
-    do_error("Argument i of <op> should be of type Register.");
+    do_error("Argument i of <op> should be of type Register.", reg->task);
     return ;
   }
 
@@ -5097,8 +5109,8 @@ op_data (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "data");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "data", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5109,13 +5121,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<data> requires at least 1 arguments.");
+        do_error("<data> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <data> should be of type String.");
+    do_error("Argument 1 of <data> should be of type String.", reg->task);
     return ;
   }
 
@@ -5130,7 +5142,8 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   FILE* f = fopen(fname, "rb");
   if (f == NULL)
     {
-      do_error("File cannot be opened.");
+      do_error("File cannot be opened.",
+               reg->task);
       free(fname);
       return;
     }
@@ -5153,8 +5166,8 @@ op_incr (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "incr");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "incr", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5165,13 +5178,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<incr> requires at least 1 arguments.");
+        do_error("<incr> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <incr> should be of type (Integer|Real).");
+    do_error("Argument 1 of <incr> should be of type (Integer|Real).", reg->task);
     return ;
   }
 
@@ -5191,13 +5204,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<incr> requires at least 2 arguments.");
+        do_error("<incr> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <incr> should be of type Integer.");
+    do_error("Argument 2 of <incr> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -5225,13 +5238,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<incr> requires at least 2 arguments.");
+        do_error("<incr> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Real|Integer))))
   {
-    do_error("Argument 2 of <incr> should be of type (Real|Integer).");
+    do_error("Argument 2 of <incr> should be of type (Real|Integer).", reg->task);
     return ;
   }
 
@@ -5261,8 +5274,8 @@ op_decr (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "decr");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "decr", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5273,13 +5286,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<decr> requires at least 1 arguments.");
+        do_error("<decr> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <decr> should be of type Integer.");
+    do_error("Argument 1 of <decr> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -5296,13 +5309,13 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<decr> requires at least 2 arguments.");
+        do_error("<decr> requires at least 2 arguments.", reg->task);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <decr> should be of type Integer.");
+    do_error("Argument 2 of <decr> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -5326,8 +5339,8 @@ op_auto_rehash (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "auto-rehash");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "auto-rehash", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5338,19 +5351,19 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<auto-rehash> requires at least 1 arguments.");
+        do_error("<auto-rehash> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <auto-rehash> should be of type Boolean.");
+    do_error("Argument 1 of <auto-rehash> should be of type Boolean.", reg->task);
     return ;
   }
 
 ;
 
-  arbel_rehash = *((bool*) arg1->data);
+  reg->task->arbel_rehash = *((bool*) arg1->data);
 }
 
 void
@@ -5358,8 +5371,8 @@ op_rehash (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "rehash");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "rehash", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5370,13 +5383,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<rehash> requires at least 1 arguments.");
+        do_error("<rehash> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <rehash> should be of type Registry.");
+    do_error("Argument 1 of <rehash> should be of type Registry.", reg->task);
     return ;
   }
 
@@ -5391,8 +5404,8 @@ op_clock (arg a, registry* reg)
 {
   
   
-  check_length(&a, 0+1, "clock");
-if (is_error(-1)) return ;;
+  check_length(&a, 0+1, "clock", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   struct timespec spec;
   int time_since_epoch;
@@ -5417,8 +5430,8 @@ op_make_time (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "make-time");
-if (is_error(-1)) return ;;
+  check_length(&a, 1+1, "make-time", reg->task);
+if (is_error(-1, reg->task)) return ;;
 
   
   
@@ -5429,13 +5442,13 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<make-time> requires at least 1 arguments.");
+        do_error("<make-time> requires at least 1 arguments.", reg->task);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <make-time> should be of type Integer.");
+    do_error("Argument 1 of <make-time> should be of type Integer.", reg->task);
     return ;
   }
 
@@ -5448,7 +5461,7 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  registry* r = new_registry(reg, ARBEL_HASH_SIZE);
+  registry* r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -5487,7 +5500,7 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
   mpz_clear(z);
   set(r, d, "day-of-week", 0);
 
-  assign_registry(&d, r, false);
+  assign_registry(&d, r, false, reg->task);
   ret_ans(reg, d);
   
 }

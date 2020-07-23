@@ -114,7 +114,7 @@ add_statement_argument (element** head, element* e, statement* s)
    Works.  Believe. */
 
 element*
-parse_stmt (FILE* f, parser_state* state, int* complete)
+parse_stmt (FILE* f, parser_state* state, int* complete, arbel_task* task)
 {
   char c;
   data* d = NULL;
@@ -178,7 +178,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                                    sizeof(char)*strlen(str), "r");
                   sub_state = fresh_state(0);
                   sub_stmt = NULL;
-                  sub_complete = parse(f_sub, &sub_state, &sub_stmt);
+                  sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
                   fclose(f_sub);
                   free_state(&sub_state);
                   free(str);
@@ -207,7 +207,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
                     }
                   else
                     {
-                      do_error("Incomplete instruction in parenthesis.");
+                      do_error("Incomplete instruction in parenthesis.",
+                               task);
                       state->open_paren = '\0';
                       state->after_instr = 0;
                       if (sub_stmt != NULL)
@@ -324,7 +325,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               state->after_instr = 1;
               if (state->open_paren != '(')
                 {
-                  do_error("Parenthesis do not match.");
+                  do_error("Parenthesis do not match.", task);
                   break;
                 }
             }
@@ -354,7 +355,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               state->after_instr = 1;
               if (state->open_paren != '{')
                 {
-                  do_error("Parenthesis do not match.");
+                  do_error("Parenthesis do not match.", task);
                   break;
                 }
             }
@@ -384,7 +385,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               state->after_instr = 1;
               if (state->open_paren != '[')
                 {
-                  do_error("Parenthesis do not match.");
+                  do_error("Parenthesis do not match.", task);
                   break;
                 }
             }
@@ -413,7 +414,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
               state->after_instr = 1;
               if (state->open_paren != '<')
                 {
-                  do_error("Parenthesis do not match.");
+                  do_error("Parenthesis do not match.", task);
                   break;
                 }
             }
@@ -440,14 +441,14 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
           *complete = 0;
         }
 
-      if (is_error(-1))
+      if (is_error(-1, task))
         {
           break;
 
         }
     }
 
-  if (is_error(-1))
+  if (is_error(-1, task))
     {
       clear_state_buffer(state);
 
@@ -455,7 +456,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
       state->in_instr = 0;
       state->after_instr = 0;
       
-      is_error(0);
+      is_error(0, task);
       *complete = 1;
     }
 
@@ -464,7 +465,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete)
 }
 
 int
-parse (FILE* f, parser_state* state, statement** s)
+parse (FILE* f, parser_state* state, statement** s, arbel_task* task)
 {
   int complete = 0;
   statement* stmt = NULL;
@@ -472,13 +473,13 @@ parse (FILE* f, parser_state* state, statement** s)
   do
     {
       complete = 0;
-      state->cur_elem = parse_stmt(f, state, &complete);
+      state->cur_elem = parse_stmt(f, state, &complete, task);
 
       if (complete && !state->in_comment)
         {
           stmt = append_statement(stmt, state->cur_elem);
 
-	  if (state != NULL) free_state(state);
+          if (state != NULL) free_state(state);
           *state = fresh_state(state->print_out);
           if (*s == NULL)
             {
@@ -487,7 +488,7 @@ parse (FILE* f, parser_state* state, statement** s)
         }
       else if (state->in_comment)
         {
-	  if (state != NULL) free_state(state);
+          if (state != NULL) free_state(state);
           *state = fresh_state(state->print_out);
         }
       else if (state->cur_elem != NULL)
@@ -505,20 +506,20 @@ int
 interact (FILE* f, parser_state* state, registry* reg)
 {
   statement* s = NULL;
-  int complete = parse(f, state, &s);
+  int complete = parse(f, state, &s, reg->task);
   data* d;
   if (complete)
     {
       execute_code(s, reg);
-      if (!is_error(-1))
+      if (!is_error(-1, reg->task))
         {
           if (reg->up == NULL && state->print_out)
             {
               d = get(reg, arbel_hash_ans, 0);
-              if (d != NULL && d != last_ans)
+              if (d != NULL && d != (reg->task->last_ans))
                 {
                   print_data(d, (PRINT_ANSWER | PRINT_QUOTES | PRINT_NEWLINE));
-                  last_ans = d;
+                  reg->task->last_ans = d;
                 }
             }
 
@@ -532,9 +533,9 @@ interact (FILE* f, parser_state* state, registry* reg)
   if (s != NULL)
     free_statement(s);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task))
     {
-      is_error(0);
+      is_error(0, reg->task);
       complete = 1;
     }
 

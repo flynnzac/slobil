@@ -22,10 +22,6 @@
 #include "arbel.h"
 #include <unistd.h>
 #include <signal.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-static bool reading; 
 
 int
 dummy_event ()
@@ -44,32 +40,8 @@ interrupt_handler (int status)
     }
   else
     {
-      is_error(2);
+      is_error(2, task0);
     }
-}
-
-char*
-get_library_dir ()
-{
-  return NULL;
-}
-
-char*
-append_to_source_code (char* source_code, const char* new)
-{
-  if (source_code == NULL)
-    {
-      source_code = malloc(sizeof(char)*(strlen(new)+1));
-      strcpy(source_code, new);
-    }
-  else
-    {
-      source_code = realloc(source_code, sizeof(char)*
-                            (strlen(source_code)+strlen(new)+1));
-      strcat(source_code, new);
-    }
-
-  return source_code;
 }
 
 int
@@ -85,15 +57,7 @@ main (int argc, char** argv)
 #endif
   
   rl_event_hook = dummy_event;
-  source_code = NULL;
-  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE);
-  add_basic_ops(reg);
-  is_exit(0);
-  current_parse_registry = reg;
 
-  arbel_stop_error_threshold = 1;
-  arbel_print_error_messages = true;
-  
   arbel_hash_ans = hash_str("ans");
   arbel_hash_0 = hash_str("#0");
   arbel_hash_1 = hash_str("#1");
@@ -104,14 +68,10 @@ main (int argc, char** argv)
   arbel_hash_class = hash_str("--of");
   arbel_hash_t = hash_str("t");
   arbel_hash_underscore = hash_str("_");
-  arbel_error = 0;
+
   reading = true;
-  arbel_rehash = true;
 
-  arbel_ll = NULL;
-  arbel_ll_cnt = 0;
-
-  last_ans = NULL;
+  task0 = new_task();
 
   char* code = NULL;
   char* prompt = "... ";
@@ -142,7 +102,7 @@ main (int argc, char** argv)
           break;
         case 'l':
           f = fopen(optarg, "r");
-          complete = interact(f, &state, current_parse_registry);
+          complete = interact(f, &state, task0->current_parse_registry);
           fclose(f);
           break;
         case 's':
@@ -163,16 +123,16 @@ main (int argc, char** argv)
           if (port <= 0)
             {
               fprintf(stderr, "Invalid port: %s\n", optarg);
-              is_exit(2);
+              is_exit(2, task0);
             }
           break;
         case 'v':
           printf("%s\n", PACKAGE_STRING);
-          is_exit(1);
+          is_exit(1, task0);
           break;
         default:
           fprintf(stderr, "Option not recognized.\n");
-          is_exit(2);
+          is_exit(2, task0);
           break;
         }
     }
@@ -180,15 +140,18 @@ main (int argc, char** argv)
   if (script != NULL)
     {
       f = fopen(script, "r");
-      complete = interact(f, &state, current_parse_registry);
+      complete = interact(f, &state, task0->current_parse_registry);
       fclose(f);
       free(script);
     }
 
   state.print_out = echo;
-  #ifndef SO_REUSEPORT
+#ifndef SO_REUSEPORT
+  if (listen_socket)
+    printf("SO_REUSEPORT not defined, unable to listen on socket, starting prompt.\n");
+
   listen_socket = false;
-  #endif
+#endif
   if (!listen_socket)
     {
 
@@ -196,128 +159,24 @@ main (int argc, char** argv)
     }
 
 
-  int sock;
-  struct sockaddr_in addr;  
-  if (listen_socket)
-    {
-      #ifdef SO_REUSEPORT
-      sock = socket(AF_INET, SOCK_STREAM, 0);
-
-      int opt = 1;
-      addr.sin_family = AF_INET;
-      addr.sin_addr.s_addr = INADDR_ANY;
-      addr.sin_port = htons(port);
-      setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-                 &opt, sizeof(opt));
-      bind(sock, (struct sockaddr*) &addr,
-           sizeof(addr));
-      #endif
-    }
-
-  while (!is_exit(-1) && (!early_stop))
+  if (!early_stop)
     {
       if (listen_socket)
         {
-          /* remove gc garbage collection because later code assumes readline
-             string which is stdlib malloc'd */
-
-          reading = false;
-
-#ifdef GARBAGE
-#undef realloc
-#undef malloc
-#endif
-
-          listen(sock, 3);
-          size_t sz_addr = sizeof(addr);
-          int new_sock = accept(sock, (struct sockaddr*) &addr,
-                                &sz_addr);
-          code = malloc(sizeof(char)*1024);
-          size_t i = 0;
-          size_t cur_size = 1024;
-          char c[2];
-          read(new_sock,&c, 1);
-          
-          while (c[0] != EOF)
-            {
-              if (i >= cur_size)
-                {
-                  code = realloc(code, sizeof(char)*(cur_size+1024));
-                  cur_size += 1024;
-                }
-              code[i] = c[0];
-              i++;
-              read(new_sock,&c, 1);
-            }
-
-          if (i >= cur_size)
-            {
-              code = realloc(code, sizeof(char)*(cur_size+1));
-            }
-          code[i] = '\0';
-#ifdef GARBAGE
-#define realloc(x,y) GC_REALLOC(x,y)
-#define malloc(x) GC_MALLOC(x)
-#endif
-
+          run_task_socket(task0, port, save_code,
+                          &state, echo);
         }
       else
         {
-          if (complete)
-            {
-              code = readline(prompt);
-            }
-          else
-            {
-              code = readline("");
-            }
-          add_history(code);
+          run_task_readline(task0, save_code,
+                            &state, echo);
         }
-      
-      code = append_nl(code);
-      
-      if (save_code)
-        {
-          source_code = append_to_source_code(source_code, code);
-        }
-      
-      f = fmemopen(code, sizeof(char)*strlen(code), "r");
-      reading = false;
-      complete = interact(f, &state, current_parse_registry);
-      reading = true;
-      fclose(f);
-#ifdef GARBAGE
-#undef free
-#endif
-      free(code);
-#ifdef GARBAGE
-#define free(x)
-#endif
-      
-      
-      state.print_out = echo;
     }
 
+  int retcode = end_task(task0);
   free_state(&state);
-  free(source_code);
-  free_registry(reg);
 
-  if (arbel_ll != NULL)
-    {
-      int i;
-      for (i=0; i < arbel_ll_cnt; i++)
-        {
-          dlclose(arbel_ll[i]);
-        }
-
-      free(arbel_ll);
-    }
-
-  printf("is_exit: %d\n", is_exit(-1));
-  if (is_exit(-1)==0)
-    return 0;
-  else
-    return is_exit(-1)-1;
+  return retcode;
   
 }
 

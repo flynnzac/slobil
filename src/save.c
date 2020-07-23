@@ -187,9 +187,9 @@ read_registry (FILE* f, registry* reg)
           free(cache);          
           break;
         case Registry:
-          r = new_registry(reg, ARBEL_HASH_SIZE);
+          r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
           read_registry(f, r);
-          assign_registry(&d, r, false);
+          assign_registry(&d, r, false, reg->task);
           break;
         case Instruction:
           cache = malloc(sizeof(int));
@@ -206,7 +206,7 @@ read_registry (FILE* f, registry* reg)
           f_sub = fmemopen(cache, sizeof(char)*size, "r");
           state = fresh_state(0);
           stmt = NULL;
-          parse(f_sub, &state, &stmt);
+          parse(f_sub, &state, &stmt, reg->task);
           fclose(f_sub);
 
           d = new_data();
@@ -232,7 +232,7 @@ read_registry (FILE* f, registry* reg)
           f_sub = fmemopen(cache, sizeof(char)*size, "r");
           state = fresh_state(0);
           stmt = NULL;
-          parse(f_sub, &state, &stmt);
+          parse(f_sub, &state, &stmt, reg->task);
           fclose(f_sub);
 
           op_wrapper* op = malloc(sizeof(op_wrapper));

@@ -115,13 +115,13 @@ assign_op (data** d, const operation op,
 }
 
 void
-assign_registry (data** d, registry* r, bool copy)
+assign_registry (data** d, registry* r, bool copy, arbel_task* task)
 {
   *d = new_data();
   (*d)->type = Registry;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
+      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, task);
     }
   else if (copy)
     {
@@ -249,9 +249,9 @@ copy_registry(registry* r0)
 {
   registry* r1;
   if (update_hash_size(r0->elements, r0->hash_size))
-    r1 = new_registry(r0->up, 2*r0->hash_size);
+    r1 = new_registry(r0->up, 2*r0->hash_size, r0->task);
   else
-    r1 = new_registry(r0->up, r0->hash_size);
+    r1 = new_registry(r0->up, r0->hash_size, r0->task);
   
   data* d;
 
@@ -294,7 +294,8 @@ copy_data (data* d_in)
                     ((regstr*) d_in->data)->key);
       break;
     case Registry:
-      assign_registry(&d, (registry*) d_in->data, true);
+      assign_registry(&d, (registry*) d_in->data, true,
+                      ((registry*) d_in->data)->task);
       break;
     case Operation:
       assign_op(&d, ((op_wrapper*) d_in->data)->op,
