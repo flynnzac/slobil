@@ -225,6 +225,15 @@ struct instruction
 
 typedef struct instruction instruction;
 
+struct task
+{
+  arbel_task* task;
+  registry* state;
+  instruction* code;
+};
+
+typedef struct task task;
+
 enum print_settings
   {
    PRINT_PLAIN = 0,

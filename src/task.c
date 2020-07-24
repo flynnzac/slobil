@@ -171,6 +171,12 @@ run_task_readline (arbel_task* task, bool save_code,
       complete = input_code(task, code, save_code, echo, state);
     }
 }
+
+void
+run_task (data* task)
+{
+  
+}
       
 
 int
