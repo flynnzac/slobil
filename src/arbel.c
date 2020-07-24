@@ -313,7 +313,6 @@ main (int argc, char** argv)
       free(arbel_ll);
     }
 
-  printf("is_exit: %d\n", is_exit(-1));
   if (is_exit(-1)==0)
     return 0;
   else
