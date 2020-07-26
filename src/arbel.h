@@ -59,7 +59,8 @@ enum data_type
    File = 256,
    Boolean = 512,
    Nothing = 1024,
-   NotAType = 2048
+   NotAType = 2048,
+   Task = 4096
   };
 
 typedef enum data_type data_type;
@@ -112,8 +113,6 @@ struct arbel_task
   data* last_ans;
   int arbel_error;
   int do_exit;
-  struct arbel_task* right;
-  struct arbel_task* left;
 };
 
 typedef struct arbel_task arbel_task;
