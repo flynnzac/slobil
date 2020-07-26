@@ -165,12 +165,25 @@ assign_boolean (data** d, bool val)
 
 
 void
+assign_task (data** d, task* t)
+{
+  *d = new_data();
+  (*d)->type = Task;
+  (*d)->data = malloc(sizeof(task));
+  ((task*) (*d)->data)->inst = copy_instruction(task->inst);
+  ((task*) (*d)->data)->state = copy_registry(task->state);
+  ((task*) (*d)->data)->task = copy_arbel_task(task->task);
+
+}
+
+void
 assign_nothing (data** d)
 {
   *d = new_data();
   (*d)->type = Nothing;
   (*d)->data = NULL;
 }
+
 
 /* copy functions */
 
@@ -271,6 +284,38 @@ copy_registry(registry* r0)
     }
 
   return r1;
+}
+
+instruction*
+copy_instruction (instruction* inst0)
+{
+  instruction* inst1 = malloc(sizeof(instruction));
+  inst1->stmt = copy_statement(inst0->stmt);
+  inst1->code = malloc(sizeof(char)*(strlen(inst0->code)+1));
+  strcpy(inst1->code, inst0->code);
+  inst1->being_called = false;
+
+  return inst1;
+}
+
+arbel_task*
+copy_arbel_task (arbel_task* task0)
+{
+  arbel_task* task1 = malloc(sizeof(arbel_task));
+
+  task1->current_parse_registry =
+    copy_registry(task0->current_parse_registry);
+
+  task1->source_code = malloc(sizeof(char)*(strlen(task0->source_code)+1));
+  strcpy(task1->source_code, task0->source_code);
+
+  task1->arbel_ll = malloc(sizeof(void*)*task0->arbel_ll_cnt);
+  for (int i=0; i < task0->arbel_ll_cnt; i++)
+    {
+      task1->arbel_ll[i] = task0->arbel_ll[i];
+    }
+
+  task1->arbel_ll_cnt = task0->arbel_ll_cnt;
 }
 
 data*
