@@ -33,13 +33,20 @@ if (#requireans~)
   {
     if (arg#num~ == NULL)
       {
-        do_error("<#op~> requires at least #num~ arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<#op~> requires at least  arguments.")+digits(#num~)+1));
+        sprintf(err_msg, "<#op~> requires at least %d arguments.", #num~);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return #retfail~;
       }
   }
 if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
   {
-    do_error("Argument #num~ of <#op~> should be of type #type~.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <#op~> should be of type #type~.")+digits(#num~)+1));
+    sprintf(err_msg, "Argument %d of <#op~> should be of type #type~.", #num~);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return #retfail~;
   }
 '

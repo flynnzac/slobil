@@ -527,6 +527,9 @@ new_data();
 int
 arbel_location(int loc, int n);
 
+int
+digits (int n);
+
 /* task is an interpreter states */
 
 arbel_task*

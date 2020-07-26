@@ -170,4 +170,13 @@ arbel_location (int loc, const int n)
     }
 }
 
-
+int
+digits (int n)
+{
+  if (n==0)
+    return 1;
+  else
+    return floor(log10(n))+1;
+}
+    
+  

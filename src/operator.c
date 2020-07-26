@@ -50,13 +50,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<range> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<range> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<range> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <range> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <range> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <range> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -70,13 +77,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<range> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<range> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<range> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <range> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <range> should be of type Integer.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <range> should be of type Integer.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -96,13 +110,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<range> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<range> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<range> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <range> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <range> should be of type Integer.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <range> should be of type Integer.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -230,13 +251,20 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<arithmetic> requires at least i arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<arithmetic> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<arithmetic> requires at least %d arguments.", i);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & (Real|Integer))))
   {
-    do_error("Argument i of <arithmetic> should be of type (Real|Integer).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <arithmetic> should be of type (Real|Integer).")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <arithmetic> should be of type (Real|Integer).", i);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -368,13 +396,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<set> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<set> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<set> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <set> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <set> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <set> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -389,13 +424,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<set> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<set> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<set> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <set> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <set> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <set> should be of type Register.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -414,13 +456,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<set> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<set> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<set> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Registry)))
   {
-    do_error("Argument 3 of <set> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <set> should be of type Registry.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <set> should be of type Registry.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -457,13 +506,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<get> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<get> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<get> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <get> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <get> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <get> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -485,13 +541,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<get> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<get> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<get> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <get> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <get> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <get> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -526,13 +589,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<if> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<if> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<if> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <if> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <if> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <if> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -552,13 +622,20 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<if> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<if> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<if> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <if> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <if> should be of type Boolean.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <if> should be of type Boolean.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -585,13 +662,20 @@ if (false)
   {
     if (arg3 == NULL)
       {
-        do_error("<if> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<if> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<if> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && false && (!(arg3->type & Boolean)))
   {
-    do_error("Argument 3 of <if> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <if> should be of type Boolean.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <if> should be of type Boolean.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -636,13 +720,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<move> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<move> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<move> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <move> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <move> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <move> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -656,13 +747,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<move> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<move> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<move> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <move> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <move> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <move> should be of type Register.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -690,13 +788,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<delete> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<delete> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<delete> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <delete> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <delete> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <delete> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -722,13 +827,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<free> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<free> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<free> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <free> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <free> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <free> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -753,13 +865,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exit> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<exit> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<exit> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <exit> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <exit> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <exit> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -788,13 +907,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exist> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<exist> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<exist> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <exist> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <exist> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <exist> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -812,13 +938,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<exist> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<exist> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<exist> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <exist> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <exist> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <exist> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -858,13 +991,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<answer> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<answer> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<answer> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <answer> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <answer> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <answer> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -895,13 +1035,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<comparison> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<comparison> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<comparison> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return -2;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <comparison> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <comparison> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <comparison> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return -2;
   }
 
@@ -915,13 +1062,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<comparison> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<comparison> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<comparison> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return -2;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of <comparison> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <comparison> should be of type (Integer|Real).")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <comparison> should be of type (Integer|Real).", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return -2;
   }
 
@@ -1073,13 +1227,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<print> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<print> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<print> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <print> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <print> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <print> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1100,13 +1261,20 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<print> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<print> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<print> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <print> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <print> should be of type Boolean.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <print> should be of type Boolean.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1142,13 +1310,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-length> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-length> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<string-length> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-length> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-length> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <string-length> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1187,13 +1362,20 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<string-append> requires at least i arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-append> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<string-append> requires at least %d arguments.", i);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & String)))
   {
-    do_error("Argument i of <string-append> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-append> should be of type String.")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <string-append> should be of type String.", i);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1234,13 +1416,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<source> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<source> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<source> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <source> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <source> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <source> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1457,13 +1646,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<next> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<next> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<next> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <next> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <next> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <next> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1491,13 +1687,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<previous> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<previous> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<previous> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <previous> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <previous> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <previous> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1526,13 +1729,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<last> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<last> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<last> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <last> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <last> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <last> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1547,13 +1757,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<last> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<last> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<last> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <last> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <last> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <last> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1603,13 +1820,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<in> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<in> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<in> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <in> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <in> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <in> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1624,13 +1848,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<in> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<in> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<in> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <in> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <in> should be of type Instruction.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <in> should be of type Instruction.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1665,13 +1896,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<while> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<while> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<while> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <while> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <while> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <while> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1685,13 +1923,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<while> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<while> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<while> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <while> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <while> should be of type Instruction.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <while> should be of type Instruction.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1751,13 +1996,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<repeat> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<repeat> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<repeat> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <repeat> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <repeat> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <repeat> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1772,13 +2024,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<repeat> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<repeat> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<repeat> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <repeat> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <repeat> should be of type Instruction.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <repeat> should be of type Instruction.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1811,13 +2070,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-register> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<to-register> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<to-register> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (String|Integer))))
   {
-    do_error("Argument 1 of <to-register> should be of type (String|Integer).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <to-register> should be of type (String|Integer).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <to-register> should be of type (String|Integer).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1861,13 +2127,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<collapse> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<collapse> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<collapse> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Operation)))
   {
-    do_error("Argument 1 of <collapse> should be of type Operation.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <collapse> should be of type Operation.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <collapse> should be of type Operation.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1882,13 +2155,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<collapse> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<collapse> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<collapse> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <collapse> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <collapse> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <collapse> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -1906,13 +2186,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<collapse> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<collapse> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<collapse> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <collapse> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <collapse> should be of type String.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <collapse> should be of type String.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2015,13 +2302,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-eq> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-eq> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<string-eq> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-eq> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-eq> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <string-eq> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2036,13 +2330,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-eq> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-eq> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<string-eq> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-eq> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-eq> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <string-eq> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2080,13 +2381,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-lt> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-lt> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<string-lt> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-lt> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-lt> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <string-lt> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2101,13 +2409,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-lt> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-lt> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<string-lt> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-lt> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-lt> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <string-lt> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2145,13 +2460,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<string-gt> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-gt> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<string-gt> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <string-gt> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-gt> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <string-gt> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2166,13 +2488,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<string-gt> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<string-gt> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<string-gt> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <string-gt> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <string-gt> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <string-gt> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2211,13 +2540,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<register-eq> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<register-eq> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<register-eq> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <register-eq> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <register-eq> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <register-eq> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2232,13 +2568,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<register-eq> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<register-eq> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<register-eq> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    do_error("Argument 2 of <register-eq> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <register-eq> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <register-eq> should be of type Register.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2273,13 +2616,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<go-in> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<go-in> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<go-in> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <go-in> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <go-in> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <go-in> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2321,13 +2671,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<save> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<save> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<save> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <save> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <save> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <save> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2359,13 +2716,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<load> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<load> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<load> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <load> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <load> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <load> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2390,13 +2754,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<load> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<load> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<load> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <load> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <load> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <load> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2429,13 +2800,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-string> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<to-string> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<to-string> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer | Real | Register))))
   {
-    do_error("Argument 1 of <to-string> should be of type (Integer | Real | Register).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <to-string> should be of type (Integer | Real | Register).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <to-string> should be of type (Integer | Real | Register).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2529,13 +2907,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-number> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<to-number> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<to-number> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (String|Register))))
   {
-    do_error("Argument 1 of <to-number> should be of type (String|Register).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <to-number> should be of type (String|Register).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <to-number> should be of type (String|Register).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2610,13 +2995,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<to-real> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<to-real> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<to-real> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real|String))))
   {
-    do_error("Argument 1 of <to-real> should be of type (Integer|Real|String).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <to-real> should be of type (Integer|Real|String).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <to-real> should be of type (Integer|Real|String).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2654,13 +3046,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<output-code> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<output-code> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<output-code> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <output-code> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <output-code> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <output-code> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2706,13 +3105,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<error> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<error> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<error> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <error> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <error> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <error> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2732,13 +3138,20 @@ if (false)
   {
     if (arg2 == NULL)
       {
-        do_error("<error> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<error> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<error> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <error> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <error> should be of type Integer.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <error> should be of type Integer.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2768,13 +3181,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-Type> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<is-Type> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<is-Type> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && false && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <is-Type> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <is-Type> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <is-Type> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2872,13 +3292,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<open-file> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<open-file> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<open-file> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <open-file> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <open-file> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <open-file> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2896,13 +3323,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<open-file> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<open-file> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<open-file> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <open-file> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <open-file> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <open-file> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2945,13 +3379,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<read> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<read> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read> should be of type File.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <read> should be of type File.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <read> should be of type File.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -2990,13 +3431,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read-char> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<read-char> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<read-char> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read-char> should be of type File.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <read-char> should be of type File.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <read-char> should be of type File.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3036,13 +3484,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<close> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<close> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<close> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <close> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <close> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <close> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3089,13 +3544,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<or> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<or> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<or> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <or> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <or> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <or> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3114,13 +3576,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<or> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<or> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<or> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <or> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <or> should be of type Boolean.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <or> should be of type Boolean.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3152,13 +3621,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<and> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<and> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<and> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <and> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <and> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <and> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3180,13 +3656,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<and> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<and> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<and> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Boolean)))
   {
-    do_error("Argument 2 of <and> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <and> should be of type Boolean.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <and> should be of type Boolean.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3218,13 +3701,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<not> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<not> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<not> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <not> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <not> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <not> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3260,13 +3750,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<read-line> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<read-line> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<read-line> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & File)))
   {
-    do_error("Argument 1 of <read-line> should be of type File.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <read-line> should be of type File.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <read-line> should be of type File.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3316,13 +3813,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<write-string> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<write-string> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<write-string> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <write-string> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <write-string> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <write-string> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3337,13 +3841,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<write-string> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<write-string> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<write-string> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & File)))
   {
-    do_error("Argument 2 of <write-string> should be of type File.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <write-string> should be of type File.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <write-string> should be of type File.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3368,13 +3879,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<write> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<write> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<write> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <write> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <write> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <write> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3389,13 +3907,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<write> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<write> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<write> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & File)))
   {
-    do_error("Argument 2 of <write> should be of type File.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <write> should be of type File.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <write> should be of type File.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3431,13 +3956,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<input> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<input> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<input> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Register)))
   {
-    do_error("Argument 1 of <input> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <input> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <input> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3469,13 +4001,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<shell> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<shell> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<shell> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <shell> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <shell> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <shell> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3528,13 +4067,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<link> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<link> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<link> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <link> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <link> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <link> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3548,13 +4094,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<link> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<link> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<link> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <link> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <link> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <link> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3568,13 +4121,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<link> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<link> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<link> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <link> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <link> should be of type String.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <link> should be of type String.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3633,13 +4193,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<match> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<match> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<match> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <match> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <match> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <match> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3653,13 +4220,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<match> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<match> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<match> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <match> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <match> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <match> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3678,13 +4252,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<match> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<match> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<match> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <match> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <match> should be of type Integer.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <match> should be of type Integer.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3782,13 +4363,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<replace> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<replace> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<replace> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <replace> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <replace> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <replace> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3802,13 +4390,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<replace> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<replace> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<replace> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <replace> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <replace> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <replace> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3822,13 +4417,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<replace> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<replace> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<replace> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & String)))
   {
-    do_error("Argument 3 of <replace> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <replace> should be of type String.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <replace> should be of type String.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3846,13 +4448,20 @@ if (true)
   {
     if (arg4 == NULL)
       {
-        do_error("<replace> requires at least 4 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<replace> requires at least  arguments.")+digits(4)+1));
+        sprintf(err_msg, "<replace> requires at least %d arguments.", 4);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg4 != NULL && true && (!(arg4->type & Integer)))
   {
-    do_error("Argument 4 of <replace> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <replace> should be of type Integer.")+digits(4)+1));
+    sprintf(err_msg, "Argument %d of <replace> should be of type Integer.", 4);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -3970,13 +4579,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<log> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<log> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<log> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <log> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <log> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <log> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4013,13 +4629,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<exp> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<exp> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<exp> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <exp> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <exp> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <exp> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4055,13 +4678,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<power> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<power> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<power> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <power> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <power> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <power> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4075,13 +4705,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<power> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<power> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<power> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Integer|Real))))
   {
-    do_error("Argument 2 of <power> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <power> should be of type (Integer|Real).")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <power> should be of type (Integer|Real).", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4130,13 +4767,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<change-dir> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<change-dir> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<change-dir> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <change-dir> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <change-dir> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <change-dir> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4169,13 +4813,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<import> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<import> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<import> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <import> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <import> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <import> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4241,13 +4892,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<substring> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<substring> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<substring> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <substring> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <substring> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <substring> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4262,13 +4920,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<substring> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<substring> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<substring> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <substring> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <substring> should be of type Integer.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <substring> should be of type Integer.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4282,13 +4947,20 @@ if (true)
   {
     if (arg3 == NULL)
       {
-        do_error("<substring> requires at least 3 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<substring> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<substring> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg3 != NULL && true && (!(arg3->type & Integer)))
   {
-    do_error("Argument 3 of <substring> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <substring> should be of type Integer.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <substring> should be of type Integer.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4406,13 +5078,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<of> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<of> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<of> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <of> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <of> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <of> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4427,13 +5106,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<of> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<of> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<of> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <of> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <of> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <of> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4461,13 +5147,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-of> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<is-of> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<is-of> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <is-of> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <is-of> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <is-of> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4482,13 +5175,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<is-of> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<is-of> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<is-of> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Registry)))
   {
-    do_error("Argument 2 of <is-of> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <is-of> should be of type Registry.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <is-of> should be of type Registry.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4532,13 +5232,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<dispatch> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<dispatch> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<dispatch> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <dispatch> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <dispatch> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <dispatch> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4553,13 +5260,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<dispatch> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<dispatch> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<dispatch> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && false && (!(arg2->type & String)))
   {
-    do_error("Argument 2 of <dispatch> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <dispatch> should be of type String.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <dispatch> should be of type String.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4645,13 +5359,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<code> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<code> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<code> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <code> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <code> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <code> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4681,13 +5402,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<is-error> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<is-error> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<is-error> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <is-error> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <is-error> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <is-error> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4733,13 +5461,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<push-through> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<push-through> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<push-through> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <push-through> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <push-through> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <push-through> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4776,13 +5511,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<error-messages> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<error-messages> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<error-messages> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <error-messages> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <error-messages> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <error-messages> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4812,13 +5554,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<find> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<find> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<find> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <find> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <find> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <find> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4833,13 +5582,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<find> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<find> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<find> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Operation)))
   {
-    do_error("Argument 2 of <find> should be of type Operation.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <find> should be of type Operation.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <find> should be of type Operation.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4907,13 +5663,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<please> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<please> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<please> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <please> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <please> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <please> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4928,13 +5691,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<please> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<please> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<please> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Instruction)))
   {
-    do_error("Argument 2 of <please> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <please> should be of type Instruction.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <please> should be of type Instruction.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4968,13 +5738,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<mod> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<mod> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<mod> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Real | Integer))))
   {
-    do_error("Argument 1 of <mod> should be of type (Real | Integer).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <mod> should be of type (Real | Integer).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <mod> should be of type (Real | Integer).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -4989,13 +5766,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<mod> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<mod> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<mod> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Real | Integer))))
   {
-    do_error("Argument 2 of <mod> should be of type (Real | Integer).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <mod> should be of type (Real | Integer).")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <mod> should be of type (Real | Integer).", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5056,13 +5840,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<op> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<op> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<op> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    do_error("Argument 1 of <op> should be of type Instruction.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <op> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <op> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5083,13 +5874,20 @@ if (true)
   {
     if (argi == NULL)
       {
-        do_error("<op> requires at least i arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<op> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<op> requires at least %d arguments.", i);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (argi != NULL && true && (!(argi->type & Register)))
   {
-    do_error("Argument i of <op> should be of type Register.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <op> should be of type Register.")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <op> should be of type Register.", i);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5121,13 +5919,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<data> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<data> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<data> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    do_error("Argument 1 of <data> should be of type String.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <data> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <data> should be of type String.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5178,13 +5983,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<incr> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<incr> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<incr> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & (Integer|Real))))
   {
-    do_error("Argument 1 of <incr> should be of type (Integer|Real).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <incr> should be of type (Integer|Real).")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <incr> should be of type (Integer|Real).", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5204,13 +6016,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<incr> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<incr> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<incr> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <incr> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <incr> should be of type Integer.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <incr> should be of type Integer.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5238,13 +6057,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<incr> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<incr> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<incr> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & (Real|Integer))))
   {
-    do_error("Argument 2 of <incr> should be of type (Real|Integer).", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <incr> should be of type (Real|Integer).")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <incr> should be of type (Real|Integer).", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5286,13 +6112,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<decr> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<decr> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<decr> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <decr> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <decr> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <decr> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5309,13 +6142,20 @@ if (true)
   {
     if (arg2 == NULL)
       {
-        do_error("<decr> requires at least 2 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<decr> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<decr> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg2 != NULL && true && (!(arg2->type & Integer)))
   {
-    do_error("Argument 2 of <decr> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <decr> should be of type Integer.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <decr> should be of type Integer.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5351,13 +6191,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<auto-rehash> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<auto-rehash> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<auto-rehash> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Boolean)))
   {
-    do_error("Argument 1 of <auto-rehash> should be of type Boolean.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <auto-rehash> should be of type Boolean.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <auto-rehash> should be of type Boolean.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5383,13 +6230,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<rehash> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<rehash> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<rehash> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Registry)))
   {
-    do_error("Argument 1 of <rehash> should be of type Registry.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <rehash> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <rehash> should be of type Registry.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
@@ -5442,13 +6296,20 @@ if (true)
   {
     if (arg1 == NULL)
       {
-        do_error("<make-time> requires at least 1 arguments.", reg->task);
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<make-time> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<make-time> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
         return ;
       }
   }
 if (arg1 != NULL && true && (!(arg1->type & Integer)))
   {
-    do_error("Argument 1 of <make-time> should be of type Integer.", reg->task);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <make-time> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <make-time> should be of type Integer.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
     return ;
   }
 
