@@ -6367,6 +6367,180 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
 }
 
 void
+op_task (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 3+1, "task", reg->task);
+if (is_error(-1, reg->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<task> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<task> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <task> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <task> should be of type Register.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<task> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<task> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Instruction)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <task> should be of type Instruction.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <task> should be of type Instruction.", 2);
+    do_error(err_msg, reg->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg3 = resolve(a.arg_array[3], reg);
+
+if (true)
+  {
+    if (arg3 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<task> requires at least  arguments.")+digits(3)+1));
+        sprintf(err_msg, "<task> requires at least %d arguments.", 3);
+        do_error(err_msg, reg->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg3 != NULL && true && (!(arg3->type & Registry)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <task> should be of type Registry.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <task> should be of type Registry.", 3);
+    do_error(err_msg, reg->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  task* t = malloc(sizeof(task));
+  t->task = new_task();
+  t->state = copy_registry((registry*) arg3->data);
+  t->state->up = t->task->current_parse_registry;
+  t->task->current_parse_registry = t->state;
+  t->code = copy_instruction((instruction*) arg2->data);
+  t->pid = -1;
+
+  data* d = new_data();
+  d->type = Task;
+  d->data = t;
+
+  set(reg, d, ((regstr*) arg1->data)->name, 1);
+  
+}
+
+void
+op_run_task (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "run-task", reg->task);
+if (is_error(-1, reg->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<run-task> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<run-task> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Task)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <run-task> should be of type Task.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <run-task> should be of type Task.", 1);
+    do_error(err_msg, reg->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  if (((task*) arg1->data)->pid > 0)
+    {
+      do_error("Task already running.", reg->task);
+      return;
+    }
+
+  int pid = fork();
+
+  if (pid < 0)
+    {
+      do_error("Process failed to fork().", reg->task);
+    }
+  else if (pid > 0)
+    {
+      ((task*) arg1->data)->pid = pid;
+    }
+  else if (pid == 0) 
+    {
+      ((task*) arg1->data)->pid = getpid();
+      run_task(arg1);
+      ((task*) arg1->data)->pid = -1;
+      exit(0);
+    }
+  
+    
+}
+  
+  
+  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -6676,6 +6850,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_make_time, NULL, NULL, 0);
   set(reg,d,"make-time",1);
+
+  assign_op(&d, op_task, NULL, NULL, 0);
+  set(reg,d,"task",1);
+
+  assign_op(&d, op_run_task, NULL, NULL, 0);
+  set(reg,d,"run-task",1);
   
 
 }

@@ -170,9 +170,10 @@ assign_task (data** d, task* t)
   *d = new_data();
   (*d)->type = Task;
   (*d)->data = malloc(sizeof(task));
-  ((task*) (*d)->data)->inst = copy_instruction(task->inst);
-  ((task*) (*d)->data)->state = copy_registry(task->state);
-  ((task*) (*d)->data)->task = copy_arbel_task(task->task);
+  ((task*) (*d)->data)->code = copy_instruction(t->code);
+  ((task*) (*d)->data)->state = copy_registry(t->state);
+  ((task*) (*d)->data)->task = copy_arbel_task(t->task);
+  ((task*) (*d)->data)->pid = t->pid;
 
 }
 

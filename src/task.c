@@ -173,11 +173,11 @@ run_task_readline (arbel_task* task, bool save_code,
 }
 
 void
-run_task (data* task)
+run_task (data* t)
 {
-  instruction* inst = (((task*) task->data)->code);
+  instruction* inst = (((task*) t->data)->code);
   inst->being_called = true;
-  execute_code(inst->stmt, ((task*) task->data)->state);
+  execute_code(inst->stmt, ((task*) t->data)->state);
   inst->being_called = false;
 }
 

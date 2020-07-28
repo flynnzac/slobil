@@ -229,6 +229,7 @@ struct task
   arbel_task* task;
   registry* state;
   instruction* code;
+  int pid;
 };
 
 typedef struct task task;
@@ -529,6 +530,13 @@ arbel_location(int loc, int n);
 int
 digits (int n);
 
+instruction*
+copy_instruction (instruction* inst0);
+
+arbel_task*
+copy_arbel_task (arbel_task* task0);
+
+
 /* task is an interpreter states */
 
 arbel_task*
@@ -549,6 +557,9 @@ run_task_socket (arbel_task* task,
                  bool save_code,
                  struct parser_state* state,
                  int echo);
+
+void
+run_task (data* t);
 
 /* global variables */
 

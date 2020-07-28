@@ -3359,6 +3359,82 @@ op_make_time (arg a, registry* reg)
 }
 
 void
+op_task (arg a, registry* reg)
+{
+  #op=task@
+  #length=3@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Instruction@
+  ##GETARG~$;
+
+  #num=3@
+  #type=Registry@
+  ##GETARG~$;
+
+  task* t = malloc(sizeof(task));
+  t->task = new_task();
+  t->state = copy_registry((registry*) arg3->data);
+  t->state->up = t->task->current_parse_registry;
+  t->task->current_parse_registry = t->state;
+  t->code = copy_instruction((instruction*) arg2->data);
+  t->pid = -1;
+
+  data* d = new_data();
+  d->type = Task;
+  d->data = t;
+
+  set(reg, d, ((regstr*) arg1->data)->name, 1);
+  
+}
+
+void
+op_run_task (arg a, registry* reg)
+{
+  #op=run-task@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Task@
+  ##GETARG~$;
+
+  if (((task*) arg1->data)->pid > 0)
+    {
+      do_error("Task already running.", reg->task);
+      return;
+    }
+
+  int pid = fork();
+
+  if (pid < 0)
+    {
+      do_error("Process failed to fork().", reg->task);
+    }
+  else if (pid > 0)
+    {
+      ((task*) arg1->data)->pid = pid;
+    }
+  else if (pid == 0) 
+    {
+      ((task*) arg1->data)->pid = getpid();
+      run_task(arg1);
+      ((task*) arg1->data)->pid = -1;
+      exit(0);
+    }
+  
+    
+}
+  
+  
+  
+
+void
 add_basic_ops (registry* reg)
 {
   data* d;
@@ -3668,6 +3744,12 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_make_time, NULL, NULL, 0);
   set(reg,d,"make-time",1);
+
+  assign_op(&d, op_task, NULL, NULL, 0);
+  set(reg,d,"task",1);
+
+  assign_op(&d, op_run_task, NULL, NULL, 0);
+  set(reg,d,"run-task",1);
   
 
 }

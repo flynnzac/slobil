@@ -78,6 +78,19 @@ print_data (data* d, print_settings settings)
     case Nothing:
       printf("Nothing.");
       break;
+    case Task:
+      printf("A Task with Body:\n");
+      printf("( %s )", ((task*) d->data)->code->code);
+      printf("\n");
+      if (((task*) d->data)->pid > 0)
+        {
+          printf("Task Running.");
+        }
+      else
+        {
+          printf("Task Not Running.");
+        }
+      break;
     default:
       break;
     }
