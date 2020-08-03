@@ -116,7 +116,7 @@ execute_statement (statement* s, registry* reg)
           if (e->data == NULL)
             {
               do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .",
-                       reg->task);
+                       reg->task->task);
             }
           else
             {
@@ -132,7 +132,7 @@ execute_statement (statement* s, registry* reg)
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans register.",
-                           reg->task);
+                           reg->task->task);
                 }
               else 
                 {
@@ -148,7 +148,7 @@ execute_statement (statement* s, registry* reg)
             }
         }
 
-      if (!is_error(-1, reg->task))
+      if (!is_error(-1, reg->task->task))
         {
           if (d != NULL && d->type == Instruction &&
               ((instruction*) d->data)->being_called && (arg_n == 0))
@@ -175,16 +175,16 @@ execute_statement (statement* s, registry* reg)
 
     }
 
-  if (!is_error(-1, reg->task))
+  if (!is_error(-1, reg->task->task))
     compute(s->arg.arg_array[0], reg, s->arg);
   
   free_arg_array_data(&s->arg, arg_n);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     {
       data* err;
       mpz_t err_z;
-      mpz_init_set_si(err_z, is_error(-1, reg->task));
+      mpz_init_set_si(err_z, is_error(-1, reg->task->task));
       assign_int(&err, err_z);
       set(reg, err, "error-code", 0);
     }
@@ -208,9 +208,9 @@ execute_code (statement* s, registry* reg)
   while (stmt != NULL)
     {
       execute_statement(stmt, reg);
-      error = is_error(-1, reg->task) > error ? is_error(-1, reg->task) : error;
-      if (reg->task->arbel_stop_error_threshold > 0 &&
-          (error >= reg->task->arbel_stop_error_threshold))
+      error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
+      if (reg->task->task->arbel_stop_error_threshold > 0 &&
+          (error >= reg->task->task->arbel_stop_error_threshold))
 	{
 	  printf("-> ");
 	  print_statement(stmt);
@@ -218,11 +218,11 @@ execute_code (statement* s, registry* reg)
 	  break;
 	}
       else
-        is_error(0, reg->task);
+        is_error(0, reg->task->task);
 
       stmt = stmt->right;
     }
 
-  is_error(error, reg->task);
+  is_error(error, reg->task->task);
 
 }

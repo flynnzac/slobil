@@ -1,0 +1,11 @@
+' Demonstrate tasks
+
+task /t1
+     (
+       print [ accept /hello . ] .
+     )
+     [ registry . ] .
+
+run-task t1 .
+
+queue t1 /hello "Hi!" .

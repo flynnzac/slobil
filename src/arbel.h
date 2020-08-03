@@ -99,7 +99,7 @@ struct content
 typedef struct content content;
 
 struct registry;
-struct arbel_task
+struct task_vars
 {
   struct registry* current_parse_registry;
   char* source_code;
@@ -115,15 +115,17 @@ struct arbel_task
   int do_exit;
 };
 
-typedef struct arbel_task arbel_task;
+typedef struct task_vars task_vars;
 
+struct task;
 struct registry
 {
   content** objects;
   size_t hash_size;
   size_t elements;
-  arbel_task* task;
+  struct task* task;
   struct registry* up;
+  bool being_modified;
 };
 
 typedef struct registry registry;
@@ -226,9 +228,12 @@ typedef struct instruction instruction;
 
 struct task
 {
-  arbel_task* task;
+  task_vars* task;
   registry* state;
   instruction* code;
+
+  registry* queued_instruction;
+  bool block_queue;
   int pid;
 };
 
@@ -265,7 +270,7 @@ assign_op (data** d, const operation op,
            int n_arg);
 
 void
-assign_registry (data** d, registry* r, bool copy, arbel_task* task);
+assign_registry (data** d, registry* r, bool copy, task* task);
 
 void
 assign_regstr (data** d, const char* name, unsigned long key);
@@ -319,7 +324,7 @@ data*
 get_data_in_registry (registry* reg, const regstr name);
 
 void
-do_error (const char* msg, arbel_task* t);
+do_error (const char* msg, task_vars* t);
 
 void
 null_ans (registry* reg);
@@ -352,16 +357,16 @@ void
 shift_arguments (registry* reg);
 
 int
-is_error (int e, arbel_task* t);
+is_error (int e, task_vars* t);
 
 int
-is_exit (int e, arbel_task* t);
+is_exit (int e, task_vars* t);
 
 bool
 is_init_reg (content* r);
 
 registry*
-new_registry (registry* parent, size_t hash_size, arbel_task* t);
+new_registry (registry* parent, size_t hash_size, task* t);
 
 void
 ret (registry* reg, data* d, const char* name);
@@ -429,13 +434,13 @@ element*
 append_statement_element (element* current, statement* s);
 
 int
-parse (FILE* f, parser_state* state, statement** s, arbel_task* task);
+parse (FILE* f, parser_state* state, statement** s, task_vars* task);
 
 void
 execute_code (statement* s, registry* reg);
 
 element*
-parse_stmt (FILE* f, parser_state* state, int* complete, arbel_task* task);
+parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task);
 
 int
 interact (FILE* f, parser_state* state, registry* reg);
@@ -507,7 +512,7 @@ size_t
 new_hash_size (size_t elements);
 
 void
-check_length (arg* a, int length, char* op, arbel_task* t);
+check_length (arg* a, int length, char* op, task_vars* t);
 
 int
 update_hash_size (size_t elements, size_t hash_size);
@@ -533,26 +538,26 @@ digits (int n);
 instruction*
 copy_instruction (instruction* inst0);
 
-arbel_task*
-copy_arbel_task (arbel_task* task0);
+task_vars*
+copy_task_vars (task_vars* task0);
 
 
 /* task is an interpreter states */
 
-arbel_task*
-new_task ();
+task_vars*
+new_task (task* t0);
 
 int
-end_task (arbel_task* t);
+end_task (task_vars* t);
 
 void
-run_task_readline (arbel_task* task,
+run_task_readline (task_vars* task,
                    bool save_code,
                    struct parser_state* state,
                    int echo);
 
 void
-run_task_socket (arbel_task* task,
+run_task_socket (task_vars* task,
                  int port,
                  bool save_code,
                  struct parser_state* state,
@@ -563,7 +568,7 @@ run_task (data* t);
 
 /* global variables */
 
-arbel_task* task0;
+task* task0;
 bool reading;
 
 /* global constants */

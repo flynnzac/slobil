@@ -114,7 +114,7 @@ add_statement_argument (element** head, element* e, statement* s)
    Works.  Believe. */
 
 element*
-parse_stmt (FILE* f, parser_state* state, int* complete, arbel_task* task)
+parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
 {
   char c;
   data* d = NULL;
@@ -465,7 +465,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, arbel_task* task)
 }
 
 int
-parse (FILE* f, parser_state* state, statement** s, arbel_task* task)
+parse (FILE* f, parser_state* state, statement** s, task_vars* task)
 {
   int complete = 0;
   statement* stmt = NULL;
@@ -506,20 +506,20 @@ int
 interact (FILE* f, parser_state* state, registry* reg)
 {
   statement* s = NULL;
-  int complete = parse(f, state, &s, reg->task);
+  int complete = parse(f, state, &s, reg->task->task);
   data* d;
   if (complete)
     {
       execute_code(s, reg);
-      if (!is_error(-1, reg->task))
+      if (!is_error(-1, reg->task->task))
         {
           if (reg->up == NULL && state->print_out)
             {
               d = get(reg, arbel_hash_ans, 0);
-              if (d != NULL && d != (reg->task->last_ans))
+              if (d != NULL && d != (reg->task->task->last_ans))
                 {
                   print_data(d, (PRINT_ANSWER | PRINT_QUOTES | PRINT_NEWLINE));
-                  reg->task->last_ans = d;
+                  reg->task->task->last_ans = d;
                 }
             }
 
@@ -533,9 +533,9 @@ interact (FILE* f, parser_state* state, registry* reg)
   if (s != NULL)
     free_statement(s);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     {
-      is_error(0, reg->task);
+      is_error(0, reg->task->task);
       complete = 1;
     }
 

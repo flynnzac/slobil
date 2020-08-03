@@ -23,8 +23,8 @@
 
 `#include <errno.h>'
 
-#CHECK_ARGS=`check_length(&#a~, #length~+1, "#op~", reg->task);
-if (is_error(-1, reg->task)) return #retcheck~;'@
+#CHECK_ARGS=`check_length(&#a~, #length~+1, "#op~", reg->task->task);
+if (is_error(-1, reg->task->task)) return #retcheck~;'@
 
 #GETARG=`
 data* arg#num~ = resolve(a.arg_array[#num~], reg);
@@ -36,7 +36,7 @@ if (#requireans~)
         char* err_msg;
         err_msg = malloc(sizeof(char)*(strlen("<#op~> requires at least  arguments.")+digits(#num~)+1));
         sprintf(err_msg, "<#op~> requires at least %d arguments.", #num~);
-        do_error(err_msg, reg->task);
+        do_error(err_msg, reg->task->task);
         free(err_msg);
         return #retfail~;
       }
@@ -45,7 +45,7 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
   {
     char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <#op~> should be of type #type~.")+digits(#num~)+1));
     sprintf(err_msg, "Argument %d of <#op~> should be of type #type~.", #num~);
-    do_error(err_msg, reg->task);
+    do_error(err_msg, reg->task->task);
     free(err_msg);
     return #retfail~;
   }
@@ -121,7 +121,8 @@ op_range (arg a, registry* reg)
 void
 op_list (arg a, registry* reg)
 {
-  registry* r_new = new_registry(reg, new_hash_size(a.length), reg->task);
+  registry* r_new = new_registry(reg, new_hash_size(a.length),
+                                 reg->task);
   data* d;
   data* d_new;
   int i = 1;
@@ -164,7 +165,7 @@ op_registry (arg a, registry* reg)
       
       if (d->type != Register)
         {
-          do_error("Expected a register", reg->task);
+          do_error("Expected a register", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -491,8 +492,8 @@ op_exit (arg a, registry* reg)
 
       err = mpz_get_si(*((mpz_t*) arg1->data));
     }
-  is_exit(err+1, reg->task);
-  is_error(1, reg->task);
+  is_exit(err+1, reg->task->task);
+  is_error(1, reg->task->task);
 }
 
 void
@@ -612,7 +613,7 @@ op_gt (arg a, registry* reg)
   data* d = NULL;
   int is_gt = op_comparison(a, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     return;
 
   if (is_gt==1)
@@ -629,7 +630,7 @@ op_lt (arg a, registry* reg)
   data* d = NULL;
   int is_lt = op_comparison(a, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     return;
 
   if (is_lt==-1)
@@ -646,7 +647,7 @@ op_eq (arg a, registry* reg)
   data* d = NULL;
   int is_eq = op_comparison(a, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     return;
 
   if (is_eq==0)
@@ -663,7 +664,7 @@ op_gt_eq (arg a, registry* reg)
   data* d = NULL;
   int is_gteq = op_comparison(a, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     return;
 
   if (is_gteq==1 || is_gteq==0)
@@ -681,7 +682,7 @@ op_lt_eq (arg a, registry* reg)
   data* d = NULL;
   int is_lteq = op_comparison(a, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     return;
 
   if (is_lteq==-1 || is_lteq==0)
@@ -800,7 +801,7 @@ op_source (arg a, registry* reg)
                                        + strlen((char*) arg1->data) +
                                        6));
       sprintf(msg, "File *%s* not found.", (char*) arg1->data);
-      do_error(msg, reg->task);
+      do_error(msg, reg->task->task);
       free(msg);
       return;
     }
@@ -829,7 +830,7 @@ op_do (arg a, registry* reg)
 
   if (arg1 == NULL)
     {
-      do_error("<do> requires an argument.", reg->task);
+      do_error("<do> requires an argument.", reg->task->task);
       free(arg_registries);
       return;
     }
@@ -838,7 +839,8 @@ op_do (arg a, registry* reg)
     {
       if (arg_registries[i] == NULL)
         {
-          do_error("<do> requires more than one argument.", reg->task);
+          do_error("<do> requires more than one argument.",
+                   reg->task->task);
           free(arg_registries);
           return;
         }
@@ -847,7 +849,8 @@ op_do (arg a, registry* reg)
 
   if (arg1->type != Operation)
     {
-      do_error("First argument to <do> must be an operation.", reg->task);
+      do_error("First argument to <do> must be an operation.",
+               reg->task->task);
       return;
     }
 
@@ -855,7 +858,8 @@ op_do (arg a, registry* reg)
     {
       if (arg_registries[i]->type != Registry)
         {
-          do_error("Arguments to <do> must be registries.", reg->task);
+          do_error("Arguments to <do> must be registries.",
+                   reg->task->task);
           free(arg_registries);
           return;
         }
@@ -866,7 +870,8 @@ op_do (arg a, registry* reg)
     {
       arg_reg[i] = (registry*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE,
+                                   reg->task);
   data* d;
   arg a1;
 
@@ -918,7 +923,7 @@ op_do (arg a, registry* reg)
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans register.",
-                       reg->task);
+                       reg->task->task);
               break;
             }
           d = copy_data(d);
@@ -931,7 +936,7 @@ op_do (arg a, registry* reg)
         break;
     }
 
-  if (!is_error(-1, reg->task))
+  if (!is_error(-1, reg->task->task))
     {
       d = new_data();
       d->type = Registry;
@@ -942,7 +947,7 @@ op_do (arg a, registry* reg)
 }
 
 data*
-register_arithmetic (regstr* rg, int diff, arbel_task* task)
+register_arithmetic (regstr* rg, int diff, task_vars* task)
 {
   char* cur_name = malloc(sizeof(char)*(strlen(rg->name)+1));
   strcpy(cur_name, rg->name);
@@ -997,7 +1002,8 @@ op_next (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  data* d = register_arithmetic((regstr*) arg1->data, 1, reg->task);
+  data* d = register_arithmetic((regstr*) arg1->data, 1,
+                                reg->task->task);
   if (d != NULL)
     ret_ans(reg,d);
 }
@@ -1013,7 +1019,8 @@ op_previous (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  data* d = register_arithmetic((regstr*) arg1->data, -1, reg->task);
+  data* d = register_arithmetic((regstr*) arg1->data, -1,
+                                reg->task->task);
   if (d != NULL)
     ret_ans(reg,d);
 }
@@ -1107,7 +1114,7 @@ op_while (arg a, registry* reg)
     {
       execute_0(arg1, reg);
       
-      if (is_error(-1, reg->task))
+      if (is_error(-1, reg->task->task))
         break;
           
       d = get(reg, arbel_hash_ans, 0);
@@ -1115,14 +1122,14 @@ op_while (arg a, registry* reg)
       if (d == NULL)
         {
           do_error("Instruction did not set *ans* to a value.",
-                   reg->task);
+                   reg->task->task);
           break;
         }
 
       if (d->type != Boolean)
         {
           do_error("First instruction should set *ans* to a Boolean.",
-                   reg->task);
+                   reg->task->task);
           break;
         }
 
@@ -1132,7 +1139,7 @@ op_while (arg a, registry* reg)
         }
 
       execute_0(arg2, reg);
-      if (is_error(-1, reg->task))
+      if (is_error(-1, reg->task->task))
         break;
 
     }
@@ -1159,7 +1166,7 @@ op_repeat (arg a, registry* reg)
   while (mpz_cmp(i, *((mpz_t*) arg1->data)) < 0)
     {
       execute_0(arg2, reg);
-      if (is_error(-1, reg->task)) break;
+      if (is_error(-1, reg->task->task)) break;
       mpz_add_ui(i, i, 1);
     }
 }
@@ -1268,7 +1275,7 @@ op_collapse (arg a, registry* reg)
       if (d1 == NULL)
         {
           do_error("Operation did not set /ans register.",
-                   reg->task);
+                   reg->task->task);
           break;
         }
       
@@ -1429,21 +1436,21 @@ op_go_in (arg a, registry* reg)
 
   ((registry*) arg1->data)->up = reg;
 
-  reg->task->current_parse_registry = (registry*) arg1->data;
+  reg->task->task->current_parse_registry = (registry*) arg1->data;
   
 }
 
 void
 op_go_out (arg a, registry* reg)
 {
-  if (reg->task->current_parse_registry->up == NULL)
+  if (reg->task->task->current_parse_registry->up == NULL)
     {
       do_error("Already at top level registry.",
-               reg->task);
+               reg->task->task);
       return;
     }
 
-  reg->task->current_parse_registry = reg->task->current_parse_registry->up;
+  reg->task->task->current_parse_registry = reg->task->task->current_parse_registry->up;
 }
 
 void
@@ -1482,7 +1489,7 @@ op_load (arg a, registry* reg)
   if (f == NULL)
     {
       do_error("File cannot be opened.",
-               reg->task);
+               reg->task->task);
       return;
     }
   if (a.length >= 3)
@@ -1529,7 +1536,7 @@ op_to_string (arg a, registry* reg)
       if (arg2 != NULL && arg2->type != Integer)
         {
           do_error("The second argument to *to-string* should be an integer.",
-                   reg->task);
+                   reg->task->task);
           return;
         }
       if (arg2 != NULL)
@@ -1538,7 +1545,7 @@ op_to_string (arg a, registry* reg)
           if (prec < 0)
             {
               do_error("The second argument to *to-string* must be non-negative.",
-                       reg->task);
+                       reg->task->task);
               return;
             }
         }
@@ -1614,7 +1621,7 @@ op_to_number (arg a, registry* reg)
         }
       else
         {
-          do_error("String not a number.", reg->task);
+          do_error("String not a number.", reg->task->task);
           return;
         }
     }
@@ -1630,7 +1637,8 @@ op_to_number (arg a, registry* reg)
 
       if (i >= (strlen(name)-1))
         {
-          do_error("Register does not end in a number.", reg->task);
+          do_error("Register does not end in a number.",
+                   reg->task->task);
           return;
         }
 
@@ -1683,16 +1691,16 @@ op_output_code (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  if (reg->task->source_code != NULL)
+  if (reg->task->task->source_code != NULL)
     {
       FILE* f = fopen((char*) arg1->data, "w");
-      fwrite(reg->task->source_code, sizeof(char),
-             strlen(reg->task->source_code), f);
+      fwrite(reg->task->task->source_code, sizeof(char),
+             strlen(reg->task->task->source_code), f);
       fclose(f);
     }
   else
     {
-      do_error("No source saved yet.", reg->task);
+      do_error("No source saved yet.", reg->task->task);
       return;
     }
 }
@@ -1700,10 +1708,10 @@ op_output_code (arg a, registry* reg)
 void
 op_clear_code (arg a, registry* reg)
 {
-  if (reg->task->source_code != NULL)
-    free(reg->task->source_code);
+  if (reg->task->task->source_code != NULL)
+    free(reg->task->task->source_code);
 
-  reg->task->source_code = NULL;
+  reg->task->task->source_code = NULL;
 }
 
 void
@@ -1717,7 +1725,7 @@ op_error (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  do_error((char*) arg1->data, reg->task);
+  do_error((char*) arg1->data, reg->task->task);
 
   if (a.length >= 3)
     {
@@ -1728,7 +1736,7 @@ op_error (arg a, registry* reg)
       #requireans=true@
       if (arg2 != NULL)
         {
-          is_error(mpz_get_si(*((mpz_t*) arg2->data)), reg->task);
+          is_error(mpz_get_si(*((mpz_t*) arg2->data)), reg->task->task);
         }
     }
 }
@@ -1846,7 +1854,8 @@ op_open_file (arg a, registry* reg)
   
   if (f == NULL)
     {
-      do_error("File did not open.  Possibly, it does not exist.", reg->task);
+      do_error("File did not open.  Possibly, it does not exist.",
+               reg->task->task);
       return;
     }
 
@@ -1927,13 +1936,15 @@ op_close (arg a, registry* reg)
 
   if (f == NULL)
     {
-      do_error("Register does not exist.", reg->task);
+      do_error("Register does not exist.",
+               reg->task->task);
       return;
     }
 
   if (f->type != File)
     {
-      do_error("Register does not contain a file.", reg->task);
+      do_error("Register does not contain a file.",
+               reg->task->task);
       return;
     }
 
@@ -2104,7 +2115,8 @@ op_write (arg a, registry* reg)
   int i = mpz_get_ui(*((mpz_t*) arg1->data));
   if ((i >= 255) || (i < 0))
     {
-      do_error("Value should be in range [0,255].", reg->task);
+      do_error("Value should be in range [0,255].",
+               reg->task->task);
       return;
     }
   else
@@ -2149,7 +2161,8 @@ op_shell (arg a, registry* reg)
   
   if (f == NULL)
     {
-      do_error("Command failed.", reg->task);
+      do_error("Command failed.",
+               reg->task->task);
       return;
     }
 
@@ -2197,14 +2210,14 @@ op_link (arg a, registry* reg)
   if (lib == NULL)
     {
       printf("`%'s\n", dlerror());
-      do_error("Library failed to open.", reg->task);
+      do_error("Library failed to open.", reg->task->task);
       return;
     }
 
   operation new_op = dlsym(lib, (char*) arg2->data);
   if (new_op == NULL)
     {
-      do_error("Error loading function.", reg->task);
+      do_error("Error loading function.", reg->task->task);
       dlclose(lib);
       return;
     }
@@ -2213,18 +2226,18 @@ op_link (arg a, registry* reg)
   assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, (char*) arg3->data, 1);
 
-  if (reg->task->arbel_ll == NULL)
+  if (reg->task->task->arbel_ll == NULL)
     {
       
-      reg->task->arbel_ll = malloc(sizeof(void*));
+      reg->task->task->arbel_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->arbel_ll = realloc(reg->task->arbel_ll,
-                                    sizeof(void*)*(reg->task->arbel_ll_cnt+1));
+      reg->task->task->arbel_ll = realloc(reg->task->task->arbel_ll,
+                                    sizeof(void*)*(reg->task->task->arbel_ll_cnt+1));
     }
-  reg->task->arbel_ll[reg->task->arbel_ll_cnt] = lib;
-  reg->task->arbel_ll_cnt++;
+  reg->task->task->arbel_ll[reg->task->task->arbel_ll_cnt] = lib;
+  reg->task->task->arbel_ll_cnt++;
 
 }
 
@@ -2256,7 +2269,7 @@ op_match (arg a, registry* reg)
   int error = regcomp(&regex, (char*) arg1->data, REG_EXTENDED);
   if (error)
     {
-      do_error("Error compiling regular expression.", reg->task);
+      do_error("Error compiling regular expression.", reg->task->task);
       return;
     }
 
@@ -2355,7 +2368,8 @@ op_replace (arg a, registry* reg)
   int error = regcomp(&regex, (char*) arg1->data, REG_EXTENDED);
   if (error)
     {
-      do_error("Error compiling regular expression.", reg->task);
+      do_error("Error compiling regular expression.",
+               reg->task->task);
       return;
     }
 
@@ -2547,7 +2561,7 @@ op_change_dir (arg a, registry* reg)
   int error = chdir((char*) arg1->data);
   if (error)
     {
-      do_error("Could not change directory.", reg->task);
+      do_error("Could not change directory.", reg->task->task);
       return;
     }
 
@@ -2600,7 +2614,7 @@ op_current_dir (arg a, registry* reg)
   char* dir = get_current_dir_name();
   if (dir == NULL)
     {
-      do_error("Error getting current directory.", reg->task);
+      do_error("Error getting current directory.", reg->task->task);
       return;
     }
   data* d;
@@ -2639,20 +2653,20 @@ op_substring (arg a, registry* reg)
 
   if ((start > length) || (start <= 0))
     {
-      do_error("Index out of range.", reg->task);
+      do_error("Index out of range.", reg->task->task);
       return;
     }
 
 
   if ((end > length) || (end <= 0))
     {
-      do_error("Index out of range.", reg->task);
+      do_error("Index out of range.", reg->task->task);
       return;
     }
 
   if (start > end)
     {
-      do_error("The starting position of the substring is greater than the ending position.", reg->task);
+      do_error("The starting position of the substring is greater than the ending position.", reg->task->task);
       return;
     }
 
@@ -2696,7 +2710,7 @@ op_up (arg a, registry* reg)
   if (reg->up == NULL)
     {
       do_error("Cannot use *up* instruction at top-level registry.",
-               reg->task);
+               reg->task->task);
       return;
     }
 
@@ -2759,7 +2773,7 @@ op_is_of (arg a, registry* reg)
 
   if (d == NULL || d->type != String)
     {
-      do_error("*class* register not found.", reg->task);
+      do_error("*class* register not found.", reg->task->task);
       return;
     }
 
@@ -2883,15 +2897,15 @@ op_is_error (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->arbel_stop_error_threshold;
-  reg->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
+  reg->task->task->arbel_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
-  assign_boolean(&d, is_error(-1, reg->task) > 0 ? true : false);
-  reg->task->arbel_stop_error_threshold = stop_thresh;
+  assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
+  reg->task->task->arbel_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
-  is_error(0, reg->task);
+  is_error(0, reg->task->task);
 
 }
 
@@ -2916,10 +2930,10 @@ op_push_through (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->arbel_stop_error_threshold;
-  reg->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
+  reg->task->task->arbel_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  reg->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->arbel_stop_error_threshold = stop_thresh;
 }
 
 void
@@ -2942,9 +2956,9 @@ op_error_messages (arg a, registry* reg)
   ##GETARG~$;
 
   if (*((bool*) arg1->data))
-    reg->task->arbel_print_error_messages = true;
+    reg->task->task->arbel_print_error_messages = true;
   else
-    reg->task->arbel_print_error_messages = false;
+    reg->task->task->arbel_print_error_messages = false;
 
 }
 
@@ -3025,9 +3039,9 @@ op_please (arg a, registry* reg)
 
   execute_0(arg1, reg);
 
-  if (is_error(-1, reg->task))
+  if (is_error(-1, reg->task->task))
     {
-      is_error(0, reg->task);
+      is_error(0, reg->task->task);
       execute_0(arg2, reg);
     }
 }
@@ -3138,7 +3152,7 @@ op_data (arg a, registry* reg)
   if (f == NULL)
     {
       do_error("File cannot be opened.",
-               reg->task);
+               reg->task->task);
       free(fname);
       return;
     }
@@ -3253,7 +3267,7 @@ op_auto_rehash (arg a, registry* reg)
   #type=Boolean@
   ##GETARG~$;
 
-  reg->task->arbel_rehash = *((bool*) arg1->data);
+  reg->task->task->arbel_rehash = *((bool*) arg1->data);
 }
 
 void
@@ -3378,16 +3392,23 @@ op_task (arg a, registry* reg)
   ##GETARG~$;
 
   task* t = malloc(sizeof(task));
-  t->task = new_task();
+  t->task = new_task(t);
   t->state = copy_registry((registry*) arg3->data);
   t->state->up = t->task->current_parse_registry;
+  t->state->task = t;
   t->task->current_parse_registry = t->state;
+
   t->code = copy_instruction((instruction*) arg2->data);
+  t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+  
   t->pid = -1;
+  t->block_queue = false;
 
   data* d = new_data();
   d->type = Task;
   d->data = t;
+
+  printf("op_task Task: %d\n", t);
 
   set(reg, d, ((regstr*) arg1->data)->name, 1);
   
@@ -3406,15 +3427,16 @@ op_run_task (arg a, registry* reg)
 
   if (((task*) arg1->data)->pid > 0)
     {
-      do_error("Task already running.", reg->task);
+      do_error("Task already running.", reg->task->task);
       return;
     }
 
+  printf("op_run_task Task: %d\n", (task*) arg1->data);
   int pid = fork();
 
   if (pid < 0)
     {
-      do_error("Process failed to fork().", reg->task);
+      do_error("Process failed to fork().", reg->task->task);
     }
   else if (pid > 0)
     {
@@ -3428,11 +3450,79 @@ op_run_task (arg a, registry* reg)
       exit(0);
     }
   
-    
 }
+
+void
+op_queue (arg a, registry* reg)
+{
+  #op=queue@
+  #length=3@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Task@
+  ##GETARG~$;
+
+
+  /* Queue Location */
+  #num=2@
+  #type=Register@
+  ##GETARG~$;
+
+    #num=3@
+  #checktype=false@
+  ##GETARG~$;
+  #checktype=true@
+
+
+  task* t = (task*) arg1->data;
+  printf("op_queue Task: %d\n", t);
+  while (t->block_queue) {}
+  t->block_queue = true;
+  data* d = copy_data(arg3);
+  set(t->queued_instruction, d,
+      ((regstr*) arg2->data)->name, 0);
+  t->block_queue = false;
   
+}
+
+void
+op_accept (arg a, registry* reg)
+{
+  #op=accept@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+
+  task* t = reg->task;
+  printf("op_accept!\n");
+  printf("op_accept Task: %d\n", t);
+  data* d = NULL;
+  while (d == NULL)
+    {
+      while (t->block_queue)
+        {
+        }
+      t->block_queue = true;
+      d = get(t->queued_instruction,
+              ((regstr*) arg1->data)->key,
+              0);
+      if (d != NULL)
+        {
+          printf("accept type: %d\n", d->type);
+        }
+      t->block_queue = false;
+    }
+
+
+  d = copy_data(d);
   
+  ret_ans(reg, d);
   
+}
 
 void
 add_basic_ops (registry* reg)
@@ -3750,7 +3840,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_run_task, NULL, NULL, 0);
   set(reg,d,"run-task",1);
-  
+
+  assign_op(&d, op_queue, NULL, NULL, 0);
+  set(reg,d,"queue",1);
+
+  assign_op(&d, op_accept, NULL, NULL, 0);
+  set(reg,d,"accept",1);
+
 
 }
   

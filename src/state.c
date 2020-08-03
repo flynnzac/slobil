@@ -22,7 +22,7 @@
 #include "arbel.h"
 
 int
-is_error (int e, arbel_task* t)
+is_error (int e, task_vars* t)
 {
   if (e >= 0)
     {
@@ -33,7 +33,7 @@ is_error (int e, arbel_task* t)
 
 
 void
-do_error (const char* msg, arbel_task* t)
+do_error (const char* msg, task_vars* t)
 {
   if (t->arbel_print_error_messages)
     fprintf(stderr, "Error: %s\n", msg);
@@ -42,7 +42,7 @@ do_error (const char* msg, arbel_task* t)
 }
 
 int
-is_exit (int e, arbel_task* t)
+is_exit (int e, task_vars* t)
 {
   if (e >= 0)
     {

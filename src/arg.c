@@ -31,7 +31,7 @@ resolve (data* arg, registry* reg)
 }
 
 void
-check_length (arg* a, int length, char* op, arbel_task* t)
+check_length (arg* a, int length, char* op, task_vars* t)
 {
   if (a->length < length)
     {

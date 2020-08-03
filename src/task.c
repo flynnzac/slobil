@@ -1,11 +1,11 @@
 #include "arbel.h"
 
-arbel_task*
-new_task ()
+task_vars*
+new_task (task* t0)
 {
-  arbel_task* t = malloc(sizeof(arbel_task));
-  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE, t);
-  add_basic_ops(reg);
+  task_vars* t = malloc(sizeof(task_vars));
+  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE, t0);
+
   is_exit(0, t);
   t->current_parse_registry = reg;
 
@@ -17,6 +17,10 @@ new_task ()
   t->arbel_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
+
+  t0->task = t;
+
+  add_basic_ops(reg);
 
   return t;
   
@@ -41,7 +45,7 @@ append_to_source_code (char* source_code, const char* new)
 }
 
 int
-input_code (arbel_task* task, char* code, bool save_code,
+input_code (task_vars* task, char* code, bool save_code,
             int echo,
             struct parser_state* state)
 {
@@ -77,7 +81,7 @@ input_code (arbel_task* task, char* code, bool save_code,
 
 
 void
-run_task_socket (arbel_task* task, int port, bool save_code,
+run_task_socket (task_vars* task, int port, bool save_code,
                  struct parser_state* state, int echo)
 {
   int sock;
@@ -153,7 +157,7 @@ run_task_socket (arbel_task* task, int port, bool save_code,
 
 
 void
-run_task_readline (arbel_task* task, bool save_code,
+run_task_readline (task_vars* task, bool save_code,
                    struct parser_state* state,
                    int echo)
 {
@@ -181,8 +185,14 @@ run_task (data* t)
   inst->being_called = false;
 }
 
+void
+run_task_instruction (task* t, instruction* inst)
+{
+  
+}
+
 int
-end_task (arbel_task* t)
+end_task (task_vars* t)
 {
   if (t->source_code != NULL)
     free(t->source_code);

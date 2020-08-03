@@ -40,7 +40,7 @@ interrupt_handler (int status)
     }
   else
     {
-      is_error(2, task0);
+      is_error(2, task0->task);
     }
 }
 
@@ -71,7 +71,13 @@ main (int argc, char** argv)
 
   reading = true;
 
-  task0 = new_task();
+  task0 = malloc(sizeof(task));
+  task0->task = new_task(task0);
+  task0->state = NULL;
+  task0->code = NULL;
+  task0->queued_instruction = NULL;
+  task0->pid = 0;
+  task0->block_queue = false;
 
   char* code = NULL;
   char* prompt = "... ";
@@ -102,7 +108,8 @@ main (int argc, char** argv)
           break;
         case 'l':
           f = fopen(optarg, "r");
-          complete = interact(f, &state, task0->current_parse_registry);
+          complete = interact(f, &state,
+                              task0->task->current_parse_registry);
           fclose(f);
           break;
         case 's':
@@ -123,16 +130,16 @@ main (int argc, char** argv)
           if (port <= 0)
             {
               fprintf(stderr, "Invalid port: %s\n", optarg);
-              is_exit(2, task0);
+              is_exit(2, task0->task);
             }
           break;
         case 'v':
           printf("%s\n", PACKAGE_STRING);
-          is_exit(1, task0);
+          is_exit(1, task0->task);
           break;
         default:
           fprintf(stderr, "Option not recognized.\n");
-          is_exit(2, task0);
+          is_exit(2, task0->task);
           break;
         }
     }
@@ -140,7 +147,7 @@ main (int argc, char** argv)
   if (script != NULL)
     {
       f = fopen(script, "r");
-      complete = interact(f, &state, task0->current_parse_registry);
+      complete = interact(f, &state, task0->task->current_parse_registry);
       fclose(f);
       free(script);
     }
@@ -163,17 +170,17 @@ main (int argc, char** argv)
     {
       if (listen_socket)
         {
-          run_task_socket(task0, port, save_code,
+          run_task_socket(task0->task, port, save_code,
                           &state, echo);
         }
       else
         {
-          run_task_readline(task0, save_code,
+          run_task_readline(task0->task, save_code,
                             &state, echo);
         }
     }
 
-  int retcode = end_task(task0);
+  int retcode = end_task(task0->task);
   free_state(&state);
 
   return retcode;

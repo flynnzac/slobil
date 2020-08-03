@@ -115,13 +115,13 @@ assign_op (data** d, const operation op,
 }
 
 void
-assign_registry (data** d, registry* r, bool copy, arbel_task* task)
+assign_registry (data** d, registry* r, bool copy, task* t)
 {
   *d = new_data();
   (*d)->type = Registry;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, task);
+      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, t);
     }
   else if (copy)
     {
@@ -172,7 +172,7 @@ assign_task (data** d, task* t)
   (*d)->data = malloc(sizeof(task));
   ((task*) (*d)->data)->code = copy_instruction(t->code);
   ((task*) (*d)->data)->state = copy_registry(t->state);
-  ((task*) (*d)->data)->task = copy_arbel_task(t->task);
+  ((task*) (*d)->data)->task = copy_task_vars(t->task);
   ((task*) (*d)->data)->pid = t->pid;
 
 }
@@ -299,10 +299,10 @@ copy_instruction (instruction* inst0)
   return inst1;
 }
 
-arbel_task*
-copy_arbel_task (arbel_task* task0)
+task_vars*
+copy_task_vars (task_vars* task0)
 {
-  arbel_task* task1 = malloc(sizeof(arbel_task));
+  task_vars* task1 = malloc(sizeof(task_vars));
 
   task1->current_parse_registry =
     copy_registry(task0->current_parse_registry);
@@ -317,6 +317,7 @@ copy_arbel_task (arbel_task* task0)
     }
 
   task1->arbel_ll_cnt = task0->arbel_ll_cnt;
+  return task1;
 }
 
 data*
