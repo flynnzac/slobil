@@ -44,6 +44,7 @@
 #include <gmp.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
 
 enum data_type
@@ -233,7 +234,7 @@ struct task
   instruction* code;
 
   registry* queued_instruction;
-  bool block_queue;
+  pthread_mutex_t lock;
   int pid;
 };
 
@@ -565,6 +566,9 @@ run_task_socket (task_vars* task,
 
 void
 run_task (data* t);
+
+void*
+run_task_thread (void* input);
 
 /* global variables */
 

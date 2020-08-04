@@ -145,6 +145,7 @@ execute_statement (statement* s, registry* reg)
               d = get_by_levels(reg,
                                 e->hash_name, e->levels, e->is_regstr,
                                 e->name);
+              
             }
         }
 
@@ -211,12 +212,12 @@ execute_code (statement* s, registry* reg)
       error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
       if (reg->task->task->arbel_stop_error_threshold > 0 &&
           (error >= reg->task->task->arbel_stop_error_threshold))
-	{
-	  printf("-> ");
-	  print_statement(stmt);
-	  printf("\n");
-	  break;
-	}
+        {
+          printf("-> ");
+          print_statement(stmt);
+          printf("\n");
+          break;
+        }
       else
         is_error(0, reg->task->task);
 

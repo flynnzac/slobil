@@ -2,10 +2,16 @@
 
 task /t1
      (
-       print [ accept /hello . ] .
+       while ( answer True . )
+             (
+               print [ accept /hello . ] .
+             ) .
      )
      [ registry . ] .
 
 run-task t1 .
 
 queue t1 /hello "Hi!" .
+queue t1 /hello "Bye!" .
+queue t1 /hello 1342 .
+queue t1 /hello ( add 1 2 . ) .

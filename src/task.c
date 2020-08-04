@@ -182,13 +182,18 @@ run_task (data* t)
   instruction* inst = (((task*) t->data)->code);
   inst->being_called = true;
   execute_code(inst->stmt, ((task*) t->data)->state);
+
   inst->being_called = false;
 }
 
-void
-run_task_instruction (task* t, instruction* inst)
+void*
+run_task_thread (void* input)
 {
-  
+  data* arg1 = (data*) input;
+  ((task*) arg1->data)->pid = 1;
+  run_task(arg1);
+  ((task*) arg1->data)->pid = -1;
+  pthread_exit(NULL);
 }
 
 int

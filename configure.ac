@@ -26,6 +26,7 @@ AS_IF([test "x$enable_greedy_gc" = "xyes"], [],[
 
 # Checks for libraries.
 AC_CHECK_LIB([dl], [dlopen])
+AC_CHECK_LIB([pthread], [pthread_create])
 AC_CHECK_LIB([m], [floor])
 AC_CHECK_LIB([readline], [readline])
 AC_CHECK_LIB([unistring], [u8_next])

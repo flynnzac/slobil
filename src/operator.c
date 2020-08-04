@@ -6483,13 +6483,10 @@ if (arg3 != NULL && true && (!(arg3->type & Registry)))
   t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
   
   t->pid = -1;
-  t->block_queue = false;
 
   data* d = new_data();
   d->type = Task;
   d->data = t;
-
-  printf("op_task Task: %d\n", t);
 
   set(reg, d, ((regstr*) arg1->data)->name, 1);
   
@@ -6537,25 +6534,13 @@ if (arg1 != NULL && true && (!(arg1->type & Task)))
       return;
     }
 
-  printf("op_run_task Task: %d\n", (task*) arg1->data);
-  int pid = fork();
+  pthread_t pt;
+  int ret = pthread_create(&pt, NULL, run_task_thread, arg1);
 
-  if (pid < 0)
+  if (ret)
     {
-      do_error("Process failed to fork().", reg->task->task);
+      do_error("Thread creation failed.", reg->task->task);
     }
-  else if (pid > 0)
-    {
-      ((task*) arg1->data)->pid = pid;
-    }
-  else if (pid == 0) 
-    {
-      ((task*) arg1->data)->pid = getpid();
-      run_task(arg1);
-      ((task*) arg1->data)->pid = -1;
-      exit(0);
-    }
-  
 }
 
 void
@@ -6655,14 +6640,12 @@ if (arg3 != NULL && false && (!(arg3->type & Register)))
 
 
   task* t = (task*) arg1->data;
-  printf("op_queue Task: %d\n", t);
-  while (t->block_queue) {}
-  t->block_queue = true;
+  pthread_mutex_lock(&t->lock);
   data* d = copy_data(arg3);
   set(t->queued_instruction, d,
       ((regstr*) arg2->data)->name, 0);
-  t->block_queue = false;
-  
+  pthread_mutex_unlock(&t->lock);
+
 }
 
 void
@@ -6702,30 +6685,25 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 ;
 
   task* t = reg->task;
-  printf("op_accept!\n");
-  printf("op_accept Task: %d\n", t);
   data* d = NULL;
   while (d == NULL)
     {
-      while (t->block_queue)
-        {
-        }
-      t->block_queue = true;
+      pthread_mutex_lock(&t->lock);
       d = get(t->queued_instruction,
               ((regstr*) arg1->data)->key,
               0);
-      if (d != NULL)
+      if (d == NULL)
         {
-          printf("accept type: %d\n", d->type);
+          pthread_mutex_unlock(&t->lock);
         }
-      t->block_queue = false;
     }
 
 
   d = copy_data(d);
-  
   ret_ans(reg, d);
-  
+  del(t->queued_instruction, ((regstr*) arg1->data)->key,
+      1, false);
+  pthread_mutex_unlock(&t->lock);
 }
 
 void

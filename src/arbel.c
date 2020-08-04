@@ -77,7 +77,6 @@ main (int argc, char** argv)
   task0->code = NULL;
   task0->queued_instruction = NULL;
   task0->pid = 0;
-  task0->block_queue = false;
 
   char* code = NULL;
   char* prompt = "... ";

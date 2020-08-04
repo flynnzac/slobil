@@ -157,7 +157,7 @@ compute (data* cmd, registry* reg, arg a)
   switch (cmd->type)
     {
     case Operation:
-      if (is_error(-1, reg->task))
+      if (is_error(-1, reg->task->task))
         return;
       do_operation((op_wrapper*) cmd->data, reg,a);
       break;
