@@ -3402,6 +3402,7 @@ op_task (arg a, registry* reg)
   t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
   
   t->pid = -1;
+  t->thread = NULL;
 
   data* d = new_data();
   d->type = Task;
@@ -3428,12 +3429,15 @@ op_run_task (arg a, registry* reg)
       return;
     }
 
-  pthread_t pt;
-  int ret = pthread_create(&pt, NULL, run_task_thread, arg1);
-
+  pthread_t* pt = malloc(sizeof(pthread_t));
+  int ret = pthread_create(pt, NULL, run_task_thread, arg1);
   if (ret)
     {
       do_error("Thread creation failed.", reg->task->task);
+    }
+  else
+    {
+      ((task*) arg1->data)->thread = pt;
     }
 }
 
@@ -3448,13 +3452,11 @@ op_queue (arg a, registry* reg)
   #type=Task@
   ##GETARG~$;
 
-
-  /* Queue Location */
   #num=2@
   #type=Register@
   ##GETARG~$;
 
-    #num=3@
+  #num=3@
   #checktype=false@
   ##GETARG~$;
   #checktype=true@
@@ -3462,7 +3464,9 @@ op_queue (arg a, registry* reg)
 
   task* t = (task*) arg1->data;
   pthread_mutex_lock(&t->lock);
-  data* d = copy_data(arg3);
+
+  data* d;
+  d = copy_data(arg3);
   set(t->queued_instruction, d,
       ((regstr*) arg2->data)->name, 0);
   pthread_mutex_unlock(&t->lock);
@@ -3499,6 +3503,106 @@ op_accept (arg a, registry* reg)
   del(t->queued_instruction, ((regstr*) arg1->data)->key,
       1, false);
   pthread_mutex_unlock(&t->lock);
+}
+
+void
+op_select (arg a, registry* reg)
+{
+  #op=select@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Instruction@
+  ##GETARG~$;
+
+  int sz = ceil((a.length-2)/2);
+  data* hashes[sz];
+  data* actions[sz];
+
+  int hash_idx = 0;
+  int action_idx = 0;
+
+  for (int i=2; i < a.length; i=i+2)
+    {
+      #num=i@
+      #type=Register@
+      ##GETARG~$;
+
+      hashes[hash_idx] = argi;
+      hash_idx++;
+
+      int i1 = i+1;
+      #num=i1@
+      #type=Instruction@
+      ##GETARG~$;
+      actions[action_idx] = argi1;
+      action_idx++;
+    }
+
+  if (hash_idx != action_idx)
+    {
+      do_error("Number of locations to select should match the number of actions to take on matching.",
+               reg->task->task);
+      return;
+    }
+
+  data* d = NULL;
+  task* t = reg->task;
+
+  int idx;
+
+  while (d==NULL)
+    {
+      pthread_mutex_lock(&t->lock);
+      for (int i=0; i < hash_idx; i++)
+        {
+          d = get(t->queued_instruction,
+                  ((regstr*) hashes[i]->data)->key,
+                  0);
+          if (d != NULL)
+            {
+              idx = i;
+              break;
+            }
+        }
+      if (d == NULL)
+        {
+          pthread_mutex_unlock(&t->lock);
+        }
+    }
+
+  d = copy_data(d);
+  ret_ans(reg,d);
+  del(t->queued_instruction,
+      ((regstr*) hashes[idx]->data)->key,
+      1, false);
+  pthread_mutex_unlock(&t->lock);
+  execute_0(actions[idx], reg);
+  
+}
+
+void
+op_stop_task (arg a, registry* reg)
+{
+  #op=stop-task@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Task@
+  ##GETARG~$;
+
+  task* t = (task*) arg1->data;
+  if (t->thread != NULL)
+    {
+      pthread_kill(t->thread, SIGKILL);
+      t->thread = NULL;
+    }
+  else
+    {
+      do_error("No active thread on task to stop.", reg->task->task);
+    }
 }
 
 void
@@ -3824,6 +3928,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_accept, NULL, NULL, 0);
   set(reg,d,"accept",1);
 
+  assign_op(&d, op_select, NULL, NULL, 0);
+  set(reg,d,"select",1);
 
 }
   

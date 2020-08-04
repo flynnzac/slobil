@@ -15,3 +15,26 @@ queue t1 /hello "Hi!" .
 queue t1 /hello "Bye!" .
 queue t1 /hello 1342 .
 queue t1 /hello ( add 1 2 . ) .
+
+task /t2
+     (
+       while ( answer True . )
+             (
+               select ( sit . )
+                      /double
+                      (
+                        print [ mul ans 2 . ] .
+                      )
+                      /triple
+                      (
+                        print [ mul ans 3 . ] .
+                      ) .
+             ) .
+     )
+     [ registry . ] .
+
+run-task t2 .
+queue t2 /double 3 .
+queue t2 /triple 10 .
+queue t2 /double 7 .
+                      

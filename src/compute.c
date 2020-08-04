@@ -30,7 +30,7 @@ ret (registry* reg, data* d, const char* name)
     }
   else
     {
-      do_error("Cannot return from top-level.", reg->task);
+      do_error("Cannot return from top-level.", reg->task->task);
     }
 }
 
@@ -58,7 +58,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
   if (arg1 == NULL || (arg1->type != Instruction && arg1->type != Operation))
     {
-      do_error("First argument to `call` must be an instruction.", reg->task);
+      do_error("First argument to `call` must be an instruction.", reg->task->task);
       return;
     }
 
@@ -74,7 +74,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
       if (d->type != Register)
         {
-          do_error("Expected a register", reg->task);
+          do_error("Expected a register", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -92,7 +92,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
   data* ans;
 
-  if (!is_error(-1, reg->task))
+  if (!is_error(-1, reg->task->task))
     {
       ans = get(r_new, arbel_hash_ans, 0);
       if (ans != NULL)
@@ -131,7 +131,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
       ((instruction*) op->instr->data)->being_called = false;
 
       data* ans;
-      if (!is_error(-1, reg->task))
+      if (!is_error(-1, reg->task->task))
         {
           ans = get(r_new, arbel_hash_ans, 0);
           if (ans != NULL)
@@ -150,7 +150,7 @@ compute (data* cmd, registry* reg, arg a)
 {
   if (cmd == NULL)
     {
-      do_error("Cannot compute a statement that does not start with an operation or instruction.", reg->task);
+      do_error("Cannot compute a statement that does not start with an operation or instruction.", reg->task->task);
       return;
     }
 
@@ -165,7 +165,7 @@ compute (data* cmd, registry* reg, arg a)
       _op_call(a, reg, 0);
       break;
     default:
-      do_error("Tried to compute something that is not an operation or instruction.", reg->task);
+      do_error("Tried to compute something that is not an operation or instruction.", reg->task->task);
       break;
     }
 

@@ -236,6 +236,7 @@ struct task
   registry* queued_instruction;
   pthread_mutex_t lock;
   int pid;
+  pthread_t* thread;
 };
 
 typedef struct task task;

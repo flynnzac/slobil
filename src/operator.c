@@ -6483,6 +6483,7 @@ if (arg3 != NULL && true && (!(arg3->type & Registry)))
   t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
   
   t->pid = -1;
+  t->thread = NULL;
 
   data* d = new_data();
   d->type = Task;
@@ -6534,12 +6535,15 @@ if (arg1 != NULL && true && (!(arg1->type & Task)))
       return;
     }
 
-  pthread_t pt;
-  int ret = pthread_create(&pt, NULL, run_task_thread, arg1);
-
+  pthread_t* pt = malloc(sizeof(pthread_t));
+  int ret = pthread_create(pt, NULL, run_task_thread, arg1);
   if (ret)
     {
       do_error("Thread creation failed.", reg->task->task);
+    }
+  else
+    {
+      ((task*) arg1->data)->thread = pt;
     }
 }
 
@@ -6579,8 +6583,6 @@ if (arg1 != NULL && true && (!(arg1->type & Task)))
 
 ;
 
-
-  /* Queue Location */
   
   
   
@@ -6609,7 +6611,7 @@ if (arg2 != NULL && true && (!(arg2->type & Register)))
 
 ;
 
-    
+  
   
   
 data* arg3 = resolve(a.arg_array[3], reg);
@@ -6641,7 +6643,9 @@ if (arg3 != NULL && false && (!(arg3->type & Register)))
 
   task* t = (task*) arg1->data;
   pthread_mutex_lock(&t->lock);
-  data* d = copy_data(arg3);
+
+  data* d;
+  d = copy_data(arg3);
   set(t->queued_instruction, d,
       ((regstr*) arg2->data)->name, 0);
   pthread_mutex_unlock(&t->lock);
@@ -6698,12 +6702,209 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
         }
     }
 
-
   d = copy_data(d);
   ret_ans(reg, d);
   del(t->queued_instruction, ((regstr*) arg1->data)->key,
       1, false);
   pthread_mutex_unlock(&t->lock);
+}
+
+void
+op_select (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "select", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<select> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<select> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Instruction)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <select> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <select> should be of type Instruction.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  int sz = ceil((a.length-2)/2);
+  data* hashes[sz];
+  data* actions[sz];
+
+  int hash_idx = 0;
+  int action_idx = 0;
+
+  for (int i=2; i < a.length; i=i+2)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
+
+if (true)
+  {
+    if (argi == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<select> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<select> requires at least %d arguments.", i);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (argi != NULL && true && (!(argi->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <select> should be of type Register.")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <select> should be of type Register.", i);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+      hashes[hash_idx] = argi;
+      hash_idx++;
+
+      int i1 = i+1;
+      
+      
+      
+data* argi1 = resolve(a.arg_array[i1], reg);
+
+if (true)
+  {
+    if (argi1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<select> requires at least  arguments.")+digits(i1)+1));
+        sprintf(err_msg, "<select> requires at least %d arguments.", i1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (argi1 != NULL && true && (!(argi1->type & Instruction)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <select> should be of type Instruction.")+digits(i1)+1));
+    sprintf(err_msg, "Argument %d of <select> should be of type Instruction.", i1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+      actions[action_idx] = argi1;
+      action_idx++;
+    }
+
+  if (hash_idx != action_idx)
+    {
+      do_error("Number of locations to select should match the number of actions to take on matching.",
+               reg->task->task);
+      return;
+    }
+
+  data* d = NULL;
+  task* t = reg->task;
+
+  int idx;
+
+  while (d==NULL)
+    {
+      pthread_mutex_lock(&t->lock);
+      for (int i=0; i < hash_idx; i++)
+        {
+          d = get(t->queued_instruction,
+                  ((regstr*) hashes[i]->data)->key,
+                  0);
+          if (d != NULL)
+            {
+              idx = i;
+              break;
+            }
+        }
+      if (d == NULL)
+        {
+          pthread_mutex_unlock(&t->lock);
+        }
+    }
+
+  d = copy_data(d);
+  ret_ans(reg,d);
+  del(t->queued_instruction,
+      ((regstr*) hashes[idx]->data)->key,
+      1, false);
+  pthread_mutex_unlock(&t->lock);
+  execute_0(actions[idx], reg);
+  
+}
+
+void
+op_stop_task (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "stop-task", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<stop-task> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<stop-task> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Task)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <stop-task> should be of type Task.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <stop-task> should be of type Task.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  task* t = (task*) arg1->data;
+  if (t->thread != NULL)
+    {
+      pthread_kill(t->thread, SIGKILL);
+      t->thread = NULL;
+    }
+  else
+    {
+      do_error("No active thread on task to stop.", reg->task->task);
+    }
 }
 
 void
@@ -7029,6 +7230,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_accept, NULL, NULL, 0);
   set(reg,d,"accept",1);
 
+  assign_op(&d, op_select, NULL, NULL, 0);
+  set(reg,d,"select",1);
 
 }
   
