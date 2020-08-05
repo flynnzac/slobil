@@ -6860,54 +6860,6 @@ if (argi1 != NULL && true && (!(argi1->type & Instruction)))
 }
 
 void
-op_stop_task (arg a, registry* reg)
-{
-  
-  
-  check_length(&a, 1+1, "stop-task", reg->task->task);
-if (is_error(-1, reg->task->task)) return ;;
-
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<stop-task> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<stop-task> requires at least %d arguments.", 1);
-        do_error(err_msg, reg->task->task);
-        free(err_msg);
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Task)))
-  {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <stop-task> should be of type Task.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <stop-task> should be of type Task.", 1);
-    do_error(err_msg, reg->task->task);
-    free(err_msg);
-    return ;
-  }
-
-;
-
-  task* t = (task*) arg1->data;
-  if (t->thread != NULL)
-    {
-      pthread_kill(t->thread, SIGKILL);
-      t->thread = NULL;
-    }
-  else
-    {
-      do_error("No active thread on task to stop.", reg->task->task);
-    }
-}
-
-void
 add_basic_ops (registry* reg)
 {
   data* d;

@@ -28,6 +28,10 @@ task /t2
                       /triple
                       (
                         print [ mul ans 3 . ] .
+                      )
+                      /end
+                      (
+                        exit .
                       ) .
              ) .
      )
@@ -38,3 +42,4 @@ queue t2 /double 3 .
 queue t2 /triple 10 .
 queue t2 /double 7 .
                       
+queue t2 /end True .

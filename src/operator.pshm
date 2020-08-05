@@ -3583,29 +3583,6 @@ op_select (arg a, registry* reg)
 }
 
 void
-op_stop_task (arg a, registry* reg)
-{
-  #op=stop-task@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Task@
-  ##GETARG~$;
-
-  task* t = (task*) arg1->data;
-  if (t->thread != NULL)
-    {
-      pthread_kill(t->thread, SIGKILL);
-      t->thread = NULL;
-    }
-  else
-    {
-      do_error("No active thread on task to stop.", reg->task->task);
-    }
-}
-
-void
 add_basic_ops (registry* reg)
 {
   data* d;

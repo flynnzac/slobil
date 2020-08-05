@@ -45,6 +45,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <signal.h>
 
 
 enum data_type
