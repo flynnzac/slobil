@@ -6552,7 +6552,7 @@ op_queue (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "queue", reg->task->task);
+  check_length(&a, 2+1, "queue", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
   
@@ -6611,9 +6611,12 @@ if (arg2 != NULL && true && (!(arg2->type & Register)))
 
 ;
 
-  
-  
-  
+  data* d;
+  if (a.length >= 4)
+    {
+      
+      
+      
 data* arg3 = resolve(a.arg_array[3], reg);
 
 if (true)
@@ -6638,14 +6641,17 @@ if (arg3 != NULL && false && (!(arg3->type & Register)))
   }
 
 ;
-  
-
+      
+      d = copy_data(arg3);
+    }
+  else
+    {
+      assign_nothing(&d);
+    }
 
   task* t = (task*) arg1->data;
   pthread_mutex_lock(&t->lock);
 
-  data* d;
-  d = copy_data(arg3);
   set(t->queued_instruction, d,
       ((regstr*) arg2->data)->name, 0);
   pthread_mutex_unlock(&t->lock);
@@ -6717,42 +6723,14 @@ op_select (arg a, registry* reg)
   check_length(&a, 1+1, "select", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<select> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<select> requires at least %d arguments.", 1);
-        do_error(err_msg, reg->task->task);
-        free(err_msg);
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Instruction)))
-  {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <select> should be of type Instruction.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <select> should be of type Instruction.", 1);
-    do_error(err_msg, reg->task->task);
-    free(err_msg);
-    return ;
-  }
-
-;
-
-  int sz = ceil((a.length-2)/2);
+  int sz = ceil((a.length-1)/2);
   data* hashes[sz];
   data* actions[sz];
 
   int hash_idx = 0;
   int action_idx = 0;
 
-  for (int i=2; i < a.length; i=i+2)
+  for (int i=1; i < a.length; i=i+2)
     {
       
       
@@ -6783,8 +6761,8 @@ if (argi != NULL && true && (!(argi->type & Register)))
 ;
 
       hashes[hash_idx] = argi;
-      hash_idx++;
 
+      hash_idx++;
       int i1 = i+1;
       
       
@@ -6840,6 +6818,12 @@ if (argi1 != NULL && true && (!(argi1->type & Instruction)))
           if (d != NULL)
             {
               idx = i;
+              d = copy_data(d);
+              ret_ans(reg,d);
+              del(t->queued_instruction,
+                  ((regstr*) hashes[idx]->data)->key,
+                  1, false);
+
               break;
             }
         }
@@ -6849,11 +6833,6 @@ if (argi1 != NULL && true && (!(argi1->type & Instruction)))
         }
     }
 
-  d = copy_data(d);
-  ret_ans(reg,d);
-  del(t->queued_instruction,
-      ((regstr*) hashes[idx]->data)->key,
-      1, false);
   pthread_mutex_unlock(&t->lock);
   execute_0(actions[idx], reg);
   

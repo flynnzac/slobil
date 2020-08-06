@@ -3445,7 +3445,7 @@ void
 op_queue (arg a, registry* reg)
 {
   #op=queue@
-  #length=3@
+  #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
@@ -3456,17 +3456,23 @@ op_queue (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  #num=3@
-  #checktype=false@
-  ##GETARG~$;
-  #checktype=true@
-
+  data* d;
+  if (a.length >= 4)
+    {
+      #num=3@
+      #checktype=false@
+      ##GETARG~$;
+      #checktype=true@
+      d = copy_data(arg3);
+    }
+  else
+    {
+      assign_nothing(&d);
+    }
 
   task* t = (task*) arg1->data;
   pthread_mutex_lock(&t->lock);
 
-  data* d;
-  d = copy_data(arg3);
   set(t->queued_instruction, d,
       ((regstr*) arg2->data)->name, 0);
   pthread_mutex_unlock(&t->lock);
@@ -3512,26 +3518,22 @@ op_select (arg a, registry* reg)
   #length=1@
   ##CHECK_ARGS~$;
 
-  #num=1@
-  #type=Instruction@
-  ##GETARG~$;
-
-  int sz = ceil((a.length-2)/2);
+  int sz = ceil((a.length-1)/2);
   data* hashes[sz];
   data* actions[sz];
 
   int hash_idx = 0;
   int action_idx = 0;
 
-  for (int i=2; i < a.length; i=i+2)
+  for (int i=1; i < a.length; i=i+2)
     {
       #num=i@
       #type=Register@
       ##GETARG~$;
 
       hashes[hash_idx] = argi;
-      hash_idx++;
 
+      hash_idx++;
       int i1 = i+1;
       #num=i1@
       #type=Instruction@
@@ -3563,6 +3565,12 @@ op_select (arg a, registry* reg)
           if (d != NULL)
             {
               idx = i;
+              d = copy_data(d);
+              ret_ans(reg,d);
+              del(t->queued_instruction,
+                  ((regstr*) hashes[idx]->data)->key,
+                  1, false);
+
               break;
             }
         }
@@ -3572,11 +3580,6 @@ op_select (arg a, registry* reg)
         }
     }
 
-  d = copy_data(d);
-  ret_ans(reg,d);
-  del(t->queued_instruction,
-      ((regstr*) hashes[idx]->data)->key,
-      1, false);
   pthread_mutex_unlock(&t->lock);
   execute_0(actions[idx], reg);
   
