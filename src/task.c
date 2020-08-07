@@ -193,6 +193,7 @@ run_task_thread (void* input)
   ((task*) arg1->data)->pid = 1;
   run_task(arg1);
   ((task*) arg1->data)->pid = -1;
+  ((task*) arg1->data)->thread = NULL;
   pthread_exit(NULL);
 }
 

@@ -6694,15 +6694,55 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 
 ;
 
+  data* def = NULL;
+  if (a.length >= 3)
+    {
+      
+      
+      
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<accept> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<accept> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg2 != NULL && false && (!(arg2->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <accept> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <accept> should be of type Register.", 2);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+      
+      def = arg2;
+    }
+
   task* t = reg->task;
   data* d = NULL;
+  bool delete = true;
   while (d == NULL)
     {
       pthread_mutex_lock(&t->lock);
       d = get(t->queued_instruction,
               ((regstr*) arg1->data)->key,
               0);
-      if (d == NULL)
+      if ((d==NULL) && (def != NULL))
+        {
+          d = def;
+          delete = false;
+        }
+      else if (d==NULL)
         {
           pthread_mutex_unlock(&t->lock);
         }
@@ -6710,8 +6750,11 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
 
   d = copy_data(d);
   ret_ans(reg, d);
-  del(t->queued_instruction, ((regstr*) arg1->data)->key,
-      1, false);
+
+  if (delete)
+    del(t->queued_instruction, ((regstr*) arg1->data)->key,
+        1, false);
+
   pthread_mutex_unlock(&t->lock);
 }
 
@@ -6837,6 +6880,57 @@ if (argi1 != NULL && true && (!(argi1->type & Instruction)))
   execute_0(actions[idx], reg);
   
 }
+
+void
+op_check_queue (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "check-queue", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<check-queue> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<check-queue> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <check-queue> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <check-queue> should be of type Register.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  task* t = reg->task;
+
+  pthread_mutex_lock(&t->lock);
+  data* d = get(t->queued_instruction,
+                ((regstr*) arg1->data)->key,
+                0);
+  pthread_mutex_unlock(&t->lock);
+  
+  data* r;
+  assign_boolean(&r, d != NULL);
+  ret_ans(reg, r);
+}
+  
+  
 
 void
 add_basic_ops (registry* reg)
@@ -7164,5 +7258,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_select, NULL, NULL, 0);
   set(reg,d,"select",1);
 
+  assign_op(&d, op_check_queue, NULL, NULL, 0);
+  set(reg,d,"check-queue",1);
+
+  
 }
   
