@@ -106,6 +106,17 @@ save_content (FILE* f, content* reg)
                          sizeof(char), size, f);
                 }
               break;
+            case Task:
+              {
+                task* t = (task*) reg->value->data;
+                save_registry(f, t->state);
+                size = NotAType;
+                fwrite(&size, sizeof(data_type),1,f);
+                size = strlen(t->code->code);
+                fwrite(&size, sizeof(int), 1, f);
+                fwrite(t->code->code, sizeof(char), size, f);
+              }
+              break;
             case Boolean:
               fwrite(reg->value->data, sizeof(bool), 1, f);
               break;
@@ -271,6 +282,43 @@ read_registry (FILE* f, registry* reg)
           d = new_data();
           d->type = Operation;
           d->data = op;
+          break;
+        case Task:
+          {
+            task* t = malloc(sizeof(task));
+            t->task = new_task(t);
+            t->state = new_registry(t->task->current_parse_registry, ARBEL_HASH_SIZE, t);
+            read_registry(f, t->state);
+            cache = malloc(sizeof(int));
+            fread(cache, sizeof(int), 1, f);
+            size = *((int*) cache);
+            free(cache);
+
+            cache = malloc(sizeof(char)*(size+1));
+            fread(cache, sizeof(char), size, f);
+            ((char*) cache)[size] = '\0';
+            code = malloc(sizeof(char)*(size+1));
+            strcpy(code, (char*) cache);
+
+            f_sub = fmemopen(cache, sizeof(char)*size, "r");
+            state = fresh_state(0);
+            stmt=NULL;
+            parse(f_sub, &state, &stmt, t->task);
+            fclose(f_sub);
+            t->code = malloc(sizeof(instruction));
+            t->code->stmt = stmt;
+            t->code->code = code;
+            stmt = NULL;
+            free(cache);
+
+            t->task->current_parse_registry = t->state;
+            t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+            t->pid = -1;
+            t->thread = NULL;
+            d = new_data();
+            d->type = Task;
+            d->data = t;
+          }
           break;
         case Boolean:
           cache = malloc(sizeof(bool));

@@ -572,6 +572,12 @@ run_task (data* t);
 void*
 run_task_thread (void* input);
 
+void
+free_task (task* t);
+
+void
+free_task_vars (task_vars* t);
+
 /* global variables */
 
 task* task0;

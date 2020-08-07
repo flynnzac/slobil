@@ -190,10 +190,15 @@ void*
 run_task_thread (void* input)
 {
   data* arg1 = (data*) input;
+  pthread_mutex_lock(&t->lock);
   ((task*) arg1->data)->pid = 1;
+  pthread_mutex_unlock(&t->unlock);
   run_task(arg1);
+  
+  pthread_mutex_lock(&t->unlock);
   ((task*) arg1->data)->pid = -1;
   ((task*) arg1->data)->thread = NULL;
+  pthread_mutex_unlock(&t->unlock);
   pthread_exit(NULL);
 }
 

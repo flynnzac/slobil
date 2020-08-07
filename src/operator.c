@@ -6529,7 +6529,7 @@ if (arg1 != NULL && true && (!(arg1->type & Task)))
 
 ;
 
-  if (((task*) arg1->data)->pid > 0)
+  if (((task*) arg1->data)->thread != NULL)
     {
       do_error("Task already running.", reg->task->task);
       return;

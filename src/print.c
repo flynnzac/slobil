@@ -82,7 +82,8 @@ print_data (data* d, print_settings settings)
       printf("A Task with Body:\n");
       printf("( %s )", ((task*) d->data)->code->code);
       printf("\n");
-      if (((task*) d->data)->pid > 0)
+      pthread_mutex_lock(&t->lock);
+      if (((task*) d->data)->thread==NULL)
         {
           printf("Task Running.");
         }
@@ -90,6 +91,7 @@ print_data (data* d, print_settings settings)
         {
           printf("Task Not Running.");
         }
+      pthread_mutex_unlock(&t->lock);
       break;
     default:
       break;
