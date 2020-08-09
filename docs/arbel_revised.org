@@ -1,0 +1,173 @@
+# -*- org-html-preamble-format: (("en" "%t<br>%a<br>%T")); -*-
+#+TITLE: ARBEL
+#+AUTHOR: Zach Flynn
+#+DESCRIPTION: ARBEL is a registry-based environment and language. 
+
+* Code inside Data
+
+ARBEL code is executed inside a data set called a registry.  Registries are tables with values entered in /registers/. The programmer enters commands to modify the contents of the registry and possibly send the results of any computations performed on the data to another registry.
+
+Code in ARBEL has no context or scope of its own.  It requires a registry to give it context.  For example,
+#+BEGIN_SRC arbel
+... print x .
+#+END_SRC
+
+requires that the registry contains data located at the =print= and =x= register.  Different registries could contain different values at these locations so the same code might perform different actions in different contexts.  
+
+* Syntax
+
+ARBEL code consists of a number of statements.  Each statement contains a series of data values, either literals or values located in the current registry, separated by whitespace and ending with a period.  All elements of a statement must be separated by whitespace from the preceding element, including the terminating period.
+#+BEGIN_SRC arbel
+... data1 data2 data3 data4 .
+#+END_SRC
+
+The following are examples of statements:
+#+BEGIN_SRC arbel
+... add 1 2 .
+ans = 3
+... print "Hello" .
+Hello
+#+END_SRC
+
+The first element of a statement is an operation that performs some transformation of the other data elements in the statement and the contents of the registry in which the statement is executed.  The first statement uses the operation located at the =add= register.  The second uses the operation located at the =add= register.  The numbers and the the string ="Hello"= are literals.
+
+** Literals and Names
+
+Names are sequences of characters that are not literals and not parenthesis (=()=, =[]=, ={}=, =<>=).  A name appearing in a statement indicates the value located at the register with that name.
+
+Literals represent a value of data.
+
+*** Numeric Literals
+- *Numbers.*  A sequence of digits either with or without a decimal point.  With a decimal point, the type of the literal is a Real.  Without a decimal point, the type of the literal is an Integer. Example: =123= and =1.23=.
+
+*** String Literals
+- *Strings.* A sequence of characters enclosed by double quotes (=""=). Example: ="Hello, world."=.
+
+*** Boolean Literals
+
+*** Register Literals
+- *Register.* A register location is a name preceeded by a forward slash =/=.  Example: =/hello=, =/x1=.  These literals refer to the register location, not its value.
+
+*** Instruction Literals
+- *Instructions.*  Statements enclosed in open parenthesis.  Instructions are code that is not executed but saved as data to be used in another environment.  Example: =( add t 2 . mul ans 5 . )=.  Whitespace must separate the parenthesis and other data elements.
+
+*** Operator Literals
+
+*** The Nothing Literal
+
+
+** Substatements 
+
+ARBEL statements can contain three forms of substatements in place of a data element.  The types of substatements are differentiated by when the code they contain is executed.  
+
+*** Immediate Substatements
+
+ Immediate substatements are executed as soon as they are encountered.  They evaluate to the value of the =ans= register in the registry where the code is executed after the substatement is executed. They are enclosed in square brackets.
+
+ #+BEGIN_SRC arbel
+ ... add [ sub 5 3 . ] 10 .
+ ans = 12
+ #+END_SRC
+
+ =sub= is the usual location of the subtraction operator.  The bracketed substatement is evaluated and replaced with the value of the =ans= register after =sub 5 3 .= is executed.   The subtraction and other arithmetic operations set the =ans= register to their result.  So =2= is the first data element in the outer statement.  =add= then adds =2= and =10= setting the =ans= register to =12=.
+
+*** Instructions
+
+ Instructions are substatements that are saved as code instead of evaluated.  They can be executed later or passed between registries to be executed in other contexts.  They are a type of data and can be assigned to registers.  They are statements enclosed in open parenthesis.
+ #+BEGIN_SRC arbel
+ ... set /2t-1 ( add t 1 . mul ans 2 . ) .
+ #+END_SRC
+
+ This instruction adds one to data located at register =t= and then multiples the result by =2=, setting the =ans= register to the result.  This statement is not executed in the definition above.  The value at =/2t-1= is code that can do that.  
+
+*** Active Instructions
+
+ Active instructions are executed immediately /when they are used/.  They are usually used in conditional operations so that code is not executed unless it is required.  They are enclosed in curly braces.
+ #+BEGIN_SRC arbel
+ ... if True { print "hello" . } { print "goodbye" . } .
+ hello
+ ... if False { print "hello" . } { print "goodbye" . } .
+ goodbye
+ ... if True [ print "hello" . ] [ print "goodbye" . ]
+ hello
+ goodbye
+ #+END_SRC
+
+ This code block illustrates the difference between active instructions and immediate substatements.  The =if= operation accesses and returns its second argument if the first argument is =True= and the third argument if the first is =False=.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the =if= operation accesses their value.
+
+** Calling Instructions
+
+Instructions can be executed with either the =in= or the =call= operations.  
+
+The =in= operation executes the instruction inside an existing registry.
+
+#+BEGIN_SRC arbel
+... set /assign-x ( set /x 10 . ) .
+... set /y [ registry . ] .
+... in y assign-x .
+... print x .
+Error: Value at register /x not found.
+... in _ assign-x .
+... print x .
+10
+#+END_SRC
+
+This example demonstrates both using instructions and how ARBEL code executes inside registries.  The =registry= operation creates a new registry.  The statement =in y assign-x= executes the code in the instruction located at =/assign-x= in the context of the =y= register.  So, within the =y= registry, the value located at =/x= is =10=.  But, because we are currently not inside the =/y= registry, after the =in= command we cannot access those registries so =print x= prints nothing.  The special name =_= refers to the current registry.  So =in _ assign-x= runs the instruction =assign-x= in the current registry.  So =/x= in the current registry now holds the value =10=.
+
+The =call= operation executes the instruction inside a temporary registry defined by the user calling the code.  It then sets the =/ans= register in the calling registry to the value of the =/ans= register in the temporary registry.
+#+BEGIN_SRC arbel
+... set /add-one ( add t 1 . ) .
+... call add-one /t 10 .
+ans = 11
+#+END_SRC
+
+The =call= operations takes an instruction and then alternating register value pairs as arguments.  The register value pairs define the state of the temporary registry when the code is run.  Because the caller of the code defines the state of the registry, any non-literal can be modified by the caller.
+#+BEGIN_SRC arbel
+... set /add-one ( add t 1 . ) .
+... call add-one /t 10 .
+ans = 11
+... call add-one /t 10 /add sub .
+ans = 9
+#+END_SRC
+
+The second line typically located at the register =/add= (the =add= operation) with the operation located at the register =/sub= (the =sub= operation).  But it only makes this replacement in the temporary registry.  The registry calling the code is unaffected by this change.  So =call add-one /t 10 /add sub= subtracts =1= from =10= instead of adds.
+
+The main difference between the =in= and =call= operation is that the =call= operation moves the value of =/ans= in the temporary registry it creates back to the calling registry.  The =in= operation is typically used for modifying registries and the =call= operation is typically used for computations.
+
+As a convenience, if an instruction is the first data object in a statement, ARBEL assumes that you want to =call= it.  It operates exactly the same as if you had included the =call= operation itself.
+#+BEGIN_SRC arbel
+... set /add-one ( add t 1 . ) .
+... add-one /t 10
+ans = 10
+#+END_SRC
+
+** Defining operations
+
+Most new procedures that a programmer writes in ARBEL are instructions, but it is sometimes useful to have "positional" arguments like operations.  Users write operations by writing instructions and assigning argument numbers to different registers in the temporary registry. They can be defined using angle brackets or the =op= operation.
+
+#+BEGIN_SRC arbel
+... set /add-one [ op ( add t 1 . ) /t . ] .
+... add-one 5 .
+ans = 6
+... set /add-one < ( add t 1 . ) /t > .
+... add-one 5 .
+ans = 6
+#+END_SRC
+
+
+* Registries
+
+Registries are tables of data located at registers.  Register locations are prefixed with a forward slash in ARBEL so:
+#+BEGIN_SRC arbel
+/hello
+/x
+/z123
+#+END_SRC
+
+are all examples of register locations in ARBEL.  The value located at a registry is referenced by removing the forward slash.
+#+BEGIN_SRC arbel
+... set /x 10 .
+... print x .
+10
+#+END_SRC
+

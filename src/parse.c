@@ -110,9 +110,6 @@ add_statement_argument (element** head, element* e, statement* s)
 
 }
 
-/* Every program is allowed one long, inscrutable, mess of a function.  parse_stmt is ARBEL's.  It
-   Works.  Believe. */
-
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
 {
@@ -172,7 +169,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                       state->open_paren = '[';
                     }
 
-                  /* Stream the sub expression into parse so we can make it a segquence of
+                  /* Stream the sub expression into parse so we can make it a sequence of
                      statements itself. */
                   f_sub = fmemopen(str,
                                    sizeof(char)*strlen(str), "r");
@@ -257,6 +254,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                 }
               else if (is_nothing(state->buffer))
                 {
+                  /* Assign Nothing if the word "Nothing" is in the buffer. */
                   assign_nothing(&d);
                   e = add_literal_argument(&head, e, d);
                 }
@@ -444,7 +442,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
       if (is_error(-1, task))
         {
           break;
-
         }
     }
 

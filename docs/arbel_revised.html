@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-08-09 Sun 00:38 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ARBEL</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zach Flynn" />
+<meta name="description" content="ARBEL is a registry-based environment and language."
+ />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+ARBEL<br>Zach Flynn<br>2020-08-09 Sun 00:38
+</div>
+<div id="content">
+<h1 class="title">ARBEL</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga29ab1b">1. Code inside Data</a></li>
+<li><a href="#orgd9c0662">2. Syntax</a>
+<ul>
+<li><a href="#org110bd65">2.1. Literals and Names</a></li>
+<li><a href="#orgdd9b216">2.2. Substatements</a>
+<ul>
+<li><a href="#orgbe39aca">2.2.1. Immediate Substatements</a></li>
+<li><a href="#org0c0292e">2.2.2. Instructions</a></li>
+<li><a href="#orge9bbe2d">2.2.3. Active Instructions</a></li>
+</ul>
+</li>
+<li><a href="#orgb9a8a29">2.3. Calling Instructions</a></li>
+<li><a href="#org0207fda">2.4. Defining operations</a></li>
+</ul>
+</li>
+<li><a href="#orge9b19da">3. Registries</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga29ab1b" class="outline-2">
+<h2 id="orga29ab1b"><span class="section-number-2">1</span> Code inside Data</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+ARBEL code is executed inside a data set called a registry.  Registries are tables with values entered in <i>registers</i>. The programmer enters commands to modify the contents of the registry and possibly send the results of any computations performed on the data to another registry.
+</p>
+
+<p>
+Code in ARBEL has no context or scope of its own.  It requires a registry to give it context.  For example,
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... print x .
+</pre>
+</div>
+
+<p>
+requires that the registry contains data located at the <code>print</code> and <code>x</code> register.  Different registries could contain different values at these locations so the same code might perform different actions in different contexts.  
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd9c0662" class="outline-2">
+<h2 id="orgd9c0662"><span class="section-number-2">2</span> Syntax</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+ARBEL code consists of a number of statements.  Each statement contains a series of data values, either literals or values located in the current registry, separated by whitespace and ending with a period.  All elements of a statement must be separated by whitespace from the preceding element, including the terminating period.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... data1 data2 data3 data4 .
+</pre>
+</div>
+
+<p>
+The following are examples of statements:
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... add 1 2 .
+ans = 3
+... print <span style="color: #4E9A06;">"Hello"</span> .
+Hello
+</pre>
+</div>
+
+<p>
+The first element of a statement is an operation that performs some transformation of the other data elements in the statement and the contents of the registry in which the statement is executed.  The first statement uses the operation located at the <code>add</code> register.  The second uses the operation located at the <code>add</code> register.  The numbers and the the string <code>"Hello"</code> are literals.
+</p>
+</div>
+
+<div id="outline-container-org110bd65" class="outline-3">
+<h3 id="org110bd65"><span class="section-number-3">2.1</span> Literals and Names</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Names are sequences of characters that are not literals and not parenthesis (<code>()</code>, <code>[]</code>, <code>{}</code>, <code>&lt;&gt;</code>).  A name appearing in a statement indicates the value located at the register with that name.
+</p>
+
+<p>
+Literals are the following:
+</p>
+
+<ul class="org-ul">
+<li><b>Numbers.</b>  A sequence of digits either with or without a decimal point.  With a decimal point, the type of the literal is a Real.  Without a decimal point, the type of the literal is an Integer. Example: <code>123</code> and <code>1.23</code>.</li>
+<li><b>Strings.</b> A sequence of characters enclosed by double quotes (<code>""</code>). Example: <code>"Hello, world."</code>.</li>
+<li><b>Register.</b> A register location is a name preceeded by a forward slash <code>/</code>.  Example: <code>/hello</code>, <code>/x1</code>.  These literals refer to the register location, not its value.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdd9b216" class="outline-3">
+<h3 id="orgdd9b216"><span class="section-number-3">2.2</span> Substatements</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+ARBEL code can also contain three forms of substatements.  The types of substatements are differentiated by when the code they contain is executed.  
+</p>
+</div>
+
+<div id="outline-container-orgbe39aca" class="outline-4">
+<h4 id="orgbe39aca"><span class="section-number-4">2.2.1</span> Immediate Substatements</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Immediate substatements are executed as soon as they are encountered.  They evaluate to the value of the <code>ans</code> register in the registry where the code is executed after the substatement is executed. They are enclosed in square brackets.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-arbel">... add [ sub 5 3 . ] 10 .
+ans = 12
+</pre>
+</div>
+
+<p>
+<code>sub</code> is the usual location of the subtraction operator.  The bracketed substatement is evaluated and replaced with the value of the <code>ans</code> register after <code>sub 5 3 .</code> is executed.   The subtraction and other arithmetic operations set the <code>ans</code> register to their result.  So <code>2</code> is the first data element in the outer statement.  <code>add</code> then adds <code>2</code> and <code>10</code> setting the <code>ans</code> register to <code>12</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0c0292e" class="outline-4">
+<h4 id="org0c0292e"><span class="section-number-4">2.2.2</span> Instructions</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Instructions are substatements that are saved as code instead of evaluated.  They can be executed later or passed between registries to be executed in other contexts.  They are a type of data and can be assigned to registers.  They are statements enclosed in open parenthesis.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/2t-1</span> ( add t 1 . mul ans 2 . ) .
+</pre>
+</div>
+
+<p>
+This instruction adds one to data located at register <code>t</code> and then multiples the result by <code>2</code>, setting the <code>ans</code> register to the result.  This statement is not executed in the definition above.  The value at <code>/2t-1</code> is code that can do that.  
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge9bbe2d" class="outline-4">
+<h4 id="orge9bbe2d"><span class="section-number-4">2.2.3</span> Active Instructions</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Active instructions are executed immediately <i>when they are used</i>.  They are usually used in conditional operations so that code is not executed unless it is required.  They are enclosed in curly braces.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... if <span style="color: #F5666D;">True</span> { print <span style="color: #4E9A06;">"hello"</span> . } { print <span style="color: #4E9A06;">"goodbye"</span> . } .
+hello
+... if <span style="color: #F5666D;">False</span> { print <span style="color: #4E9A06;">"hello"</span> . } { print <span style="color: #4E9A06;">"goodbye"</span> . } .
+goodbye
+... if <span style="color: #F5666D;">True</span> [ print <span style="color: #4E9A06;">"hello"</span> . ] [ print <span style="color: #4E9A06;">"goodbye"</span> . ]
+hello
+goodbye
+</pre>
+</div>
+
+<p>
+This code block illustrates the difference between active instructions and immediate substatements.  The <code>if</code> operation accesses and returns its second argument if the first argument is <code>True</code> and the third argument if the first is <code>False</code>.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the <code>if</code> operation accesses their value.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb9a8a29" class="outline-3">
+<h3 id="orgb9a8a29"><span class="section-number-3">2.3</span> Calling Instructions</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Instructions can be executed with either the <code>in</code> or the <code>call</code> operations.  
+</p>
+
+<p>
+The <code>in</code> operation executes the instruction inside an existing registry.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/assign-x</span> ( set <span style="color: #0084C8; font-weight: bold;">/x</span> 10 . ) .
+... set <span style="color: #0084C8; font-weight: bold;">/y</span> [ registry . ] .
+... in y assign-x .
+... print x .
+Error: Value at register <span style="color: #0084C8; font-weight: bold;">/x</span> not found.
+... in _ assign-x .
+... print x .
+10
+</pre>
+</div>
+
+<p>
+This example demonstrates both using instructions and how ARBEL code executes inside registries.  The <code>registry</code> operation creates a new registry.  The statement <code>in y assign-x</code> executes the code in the instruction located at <code>/assign-x</code> in the context of the <code>y</code> register.  So, within the <code>y</code> registry, the value located at <code>/x</code> is <code>10</code>.  But, because we are currently not inside the <code>/y</code> registry, after the <code>in</code> command we cannot access those registries so <code>print x</code> prints nothing.  The special name <code>_</code> refers to the current registry.  So <code>in _ assign-x</code> runs the instruction <code>assign-x</code> in the current registry.  So <code>/x</code> in the current registry now holds the value <code>10</code>.
+</p>
+
+<p>
+The <code>call</code> operation executes the instruction inside a temporary registry defined by the user calling the code.  It then sets the <code>/ans</code> register in the calling registry to the value of the <code>/ans</code> register in the temporary registry.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/add-one</span> ( add t 1 . ) .
+... call add-one <span style="color: #0084C8; font-weight: bold;">/t</span> 10 .
+ans = 11
+</pre>
+</div>
+
+<p>
+The <code>call</code> operations takes an instruction and then alternating register value pairs as arguments.  The register value pairs define the state of the temporary registry when the code is run.  Because the caller of the code defines the state of the registry, any non-literal can be modified by the caller.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/add-one</span> ( add t 1 . ) .
+... call add-one <span style="color: #0084C8; font-weight: bold;">/t</span> 10 .
+ans = 11
+... call add-one <span style="color: #0084C8; font-weight: bold;">/t</span> 10 <span style="color: #0084C8; font-weight: bold;">/add</span> sub .
+ans = 9
+</pre>
+</div>
+
+<p>
+The second line typically located at the register <code>/add</code> (the <code>add</code> operation) with the operation located at the register <code>/sub</code> (the <code>sub</code> operation).  But it only makes this replacement in the temporary registry.  The registry calling the code is unaffected by this change.  So <code>call add-one /t 10 /add sub</code> subtracts <code>1</code> from <code>10</code> instead of adds.
+</p>
+
+<p>
+The main difference between the <code>in</code> and <code>call</code> operation is that the <code>call</code> operation moves the value of <code>/ans</code> in the temporary registry it creates back to the calling registry.  The <code>in</code> operation is typically used for modifying registries and the <code>call</code> operation is typically used for computations.
+</p>
+
+<p>
+As a convenience, if an instruction is the first data object in a statement, ARBEL assumes that you want to <code>call</code> it.  It operates exactly the same as if you had included the <code>call</code> operation itself.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/add-one</span> ( add t 1 . ) .
+... add-one <span style="color: #0084C8; font-weight: bold;">/t</span> 10
+ans = 10
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0207fda" class="outline-3">
+<h3 id="org0207fda"><span class="section-number-3">2.4</span> Defining operations</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Most new procedures that a programmer writes in ARBEL are instructions, but it is sometimes useful to have "positional" arguments like operations.  Users write operations by writing instructions and assigning argument numbers to different registers in the temporary registry. They can be defined using angle brackets or the <code>op</code> operation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/add-one</span> [ op ( add t 1 . ) <span style="color: #0084C8; font-weight: bold;">/t</span> . ] .
+... add-one 5 .
+ans = 6
+... set <span style="color: #0084C8; font-weight: bold;">/add-one</span> <span style="color: #00578E; font-weight: bold;">&lt;</span> ( add t 1 . ) <span style="color: #0084C8; font-weight: bold;">/t</span> <span style="color: #00578E; font-weight: bold;">&gt;</span> .
+... add-one 5 .
+ans = 6
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge9b19da" class="outline-2">
+<h2 id="orge9b19da"><span class="section-number-2">3</span> Registries</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Registries are tables of data located at registers.  Register locations are prefixed with a forward slash in ARBEL so:
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel"><span style="color: #0084C8; font-weight: bold;">/hello</span>
+<span style="color: #0084C8; font-weight: bold;">/x</span>
+<span style="color: #0084C8; font-weight: bold;">/z123</span>
+</pre>
+</div>
+
+<p>
+are all examples of register locations in ARBEL.  The value located at a registry is referenced by removing the forward slash.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/x</span> 10 .
+... print x .
+10
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Zach Flynn</p>
+<p class="date">Created: 2020-08-09 Sun 00:38</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
