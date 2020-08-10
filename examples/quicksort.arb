@@ -1,0 +1,82 @@
+set /swap
+    (
+      set /tmp input:i .
+      set i input:j input .
+      set j tmp input .
+    ) .
+
+
+set /partition
+    (
+      set /pivot input:end .
+      set /i start .
+      set /j start .
+      set /cont True .
+      while ( answer cont . )
+            (
+              if [ less-than input:j pivot . ]
+                 {
+                   swap /input input /i i /j j .
+                   set /i [ next i . ] .
+                 } .
+
+              if [ register-eq j end . ]
+                 {
+                   set /cont False .
+                 } .
+              
+              set /j [ next j . ] .
+            ) .
+
+      swap /input input /i i /j end .
+      answer i .
+    ) .
+
+' Sort registers at locations "t" 1 ... n using an operation that compares the elements
+set /quicksort-internal
+    (
+      if [ not [ register-eq start end . ] . ]
+         {
+           partition /input input /start start /end end /less-than less-than . 
+           move /ans /p .
+           if [ not [ register-eq p start . ] . ]
+              {
+                quicksort-internal /input input /start start /end [ previous p . ] .
+              } .
+
+           if [ not [ register-eq p end . ] . ]
+              {
+                quicksort-internal /input input /start [ next p . ] /end end .
+              } .
+         } .
+    ) .
+
+set /quicksort
+    (
+      if [ not [ exist /end . ] . ]
+         {
+           set /end [ last input slice . ] .
+         } .
+      if [ not [ exist /start . ] . ]
+         {
+           set /start [ to-register [ string-append slice "1" . ] . ] .
+         } .
+
+      if [ not [ exist start input . ] . ]
+         {
+           error "Starting register not found in input." .
+         } .
+
+      if [ not [ exist end input . ] . ]
+         {
+           error "Ending register not found in input." .
+         } .
+
+      ' Should be an operation to check whether registers are ordered: ordered start end .
+
+      quicksort-internal /input input /start start /end end /less-than less-than .
+    ) .
+
+         
+          
+      

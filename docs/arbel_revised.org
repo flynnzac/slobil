@@ -38,23 +38,26 @@ Names are sequences of characters that are not literals and not parenthesis (=()
 Literals represent a value of data.
 
 *** Numeric Literals
-- *Numbers.*  A sequence of digits either with or without a decimal point.  With a decimal point, the type of the literal is a Real.  Without a decimal point, the type of the literal is an Integer. Example: =123= and =1.23=.
+Numbers are a sequence of digits either with or without a decimal point.  With a decimal point, the type of the literal is a Real.  Without a decimal point, the type of the literal is an Integer. Example: =123= and =1.23=.
 
 *** String Literals
-- *Strings.* A sequence of characters enclosed by double quotes (=""=). Example: ="Hello, world."=.
+Strings are a sequence of characters enclosed by double quotes (=""=). Example: ="Hello, world."=.  
 
 *** Boolean Literals
+Boolean literals are one of two words: =True= and =False= (case sensitive).  
 
 *** Register Literals
-- *Register.* A register location is a name preceeded by a forward slash =/=.  Example: =/hello=, =/x1=.  These literals refer to the register location, not its value.
+A register location is a name preceeded by a forward slash =/=.  Example: =/hello=, =/x1=.  These literals refer to the register location, not its value.
 
 *** Instruction Literals
-- *Instructions.*  Statements enclosed in open parenthesis.  Instructions are code that is not executed but saved as data to be used in another environment.  Example: =( add t 2 . mul ans 5 . )=.  Whitespace must separate the parenthesis and other data elements.
+Instructions are ARBEL statements enclosed in open parenthesis.  Instructions are code that is not executed but saved as data to be used in another environment.  Example: =( add t 2 . mul ans 5 . )= which is an instruction to add =2= to the value at a register =/t= and multiply the answer by =5=. This code is not executed and resolves to a type of data called an Instruction.  It is treated as a literal value.  The whitespace following the first parenthesis and preceeding the last is required.
 
 *** Operator Literals
+Operations are like instructions except that they are less flexible because they must be called in a certain way with fixed positional arguments.  Operation literals are enclosed in angle brackets (=<>=) like so: =< ( add t 1 . ) /t >=.  The first element inside the angle brackets is an instruction.  The rest of the arguments are registers which give the data locations to bind the operator's arguments to when called so that: =< ( add t 1 . ) /t > 10 .= would give =11=.  These values are treated as literals of the Operation type.
 
 *** The Nothing Literal
 
+The word =Nothing= is a literal value of type =Nothing=.  =Nothing= is not like other data types.  That is the most important thing about it.  It can be used as the return value for errors and other situations.
 
 ** Substatements 
 
@@ -171,3 +174,9 @@ are all examples of register locations in ARBEL.  The value located at a registr
 10
 #+END_SRC
 
+
+* Examples
+
+** Short Examples
+
+** Complete Program

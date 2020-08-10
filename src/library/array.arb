@@ -1,0 +1,61 @@
+set /array-lib [ 
+      /root
+        <
+        (
+          replace "[0-9]+$" "" [ to-string r . ] .
+        )
+        /r
+        > .
+      
+      /compare
+        <
+        (
+          if [ string-eq [ array-lib:root a . ]
+                         [ array-lib:root b . ] . ]
+             {
+               cmp [ to-number a . ] [ to-number b . ] .
+             }
+         Nothing .
+              
+        )
+        /a /b /cmp
+        > .
+
+      /lt-array
+        <
+        (
+          array-lib:compare a b lt .
+        )
+        /a /b
+        > .
+
+      /gt-array
+        <
+        (
+          array-lib:compare a b gt .
+        )
+        /a /b
+        > .
+
+      /lt-eq-array
+        <
+        (
+          array-lib:compare a b lt-eq .
+        )
+        > .
+
+      /gt-eq-array
+        <
+        (
+          array-lib:compare a b gt-eq .
+        )
+        > .
+
+      /eq-array
+        <
+        (
+          array-lib:compare a b eq .
+        )
+        > .
+    ] .
+
