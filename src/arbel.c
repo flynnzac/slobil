@@ -91,10 +91,36 @@ main (int argc, char** argv)
   bool listen_socket = false;
   int port = 0;
   bool early_stop = false;
-  while ((k = getopt(argc, argv, "l:s:nmvc:p:")) != -1)
+  while ((k = getopt(argc, argv, "l:s:nmvc:p:b:")) != -1)
     {
       switch (k)
         {
+        case 'b':
+          f = fopen(optarg, "r");
+          complete = interact(f, &state,
+                              task0->task->current_parse_registry);
+          fclose(f);
+          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".darb")+1));
+          for (int idx = 0; idx < strlen(optarg); idx++)
+            {
+              if (optarg[idx]=='.')
+                {
+                  newname[idx] = '\0';
+                  break;
+                }
+              else
+                {
+                  newname[idx] = optarg[idx];
+                }
+              if (idx == (strlen(optarg)-1))
+                {
+                  newname[idx+1] = '\0';
+                }
+            }
+          strcat(newname, ".darb");
+          save_outer(task0->task->current_parse_registry, newname);
+          early_stop = true;
+          break;
         case 'c':
           state.in_comment = 1;
           early_stop = true;

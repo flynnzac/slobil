@@ -2700,7 +2700,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   char* fname = (char*) arg1->data;
   FILE* f = fopen(fname, "wb");
   save_registry(f, reg);
-  data_type end = Nothing;
+  data_type end = NotAType;
   fwrite(&end, sizeof(data_type), 1, f);
   fclose(f);
 

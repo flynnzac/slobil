@@ -351,3 +351,15 @@ read_registry (FILE* f, registry* reg)
   return 0;
   
 }
+
+void
+save_outer (registry* reg, char* fname)
+{
+  FILE* f = fopen(fname, "wb");
+  save_registry(f, reg);
+  data_type end = NotAType;
+  fwrite(&end, sizeof(data_type), 1, f);
+  fclose(f);
+}
+
+  

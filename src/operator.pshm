@@ -1464,12 +1464,7 @@ op_save (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* fname = (char*) arg1->data;
-  FILE* f = fopen(fname, "wb");
-  save_registry(f, reg);
-  data_type end = Nothing;
-  fwrite(&end, sizeof(data_type), 1, f);
-  fclose(f);
+  save_outer(reg, (char*) arg1->data);
 
 }
 
