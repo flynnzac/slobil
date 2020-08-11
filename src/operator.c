@@ -2697,12 +2697,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 
 ;
 
-  char* fname = (char*) arg1->data;
-  FILE* f = fopen(fname, "wb");
-  save_registry(f, reg);
-  data_type end = NotAType;
-  fwrite(&end, sizeof(data_type), 1, f);
-  fclose(f);
+  save_outer(reg, (char*) arg1->data);
 
 }
 
@@ -6656,23 +6651,9 @@ add_basic_ops (registry* reg)
 {
   data* d;
 
+  /* Registry operations */
   assign_op(&d, op_set, NULL, NULL, 0);
   set(reg, d, "set",1);
-  
-  assign_op(&d, op_add, NULL, NULL, 0);
-  set(reg,d,"add",1);
-
-  assign_op(&d, op_mul, NULL, NULL, 0);
-  set(reg,d,"mul",1);
-
-  assign_op(&d, op_sub, NULL, NULL, 0);
-  set(reg,d,"sub",1);
-
-  assign_op(&d, op_div, NULL, NULL, 0);
-  set(reg,d,"div",1);
-
-  assign_op(&d, op_if, NULL, NULL, 0);
-  set(reg,d,"if",1);
 
   assign_op(&d, op_registry, NULL, NULL, 0);
   set(reg,d,"registry",1);
@@ -6686,17 +6667,56 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_delete, NULL, NULL, 0);
   set(reg,d,"delete",1);
 
-  assign_op(&d, op_exit, NULL, NULL, 0);
-  set(reg,d,"exit",1);
-
-  assign_op(&d, op_answer, NULL, NULL, 0);
-  set(reg,d,"answer",1);
-
-  assign_op(&d, op_sit, NULL, NULL, 0);
-  set(reg,d,"sit",1);
-
   assign_op(&d, op_exist, NULL, NULL, 0);
   set(reg,d,"exist",1);
+
+  assign_op(&d, op_list, NULL, NULL, 0);
+  set(reg,d,"list",1);
+
+  assign_op(&d, op_go_in, NULL, NULL, 0);
+  set(reg,d,"go-in",1);
+
+  assign_op(&d, op_go_out, NULL, NULL, 0);
+  set(reg,d,"go-out",1);
+
+  assign_op(&d, op_is_registry, NULL, NULL, 0);
+  set(reg,d,"is-registry",1);
+
+  assign_op(&d, op_import, NULL, NULL, 0);
+  set(reg,d,"import",1);
+
+  assign_op(&d, op_free, NULL, NULL, 0);
+  set(reg,d,"free",1);
+
+  assign_op(&d, op_find, NULL, NULL, 0);
+  set(reg,d,"find",1);
+
+  assign_op(&d, op_auto_rehash, NULL, NULL, 0);
+  set(reg,d,"auto-rehash",1);
+
+  assign_op(&d, op_rehash, NULL, NULL, 0);
+  set(reg,d,"rehash",1);
+
+  assign_op(&d, op_range, NULL, NULL, 0);
+  set(reg,d,"range",1);
+
+  assign_op(&d, op_data, NULL, NULL, 0);
+  set(reg,d,"data",1);
+
+
+  /* Numeric operations */
+  
+  assign_op(&d, op_add, NULL, NULL, 0);
+  set(reg,d,"add",1);
+
+  assign_op(&d, op_mul, NULL, NULL, 0);
+  set(reg,d,"mul",1);
+
+  assign_op(&d, op_sub, NULL, NULL, 0);
+  set(reg,d,"sub",1);
+
+  assign_op(&d, op_div, NULL, NULL, 0);
+  set(reg,d,"div",1);
 
   assign_op(&d, op_gt, NULL, NULL, 0);
   set(reg,d,"gt",1);
@@ -6712,42 +6732,90 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_gt_eq, NULL, NULL, 0);
   set(reg,d,"gt-eq",1);
+
+  assign_op(&d, op_to_string, NULL, NULL, 0);
+  set(reg,d,"to-string",1);
   
-  assign_op(&d, op_print, NULL, NULL, 0);
-  set(reg,d,"print",1);
+  assign_op(&d, op_is_integer, NULL, NULL, 0);
+  set(reg,d,"is-integer",1);
 
-  assign_op(&d, op_string_length, NULL, NULL, 0);
-  set(reg,d,"string-length",1);
+  assign_op(&d, op_is_real, NULL, NULL, 0);
+  set(reg,d,"is-real",1);
 
-  assign_op(&d, op_string_append, NULL, NULL, 0);
-  set(reg,d,"string-append",1);
+  assign_op(&d, op_log, NULL, NULL, 0);
+  set(reg,d,"log",1);
 
-  assign_op(&d, op_source, NULL, NULL, 0);
-  set(reg,d,"source",1);
+  assign_op(&d, op_exp, NULL, NULL, 0);
+  set(reg,d,"exp",1);
+
+  assign_op(&d, op_power, NULL, NULL, 0);
+  set(reg,d,"power",1);
+
+  assign_op(&d, op_mod, NULL, NULL, 0);
+  set(reg,d,"mod",1);
+
+  assign_op(&d, op_incr, NULL, NULL, 0);
+  set(reg,d,"incr",1);
+
+  assign_op(&d, op_decr, NULL, NULL, 0);
+  set(reg,d,"decr",1);
+
+  /* Boolean operations */
+
+  assign_op(&d, op_if, NULL, NULL, 0);
+  set(reg,d,"if",1);
+
+  assign_op(&d, op_and, NULL, NULL, 0);
+  set(reg,d,"and",1);
+
+  assign_op(&d, op_or, NULL, NULL, 0);
+  set(reg,d,"or",1);
+
+  assign_op(&d, op_not, NULL, NULL, 0);
+  set(reg,d,"not",1);
+
+  assign_op(&d, op_is_boolean, NULL, NULL, 0);
+  set(reg,d,"is-boolean",1);
+
+  /* Instruction operations */
 
   assign_op(&d, op_do, NULL, NULL, 0);
   set(reg,d,"do",1);
-
-  assign_op(&d, op_next, NULL, NULL, 0);
-  set(reg,d,"next",1);
-
-  assign_op(&d, op_last, NULL, NULL, 0);
-  set(reg,d,"last",1);
 
   assign_op(&d, op_in, NULL, NULL, 0);
   set(reg,d,"in",1);
 
   assign_op(&d, op_while, NULL, NULL, 0);
   set(reg,d,"while",1);
-  
-  assign_op(&d, op_list, NULL, NULL, 0);
-  set(reg,d,"list",1);
-
-  assign_op(&d, op_to_register, NULL, NULL, 0);
-  set(reg,d,"to-register",1);
 
   assign_op(&d, op_collapse, NULL, NULL, 0);
   set(reg,d,"collapse",1);
+
+  assign_op(&d, op_code, NULL, NULL, 0);
+  set(reg,d,"code",1);
+
+  assign_op(&d, op_call, NULL, NULL, 0);
+  set(reg,d,"call",1);
+
+  assign_op(&d, op_op, NULL, NULL, 0);
+  set(reg,d,"op",1);
+
+  assign_op(&d, op_is_instruction, NULL, NULL, 0);
+  set(reg,d,"is-instruction",1);
+
+  assign_op(&d, op_repeat, NULL, NULL, 0);
+  set(reg,d,"repeat",1);
+
+  assign_op(&d, op_is_operation, NULL, NULL, 0);
+  set(reg,d,"is-operation",1);
+
+  /* String operations */
+
+  assign_op(&d, op_string_length, NULL, NULL, 0);
+  set(reg,d,"string-length",1);
+
+  assign_op(&d, op_string_append, NULL, NULL, 0);
+  set(reg,d,"string-append",1);
 
   assign_op(&d, op_string_eq, NULL, NULL, 0);
   set(reg,d,"string-eq",1);
@@ -6758,26 +6826,40 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_string_lt, NULL, NULL, 0);
   set(reg,d,"string-lt",1);
 
-  assign_op(&d, op_register_eq, NULL, NULL, 0);
-  set(reg,d,"register-eq",1);
+  assign_op(&d, op_to_number, NULL, NULL, 0);
+  set(reg,d,"to-number",1);
 
-  assign_op(&d, op_go_in, NULL, NULL, 0);
-  set(reg,d,"go-in",1);
+  assign_op(&d, op_is_string, NULL, NULL, 0);
+  set(reg,d,"is-string",1);
 
-  assign_op(&d, op_go_out, NULL, NULL, 0);
-  set(reg,d,"go-out",1);
+  assign_op(&d, op_match, NULL, NULL, 0);
+  set(reg,d,"match",1);
+
+  assign_op(&d, op_replace, NULL, NULL, 0);
+  set(reg,d,"replace",1);
+
+  assign_op(&d, op_substring, NULL, NULL, 0);
+  set(reg,d,"substring",1);
+
+  assign_op(&d, op_to_real, NULL, NULL, 0);
+  set(reg,d,"to-real",1);
+
+  /* State and environment operations */
+
+  assign_op(&d, op_exit, NULL, NULL, 0);
+  set(reg,d,"exit",1);
+
+  assign_op(&d, op_answer, NULL, NULL, 0);
+  set(reg,d,"answer",1);
+
+  assign_op(&d, op_sit, NULL, NULL, 0);
+  set(reg,d,"sit",1);
 
   assign_op(&d, op_save, NULL, NULL, 0);
   set(reg,d,"save",1);
 
   assign_op(&d, op_load, NULL, NULL, 0);
   set(reg,d,"load",1);
-
-  assign_op(&d, op_to_string, NULL, NULL, 0);
-  set(reg,d,"to-string",1);
-  
-  assign_op(&d, op_to_number, NULL, NULL, 0);
-  set(reg,d,"to-number",1);
 
   assign_op(&d, op_output_code, NULL, NULL, 0);
   set(reg,d,"output-code",1);
@@ -6788,36 +6870,52 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_error, NULL, NULL, 0);
   set(reg,d,"error",1);
 
-  assign_op(&d, op_is_integer, NULL, NULL, 0);
-  set(reg,d,"is-integer",1);
+  assign_op(&d, op_up, NULL, NULL, 0);
+  set(reg,d,"up",1);
 
-  assign_op(&d, op_is_real, NULL, NULL, 0);
-  set(reg,d,"is-real",1);
+  assign_op(&d, op_push_through, NULL, NULL, 0);
+  set(reg,d,"push-through",1);
 
-  assign_op(&d, op_is_string, NULL, NULL, 0);
-  set(reg,d,"is-string",1);
-  
+  assign_op(&d, op_error_messages, NULL, NULL, 0);
+  set(reg,d,"error-messages",1);
+
+  assign_op(&d, op_please, NULL, NULL, 0);
+  set(reg,d,"please",1);
+
+  assign_op(&d, op_source, NULL, NULL, 0);
+  set(reg,d,"source",1);
+
+  assign_op(&d, op_is_error, NULL, NULL, 0);
+  set(reg,d,"is-error",1);
+
+  assign_op(&d, op_version, NULL, NULL, 0);
+  set(reg,d,"version",1);
+
+  /* Register operations */
+
+  assign_op(&d, op_next, NULL, NULL, 0);
+  set(reg,d,"next",1);
+
+  assign_op(&d, op_previous, NULL, NULL, 0);
+  set(reg,d,"previous",1);
+
+  assign_op(&d, op_last, NULL, NULL, 0);
+  set(reg,d,"last",1);
+
+  assign_op(&d, op_to_register, NULL, NULL, 0);
+  set(reg,d,"to-register",1);
+
+  assign_op(&d, op_register_eq, NULL, NULL, 0);
+  set(reg,d,"register-eq",1);
+
   assign_op(&d, op_is_register, NULL, NULL, 0);
   set(reg,d,"is-register",1);
 
-  assign_op(&d, op_is_registry, NULL, NULL, 0);
-  set(reg,d,"is-registry",1);
-
-  assign_op(&d, op_is_instruction, NULL, NULL, 0);
-  set(reg,d,"is-instruction",1);
+  /* File operations
 
   assign_op(&d, op_is_file, NULL, NULL, 0);
   set(reg,d,"is-file",1);
 
-  assign_op(&d, op_is_nothing, NULL, NULL, 0);
-  set(reg,d,"is-nothing",1);
-
-  assign_op(&d, op_is_boolean, NULL, NULL, 0);
-  set(reg,d,"is-boolean",1);
-
-  assign_op(&d, op_is_operation, NULL, NULL, 0);
-  set(reg,d,"is-operation",1);
-  
   assign_op(&d, op_open_file, NULL, NULL, 0);
   set(reg,d,"open-file",1);
 
@@ -6830,15 +6928,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_close, NULL, NULL, 0);
   set(reg,d,"close",1);
 
-  assign_op(&d, op_and, NULL, NULL, 0);
-  set(reg,d,"and",1);
-
-  assign_op(&d, op_or, NULL, NULL, 0);
-  set(reg,d,"or",1);
-
-  assign_op(&d, op_not, NULL, NULL, 0);
-  set(reg,d,"not",1);
-
   assign_op(&d, op_read_line, NULL, NULL, 0);
   set(reg,d,"read-line",1);
   
@@ -6847,7 +6936,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_write_string, NULL, NULL, 0);
   set(reg,d,"write-string",1);
-  
+
+
+  /* Input, Output, Shell, and System */
+
   assign_op(&d, op_input, NULL, NULL, 0);
   set(reg,d,"input",1);
 
@@ -6857,101 +6949,32 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_link, NULL, NULL, 0);
   set(reg,d,"link",1);
 
-  assign_op(&d, op_match, NULL, NULL, 0);
-  set(reg,d,"match",1);
-
-  assign_op(&d, op_replace, NULL, NULL, 0);
-  set(reg,d,"replace",1);
-
-  assign_op(&d, op_log, NULL, NULL, 0);
-  set(reg,d,"log",1);
-
-  assign_op(&d, op_exp, NULL, NULL, 0);
-  set(reg,d,"exp",1);
-
-  assign_op(&d, op_power, NULL, NULL, 0);
-  set(reg,d,"power",1);
-
   assign_op(&d, op_change_dir, NULL, NULL, 0);
   set(reg,d,"change-dir",1);
 
   assign_op(&d, op_current_dir, NULL, NULL, 0);
   set(reg,d,"current-dir",1);
 
-  assign_op(&d, op_import, NULL, NULL, 0);
-  set(reg,d,"import",1);
-  
-  assign_op(&d, op_repeat, NULL, NULL, 0);
-  set(reg,d,"repeat",1);
+  assign_op(&d, op_print, NULL, NULL, 0);
+  set(reg,d,"print",1);
 
-  assign_op(&d, op_substring, NULL, NULL, 0);
-  set(reg,d,"substring",1);
 
-  assign_op(&d, op_up, NULL, NULL, 0);
-  set(reg,d,"up",1);
-  
-  assign_op(&d, op_to_real, NULL, NULL, 0);
-  set(reg,d,"to-real",1);
-
-  assign_op(&d, op_call, NULL, NULL, 0);
-  set(reg,d,"call",1);
-
-  assign_op(&d, op_code, NULL, NULL, 0);
-  set(reg,d,"code",1);
-
-  assign_op(&d, op_is_error, NULL, NULL, 0);
-  set(reg,d,"is-error",1);
-
-  assign_op(&d, op_range, NULL, NULL, 0);
-  set(reg,d,"range",1);
-
-  assign_op(&d, op_push_through, NULL, NULL, 0);
-  set(reg,d,"push-through",1);
-
-  assign_op(&d, op_error_messages, NULL, NULL, 0);
-  set(reg,d,"error-messages",1);
-
-  assign_op(&d, op_version, NULL, NULL, 0);
-  set(reg,d,"version",1);
-
-  assign_op(&d, op_free, NULL, NULL, 0);
-  set(reg,d,"free",1);
-
-  assign_op(&d, op_previous, NULL, NULL, 0);
-  set(reg,d,"previous",1);
-
-  assign_op(&d, op_find, NULL, NULL, 0);
-  set(reg,d,"find",1);
-
-  assign_op(&d, op_please, NULL, NULL, 0);
-  set(reg,d,"please",1);
-
-  assign_op(&d, op_mod, NULL, NULL, 0);
-  set(reg,d,"mod",1);
-
-  assign_op(&d, op_op, NULL, NULL, 0);
-  set(reg,d,"op",1);
-
-  assign_op(&d, op_data, NULL, NULL, 0);
-  set(reg,d,"data",1);
-
-  assign_op(&d, op_incr, NULL, NULL, 0);
-  set(reg,d,"incr",1);
-
-  assign_op(&d, op_decr, NULL, NULL, 0);
-  set(reg,d,"decr",1);
-
-  assign_op(&d, op_auto_rehash, NULL, NULL, 0);
-  set(reg,d,"auto-rehash",1);
-
-  assign_op(&d, op_rehash, NULL, NULL, 0);
-  set(reg,d,"rehash",1);
+  /* Time operations */
 
   assign_op(&d, op_clock, NULL, NULL, 0);
   set(reg,d,"clock",1);
 
   assign_op(&d, op_make_time, NULL, NULL, 0);
   set(reg,d,"make-time",1);
+
+
+  /* Nothing operations */
+
+  assign_op(&d, op_is_nothing, NULL, NULL, 0);
+  set(reg,d,"is-nothing",1);
+
+
+  /* Task operations */
 
   assign_op(&d, op_task, NULL, NULL, 0);
   set(reg,d,"task",1);
