@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-12 Wed 01:21 -->
+<!-- 2020-08-12 Wed 13:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ARBEL</title>
@@ -231,7 +231,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-ARBEL<br>Zach Flynn<br>2020-08-12 Wed 01:21
+ARBEL<br>Zach Flynn<br>2020-08-12 Wed 13:13
 </div>
 <div id="content">
 <h1 class="title">ARBEL</h1>
@@ -239,57 +239,57 @@ ARBEL<br>Zach Flynn<br>2020-08-12 Wed 01:21
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge6c7535">1. Code inside Data</a></li>
-<li><a href="#orgd02f565">2. Syntax</a>
+<li><a href="#orgde955a5">1. Code inside Data</a></li>
+<li><a href="#org8e21b8a">2. Syntax</a>
 <ul>
-<li><a href="#orgc5a06ee">2.1. Literals and Names</a>
+<li><a href="#org03111cf">2.1. Literals and Names</a>
 <ul>
-<li><a href="#orgef1a1ab">2.1.1. Numeric Literals</a></li>
-<li><a href="#orgd190338">2.1.2. String Literals</a></li>
-<li><a href="#org0f5e43e">2.1.3. Boolean Literals</a></li>
-<li><a href="#org7a87234">2.1.4. Register Literals</a></li>
-<li><a href="#org258aa9e">2.1.5. Instruction Literals</a></li>
-<li><a href="#org8991ceb">2.1.6. Operator Literals</a></li>
-<li><a href="#org0ae5c5e">2.1.7. The Nothing Literal</a></li>
+<li><a href="#orgc7e0372">2.1.1. Numeric Literals</a></li>
+<li><a href="#org01daa58">2.1.2. String Literals</a></li>
+<li><a href="#org5a8a03a">2.1.3. Boolean Literals</a></li>
+<li><a href="#org1b44b64">2.1.4. Register Literals</a></li>
+<li><a href="#orgee8934c">2.1.5. Instruction Literals</a></li>
+<li><a href="#org4480a59">2.1.6. Operator Literals</a></li>
+<li><a href="#org8296d00">2.1.7. The Nothing Literal</a></li>
 </ul>
 </li>
-<li><a href="#orgf30cf7c">2.2. Substatements</a>
+<li><a href="#org8b09bf2">2.2. Substatements</a>
 <ul>
-<li><a href="#org0e19c9e">2.2.1. Immediate Substatements</a></li>
-<li><a href="#org9be2f07">2.2.2. Active Instructions</a></li>
+<li><a href="#org2434fb3">2.2.1. Immediate Substatements</a></li>
+<li><a href="#org987f350">2.2.2. Active Instructions</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgdf50e09">3. Overview of ARBEL vocabulary</a></li>
-<li><a href="#org30fd3f1">4. Registries</a>
+<li><a href="#org55a52cc">3. Overview of ARBEL vocabulary</a></li>
+<li><a href="#org5a5a5d4">4. Registries</a>
 <ul>
-<li><a href="#org47c28d0">4.1. Registries as data structures</a></li>
-<li><a href="#org4673ed7">4.2. Registries as environments</a></li>
+<li><a href="#org4fa3346">4.1. Registries as data structures</a></li>
+<li><a href="#org433b25d">4.2. Registries as environments</a></li>
 </ul>
 </li>
-<li><a href="#org9f878fb">5. Registers</a></li>
-<li><a href="#org11152b0">6. Instructions</a>
+<li><a href="#orgf484223">5. Registers</a></li>
+<li><a href="#orga51d00d">6. Instructions</a>
 <ul>
-<li><a href="#orgb2a1a0b">6.1. Defining operations</a></li>
+<li><a href="#org82f8319">6.1. Defining operations</a></li>
 </ul>
 </li>
-<li><a href="#org863bb07">7. Booleans</a></li>
-<li><a href="#org1f8b3d2">8. Numbers</a></li>
-<li><a href="#org0e0c08c">9. Strings</a></li>
-<li><a href="#org02a5f15">10. </a></li>
-<li><a href="#org7b57507">11. Examples</a>
+<li><a href="#orga6234aa">7. Booleans and Control Flow</a></li>
+<li><a href="#org09e8301">8. Numbers</a></li>
+<li><a href="#orgd662040">9. Strings</a></li>
+<li><a href="#orgb929db8">10. Tasks (multi-threading)</a></li>
+<li><a href="#orgfd266dc">11. Examples</a>
 <ul>
-<li><a href="#org3d62d5b">11.1. Short Examples</a></li>
-<li><a href="#org0000aff">11.2. Complete Program</a></li>
+<li><a href="#org5e04e0d">11.1. Short Examples</a></li>
+<li><a href="#orgff06346">11.2. Complete Program</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge6c7535" class="outline-2">
-<h2 id="orge6c7535"><span class="section-number-2">1</span> Code inside Data</h2>
+<div id="outline-container-orgde955a5" class="outline-2">
+<h2 id="orgde955a5"><span class="section-number-2">1</span> Code inside Data</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 ARBEL code is executed inside a data set called a registry.  Registries are tables with values entered in <i>registers</i>. The programmer enters commands to modify the contents of the registry and possibly send the results of any computations performed on the data to another registry.
@@ -309,8 +309,8 @@ requires that the registry contains data located at the <code>print</code> and <
 </div>
 </div>
 
-<div id="outline-container-orgd02f565" class="outline-2">
-<h2 id="orgd02f565"><span class="section-number-2">2</span> Syntax</h2>
+<div id="outline-container-org8e21b8a" class="outline-2">
+<h2 id="org8e21b8a"><span class="section-number-2">2</span> Syntax</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 ARBEL code consists of a number of statements.  Each statement contains a series of data values, either literals or values located in the current registry, separated by whitespace and ending with a period.  All elements of a statement must be separated by whitespace from the preceding element, including the terminating period.
@@ -336,8 +336,8 @@ The first element of a statement is an operation that performs some transformati
 </p>
 </div>
 
-<div id="outline-container-orgc5a06ee" class="outline-3">
-<h3 id="orgc5a06ee"><span class="section-number-3">2.1</span> Literals and Names</h3>
+<div id="outline-container-org03111cf" class="outline-3">
+<h3 id="org03111cf"><span class="section-number-3">2.1</span> Literals and Names</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Names are sequences of characters that are not literals and not parenthesis (<code>()</code>, <code>[]</code>, <code>{}</code>, <code>&lt;&gt;</code>).  A name appearing in a statement indicates the value located at the register with that name.
@@ -348,8 +348,8 @@ Literals represent a value of data.
 </p>
 </div>
 
-<div id="outline-container-orgef1a1ab" class="outline-4">
-<h4 id="orgef1a1ab"><span class="section-number-4">2.1.1</span> Numeric Literals</h4>
+<div id="outline-container-orgc7e0372" class="outline-4">
+<h4 id="orgc7e0372"><span class="section-number-4">2.1.1</span> Numeric Literals</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 Numbers are a sequence of digits either with or without a decimal point.  With a decimal point, the type of the literal is a Real.  Without a decimal point, the type of the literal is an Integer. Example: <code>123</code> and <code>1.23</code>.
@@ -357,8 +357,8 @@ Numbers are a sequence of digits either with or without a decimal point.  With a
 </div>
 </div>
 
-<div id="outline-container-orgd190338" class="outline-4">
-<h4 id="orgd190338"><span class="section-number-4">2.1.2</span> String Literals</h4>
+<div id="outline-container-org01daa58" class="outline-4">
+<h4 id="org01daa58"><span class="section-number-4">2.1.2</span> String Literals</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 Strings are a sequence of characters enclosed by double quotes (<code>""</code>). Example: <code>"Hello, world."</code>.  
@@ -366,8 +366,8 @@ Strings are a sequence of characters enclosed by double quotes (<code>""</code>)
 </div>
 </div>
 
-<div id="outline-container-org0f5e43e" class="outline-4">
-<h4 id="org0f5e43e"><span class="section-number-4">2.1.3</span> Boolean Literals</h4>
+<div id="outline-container-org5a8a03a" class="outline-4">
+<h4 id="org5a8a03a"><span class="section-number-4">2.1.3</span> Boolean Literals</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Boolean literals are one of two words: <code>True</code> and <code>False</code> (case sensitive).  
@@ -375,8 +375,8 @@ Boolean literals are one of two words: <code>True</code> and <code>False</code> 
 </div>
 </div>
 
-<div id="outline-container-org7a87234" class="outline-4">
-<h4 id="org7a87234"><span class="section-number-4">2.1.4</span> Register Literals</h4>
+<div id="outline-container-org1b44b64" class="outline-4">
+<h4 id="org1b44b64"><span class="section-number-4">2.1.4</span> Register Literals</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 A register location is a name preceeded by a forward slash <code>/</code>.  Example: <code>/hello</code>, <code>/x1</code>.  These literals refer to the register location, not its value.  Almost any string of characters is a valid register location, but some will be less convenient to access because they collide with other elements of ARBEL's syntax.  But they can still be used.  For example,
@@ -394,8 +394,8 @@ Can be used to access the value when the register's value cannot be accessed in 
 </div>
 </div>
 
-<div id="outline-container-org258aa9e" class="outline-4">
-<h4 id="org258aa9e"><span class="section-number-4">2.1.5</span> Instruction Literals</h4>
+<div id="outline-container-orgee8934c" class="outline-4">
+<h4 id="orgee8934c"><span class="section-number-4">2.1.5</span> Instruction Literals</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <p>
 Instructions are ARBEL statements enclosed in open parenthesis.  Instructions are code that is not executed but saved as data to be used in another environment.  Example: <code>( add t 2 . mul ans 5 . )</code> which is an instruction to add <code>2</code> to the value at a register <code>/t</code> and multiply the answer by <code>5</code>. This code is not executed and resolves to a type of data called an Instruction.  It is treated as a literal value.  The whitespace following the first parenthesis and preceeding the last is required.
@@ -403,8 +403,8 @@ Instructions are ARBEL statements enclosed in open parenthesis.  Instructions ar
 </div>
 </div>
 
-<div id="outline-container-org8991ceb" class="outline-4">
-<h4 id="org8991ceb"><span class="section-number-4">2.1.6</span> Operator Literals</h4>
+<div id="outline-container-org4480a59" class="outline-4">
+<h4 id="org4480a59"><span class="section-number-4">2.1.6</span> Operator Literals</h4>
 <div class="outline-text-4" id="text-2-1-6">
 <p>
 Operations are like instructions except that they are less flexible because they must be called in a certain way with fixed positional arguments.  Operation literals are enclosed in angle brackets (<code>&lt;&gt;</code>) like so: <code>&lt; ( add t 1 . ) /t &gt;</code>.  The first element inside the angle brackets is an instruction.  The rest of the arguments are registers which give the data locations to bind the operator's arguments to when called so that: <code>&lt; ( add t 1 . ) /t &gt; 10 .</code> would give <code>11</code>.  These values are treated as literals of the Operation type.
@@ -412,8 +412,8 @@ Operations are like instructions except that they are less flexible because they
 </div>
 </div>
 
-<div id="outline-container-org0ae5c5e" class="outline-4">
-<h4 id="org0ae5c5e"><span class="section-number-4">2.1.7</span> The Nothing Literal</h4>
+<div id="outline-container-org8296d00" class="outline-4">
+<h4 id="org8296d00"><span class="section-number-4">2.1.7</span> The Nothing Literal</h4>
 <div class="outline-text-4" id="text-2-1-7">
 <p>
 The word <code>Nothing</code> is a literal value of type <code>Nothing</code>.  <code>Nothing</code> is not like other data types.  That is the most important thing about it.  It can be used as the return value for errors and other situations.
@@ -422,16 +422,16 @@ The word <code>Nothing</code> is a literal value of type <code>Nothing</code>.  
 </div>
 </div>
 
-<div id="outline-container-orgf30cf7c" class="outline-3">
-<h3 id="orgf30cf7c"><span class="section-number-3">2.2</span> Substatements</h3>
+<div id="outline-container-org8b09bf2" class="outline-3">
+<h3 id="org8b09bf2"><span class="section-number-3">2.2</span> Substatements</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 ARBEL statements can contain two forms of substatements in place of a data element.  The substatements differ by when the code they contain is executed.  
 </p>
 </div>
 
-<div id="outline-container-org0e19c9e" class="outline-4">
-<h4 id="org0e19c9e"><span class="section-number-4">2.2.1</span> Immediate Substatements</h4>
+<div id="outline-container-org2434fb3" class="outline-4">
+<h4 id="org2434fb3"><span class="section-number-4">2.2.1</span> Immediate Substatements</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Immediate substatements are executed as soon as they are encountered.  They evaluate to the value of the <code>ans</code> register in the registry where the code is executed after the substatement is executed. They are enclosed in square brackets.
@@ -449,8 +449,8 @@ ans = 12
 </div>
 </div>
 
-<div id="outline-container-org9be2f07" class="outline-4">
-<h4 id="org9be2f07"><span class="section-number-4">2.2.2</span> Active Instructions</h4>
+<div id="outline-container-org987f350" class="outline-4">
+<h4 id="org987f350"><span class="section-number-4">2.2.2</span> Active Instructions</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Active instructions are executed <i>when they are used</i>.  They are usually used in conditional operations so that code is not executed unless it is required.  They are enclosed in curly braces.
@@ -474,9 +474,8 @@ This code block illustrates the difference between active instructions and immed
 </div>
 </div>
 
-
-<div id="outline-container-orgdf50e09" class="outline-2">
-<h2 id="orgdf50e09"><span class="section-number-2">3</span> Overview of ARBEL vocabulary</h2>
+<div id="outline-container-org55a52cc" class="outline-2">
+<h2 id="org55a52cc"><span class="section-number-2">3</span> Overview of ARBEL vocabulary</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 ARBEL statements consist of sequences of data.  Statements start with an operation, generally, and other types of data follow.  ARBEL the language consists of operations that implement each data type.  Users of ARBEL do not specify new types unlike in many languages.  ARBEL uses a single flexible data structure, the registry, to describe many types.  Like lists in Lisp.
@@ -484,12 +483,12 @@ ARBEL statements consist of sequences of data.  Statements start with an operati
 </div>
 </div>
 
-<div id="outline-container-org30fd3f1" class="outline-2">
-<h2 id="org30fd3f1"><span class="section-number-2">4</span> Registries</h2>
+<div id="outline-container-org5a5a5d4" class="outline-2">
+<h2 id="org5a5a5d4"><span class="section-number-2">4</span> Registries</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org47c28d0" class="outline-3">
-<h3 id="org47c28d0"><span class="section-number-3">4.1</span> Registries as data structures</h3>
+<div id="outline-container-org4fa3346" class="outline-3">
+<h3 id="org4fa3346"><span class="section-number-3">4.1</span> Registries as data structures</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Registries are tables of data located at registers.  Register locations are prefixed with a forward slash in ARBEL so:
@@ -614,13 +613,58 @@ Where the first register is the location of another registry inside the registry
 <p>
 Elements of a registry can be selected using the <code>find</code> operation.  The find operation takes a registry and an operation as arguments.  The operation should take two arguments.  The first is a value in the registry.  The second is the register the value is located at in the registry.  If the element should be selected, the operation should set the <code>/ans</code> register to <code>True</code>.  If it should not be, the operation should set the <code>/ans</code> register to <code>False</code>.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/r</span> [ list 4 2 3 <span style="color: #4E9A06;">"hello"</span> . ] .
+... print r .
+ans = a registry with:
+t1 of type Integer, value: 4
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+t4 of type String, value: <span style="color: #4E9A06;">"hello"</span>
+... find r <span style="color: #00578E; font-weight: bold;">&lt;</span> ( is-integer value . ) <span style="color: #0084C8; font-weight: bold;">/value</span> <span style="color: #0084C8; font-weight: bold;">/key</span> <span style="color: #00578E; font-weight: bold;">&gt;</span> .
+ans = a registry with:
+t1 of type Integer, value: 4
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+</pre>
+</div>
+
+<p>
+The <code>import</code> operation is used to take the objects from one registry and add them to another. 
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/r</span> [ registry <span style="color: #0084C8; font-weight: bold;">/x</span> 10 . ] .
+... print x .
+Error: Value not found at register <span style="color: #0084C8; font-weight: bold;">/x.</span>
+... import r .
+... print x .
+10
+</pre>
+</div>
+
+<p>
+<code>exist</code> checks whether a value is located in a registry.  It sets the <code>/ans</code> register to <code>True</code> if it is and to <code>False</code> if it does not.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/x</span> 10 .
+... exist <span style="color: #0084C8; font-weight: bold;">/x</span> .
+ans = <span style="color: #F5666D;">True</span>
+... delete <span style="color: #0084C8; font-weight: bold;">/x</span> .
+... exist <span style="color: #0084C8; font-weight: bold;">/x</span> .
+ans = <span style="color: #F5666D;">False</span>
+... set <span style="color: #0084C8; font-weight: bold;">/r</span> [ registry <span style="color: #0084C8; font-weight: bold;">/z</span> 50 . ] .
+... exist <span style="color: #0084C8; font-weight: bold;">/z</span> r .
+ans = <span style="color: #F5666D;">True</span>
+... exist <span style="color: #0084C8; font-weight: bold;">/z</span> .
+ans = <span style="color: #F5666D;">False</span> 
+</pre>
 </div>
 </div>
+</div>
 
-
-
-<div id="outline-container-org4673ed7" class="outline-3">
-<h3 id="org4673ed7"><span class="section-number-3">4.2</span> Registries as environments</h3>
+<div id="outline-container-org433b25d" class="outline-3">
+<h3 id="org433b25d"><span class="section-number-3">4.2</span> Registries as environments</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Registries are both a data structure as described above, and an environment in which code is executed.  To change which registry code is being executed in, use the <code>go-in</code> operation to change the current registry to another registry.  Use the <code>go-out</code> operation to move up to the previous registry.
@@ -658,15 +702,55 @@ Error: No value found at register <span style="color: #0084C8; font-weight: bold
 </div>
 </div>
 
+<div id="outline-container-orgf484223" class="outline-2">
+<h2 id="orgf484223"><span class="section-number-2">5</span> Registers</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Registers are a full-fledged data type.  Register locations can be inserted into a registry.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... set <span style="color: #0084C8; font-weight: bold;">/x</span> <span style="color: #0084C8; font-weight: bold;">/y</span> .
+... set x 10 .
+... print x .
+<span style="color: #0084C8; font-weight: bold;">/y</span>
+... print y .
+10
+</pre>
+</div>
 
-<div id="outline-container-org9f878fb" class="outline-2">
-<h2 id="org9f878fb"><span class="section-number-2">5</span> Registers</h2>
+<p>
+Registries with an array-like structure often have registers with names like: <code>/r1,/r2,/r3</code>.  ARBEL has convenience operations to work with registers like these.
+</p>
+
+<p>
+<code>list</code> creates registries where each element is at register location <code>/t1,/t2,/t3,...</code>.  
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... list 1 2 3 .
+ans = a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+</pre>
+</div>
+
+<p>
+<code>next</code> and <code>previous</code> set the <code>/ans</code> register to the next or previous register for registers that end in numeric values.
+</p>
+<div class="org-src-container">
+<pre class="src src-arbel">... next <span style="color: #0084C8; font-weight: bold;">/element10</span> .
+ans = <span style="color: #0084C8; font-weight: bold;">/element11</span>
+... previous <span style="color: #0084C8; font-weight: bold;">/element10</span> .
+ans = <span style="color: #0084C8; font-weight: bold;">/element9</span>
+</pre>
+</div>
+</div>
 </div>
 
 
 
-<div id="outline-container-org11152b0" class="outline-2">
-<h2 id="org11152b0"><span class="section-number-2">6</span> Instructions</h2>
+<div id="outline-container-orga51d00d" class="outline-2">
+<h2 id="orga51d00d"><span class="section-number-2">6</span> Instructions</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Instructions are code literals.  In syntax, they are statements enclosed in open parenthesis. Instructions can be executed with either the <code>in</code> or the <code>call</code> operations and they are often used as arguments for various operations like loops.  
@@ -733,8 +817,8 @@ ans = 10
 </div>
 </div>
 
-<div id="outline-container-orgb2a1a0b" class="outline-3">
-<h3 id="orgb2a1a0b"><span class="section-number-3">6.1</span> Defining operations</h3>
+<div id="outline-container-org82f8319" class="outline-3">
+<h3 id="org82f8319"><span class="section-number-3">6.1</span> Defining operations</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Most new procedures that a programmer writes in ARBEL are instructions, but it is sometimes useful to have "positional" arguments like operations.  Users write operations by writing instructions and assigning argument numbers to different registers in the temporary registry. They can be defined using angle brackets or the <code>op</code> operation.
@@ -753,35 +837,52 @@ ans = 6
 </div>
 </div>
 
+<div id="outline-container-orga6234aa" class="outline-2">
+<h2 id="orga6234aa"><span class="section-number-2">7</span> Booleans and Control Flow</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<code>if</code>
+</p>
 
-<div id="outline-container-org863bb07" class="outline-2">
-<h2 id="org863bb07"><span class="section-number-2">7</span> Booleans</h2>
+<p>
+<code>while</code>
+</p>
+
+<p>
+<code>is-type</code>
+</p>
+
+<p>
+<code>and=/=or=/=not</code>
+</p>
 </div>
-<div id="outline-container-org1f8b3d2" class="outline-2">
-<h2 id="org1f8b3d2"><span class="section-number-2">8</span> Numbers</h2>
 </div>
-<div id="outline-container-org0e0c08c" class="outline-2">
-<h2 id="org0e0c08c"><span class="section-number-2">9</span> Strings</h2>
+
+<div id="outline-container-org09e8301" class="outline-2">
+<h2 id="org09e8301"><span class="section-number-2">8</span> Numbers</h2>
 </div>
-<div id="outline-container-org02a5f15" class="outline-2">
-<h2 id="org02a5f15"><span class="section-number-2">10</span> </h2>
+<div id="outline-container-orgd662040" class="outline-2">
+<h2 id="orgd662040"><span class="section-number-2">9</span> Strings</h2>
 </div>
-<div id="outline-container-org7b57507" class="outline-2">
-<h2 id="org7b57507"><span class="section-number-2">11</span> Examples</h2>
+<div id="outline-container-orgb929db8" class="outline-2">
+<h2 id="orgb929db8"><span class="section-number-2">10</span> Tasks (multi-threading)</h2>
+</div>
+<div id="outline-container-orgfd266dc" class="outline-2">
+<h2 id="orgfd266dc"><span class="section-number-2">11</span> Examples</h2>
 <div class="outline-text-2" id="text-11">
 </div>
-<div id="outline-container-org3d62d5b" class="outline-3">
-<h3 id="org3d62d5b"><span class="section-number-3">11.1</span> Short Examples</h3>
+<div id="outline-container-org5e04e0d" class="outline-3">
+<h3 id="org5e04e0d"><span class="section-number-3">11.1</span> Short Examples</h3>
 </div>
 
-<div id="outline-container-org0000aff" class="outline-3">
-<h3 id="org0000aff"><span class="section-number-3">11.2</span> Complete Program</h3>
+<div id="outline-container-orgff06346" class="outline-3">
+<h3 id="orgff06346"><span class="section-number-3">11.2</span> Complete Program</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2020-08-12 Wed 01:21</p>
+<p class="date">Created: 2020-08-12 Wed 13:13</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

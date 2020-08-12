@@ -96,7 +96,6 @@ ARBEL statements can contain two forms of substatements in place of a data eleme
 
  This code block illustrates the difference between active instructions and immediate substatements.  The =if= operation accesses and returns its second argument if the first argument is =True= and the third argument if the first is =False=.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the =if= operation accesses their value.
 
-
 * Overview of ARBEL vocabulary
 
 ARBEL statements consist of sequences of data.  Statements start with an operation, generally, and other types of data follow.  ARBEL the language consists of operations that implement each data type.  Users of ARBEL do not specify new types unlike in many languages.  ARBEL uses a single flexible data structure, the registry, to describe many types.  Like lists in Lisp.
@@ -208,6 +207,30 @@ t2 of type Integer, value: 2
 t3 of type Integer, value: 3
 #+END_SRC
 
+The =import= operation is used to take the objects from one registry and add them to another. 
+#+BEGIN_SRC arbel
+... set /r [ registry /x 10 . ] .
+... print x .
+Error: Value not found at register /x.
+... import r .
+... print x .
+10
+#+END_SRC
+
+=exist= checks whether a value is located in a registry.  It sets the =/ans= register to =True= if it is and to =False= if it does not.
+#+BEGIN_SRC arbel
+... set /x 10 .
+... exist /x .
+ans = True
+... delete /x .
+... exist /x .
+ans = False
+... set /r [ registry /z 50 . ] .
+... exist /z r .
+ans = True
+... exist /z .
+ans = False 
+#+END_SRC
 
 ** Registries as environments
 
@@ -239,6 +262,38 @@ Error: No value found at register /s.
 #+END_SRC
 
 * Registers
+
+Registers are a full-fledged data type.  Register locations can be inserted into a registry.
+#+BEGIN_SRC arbel
+... set /x /y .
+... set x 10 .
+... print x .
+/y
+... print y .
+10
+#+END_SRC
+
+Registries with an array-like structure often have registers with names like: =/r1,/r2,/r3=.  ARBEL has convenience operations to work with registers like these.
+
+=list= creates registries where each element is at register location =/t1,/t2,/t3,...=.  
+#+BEGIN_SRC arbel
+... list 1 2 3 .
+ans = a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+#+END_SRC
+
+=next= and =previous= set the =/ans= register to the next or previous register for registers that end in numeric values.
+#+BEGIN_SRC arbel
+... next /element10 .
+ans = /element11
+... previous /element10 .
+ans = /element9
+#+END_SRC
+
+
+
 * Instructions
 
 Instructions are code literals.  In syntax, they are statements enclosed in open parenthesis. Instructions can be executed with either the =in= or the =call= operations and they are often used as arguments for various operations like loops.  
@@ -298,11 +353,60 @@ ans = 6
 ans = 6
 #+END_SRC
 
+* Booleans and Control Flow
 
-* Booleans
+The primary "control flow" operations in ARBEL are =if= and =while=.  Control flow in ARBEL is achieved with operations that execute code repeatedly or conditionally.
+
+=if= takes three arguments.  If its first argument is =True=, it sets the =/ans= register to the second argument.  If the third argument is =False=, it sets the =/ans= register to the third argument.
+#+BEGIN_SRC arbel
+... set /gt-3 < ( gt t 3 . ) /t > .
+... set /max-3 < ( if [ gt-3 t . ] 3 t . ) /t > .
+... max-3 4 .
+ans = 3
+... max-3 2 .
+ans = 2
+#+END_SRC
+
+Frequently, we would like to execute some code if a condition is =True= and another piece of code if a condition is =False=.  To do this using the =if= operation, ARBEL uses active instructions.  Because active instructions are only executed if the code attempts to use the value, the statements will not be evaluated unless the =if= operation attempts to access its second or third argument.  Continuing from the above block of code,
+
+#+BEGIN_SRC arbel
+... if [ gt-3 4 . ] { print "Greater than 3." . } { print "Less than or equal to 3." . } .
+Greater than 3.
+... if [ gt-3 2 . ] { print "Greater than 3." . } { print "Less than or equal to 3." . } .
+Less than or equal to 3.
+... if [ gt-3 3 . ] { print "Greater than 3." . } { print "Less than or equal to 3." . } .
+Less than or equal to 3.
+#+END_SRC
+
+=while= is the other main control flow operation in ARBEL.  =while= takes two instructions as arguments.  The first instruction is executed first in the current registry.  If the instruction sets the =/ans= register to =True=, the second instruction is executed in the current registry as well.  Then, the first instruction is executed again.  If it is =True=, the second instruction is executed again, and so on.
+
+#+BEGIN_SRC arbel
+... set /i 1 .
+... while ( lt i 10 . )
+          ( 
+            print i . 
+            set /i [ add i 1 . ] .
+          ) .
+1
+2
+3
+4
+5
+6
+7
+8
+9
+#+END_SRC
+
+=is-type=
+
+=and=/=or=/=not=
+
 * Numbers
 * Strings
+* Files
 * Tasks (multi-threading)
+* Interacting with the Shell
 * Examples
 
 ** Short Examples

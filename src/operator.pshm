@@ -1960,19 +1960,17 @@ op_or (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   bool check = false;
-  #num=1@
-  #type=Boolean@
-  ##GETARG~$;
-  if (*((bool*) arg1->data))
+
+  for (int i=1; i < a.length; i++)
     {
-      check = true;
-    }
-  else
-    {
-      #num=2@
+      #num=i@
+      #type=Boolean@
       ##GETARG~$;
-      if (*((bool*) arg2->data))
-        check = true;
+      if (*((bool*) argi->data))
+        {
+          check = true;
+          break;
+        }
     }
 
   data* d;
@@ -1988,22 +1986,17 @@ op_and (arg a, registry* reg)
   #length=2@
   ##CHECK_ARGS~$;
 
-  #num=1@
-  #type=Boolean@
-  ##GETARG~$;
-
   bool check = true;
-
-  if (!(*((bool*) arg1->data)))
+  for (int i=1; i < a.length; i++)
     {
-      check = false;
-    }
-  else
-    {
-      #num=2@
+      #num=i@
+      #type=Boolean@
       ##GETARG~$;
-      if (!(*((bool*) arg2->data)))
-        check = false;
+      if (!(*((bool*) argi->data)))
+        {
+          check = false;
+          break;
+        }
     }
 
   data* d;
@@ -3761,7 +3754,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_register, NULL, NULL, 0);
   set(reg,d,"is-register",1);
 
-  /* File operations
+  /* File operations */
 
   assign_op(&d, op_is_file, NULL, NULL, 0);
   set(reg,d,"is-file",1);

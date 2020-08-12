@@ -3541,67 +3541,41 @@ op_or (arg a, registry* reg)
 if (is_error(-1, reg->task->task)) return ;;
 
   bool check = false;
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
+
+  for (int i=1; i < a.length; i++)
+    {
+      
+      
+      
+data* argi = resolve(a.arg_array[i], reg);
 
 if (true)
   {
-    if (arg1 == NULL)
+    if (argi == NULL)
       {
         char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<or> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<or> requires at least %d arguments.", 1);
+        err_msg = malloc(sizeof(char)*(strlen("<or> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<or> requires at least %d arguments.", i);
         do_error(err_msg, reg->task->task);
         free(err_msg);
         return ;
       }
   }
-if (arg1 != NULL && true && (!(arg1->type & Boolean)))
+if (argi != NULL && true && (!(argi->type & Boolean)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <or> should be of type Boolean.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <or> should be of type Boolean.", 1);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <or> should be of type Boolean.")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <or> should be of type Boolean.", i);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
   }
 
 ;
-  if (*((bool*) arg1->data))
-    {
-      check = true;
-    }
-  else
-    {
-      
-      
-data* arg2 = resolve(a.arg_array[2], reg);
-
-if (true)
-  {
-    if (arg2 == NULL)
-      {
-        char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<or> requires at least  arguments.")+digits(2)+1));
-        sprintf(err_msg, "<or> requires at least %d arguments.", 2);
-        do_error(err_msg, reg->task->task);
-        free(err_msg);
-        return ;
-      }
-  }
-if (arg2 != NULL && true && (!(arg2->type & Boolean)))
-  {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <or> should be of type Boolean.")+digits(2)+1));
-    sprintf(err_msg, "Argument %d of <or> should be of type Boolean.", 2);
-    do_error(err_msg, reg->task->task);
-    free(err_msg);
-    return ;
-  }
-
-;
-      if (*((bool*) arg2->data))
-        check = true;
+      if (*((bool*) argi->data))
+        {
+          check = true;
+          break;
+        }
     }
 
   data* d;
@@ -3618,70 +3592,41 @@ op_and (arg a, registry* reg)
   check_length(&a, 2+1, "and", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
-  
-  
-  
-data* arg1 = resolve(a.arg_array[1], reg);
-
-if (true)
-  {
-    if (arg1 == NULL)
-      {
-        char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<and> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<and> requires at least %d arguments.", 1);
-        do_error(err_msg, reg->task->task);
-        free(err_msg);
-        return ;
-      }
-  }
-if (arg1 != NULL && true && (!(arg1->type & Boolean)))
-  {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <and> should be of type Boolean.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <and> should be of type Boolean.", 1);
-    do_error(err_msg, reg->task->task);
-    free(err_msg);
-    return ;
-  }
-
-;
-
   bool check = true;
-
-  if (!(*((bool*) arg1->data)))
-    {
-      check = false;
-    }
-  else
+  for (int i=1; i < a.length; i++)
     {
       
       
-data* arg2 = resolve(a.arg_array[2], reg);
+      
+data* argi = resolve(a.arg_array[i], reg);
 
 if (true)
   {
-    if (arg2 == NULL)
+    if (argi == NULL)
       {
         char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<and> requires at least  arguments.")+digits(2)+1));
-        sprintf(err_msg, "<and> requires at least %d arguments.", 2);
+        err_msg = malloc(sizeof(char)*(strlen("<and> requires at least  arguments.")+digits(i)+1));
+        sprintf(err_msg, "<and> requires at least %d arguments.", i);
         do_error(err_msg, reg->task->task);
         free(err_msg);
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & Boolean)))
+if (argi != NULL && true && (!(argi->type & Boolean)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <and> should be of type Boolean.")+digits(2)+1));
-    sprintf(err_msg, "Argument %d of <and> should be of type Boolean.", 2);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <and> should be of type Boolean.")+digits(i)+1));
+    sprintf(err_msg, "Argument %d of <and> should be of type Boolean.", i);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
   }
 
 ;
-      if (!(*((bool*) arg2->data)))
-        check = false;
+      if (!(*((bool*) argi->data)))
+        {
+          check = false;
+          break;
+        }
     }
 
   data* d;
@@ -6916,7 +6861,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_register, NULL, NULL, 0);
   set(reg,d,"is-register",1);
 
-  /* File operations
+  /* File operations */
 
   assign_op(&d, op_is_file, NULL, NULL, 0);
   set(reg,d,"is-file",1);
