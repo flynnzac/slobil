@@ -490,6 +490,9 @@ shift_list_down (registry* reg);
 int
 save_content (FILE* f, content* reg);
 
+void
+save_outer (registry* reg, char* fname);
+
 content*
 new_content ();
 

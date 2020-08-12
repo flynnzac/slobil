@@ -96,8 +96,14 @@ ARBEL statements can contain two forms of substatements in place of a data eleme
 
  This code block illustrates the difference between active instructions and immediate substatements.  The =if= operation accesses and returns its second argument if the first argument is =True= and the third argument if the first is =False=.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the =if= operation accesses their value.
 
+
+* Overview of ARBEL vocabulary
+
+ARBEL statements consist of sequences of data.  Statements start with an operation, generally, and other types of data follow.  ARBEL the language consists of operations that implement each data type.  Users of ARBEL do not specify new types unlike in many languages.  ARBEL uses a single flexible data structure, the registry, to describe many types.  Like lists in Lisp.
+
 * Registries
 
+** Registries as data structures
 Registries are tables of data located at registers.  Register locations are prefixed with a forward slash in ARBEL so:
 #+BEGIN_SRC arbel
 /hello
@@ -130,6 +136,16 @@ Error: Value at register /x not found.
 ... print y .
 10
 #+END_SRC
+
+The =delete= operation deletes a value from a given register in the current registry.
+#+BEGIN_SRC arbel
+... set /x 10 .
+... print x .
+10
+... delete /x .
+... print x .
+Error: Value not found at /x register.
+#+END_SRC 
 
 The =registry= operation creates a new registry.
 #+BEGIN_SRC arbel
@@ -168,9 +184,61 @@ This notation can be nested.  So a value in a registry located at a register ins
 registry:register:register
 #+END_SRC
 
-Where the first register is the location of another registry inside the registry.
+Where the first register is the location of another registry inside the registry.  Like so,
+#+BEGIN_SRC arbel
+... set /r [ registry /s [ registry /x 10 . ] . ] .
+... print r:/s:/x .
+10
+#+END_SRC
+
+Elements of a registry can be selected using the =find= operation.  The find operation takes a registry and an operation as arguments.  The operation should take two arguments.  The first is a value in the registry.  The second is the register the value is located at in the registry.  If the element should be selected, the operation should set the =/ans= register to =True=.  If it should not be, the operation should set the =/ans= register to =False=.
+
+#+BEGIN_SRC arbel
+... set /r [ list 4 2 3 "hello" . ] .
+... print r .
+ans = a registry with:
+t1 of type Integer, value: 4
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+t4 of type String, value: "hello"
+... find r < ( is-integer value . ) /value /key > .
+ans = a registry with:
+t1 of type Integer, value: 4
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+#+END_SRC
 
 
+** Registries as environments
+
+Registries are both a data structure as described above, and an environment in which code is executed.  To change which registry code is being executed in, use the =go-in= operation to change the current registry to another registry.  Use the =go-out= operation to move up to the previous registry.
+#+BEGIN_SRC arbel
+... /set /r [ registry . ] .
+... go-in r .
+... set /x 10 .
+... print x .
+10
+... go-out .
+... print x .
+Error: Value not found at /x register.
+... print r:/x .
+10
+#+END_SRC
+
+
+An instruction can also be executed in a registry using the =in= operation.
+#+BEGIN_SRC arbel
+... set /r [ registry /t 1 . ] .
+... print r:/t .
+1
+... in r ( move /t /s . ) .
+... print r:/s .
+1
+... print s .
+Error: No value found at register /s.
+#+END_SRC
+
+* Registers
 * Instructions
 
 Instructions are code literals.  In syntax, they are statements enclosed in open parenthesis. Instructions can be executed with either the =in= or the =call= operations and they are often used as arguments for various operations like loops.  
@@ -231,8 +299,10 @@ ans = 6
 #+END_SRC
 
 
-
-
+* Booleans
+* Numbers
+* Strings
+* Tasks (multi-threading)
 * Examples
 
 ** Short Examples

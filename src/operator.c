@@ -5340,6 +5340,7 @@ if (arg2 != NULL && true && (!(arg2->type & Operation)))
   a1.arg_array = malloc(sizeof(data*)*a1.length);
   a1.arg_array[0] = arg2;
   a1.arg_array[1] = NULL;
+  a1.arg_array[2] = NULL;
   
   for (int i = 0; i < r->hash_size; i++)
     {
@@ -5356,6 +5357,9 @@ if (arg2 != NULL && true && (!(arg2->type & Operation)))
           if (c->value != NULL)
             {
               a1.arg_array[1] = c->value;
+              data* key;
+              assign_regstr(&key, c->name, c->key);
+              a1.arg_array[2] = key;
               compute(arg2, reg, a1);
               data* d = lookup(reg, arbel_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
@@ -5363,6 +5367,7 @@ if (arg2 != NULL && true && (!(arg2->type & Operation)))
                 {
                   set(result, copy_data(c->value), c->name, 0);
                 }
+              free_data(key);
             }
           c = c->right;
         }
