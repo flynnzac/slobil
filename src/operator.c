@@ -2201,10 +2201,10 @@ if (true)
         return ;
       }
   }
-if (arg3 != NULL && true && (!(arg3->type & String)))
+if (arg3 != NULL && true && (!(arg3->type & Register)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <collapse> should be of type String.")+digits(3)+1));
-    sprintf(err_msg, "Argument %d of <collapse> should be of type String.", 3);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <collapse> should be of type Register.")+digits(3)+1));
+    sprintf(err_msg, "Argument %d of <collapse> should be of type Register.", 3);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
@@ -2212,7 +2212,7 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
 
 ;
 
-      prefix = (char*) arg3->data;
+      prefix = ((regstr*) arg3->data)->name;
     }
 
   data* d;

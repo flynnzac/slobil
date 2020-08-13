@@ -298,6 +298,8 @@ ans = /element9
 
 Instructions are code literals.  In syntax, they are statements enclosed in open parenthesis. Instructions can be executed with either the =in= or the =call= operations and they are often used as arguments for various operations like loops.  
 
+** In operation
+
 The =in= operation executes the instruction inside an existing registry.
 
 #+BEGIN_SRC arbel
@@ -312,6 +314,8 @@ Error: Value at register /x not found.
 #+END_SRC
 
 This example demonstrates both using instructions and how ARBEL code executes inside registries.  The =registry= operation creates a new registry.  The statement =in y assign-x= executes the code in the instruction located at =/assign-x= in the context of the =y= register.  So, within the =y= registry, the value located at =/x= is =10=.  But, because we are currently not inside the =/y= registry, after the =in= command we cannot access those registries so =print x= prints nothing.  The special name =_= refers to the current registry.  So =in _ assign-x= runs the instruction =assign-x= in the current registry.  So =/x= in the current registry now holds the value =10=.
+
+** Call operation
 
 The =call= operation executes the instruction inside a temporary registry defined by the user calling the code.  It then sets the =/ans= register in the calling registry to the value of the =/ans= register in the temporary registry.
 #+BEGIN_SRC arbel
@@ -340,6 +344,34 @@ As a convenience, if an instruction is the first data object in a statement, ARB
 ans = 10
 #+END_SRC
 
+=answer= is a useful operation when calling instructions.  =answer= sets the =/ans= register to whatever argument is provided to the operation.  It highlights that the data is being returned to the registry that called the operation, but =answer DATA= is functionally equivalent to =set /ans DATA=.
+
+** The collapse and do operations
+
+The =collapse= and =do= operations iterate over the elements of a registry and create a new registry.  
+
+The =collapse= operation aggregates over data at a number of registries.  Collapse makes use of a special structure put on the registry where some registers have the form =/prefixNNN...N=  where =NNN...N= is a natural number.  The =list= operation creates a registry with this form where the prefix is =t=.
+#+BEGIN_SRC arbel
+... set /r [ list 1 2 3 . ] .
+... print r .
+ans = a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+... collapse add r /t .
+ans = 6
+#+END_SRC
+
+The =collapse= operation takes an operation that takes (at least) two arguments as its first argument.  Elements of the registry provided in the second argument that match the prefix provided in the third argument are fed in sequentially to the operation.  The collapse operation does the equivalent of:
+#+BEGIN_SRC arbel
+... add r:/t1 r:/t2 .
+ans = 3
+... add ans r:/t3 .
+ans = 6
+#+END_SRC
+
+The =do= operation applies another operation to all elements in a registry.
+
 ** Defining operations
 
 Most new procedures that a programmer writes in ARBEL are instructions, but it is sometimes useful to have "positional" arguments like operations.  Users write operations by writing instructions and assigning argument numbers to different registers in the temporary registry. They can be defined using angle brackets or the =op= operation.
@@ -356,6 +388,8 @@ ans = 6
 * Booleans and Control Flow
 
 The primary "control flow" operations in ARBEL are =if= and =while=.  Control flow in ARBEL is achieved with operations that execute code repeatedly or conditionally.
+
+** The if operation
 
 =if= takes three arguments.  If its first argument is =True=, it sets the =/ans= register to the second argument.  If the third argument is =False=, it sets the =/ans= register to the third argument.
 #+BEGIN_SRC arbel
@@ -378,6 +412,8 @@ Less than or equal to 3.
 Less than or equal to 3.
 #+END_SRC
 
+** The while operation
+
 =while= is the other main control flow operation in ARBEL.  =while= takes two instructions as arguments.  The first instruction is executed first in the current registry.  If the instruction sets the =/ans= register to =True=, the second instruction is executed in the current registry as well.  Then, the first instruction is executed again.  If it is =True=, the second instruction is executed again, and so on.
 
 #+BEGIN_SRC arbel
@@ -398,12 +434,212 @@ Less than or equal to 3.
 9
 #+END_SRC
 
-=is-type=
+** Logical concatenation
 
-=and=/=or=/=not=
+ARBEL also includes logical operations: =and=, =or=, and =not=.  
+
+=and= and =or= take any number of Boolean arguments.  =and= sets the =/ans= register to =True= if all arguments are =True= and to =False= otherwise.  =or= sets the =/ans= register to =True= if any arguments are =True= and to =False= otherwise.  Both operations short circuit as soon as the result is clear.  This is only relevant if active expressions are used with =and= or =or=.  Because this is the only way that accessing the values has an effect on the program.  This behavior is useful for checking whether some condition is true before executing a command.
+
+#+BEGIN_SRC arbel
+... set /f ( or [ is-integer x . ] 
+           { set /x [ add x 1 . ] . answer True . ] . } . 
+             answer x . 
+           ) .
+... f /x 3.4 .
+ans = 3.4
+... f /x 10 .
+ans = 11
+#+END_SRC
 
 * Numbers
+
+ARBEL has two kinds of numeric data.  It has Real numbers (numbers with a decimal point) and Integer numbers (numbers without a decimal point). 
+
+** Arithmetic
+Real and Integer types are different in ARBEL, but the basic arithmetic operations do silently convert between the two.  Whenever both a Real and an Integer are used in arithmetic, the =/ans= register is a Real number.  The basic arithmetic operations are =add=, =sub=, =mul=, and =div=.  Dividing two integers gives an integer answer.  
+
+#+BEGIN_SRC arbel
+... add 1 2.0 .
+ans = 3.0
+... sub 4 1 .
+ans = 3
+... mul 2.5 2 .
+ans = 5.0
+... div 5 2 .
+ans = 2
+... div 5.0 2 .
+ans = 2.5
+#+END_SRC
+
+The arithmetic operations can take any number of arguments so that three numbers could be summed by:
+
+#+BEGIN_SRC arbel
+... add 5 2 3 .
+ans = 10
+#+END_SRC
+
+** Comparison
+
+The numeric comparison operators are =gt= (greater than), =lt= (less than), =eq= (equal to), =lt-eq= (less than or equal to), and =gt-eq= (greater than or equal to).  These operations can also take any number of arguments.  These operations set the =/ans= register to =True= if the comparison is true and to =False= if it is false.
+
+#+BEGIN_SRC arbel
+... gt 4 3 .
+ans = True 
+... gt 10 2 3 4 5 .
+ans = False
+... gt 10 5 3 .
+ans = True
+#+END_SRC
+
+** Exponentiation
+The built in operations for exponentiation are =exp= to compute the natural exponent of a number, =log= to compute the natural logarithm of a number, and =power= to raise a number to a given power.
+
+#+BEGIN_SRC arbel
+... exp 1 .
+ans = 2.718282
+... log 2 .
+ans = 0.693147
+... power 2 0.5 .
+ans = 1.414214
+#+END_SRC
+
+** Modulus
+
+The modulus operation is =mod=.  It computes both the Integer and the Real modulus.
+
+#+BEGIN_SRC arbel
+... mod 5 2 .
+ans = 1
+... mod 5.0 2.6
+ans = 2.4
+#+END_SRC
+
+** Increment and Decrement
+
+For efficiency in loops, ARBEL includes operations to increment and decrement Integer values /in place/, without copying the value.
+#+BEGIN_SRC arbel 
+... set /x 5 .
+... print x .
+5
+... incr x .
+... print x .
+6
+... decr x .
+... print x .
+5
+#+END_SRC
+
 * Strings
+
+Strings are ARBEL's data type for handling text data.  A literal string is text enclosed in double-quotes, like so: ="hello"=.  String literals can include the following escape sequences to input characters that would otherwise be difficult to insert.
+
+| Escape Sequence  | Meaning          |
+|------------------+------------------|
+| \\               | \                |
+| \'               | ' (single-quote) |
+| \t               | tab              |
+| \n               | newline          |
+| \r               | carriage return  |
+| ' (single-quote) | " (double quote) |
+|------------------+------------------|
+
+Strings are UTF-8 compliant so Unicode characters are valid characters and will be counted as single characters by string operations.  
+
+** String manipulation
+
+The =string-length= operation sets the =/ans= register to the number of characters in the string.
+
+#+BEGIN_SRC arbel
+... string-length "hello" .
+ans = 5
+... string-length "dŵr" .
+ans = 3
+#+END_SRC
+
+The =substring= operation sets the =/ans= register to a substring of =string= from characters =index1= to =index2=.  
+
+#+BEGIN_SRC arbel
+substring string index1 index2 .
+#+END_SRC
+
+ARBEL strings start at position =1=.  Indexes less than or equal to =0= have a special meaning.  They count backwards from the last character in the string.  So position =0= is the last character in the String.  There is no "character" type in ARBEL so =substring= is the primary way to access elements of strings.
+
+#+BEGIN_SRC arbel
+... substring "hello" -1 0 .
+ans = "lo"
+... substring "hello" 1 2 .
+ans = "he"
+... substring "hello" 3 3 .
+ans = "l"
+#+END_SRC
+
+ARBEL provides the =string-append= operation to concatenate strings.  
+
+#+BEGIN_SRC arbel
+... string-append "hello " "world" .
+ans = "hello world"
+#+END_SRC
+
+The =string-append= operation take an arbitrary number of arguments so, the following works as well.
+
+#+BEGIN_SRC arbel
+... string-append "hello" "world" "\nhi!" .
+ans = "helloworld
+hi!"
+#+END_SRC
+
+Using the =collapse= operation with =string-append= is a useful way to join a list of strings.
+
+#+BEGIN_SRC arbel
+... collapse string-append [ list "h" "e" "l" "l" "o" . ] /t .
+ans = "hello"
+#+END_SRC
+
+** Regular expressions
+
+ARBEL implements the POSIX regular expression language using the =match= and =replace= operations.  The =match= operation returns =matches= in a registry structure and =replace= sets the =/ans= register to the original string with all matches replaced with a given replacement string.
+
+The syntax for the =match= operation is:
+
+#+BEGIN_SRC arbel
+... match regex string |max matches|
+#+END_SRC
+
+Where =|max matches|= is an optional argument denoting the maximum number of matches to return.  By default, it is =0= which indicates to return all matches.  If it is =2=, it would return the first two matches.  =match= sets the =/ans= registry to a registry that contains a registry for each match that divides the matched string into any groups specified in the regular expression.  For example,
+
+#+BEGIN_SRC arbel
+... match "el" "hello hello" .
+ans = a registry with:
+t1 of type Registry, value: a registry with:
+t0 of type String, value: "el"
+t2 of type Registry, value: a registry with:
+t0 of type String, value: "el"
+... match "(e)(l)" "hello hello" .
+t1 of type Registry, value: a registry with:
+t0 of type String, value: "el"
+t1 of type String, value: "e"
+t2 of type String, value: "l"
+t2 of type Registry, value: a registry with:
+t0 of type String, value: "el"
+t1 of type String, value: "e"
+t2 of type String, value: "l"
+#+END_SRC
+
+Each match contains the full match at =/t0= and then the subgroup matches at =/tGROUP=.
+
+The =replace= operation is similar.  Its syntax is:
+
+#+BEGIN_SRC arbel
+... replace regex replacement original-string |max matches|
+#+END_SRC
+
+The optional =|max matches|= argument limits the number of replacements to make.  =replacement= is the string to replace all matches with.
+
+#+BEGIN_SRC arbel
+... replace "h" "e" "hello" .
+ans = "eello" .
+#+END_SRC
+
 * Files
 * Tasks (multi-threading)
 * Interacting with the Shell

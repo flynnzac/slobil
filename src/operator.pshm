@@ -1222,10 +1222,10 @@ op_collapse (arg a, registry* reg)
   if (a.length >= 4)
     {
       #num=3@
-      #type=String@
+      #type=Register@
       ##GETARG~$;
 
-      prefix = (char*) arg3->data;
+      prefix = ((regstr*) arg3->data)->name;
     }
 
   data* d;
