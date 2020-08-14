@@ -4,7 +4,8 @@ task /t1
      (
        while ( answer True . )
              (
-               print [ accept /hello . ] .
+               set /current [ accept /hello . ] .
+               push /current .
              ) .
      )
      [ registry . ] .
@@ -12,6 +13,7 @@ task /t1
 run-task t1 .
 
 queue t1 /hello "Hi!" .
+retrieve t1 /current .
 queue t1 /hello "Bye!" .
 queue t1 /hello 1342 .
 queue t1 /hello ( add 1 2 . ) .

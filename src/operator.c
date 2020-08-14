@@ -6648,8 +6648,9 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
                 ((regstr*) arg1->data)->key,
                 0);
 
-  set(t->queued_instruction, copy_data(d),
-      ((regstr*) arg1->data)->name, 0);
+  if (d != NULL)
+    set(t->queued_instruction, copy_data(d),
+        ((regstr*) arg1->data)->name, 0);
 
   pthread_mutex_unlock(&t->lock);
 }
@@ -6730,7 +6731,9 @@ if (arg2 != NULL && true && (!(arg2->type & Register)))
       false);
 
   pthread_mutex_unlock(&t->lock);
-  ret_ans(reg, d);
+
+  if (d != NULL)
+    ret_ans(reg, d);
   
   
 }
