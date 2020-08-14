@@ -552,7 +552,7 @@ The =string-length= operation sets the =/ans= register to the number of characte
 #+BEGIN_SRC arbel
 ... string-length "hello" .
 ans = 5
-... string-length "dŵr" .
+... string-length "dÅµr" .
 ans = 3
 #+END_SRC
 
@@ -641,7 +641,68 @@ ans = "eello" .
 #+END_SRC
 
 * Files
+
+ARBEL provides a File type to manage writing and reading streams of data.  
+
+The =open-file= operation... opens a file, setting the =/ans= register to the resulting file object.
+
+#+BEGIN_SRC arbel
+... open-file "myfile.txt" .
+ans = A file
+#+END_SRC
+
+To read from the File, we can use the =read=, =read-char=, or =read-line= operations.  The =read= operation is primarily useful for reading binary data.  It reads a single byte from the file and sets the =/ans= register to the Integer value of the byte.  =read-char= and =read-line= are the primary operations for reading text files.  =read-char= reads a single character and sets the =/ans= register to a String result.  =read-line= reads a full line into a String.  Each of these operations modifies the state of the File.  The next read will grab the next character and so on.  When reading is complete, the read operations set the =/ans= register to =Nothing=
+
+Suppose the file ="myfile.txt"= referenced above contained the following line only: =hello, world=
+
+#+BEGIN_SRC arbel
+... set /f [ open-file "myfile.txt" . ] .
+... read f .
+ans = 104
+... read-char f .
+ans = "e"
+... read-line f .
+ans = "llo, world"
+#+END_SRC
+
+
+Reading-by character works in Unicode as well.  Suppose =myfile.txt= contains only the word: =dŵr.=.
+
+#+BEGIN_SRC arbel
+... set /f [ open-file "myfile.txt" . ] .
+... read-char f .
+ans = "d"
+... read-char f .
+ans = "ŵ"
+#+END_SRC
+
+To close a file, ARBEL provides the =close= operation.  The =close= operation takes the register at which the File is located as its argument because ARBEL also needs to remove the File value from the register after closing the file.
+
+#+BEGIN_SRC arbel
+... set /f [ open-file "myfile.txt" . ] .
+... close /f .
+#+END_SRC
+
 * Tasks (multi-threading)
+
+ARBEL has facilities for multi-threaded code using a "task" system (vaguely) similar to the task system in Ada, but ARBEL-style.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
+
+Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the register to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a registry defining the environment in which the task will run.
+
+#+BEGIN_SRC arbel
+... task /my-task ( commands to run... ) [ registry . ] .
+#+END_SRC
+
+Tasks are started with the =run-task= operation.  =run-task= takes a single argument, the task to start running.  Running a task means that the instruction that forms the body of the task is executed.
+
+The key thing to understand about tasks is that their environment is entirely /separate/ from the current registry.  There is no way to directly access data in a task fro
+
+
+
+
+
+
+
 * Interacting with the Shell
 * Examples
 

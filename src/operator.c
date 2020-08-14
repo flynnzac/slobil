@@ -3454,19 +3454,30 @@ if (arg1 != NULL && true && (!(arg1->type & File)))
 
 ;
 
-  char c = fgetc((FILE*) arg1->data);
-  char* ret;
+  unsigned char* c = malloc(sizeof(char)*5);
+  c[0] = fgetc((FILE*) arg1->data);
+  int nbytes = 1;
+  while (c[0] & (((unsigned char) 128)>>(nbytes-1)))
+    {
+      printf("%d: %d\n", nbytes, (((unsigned char) 128)>>(nbytes-1)));
+      nbytes++;
+    }
+  nbytes = nbytes > 1 ? (nbytes-1) : 1;
+
+  for (int i = 1; i < nbytes; i++)
+    {
+      c[i] = fgetc((FILE*) arg1->data);
+    }
+  
   data* d;
-  if (c == EOF || c == '\0')
+  if (c[0] == EOF || c[0] == '\0')
     {
       assign_nothing(&d);
     }
   else
     {
-      ret = malloc(sizeof(char)*2);
-      ret[0] = c;
-      ret[1] = '\0';
-      assign_str(&d, ret, 0);
+      c[nbytes] = '\0';
+      assign_str(&d, (char*) c, 0);
     }
   ret_ans(reg,d);
 }
@@ -5118,11 +5129,11 @@ if (is_error(-1, reg->task->task)) return ;;
 }
 
 void
-op_push_through (arg a, registry* reg)
+op_ignore_errors (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "push-through", reg->task->task);
+  check_length(&a, 1+1, "ignore-errors", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
   
@@ -5135,8 +5146,8 @@ if (true)
     if (arg1 == NULL)
       {
         char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<push-through> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<push-through> requires at least %d arguments.", 1);
+        err_msg = malloc(sizeof(char)*(strlen("<ignore-errors> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<ignore-errors> requires at least %d arguments.", 1);
         do_error(err_msg, reg->task->task);
         free(err_msg);
         return ;
@@ -5144,8 +5155,8 @@ if (true)
   }
 if (arg1 != NULL && true && (!(arg1->type & Instruction)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <push-through> should be of type Instruction.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <push-through> should be of type Instruction.", 1);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <ignore-errors> should be of type Instruction.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <ignore-errors> should be of type Instruction.", 1);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
@@ -6593,8 +6604,138 @@ if (arg1 != NULL && true && (!(arg1->type & Register)))
   assign_boolean(&r, d != NULL);
   ret_ans(reg, r);
 }
+
+void
+op_push (arg a, registry* reg)
+{
   
   
+  check_length(&a, 1+1, "push", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<push> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<push> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <push> should be of type Register.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <push> should be of type Register.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  task* t = reg->task;
+
+  pthread_mutex_lock(&t->lock);
+  data* d = get(reg,
+                ((regstr*) arg1->data)->key,
+                0);
+
+  set(t->queued_instruction, copy_data(d),
+      ((regstr*) arg1->data)->name, 0);
+
+  pthread_mutex_unlock(&t->lock);
+}
+
+void
+op_retrieve (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 2+1, "retrieve", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<retrieve> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<retrieve> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Task)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <retrieve> should be of type Task.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <retrieve> should be of type Task.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  
+  
+  
+data* arg2 = resolve(a.arg_array[2], reg);
+
+if (true)
+  {
+    if (arg2 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<retrieve> requires at least  arguments.")+digits(2)+1));
+        sprintf(err_msg, "<retrieve> requires at least %d arguments.", 2);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg2 != NULL && true && (!(arg2->type & Register)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <retrieve> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <retrieve> should be of type Register.", 2);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  task* t = (task*) arg1->data;
+
+  pthread_mutex_lock(&t->lock);
+  data* d = get(t->queued_instruction,
+                ((regstr*) arg2->data)->key,
+                0);
+  del(t->queued_instruction,
+      ((regstr*) arg2->data)->key,
+      0,
+      false);
+
+  pthread_mutex_unlock(&t->lock);
+  ret_ans(reg, d);
+  
+  
+}
+  
+   
 
 void
 add_basic_ops (registry* reg)
@@ -6823,8 +6964,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_up, NULL, NULL, 0);
   set(reg,d,"up",1);
 
-  assign_op(&d, op_push_through, NULL, NULL, 0);
-  set(reg,d,"push-through",1);
+  assign_op(&d, op_ignore_errors, NULL, NULL, 0);
+  set(reg,d,"ignore-errors",1);
 
   assign_op(&d, op_error_messages, NULL, NULL, 0);
   set(reg,d,"error-messages",1);
@@ -6944,5 +7085,12 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_check_queue, NULL, NULL, 0);
   set(reg,d,"check-queue",1);
 
+  assign_op(&d, op_retrieve, NULL, NULL, 0);
+  set(reg,d,"retrieve",1);
+
+  assign_op(&d, op_push, NULL, NULL, 0);
+  set(reg,d,"push",1);
+
+  
 }
   

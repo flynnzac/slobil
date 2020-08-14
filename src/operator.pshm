@@ -1899,19 +1899,30 @@ op_read_char (arg a, registry* reg)
   #type=File@
   ##GETARG~$;
 
-  char c = fgetc((FILE*) arg1->data);
-  char* ret;
+  unsigned char* c = malloc(sizeof(char)*5);
+  c[0] = fgetc((FILE*) arg1->data);
+  int nbytes = 1;
+  while (c[0] & (((unsigned char) 128)>>(nbytes-1)))
+    {
+      printf("%d: %d\n", nbytes, (((unsigned char) 128)>>(nbytes-1)));
+      nbytes++;
+    }
+  nbytes = nbytes > 1 ? (nbytes-1) : 1;
+
+  for (int i = 1; i < nbytes; i++)
+    {
+      c[i] = fgetc((FILE*) arg1->data);
+    }
+  
   data* d;
-  if (c == EOF || c == '\0')
+  if (c[0] == EOF || c[0] == '\0')
     {
       assign_nothing(&d);
     }
   else
     {
-      ret = malloc(sizeof(char)*2);
-      ret[0] = c;
-      ret[1] = '\0';
-      assign_str(&d, ret, 0);
+      c[nbytes] = '\0';
+      assign_str(&d, (char*) c, 0);
     }
   ret_ans(reg,d);
 }
@@ -2774,9 +2785,9 @@ op_call (arg a, registry* reg)
 }
 
 void
-op_push_through (arg a, registry* reg)
+op_ignore_errors (arg a, registry* reg)
 {
-  #op=push-through@
+  #op=ignore-errors@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -3486,8 +3497,64 @@ op_check_queue (arg a, registry* reg)
   assign_boolean(&r, d != NULL);
   ret_ans(reg, r);
 }
+
+void
+op_push (arg a, registry* reg)
+{
+  #op=push@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+
+  task* t = reg->task;
+
+  pthread_mutex_lock(&t->lock);
+  data* d = get(reg,
+                ((regstr*) arg1->data)->key,
+                0);
+
+  set(t->queued_instruction, copy_data(d),
+      ((regstr*) arg1->data)->name, 0);
+
+  pthread_mutex_unlock(&t->lock);
+}
+
+void
+op_retrieve (arg a, registry* reg)
+{
+  #op=retrieve@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Task@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Register@
+  ##GETARG~$;
+
+  task* t = (task*) arg1->data;
+
+  pthread_mutex_lock(&t->lock);
+  data* d = get(t->queued_instruction,
+                ((regstr*) arg2->data)->key,
+                0);
+  del(t->queued_instruction,
+      ((regstr*) arg2->data)->key,
+      0,
+      false);
+
+  pthread_mutex_unlock(&t->lock);
+  ret_ans(reg, d);
   
   
+}
+  
+   
 
 void
 add_basic_ops (registry* reg)
@@ -3716,8 +3783,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_up, NULL, NULL, 0);
   set(reg,d,"up",1);
 
-  assign_op(&d, op_push_through, NULL, NULL, 0);
-  set(reg,d,"push-through",1);
+  assign_op(&d, op_ignore_errors, NULL, NULL, 0);
+  set(reg,d,"ignore-errors",1);
 
   assign_op(&d, op_error_messages, NULL, NULL, 0);
   set(reg,d,"error-messages",1);
@@ -3837,5 +3904,12 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_check_queue, NULL, NULL, 0);
   set(reg,d,"check-queue",1);
 
+  assign_op(&d, op_retrieve, NULL, NULL, 0);
+  set(reg,d,"retrieve",1);
+
+  assign_op(&d, op_push, NULL, NULL, 0);
+  set(reg,d,"push",1);
+
+  
 }
   
