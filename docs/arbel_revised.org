@@ -693,9 +693,30 @@ Tasks are created with the =task= operation.  The =task= operation takes three a
 ... task /my-task ( commands to run... ) [ registry . ] .
 #+END_SRC
 
-Tasks are started with the =run-task= operation.  =run-task= takes a single argument, the task to start running.  Running a task means that the instruction that forms the body of the task is executed.
+Tasks are started with the =run-task= operation.  =run-task= takes a single argument, the task to start running.  Running a task means that the instruction that forms the body of the task is executed.  Only one instance of the task can be running at a given time but the same task executed can be executed multiple times (the state of the task will not revert when it is run again).
 
-The key thing to understand about tasks is that their environment is entirely /separate/ from the current registry.  There is no way to directly access data in a task.  Data can only be accepted and retrieved by using the =accept= operation and 
+The structure of a task is described in the below table:
+
+| Element | Description                                                                                              |
+|---------+----------------------------------------------------------------------------------------------------------|
+| Body    | The instruction run in a separate thread from the main ARBEL thread.                                     |
+| State   | A Registry that contains the current state of the task.  The registry being modified by the Task's body. |
+| Queue   | A Registry that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
+|---------+----------------------------------------------------------------------------------------------------------|
+
+
+
+The key thing to understand about tasks is that their environment is entirely /separate/ from the current registry.  There is no way to directly access data in a task except in the body of the task.  No data in the Task's queue can be accessed directly in any thread. Data can be sent between the main thread and the task thread using the following operations:
+
+1. The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
+
+2. The =queue= operation copies data into a Task's queue at a given registry in the queue.  
+
+3. The =select= operation is run /in the Task thread/ and takes paired registers and instructions as arguments.  It waits until data is set in the queue at /any/ of the registers.  When one of the registers has data its associated instruction is executed in the Task's state registry with the =/ans= register initial set to the data from the queue.
+
+4. The =push= operation is run /in the Task thread/ to move data from the Task to its queue.  It works like =queue=.
+
+5. The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction.
 
 
 

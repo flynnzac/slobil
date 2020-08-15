@@ -3360,43 +3360,34 @@ op_accept (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  data* def = NULL;
+  task* t;
   if (a.length >= 3)
     {
       #num=2@
-      #checktype=false@
+      #type=Task@
       ##GETARG~$;
-      #checktype=true@
-      def = arg2;
+      t = (task*) arg2->data;
     }
-
-  task* t = reg->task;
+  else
+    {
+      t = reg->task;
+    }
   data* d = NULL;
-  bool delete = true;
   while (d == NULL)
     {
       pthread_mutex_lock(&t->lock);
       d = get(t->queued_instruction,
               ((regstr*) arg1->data)->key,
               0);
-      if ((d==NULL) && (def != NULL))
-        {
-          d = def;
-          delete = false;
-        }
-      else if (d==NULL)
+      if (d==NULL)
         {
           pthread_mutex_unlock(&t->lock);
         }
     }
 
-  d = copy_data(d);
+  del(t->queued_instruction, ((regstr*) arg1->data)->key,
+      0, false);  
   ret_ans(reg, d);
-
-  if (delete)
-    del(t->queued_instruction, ((regstr*) arg1->data)->key,
-        1, false);
-
   pthread_mutex_unlock(&t->lock);
 }
 
@@ -3475,27 +3466,51 @@ op_select (arg a, registry* reg)
 }
 
 void
-op_check_queue (arg a, registry* reg)
+op_accept_or (arg a, registry* reg)
 {
-  #op=check-queue@
-  #length=1@
+  #op=accept-or@
+  #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
   #type=Register@
   ##GETARG~$;
 
-  task* t = reg->task;
+  #num=2@
+  #type=Instruction@
+  ##GETARG~$;
+
+  task* t;
+  if (a.length >= 4)
+    {
+      #num=3@
+      #type=Task@
+      ##GETARG~$;
+      t = (task*) arg3->data;
+    }
+  else
+    {
+      t = reg->task;
+    }
 
   pthread_mutex_lock(&t->lock);
   data* d = get(t->queued_instruction,
                 ((regstr*) arg1->data)->key,
                 0);
   pthread_mutex_unlock(&t->lock);
-  
-  data* r;
-  assign_boolean(&r, d != NULL);
-  ret_ans(reg, r);
+
+  if (d==NULL)
+    {
+      execute_0(arg2, reg);
+    }
+  else
+    {
+      pthread_mutex_lock(&t->lock);
+      del(t->queued_instruction, ((regstr*) arg1->data)->key,
+          0, false);
+      ret_ans(reg,d);
+      pthread_mutex_unlock(&t->lock);
+    }
 }
 
 void
@@ -3901,8 +3916,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_select, NULL, NULL, 0);
   set(reg,d,"select",1);
 
-  assign_op(&d, op_check_queue, NULL, NULL, 0);
-  set(reg,d,"check-queue",1);
+  assign_op(&d, op_accept_or, NULL, NULL, 0);
+  set(reg,d,"accept-or",1);
 
   assign_op(&d, op_retrieve, NULL, NULL, 0);
   set(reg,d,"retrieve",1);
