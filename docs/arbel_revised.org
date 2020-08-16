@@ -683,9 +683,9 @@ To close a file, ARBEL provides the =close= operation.  The =close= operation ta
 ... close /f .
 #+END_SRC
 
-* Tasks (multi-threading)
+* Tasks (concurrent programs)
 
-ARBEL has facilities for multi-threaded code using a "task" system (vaguely) similar to the task system in Ada, but ARBEL-style.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
+ARBEL has facilities for multi-threaded code using a "task" system (vaguely) similar to the task system in Ada, but with an ARBEL-flavor.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
 
 Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the register to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a registry defining the environment in which the task will run.
 
@@ -714,9 +714,7 @@ The key thing to understand about tasks is that their environment is entirely /s
 
 3. The =select= operation is run /in the Task thread/ and takes paired registers and instructions as arguments.  It waits until data is set in the queue at /any/ of the registers.  When one of the registers has data its associated instruction is executed in the Task's state registry with the =/ans= register initial set to the data from the queue.
 
-4. The =push= operation is run /in the Task thread/ to move data from the Task to its queue.  It works like =queue=.
-
-5. The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction.
+4. The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction.
 
 
 

@@ -3319,32 +3319,33 @@ op_queue (arg a, registry* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Task@
-  ##GETARG~$;
-
-  #num=2@
   #type=Register@
   ##GETARG~$;
 
-  data* d;
+  #num=2@
+  #checktype=false@
+  ##GETARG~$;
+  #checktype=true@
+
+  data* d = copy_data(arg2);
+
+  task* t;
   if (a.length >= 4)
     {
       #num=3@
-      #checktype=false@
+      #type=Task@
       ##GETARG~$;
-      #checktype=true@
-      d = copy_data(arg3);
+      t = (task*) arg3->data;
     }
   else
     {
-      assign_nothing(&d);
+      t = reg->task;
     }
 
-  task* t = (task*) arg1->data;
   pthread_mutex_lock(&t->lock);
 
   set(t->queued_instruction, d,
-      ((regstr*) arg2->data)->name, 0);
+      ((regstr*) arg1->data)->name, 0);
   pthread_mutex_unlock(&t->lock);
 
 }
@@ -3511,64 +3512,6 @@ op_accept_or (arg a, registry* reg)
       ret_ans(reg,d);
       pthread_mutex_unlock(&t->lock);
     }
-}
-
-void
-op_push (arg a, registry* reg)
-{
-  #op=push@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Register@
-  ##GETARG~$;
-
-  task* t = reg->task;
-
-  pthread_mutex_lock(&t->lock);
-  data* d = get(reg,
-                ((regstr*) arg1->data)->key,
-                0);
-
-  if (d != NULL)
-    set(t->queued_instruction, copy_data(d),
-        ((regstr*) arg1->data)->name, 0);
-
-  pthread_mutex_unlock(&t->lock);
-}
-
-void
-op_retrieve (arg a, registry* reg)
-{
-  #op=retrieve@
-  #length=2@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Task@
-  ##GETARG~$;
-
-  #num=2@
-  #type=Register@
-  ##GETARG~$;
-
-  task* t = (task*) arg1->data;
-
-  pthread_mutex_lock(&t->lock);
-  data* d = get(t->queued_instruction,
-                ((regstr*) arg2->data)->key,
-                0);
-  del(t->queued_instruction,
-      ((regstr*) arg2->data)->key,
-      0,
-      false);
-
-  pthread_mutex_unlock(&t->lock);
-
-  if (d != NULL)
-    ret_ans(reg, d);
-  
 }
   
 void
@@ -3919,12 +3862,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_accept_or, NULL, NULL, 0);
   set(reg,d,"accept-or",1);
 
-  assign_op(&d, op_retrieve, NULL, NULL, 0);
-  set(reg,d,"retrieve",1);
 
-  assign_op(&d, op_push, NULL, NULL, 0);
-  set(reg,d,"push",1);
-
-  
 }
   
