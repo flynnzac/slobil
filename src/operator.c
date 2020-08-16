@@ -6326,10 +6326,18 @@ if (arg3 != NULL && true && (!(arg3->type & Task)))
       t = reg->task;
     }
 
-  pthread_mutex_lock(&t->lock);
 
-  set(t->queued_instruction, d,
-      ((regstr*) arg1->data)->name, 0);
+  pthread_mutex_lock(&t->lock);
+  
+  if (t->queued_instruction == NULL)
+    {
+      do_error("Task has no queue.  Data cannot be queued.", reg->task->task);
+    }
+  else
+    {
+      set(t->queued_instruction, d,
+          ((regstr*) arg1->data)->name, 0);
+    }
   pthread_mutex_unlock(&t->lock);
 
 }
