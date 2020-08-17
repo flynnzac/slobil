@@ -685,7 +685,7 @@ To close a file, ARBEL provides the =close= operation.  The =close= operation ta
 
 * Tasks (concurrent programs)
 
-ARBEL has facilities for multi-threaded code using a "task" system (vaguely) similar to the task system in Ada, but with an ARBEL-flavor.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
+ARBEL can be used to write concurrent (multi-threaded) programs using Task objects.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
 
 Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the register to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a registry defining the environment in which the task will run.
 
@@ -704,17 +704,38 @@ The structure of a task is described in the below table:
 | Queue   | A Registry that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
 |---------+----------------------------------------------------------------------------------------------------------|
 
+A Task's state registry is entirely /separate/ from the current registry.  There is no way to directly access data in a task except in the body of the task.  No data in the Task's queue can be accessed directly in any thread. Data can be sent between the main thread and the task thread using operations.
 
+Tasks /accept/ data when they take data from their queue and move it into their state registry.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
 
-The key thing to understand about tasks is that their environment is entirely /separate/ from the current registry.  There is no way to directly access data in a task except in the body of the task.  No data in the Task's queue can be accessed directly in any thread. Data can be sent between the main thread and the task thread using the following operations:
+The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
 
-1. The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
+The =queue= operation moves data from one registry into the queue of another Task.  It tasks a registry to set in the queue registry, the data to use, and the task's queue to access.
 
-2. The =queue= operation copies data into a Task's queue at a given registry in the queue.  
+#+BEGIN_SRC arbel
+... task /t1 ( print [ accept /hello . ] . ) .
+... run-task t1 .
+... queue /hello "Hi!" t1 .
+Hi!
+#+END_SRC
 
-3. The =select= operation is run /in the Task thread/ and takes paired registers and instructions as arguments.  It waits until data is set in the queue at /any/ of the registers.  When one of the registers has data its associated instruction is executed in the Task's state registry with the =/ans= register initial set to the data from the queue.
+Because the =accept= operation blocks the thread until the data is entered into the queue, it cannot be used when the data is optional.  ARBEL provides two other operations.
 
-4. The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction.
+The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction, in its state registry.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
+
+#+BEGIN_SRC arbel
+accept-or /hello ( set /hello "Hello." ) .
+#+END_SRC
+
+The main use of =accept-or= is to provide default values for missing data or to do something else if data is not available.
+
+Alternatively, the =select= operation executes one of several instructions if data comes in at any number of registers.
+
+   The =select= operation is run /in the Task thread/ and takes paired registers and instructions as arguments.  It waits until data is set in the queue at /any/ of the registers.  When one of the registers has data its associated instruction is executed in the Task's state registry with the =/ans= register initial set to the data from the queue.
+
+** Sending data to a Task
+
+   The =queue= operation copies data into a Task's queue at a given registry in the queue.  
 
 
 

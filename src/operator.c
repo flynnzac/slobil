@@ -6414,6 +6414,17 @@ if (arg2 != NULL && true && (!(arg2->type & Task)))
     {
       t = reg->task;
     }
+
+  pthread_mutex_lock(&t->lock);
+  if (t->queued_instruction == NULL)
+    {
+      do_error("Task has no queue, cannot accept data.",
+               reg->task->task);
+      pthread_mutex_unlock(&t->lock);
+      return;
+    }
+  pthread_mutex_unlock(&t->lock);
+    
   data* d = NULL;
   while (d == NULL)
     {
@@ -6523,8 +6534,17 @@ if (argi1 != NULL && true && (!(argi1->type & Instruction)))
   data* d = NULL;
   task* t = reg->task;
 
-  int idx;
+  pthread_mutex_lock(&t->lock);
+  if (t->queued_instruction == NULL)
+    {
+      do_error("Task has no queue, cannot accept data.",
+               reg->task->task);
+      pthread_mutex_unlock(&t->lock);
+      return;
+    }
+  pthread_mutex_unlock(&t->lock);
 
+  int idx;
   while (d==NULL)
     {
       pthread_mutex_lock(&t->lock);
