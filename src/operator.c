@@ -2738,7 +2738,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
 ;
 
   char* fname = (char*) arg1->data;
-  FILE* f = fopen(fname, "rb");
+  gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
       do_error("File cannot be opened.",
@@ -2781,7 +2781,7 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
     {
       read_registry(f, reg);
     }
-  fclose(f);
+  gzclose(f);
 
 }
 
@@ -5633,7 +5633,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
                                      strlen(".darbs/")+
                                      strlen("/.darb")+1));
   sprintf(fname, "%s/.darbs/%s.darb", home, (char*) arg1->data);
-  FILE* f = fopen(fname, "rb");
+  gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
       do_error("File cannot be opened.",
@@ -5643,7 +5643,7 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
     }
 
   read_registry(f, reg);
-  fclose(f);
+  gzclose(f);
   free(fname);
 }
 

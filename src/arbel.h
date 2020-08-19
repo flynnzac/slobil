@@ -46,6 +46,7 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <signal.h>
+#include <zlib.h>
 
 
 enum data_type
@@ -411,10 +412,10 @@ void
 compute (data* cmd, registry* reg, arg arg);
 
 int
-save_registry (FILE* f, registry* reg);
+save_registry (gzFile f, registry* reg);
 
 int
-read_registry (FILE* f, registry* reg);
+read_registry (gzFile f, registry* reg);
 
 char*
 vector_name (const char* lead, int n);
@@ -488,7 +489,7 @@ registry*
 shift_list_down (registry* reg);
 
 int
-save_content (FILE* f, content* reg);
+save_content (gzFile f, content* reg);
 
 void
 save_outer (registry* reg, char* fname);

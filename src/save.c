@@ -22,7 +22,7 @@
 #include "arbel.h"
 
 int
-save_registry (FILE* f, registry* reg)
+save_registry (gzFile f, registry* reg)
 {
   for (int i = 0; i < reg->hash_size; i++)
     {
@@ -34,7 +34,7 @@ save_registry (FILE* f, registry* reg)
 
 
 int
-save_content (FILE* f, content* reg)
+save_content (gzFile f, content* reg)
 {
   reg = tail(reg);
   int size;
@@ -46,7 +46,7 @@ save_content (FILE* f, content* reg)
           (reg->value->type != File) &&
           ((reg->value->type != Operation) || ((op_wrapper*) reg->value->data)->instr != NULL))
         {
-          fwrite(&reg->value->type, sizeof(data_type), 1, f);
+          gzfwrite(&reg->value->type, sizeof(data_type), 1, f);
       
           switch (reg->value->type)
             {
@@ -57,35 +57,35 @@ save_content (FILE* f, content* reg)
                 char* s = malloc(size);
                 mpz_get_str(s, 10, *z);
                 size = strlen(s);
-                fwrite(&size, sizeof(int), 1, f);
-                fwrite(s, sizeof(char), strlen(s), f);
+                gzfwrite(&size, sizeof(int), 1, f);
+                gzfwrite(s, sizeof(char), strlen(s), f);
                 free(s);
               }
               break;
             case Real:
-              fwrite(reg->value->data, sizeof(double), 1, f);
+              gzfwrite(reg->value->data, sizeof(double), 1, f);
               break;
             case String:
               size = strlen((char*) reg->value->data);
-              fwrite(&size, sizeof(int), 1, f);
-              fwrite(reg->value->data, sizeof(char),
+              gzfwrite(&size, sizeof(int), 1, f);
+              gzfwrite(reg->value->data, sizeof(char),
                      strlen((char*) reg->value->data), f);
               break;
             case Register:
               size = strlen(((regstr*) reg->value->data)->name);
-              fwrite(&size, sizeof(int), 1, f);
-              fwrite(reg->value->data, sizeof(char),
+              gzfwrite(&size, sizeof(int), 1, f);
+              gzfwrite(reg->value->data, sizeof(char),
                      strlen(((regstr*) reg->value->data)->name), f);
               break;
             case Registry:
               save_registry(f, (registry*) reg->value->data);
               size = NotAType;
-              fwrite(&size, sizeof(data_type), 1, f);
+              gzfwrite(&size, sizeof(data_type), 1, f);
               break;
             case Instruction:
               size = strlen(((instruction*) reg->value->data)->code);
-              fwrite(&size, sizeof(int), 1, f);
-              fwrite(((instruction*) reg->value->data)->code, sizeof(char),
+              gzfwrite(&size, sizeof(int), 1, f);
+              gzfwrite(((instruction*) reg->value->data)->code, sizeof(char),
                      strlen(((instruction*) reg->value->data)->code), f);
               break;
             case Operation:
@@ -94,15 +94,15 @@ save_content (FILE* f, content* reg)
                 break;
               size = strlen(((instruction*) op->instr->data)->code);
 
-              fwrite(&size, sizeof(int), 1, f);
-              fwrite(((instruction*) op->instr->data)->code, sizeof(char), size, f);
-              fwrite(&(op->n_arg), sizeof(int), 1, f);
+              gzfwrite(&size, sizeof(int), 1, f);
+              gzfwrite(((instruction*) op->instr->data)->code, sizeof(char), size, f);
+              gzfwrite(&(op->n_arg), sizeof(int), 1, f);
 
               for (int i=0; i < op->n_arg; i++)
                 {
                   size = strlen(((regstr*) op->args[i]->data)->name);
-                  fwrite(&size, sizeof(int), 1, f);
-                  fwrite(((regstr*) op->args[i]->data)->name,
+                  gzfwrite(&size, sizeof(int), 1, f);
+                  gzfwrite(((regstr*) op->args[i]->data)->name,
                          sizeof(char), size, f);
                 }
               break;
@@ -111,22 +111,22 @@ save_content (FILE* f, content* reg)
                 task* t = (task*) reg->value->data;
                 save_registry(f, t->state);
                 size = NotAType;
-                fwrite(&size, sizeof(data_type),1,f);
+                gzfwrite(&size, sizeof(data_type),1,f);
                 size = strlen(t->code->code);
-                fwrite(&size, sizeof(int), 1, f);
-                fwrite(t->code->code, sizeof(char), size, f);
+                gzfwrite(&size, sizeof(int), 1, f);
+                gzfwrite(t->code->code, sizeof(char), size, f);
               }
               break;
             case Boolean:
-              fwrite(reg->value->data, sizeof(bool), 1, f);
+              gzfwrite(reg->value->data, sizeof(bool), 1, f);
               break;
             default:
               break;
             }
 
           size = strlen(reg->name);
-          fwrite(&size, sizeof(int), 1, f);
-          fwrite(reg->name, sizeof(char), strlen(reg->name), f);
+          gzfwrite(&size, sizeof(int), 1, f);
+          gzfwrite(reg->name, sizeof(char), strlen(reg->name), f);
 
         }
       
@@ -138,7 +138,7 @@ save_content (FILE* f, content* reg)
 }
 
 int
-read_registry (FILE* f, registry* reg)
+read_registry (gzFile f, registry* reg)
 {
   data_type* type_cache = malloc(sizeof(data_type));
   void* cache;
@@ -149,7 +149,7 @@ read_registry (FILE* f, registry* reg)
   parser_state state;
   FILE* f_sub;
   char* code;
-  while (fread(type_cache, sizeof(data_type), 1, f)
+  while (gzfread(type_cache, sizeof(data_type), 1, f)
          && (*type_cache != NotAType))
     {
       switch (*type_cache)
@@ -157,11 +157,11 @@ read_registry (FILE* f, registry* reg)
         case Integer:
           {
             cache = malloc(sizeof(int));
-            fread(cache, sizeof(int), 1, f);
+            gzfread(cache, sizeof(int), 1, f);
             size = *((int*) cache);
             free(cache);
             cache = malloc(sizeof(char)*(size+1));
-            fread(cache, sizeof(char), size, f);
+            gzfread(cache, sizeof(char), size, f);
             *((char*) (cache+size)) = '\0';
             mpz_t z;
             mpz_init_set_str(z, cache, 10);
@@ -172,27 +172,27 @@ read_registry (FILE* f, registry* reg)
           break;
         case Real:
           cache = malloc(sizeof(double));
-          fread(cache, sizeof(double), 1, f);
+          gzfread(cache, sizeof(double), 1, f);
           assign_real(&d, *((double*) cache));
           free(cache);
           break;
         case String:
           cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
+          gzfread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
           free(cache);
           cache = malloc(sizeof(char)*(size+1));
-          fread(cache, sizeof(char), size, f);
+          gzfread(cache, sizeof(char), size, f);
           *((char*) (cache+size)) = '\0';
           assign_str(&d, (char*) cache, 0);
           break;
         case Register:
           cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
+          gzfread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
           free(cache);
           cache = malloc(sizeof(char)*(size+1));
-          fread(cache, sizeof(char), size, f);
+          gzfread(cache, sizeof(char), size, f);
           *((char*) (cache+size)) = '\0';
           assign_regstr(&d, (char*) cache, hash_str((char*) cache));
           free(cache);          
@@ -204,12 +204,12 @@ read_registry (FILE* f, registry* reg)
           break;
         case Instruction:
           cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
+          gzfread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
           free(cache);
           
           cache = malloc(sizeof(char)*(size+1));
-          fread(cache, sizeof(char), size, f);
+          gzfread(cache, sizeof(char), size, f);
           ((char*) cache)[size] = '\0';
           code = malloc(sizeof(char)*(size+1));
           strcpy(code, (char*) cache);
@@ -230,12 +230,12 @@ read_registry (FILE* f, registry* reg)
           break;
         case Operation:
           cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
+          gzfread(cache, sizeof(int), 1, f);
           size = *((int*) cache);
           free(cache);
 
           cache = malloc(sizeof(char)*(size+1));
-          fread(cache, sizeof(char), size, f);
+          gzfread(cache, sizeof(char), size, f);
           ((char*) cache)[size] = '\0';
           code = malloc(sizeof(char)*(size+1));
           strcpy(code, (char*) cache);
@@ -256,7 +256,7 @@ read_registry (FILE* f, registry* reg)
           free(cache);
 
           cache = malloc(sizeof(int));
-          fread(cache, sizeof(int), 1, f);
+          gzfread(cache, sizeof(int), 1, f);
           op->n_arg = *((int*) cache);
           free(cache);
 
@@ -265,12 +265,12 @@ read_registry (FILE* f, registry* reg)
           for (int i = 0; i < op->n_arg; i++)
             {
               cache = malloc(sizeof(int));
-              fread(cache, sizeof(int), 1, f);
+              gzfread(cache, sizeof(int), 1, f);
               size = *((int*) cache);
               free(cache);
 
               char* name = malloc(sizeof(char)*(size+1));
-              fread(name, sizeof(char), size, f);
+              gzfread(name, sizeof(char), size, f);
               name[size] = '\0';
 
               unsigned long hash = hash_str(name);
@@ -290,12 +290,12 @@ read_registry (FILE* f, registry* reg)
             t->state = new_registry(t->task->current_parse_registry, ARBEL_HASH_SIZE, t);
             read_registry(f, t->state);
             cache = malloc(sizeof(int));
-            fread(cache, sizeof(int), 1, f);
+            gzfread(cache, sizeof(int), 1, f);
             size = *((int*) cache);
             free(cache);
 
             cache = malloc(sizeof(char)*(size+1));
-            fread(cache, sizeof(char), size, f);
+            gzfread(cache, sizeof(char), size, f);
             ((char*) cache)[size] = '\0';
             code = malloc(sizeof(char)*(size+1));
             strcpy(code, (char*) cache);
@@ -322,7 +322,7 @@ read_registry (FILE* f, registry* reg)
           break;
         case Boolean:
           cache = malloc(sizeof(bool));
-          fread(cache, sizeof(bool), 1, f);
+          gzfread(cache, sizeof(bool), 1, f);
           assign_boolean(&d, *(bool*) cache);
           free(cache);
           break;
@@ -333,11 +333,11 @@ read_registry (FILE* f, registry* reg)
           break;
         }
       cache = malloc(sizeof(int));
-      fread(cache, sizeof(int), 1, f);
+      gzfread(cache, sizeof(int), 1, f);
       size = *((int*) cache);
       free(cache);
       cache = malloc(sizeof(char)*(size+1));
-      fread(cache, sizeof(char), size, f);
+      gzfread(cache, sizeof(char), size, f);
       *((char*) (cache+size)) = '\0';
 
       if (d != NULL)
@@ -355,11 +355,11 @@ read_registry (FILE* f, registry* reg)
 void
 save_outer (registry* reg, char* fname)
 {
-  FILE* f = fopen(fname, "wb");
+  gzFile f = gzopen(fname, "w6");
   save_registry(f, reg);
   data_type end = NotAType;
-  fwrite(&end, sizeof(data_type), 1, f);
-  fclose(f);
+  gzfwrite(&end, sizeof(data_type), 1, f);
+  gzclose(f);
 }
 
   
