@@ -3246,7 +3246,7 @@ void
 op_task (arg a, registry* reg)
 {
   #op=task@
-  #length=3@
+  #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
@@ -3257,13 +3257,27 @@ op_task (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  #num=3@
-  #type=Registry@
-  ##GETARG~$;
+  registry* init_state = NULL;
+  if (a.length >= 4)
+    {
+      #num=3@
+      #type=Registry@
+      ##GETARG~$;
+      init_state = (registry*) arg3->data;
+    }
 
   task* t = malloc(sizeof(task));
   t->task = new_task(t);
-  t->state = copy_registry((registry*) arg3->data);
+  if (init_state == NULL)
+    {
+      t->state = new_registry(t->task->current_parse_registry,
+                              ARBEL_HASH_SIZE,
+                              t);
+    }
+  else
+    {
+      t->state = copy_registry(init_state);
+    }
   t->state->up = t->task->current_parse_registry;
   t->state->task = t;
   t->task->current_parse_registry = t->state;

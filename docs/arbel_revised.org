@@ -96,9 +96,6 @@ ARBEL statements can contain two forms of substatements in place of a data eleme
 
  This code block illustrates the difference between active instructions and immediate substatements.  The =if= operation accesses and returns its second argument if the first argument is =True= and the third argument if the first is =False=.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the =if= operation accesses their value.
 
-* Overview of ARBEL vocabulary
-
-ARBEL statements consist of sequences of data.  Statements start with an operation, generally, and other types of data follow.  ARBEL the language consists of operations that implement each data type.  Users of ARBEL do not specify new types unlike in many languages.  ARBEL uses a single flexible data structure, the registry, to describe many types.  Like lists in Lisp.
 
 * Registries
 
@@ -729,21 +726,48 @@ accept-or /hello ( set /hello "Hello." ) .
 
 The main use of =accept-or= is to provide default values for missing data or to do something else if data is not available.
 
-Alternatively, the =select= operation executes one of several instructions if data comes in at any number of registers.
+Alternatively, the =select= operation executes one of several instructions if data comes in at any number of registers.  =select= takes paired registers and instructions as its arguments.  It waits for data to appear in its queue at any of the registers listed.  The first register to receive data is "selected".  The instruction associated with the register is executed in the register's state registry after setting the =/ans= register to the value of the data located at the register in the queue.
 
-   The =select= operation is run /in the Task thread/ and takes paired registers and instructions as arguments.  It waits until data is set in the queue at /any/ of the registers.  When one of the registers has data its associated instruction is executed in the Task's state registry with the =/ans= register initial set to the data from the queue.
+#+BEGIN_SRC arbel
+... task /t1 ( 
+                set /continue True .
+                while ( answer continue . )
+                      (
+                        select /add-one ( print [ add ans 1 . ] . ) 
+                               /sub-one ( print [ sub ans 1 . ] . )
+                               /continue ( set /continue ans . ) .
+                      ) .
+             ) .
+... run-task t1 .
+... queue /add-one 3 t1 .
+4
+... queue /sub-one 3 t1 .
+2
+#+END_SRC
 
-** Sending data to a Task
 
-   The =queue= operation copies data into a Task's queue at a given registry in the queue.  
+* Interacting with the User and the Shell
+
+One of ARBEL's strengths is in rapidly-developing interactive programs.  ARBEL's syntax is command-like so interaction in such a program can often be done using ARBEL's prompt.  I use a simple program to keep track of my hours at work, an example of this type of program.  These types of programs often require input from the user and the ability to interact with other non-ARBEL programs on the computer.  
+
+The =input= operation accepts input from the user in the same way as ARBEL's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
+
+#+BEGIN_SRC arbel
+... set /get-name 
+        (
+          print "What is your name?" .
+          input /ans .
+        ) .
+... get-name .
+What is your name?
+Zach
+ans = "Zach"
+#+END_SRC
 
 
+  
 
 
-
-
-
-* Interacting with the Shell
 * Examples
 
 ** Short Examples

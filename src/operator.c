@@ -6060,7 +6060,7 @@ op_task (arg a, registry* reg)
 {
   
   
-  check_length(&a, 3+1, "task", reg->task->task);
+  check_length(&a, 2+1, "task", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
   
@@ -6119,9 +6119,12 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
 ;
 
-  
-  
-  
+  registry* init_state = NULL;
+  if (a.length >= 4)
+    {
+      
+      
+      
 data* arg3 = resolve(a.arg_array[3], reg);
 
 if (true)
@@ -6146,10 +6149,21 @@ if (arg3 != NULL && true && (!(arg3->type & Registry)))
   }
 
 ;
+      init_state = (registry*) arg3->data;
+    }
 
   task* t = malloc(sizeof(task));
   t->task = new_task(t);
-  t->state = copy_registry((registry*) arg3->data);
+  if (init_state == NULL)
+    {
+      t->state = new_registry(t->task->current_parse_registry,
+                              ARBEL_HASH_SIZE,
+                              t);
+    }
+  else
+    {
+      t->state = copy_registry(init_state);
+    }
   t->state->up = t->task->current_parse_registry;
   t->state->task = t;
   t->task->current_parse_registry = t->state;
