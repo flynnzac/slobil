@@ -590,14 +590,6 @@ bool reading;
 /* global constants */
 
 unsigned long arbel_hash_ans;
-unsigned long arbel_hash_0;
-unsigned long arbel_hash_1;
-unsigned long arbel_hash_2;
-unsigned long arbel_hash_3;
-unsigned long arbel_hash_4;
-unsigned long arbel_hash_data;
-unsigned long arbel_hash_up;
-unsigned long arbel_hash_class;
 unsigned long arbel_hash_t;
 unsigned long arbel_hash_underscore;
 

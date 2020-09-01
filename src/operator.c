@@ -1602,9 +1602,7 @@ register_arithmetic (regstr* rg, int diff, task_vars* task)
 
   if (i == (strlen(cur_name)-1))
     {
-      do_error("Register does not end in integer.",
-               task);
-      return NULL;
+      i = 0;
     }
   
   i++;
@@ -1772,10 +1770,10 @@ if (true)
         return ;
       }
   }
-if (arg2 != NULL && true && (!(arg2->type & String)))
+if (arg2 != NULL && true && (!(arg2->type & Register)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <last> should be of type String.")+digits(2)+1));
-    sprintf(err_msg, "Argument %d of <last> should be of type String.", 2);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <last> should be of type Register.")+digits(2)+1));
+    sprintf(err_msg, "Argument %d of <last> should be of type Register.", 2);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
@@ -1787,18 +1785,19 @@ if (arg2 != NULL && true && (!(arg2->type & String)))
   char* name = NULL;
   int i = 1;
   data* d;
-  name = vector_name((char*) arg2->data, i);
+  char* root = ((regstr*) arg2->data)->name;
+  name = vector_name(root, i);
   unsigned long hash_name = hash_str(name);
   while ((d = get(arg_reg, hash_name, 0)) != NULL)
     {
       i++;
       free(name);
-      name = vector_name((char*) arg2->data, i);
+      name = vector_name(root, i);
       hash_name = hash_str(name);
     }
   free(name);
 
-  name = vector_name((char*) arg2->data, i-1);
+  name = vector_name(root, i-1);
 
   d = new_data();
   d->type = Register;
@@ -2283,13 +2282,9 @@ if (arg3 != NULL && true && (!(arg3->type & Register)))
       ret_ans(reg, copy_data(d));
     }
 
-  del(r, arbel_hash_0, 0, false);
-
   free_registry(r);
   free(second_name);
   free_arg(&a1);
-
-
 }
 
 void

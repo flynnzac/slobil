@@ -3,7 +3,29 @@
 #+AUTHOR: Zach Flynn
 #+DESCRIPTION: ARBEL is a registry-based environment and language. 
 
-* Code inside Data
+* Introduction to ARBEL
+
+ARBEL is a programming system focused on being useful interactively.  ARBEL programs are a set of instructions that a user can use from the ARBEL environment.  It is centered around its REPL and provides commands to save the state of the REPL and keep logs of sessions.  The REPL can even be controlled via sockets.  
+
+Everything in ARBEL is data, including the scope in which code is executed.  "Data sets" called registries in ARBEL determine what variables are available to ARBEL code at any given time. Registries are flexible tables containing data located at /registers/.  These data locations are themselves data which enables many simple optimizations such as moving data between registers without copying. Registries function both as the scope of code and are the main data structure in ARBEL.
+
+* Elements of ARBEL
+
+When you start ARBEL, you are greeted by the prompt.
+#+BEGIN_SRC arbel
+...
+#+END_SRC
+
+Initially, the code you enter at this prompt is executed in the /root/ registry.  Later, it may be executed in other registries.
+
+An ARBEL statement with no substatements has a highly regular structure.  It consists of a number of data values each separated by whitespace ending with a period (separated from the last data element by whitespace as well).
+#+BEGIN_SRC arbel
+... data1 data2 data3 data4 .
+#+END_SRC
+
+The first element in an ARBEL statement is always an /operation/, except for one exception made for convenience discussed shortly.  Operations perform actions using the data elements.
+
+The first element can also be an /instruction/ which is the data type containing arbitrary code.  Similarly, instructions perform actions using the data elements when they are used in this way, but they are more flexible than operations and can be used for other tasks as well.
 
 ARBEL code is executed inside a data set called a registry.  Registries are tables with values entered in /registers/. The programmer enters commands to modify the contents of the registry and possibly send the results of any computations performed on the data to another registry.
 
@@ -764,12 +786,157 @@ Zach
 ans = "Zach"
 #+END_SRC
 
+To call commands from the shell, use the =shell= operation.  The =shell= operation sets the =/ans= register to a string containing the output of the command.
 
-  
+#+BEGIN_SRC arbel
+... shell "ls" .
+ans = "file1.txt
+file2.txt
+"
+#+END_SRC
 
+The =change-dir= operation changes the working directory of ARBEL and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
+
+#+BEGIN_SRC arbel
+... change-dir "/home/fzac" .
+... current-dir .
+ans = "/home/fzac" 
+#+END_SRC
 
 * Examples
 
-** Short Examples
+** Quicksort
 
-** Complete Program
+#+INCLUDE: "../examples/quicksort.arb" src arbel
+
+Example of use:
+
+#+BEGIN_SRC arbel
+... set /x [ list 3 2 4 1 . ] .
+... quicksort /input x /slice /t /compare lt .
+... print x .
+ans = a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+t4 of type Integer, value: 4
+#+END_SRC
+
+** A Line-Oriented Text Editor
+
+#+INCLUDE: "../examples/arbed.arb" src arbel
+
+Example of use:
+#+BEGIN_SRC arbel
+... go-in arbed .
+... i /s "Hello" .
+... o .
+Hello
+... n .
+... i /s "Goodbye" .
+... o .
+Goodbye
+... p .
+... o .
+Hello
+#+END_SRC
+
+** Numerical Differentiation
+
+#+INCLUDE: "../examples/deriv.arb" src arbel
+
+Example of use:
+#+BEGIN_SRC arbel
+... set /f ( power t 2 . ) .
+... deriv /f f /x 1.0
+ans = 2.0
+#+END_SRC
+
+** Compute Factorial
+
+#+INCLUDE: "../examples/factorial.arb" src arbel
+
+Example of use:
+#+BEGIN_SRC arbel
+... factorial 5 .
+ans = 120
+#+END_SRC
+
+** Numerical Integration
+
+#+INCLUDE: "../examples/integrate.arb" src arbel
+
+Example of use:
+#+BEGIN_SRC arbel
+... integrate /f ( power t 2 . ) /lb 0.0 /ub 1.0 /n 1000 .
+ans = 0.332834
+#+END_SRC
+
+** Basic Linear Algebra
+
+#+INCLUDE: "../examples/matrix.arb" src arbel
+
+Example of use:
+#+BEGIN_SRC arbel
+... set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
+... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+... transpose /A A .
+ans = a registry with:
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 3
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 2
+t2 of type Integer, value: 4
+... matrix-multiply /A A /B B .
+ans = a registry with:
+t1 of type Registry, value: a registry with:
+t1 of type Integer, value: 10
+t2 of type Integer, value: 26
+t2 of type Registry, value: a registry with:
+t1 of type Integer, value: 11
+t2 of type Integer, value: 25
+#+END_SRC
+
+** Split a String
+
+#+INCLUDE: "../examples/tokenize.arb" src arbel
+
+Examples of use:
+#+BEGIN_SRC arbel
+... tokenize /line "1,2,3" /sep "," .
+ans = a registry with:
+t1 of type String, value: 1
+t2 of type String, value: 2
+t3 of type String, value: 3
+#+END_SRC
+
+** Linking C code
+
+It is possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+
+The following is an example of C code.
+
+#+INCLUDE: "../examples/link.c" src c
+
+We then compile it into a shared object file, linking against =libarbel=.
+
+#+INCLUDE: "../examples/link_compile.sh" src sh
+
+The code then can be loaded into ARBEL with the =link= operation like so:
+
+#+INCLUDE: "../examples/link.arb" src arbel
+
+The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
+
+Now, the operation can be called in the following way:
+#+BEGIN_SRC arbel
+... log1 1 .
+ans = 0.693147
+#+END_SRC
+
+
+
+
+
+

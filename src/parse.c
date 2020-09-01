@@ -273,13 +273,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   *complete = 1;
                   continue;
                 }
-              else if (strcmp(state->buffer,",")==0)
-                {
-                  /* Terminate statement, do not print ans= */
-                  *complete = 1;
-                  state->print_out = 0;
-                  continue;
-                }
               else if (strcmp(state->buffer, "'")==0)
                 {
                   /* Start comment. */

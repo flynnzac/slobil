@@ -1,0 +1,32 @@
+# -*- org-html-preamble-format: (("en" "%t<br>%a<br>%T")); -*-
+#+TITLE: ARBEL
+#+AUTHOR: Zach Flynn
+#+DESCRIPTION: ARBEL is a registry-based environment and language. 
+
+
+* Language
+
+Simple ARBEL statements are composed of sequences of Data.  Data is either a Literal or a Reference.
+
+- Literals are a specific value of Data.
+
+- References are symbols giving the location at which Data is stored.
+
+A simple ARBEL statement consists of Data elements, each separated by whitespace (space, line, or tab), ending with a period separated from the Data sequence by whitespace. 
+
+#+BEGIN_SRC arbel
+Data Data Data ... Data .
+#+END_SRC
+
+An Element is either Data or a Substatement.  ARBEL has two kinds of Substatements: Immediate Substatements and Delayed Substatements.
+
+Immediate Substatements contain sequences of Elements surrounded by square brackets, separated from the sequence of Elements by whitespace.
+
+#+BEGIN_SRC arbel
+[ Element Element Element ... Element . ]
+#+END_SRC
+
+Delayed Substatements contains sequences of Elements 
+
+
+

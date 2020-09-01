@@ -59,13 +59,6 @@ main (int argc, char** argv)
   rl_event_hook = dummy_event;
 
   arbel_hash_ans = hash_str("ans");
-  arbel_hash_0 = hash_str("#0");
-  arbel_hash_1 = hash_str("#1");
-  arbel_hash_2 = hash_str("#2");
-  arbel_hash_3 = hash_str("#3");
-  arbel_hash_4 = hash_str("#4");
-  arbel_hash_data = hash_str("data");
-  arbel_hash_class = hash_str("--of");
   arbel_hash_t = hash_str("t");
   arbel_hash_underscore = hash_str("_");
 
