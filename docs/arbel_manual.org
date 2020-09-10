@@ -3,6 +3,74 @@
 #+AUTHOR: Zach Flynn
 #+DESCRIPTION: ARBEL is a registry-based environment and language. 
 
+* Data Types
+
+ARBEL data is strongly-typed.  Each data value has a type and conversion between the types is explicito.  But the locations where data is stored --- called /registers/ in ARBEL --- have no type.  A location might store a number at one point in the program and then a string at another point.  
+
+ARBEL values can have the following types:
+
+- Integer
+- Real
+- String
+- Boolean
+- Register
+- Registry
+- Instruction
+- Operation
+- File
+- Nothing
+- Task
+
+** Integers
+
+Integers can be arbitrarily large in ARBEL without losing any precision.  They are whole numbers without a decimal point.  ARBEL interprets any sequence of numbers that does not include a decimal point as an Integer literal.  For example,
+#+BEGIN_SRC arbel
+3
+#+END_SRC
+
+is an Integer.
+
+** Real
+
+Reals are the floating point type in ARBEL.  Reals are always double-precision floats. ARBEL interprets any number with a decimal point as a Real.  Trailing zeros are always optional. For example,
+#+BEGIN_SRC arbel
+3.
+1.5
+#+END_SRC
+
+are Reals.
+
+** Boolean
+
+Booleans are commonly used in ARBEL as the result of a test or comparison.  There are only two Boolean literals: =True= and =False= (where the capitalization is significant). 
+
+** Register
+
+A register represents the /location/ of data instead of its value.  Registers are themselves full-fledged data types.  Register literals start with a forward-slash with any symbol following the slash giving the register's location. For example,
+#+BEGIN_SRC arbel
+/hello
+/x1323
+/-32st0x0 
+#+END_SRC
+
+are all valid Register literals.
+
+** Registry
+
+Registries are the only data structure in ARBEL.  They are tables with data (potentially including other registries) located at various registers.  Registries are both a data object and also used to determine the /scope/ of code.  Code is execute inside registries. Data locations referenced in the code refer to the data located at those registers in the registry in which the code is executed.
+
+There is no literal representation of registries.  They are created by operations that will be detailed in later sections.
+
+** Instruction
+
+Instructions are data that represents ARBEL code.  The code is saved as an object to be evaluated in a different environment or otherwise used as code to be evaluated (e.g. code to be executed repeatedly in a loop).
+
+** Operation
+
+An operation is a data object that performs some computation given a fixed set of arguments.  ARBEL provides several built-in operations that are used to create and manipulate the various types of data. 
+
+New operations can also be created from instructions.
+
 * Language
 
 This section describes the ARBEL language's form without reference to the environment or its particular operations.  It consists of a series of definitions.
