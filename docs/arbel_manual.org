@@ -18,8 +18,8 @@ ARBEL values can have the following types:
 - Instruction
 - Operation
 - File
-- Nothing
 - Task
+- Nothing
 
 ** Integers
 
@@ -69,7 +69,24 @@ Instructions are data that represents ARBEL code.  The code is saved as an objec
 
 An operation is a data object that performs some computation given a fixed set of arguments.  ARBEL provides several built-in operations that are used to create and manipulate the various types of data. 
 
-New operations can also be created from instructions.
+New operations can also be created from instructions by specifying an environment known up to a finite set of parameters.
+
+** File
+
+The File type is primarily used for files on disk but it is a general "stream" type.  Data can be written to the stream and read from it.  Files have no literal representation.  They are created by operations.
+
+** Task
+
+Tasks are used for multi-process programs.  They are a full data-type, treated just like any other.  They contain a number of elements:
+
+- a Body: code that the task will execute.
+- a State: a registry that gives the environment for the Task.
+- a Queue: an inaccessible registry that facilitates data-sharing between different tasks, including the main task.
+
+
+* Basic Syntax
+
+A simple ARBEL statement is a sequence of data objects, separated from each other by whitespace, ending in a period.  Every code element is separated from the other elements by whitespace, including the single period which terminates a statement.
 
 * Language
 
