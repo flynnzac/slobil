@@ -40,6 +40,23 @@ Reals are the floating point type in ARBEL.  Reals are always double-precision f
 
 are Reals.
 
+** Strings
+
+Strings are the data type for text in ARBEL.  Internally, they are UTF-8 encoded text strings.  Characters not in the ASCII character set are treated as single characters.  Literal strings are represented by surrounding text in double quotes, as in ="Hello, world!"=.
+
+String literals also recognize the following escape sequences to introduce text that is either non-printing or difficult-to-enter.
+
+| Escape Sequence  | Meaning          |
+|------------------+------------------|
+| \\               | \                |
+| \'               | ' (single quote) |
+| \t               | tab              |
+| \n               | newline          |
+| \r               | carriage return  |
+| ' (single quote) | " (double quote) |
+|------------------+------------------|
+
+
 ** Boolean
 
 Booleans are commonly used in ARBEL as the result of a test or comparison.  There are only two Boolean literals: =True= and =False= (where the capitalization is significant). 
@@ -60,6 +77,8 @@ are all valid Register literals.
 Registries are the only data structure in ARBEL.  They are tables with data (potentially including other registries) located at various registers.  Registries are both a data object and also used to determine the /scope/ of code.  Code is execute inside registries. Data locations referenced in the code refer to the data located at those registers in the registry in which the code is executed.
 
 There is no literal representation of registries.  They are created by operations that will be detailed in later sections.
+
+There are many operations to manipulate data in registries which form the core of ARBEL's programming environment.
 
 ** Instruction
 
@@ -87,6 +106,18 @@ Tasks are used for multi-process programs.  They are a full data-type, treated j
 * Basic Syntax
 
 A simple ARBEL statement is a sequence of data objects, separated from each other by whitespace, ending in a period.  Every code element is separated from the other elements by whitespace, including the single period which terminates a statement.
+
+
+* Basic Statements and the ARBEL environment
+
+A statement is a sequence of data elements and sub-statements ending in a period.  Each code element must be separated from the others by whitespace, including the period which terminates the statement. For example:
+#+BEGIN_SRC arbel
+... print "Hello, world!" .
+#+END_SRC
+
+=print= is an operation and ="Hello, world!"= is a string.  ="Hello, world!"= is a /literal/, it represents a data value directly.  =print= is a /reference/ to the value stored at register =/print= in the registry where the code is executed.  ARBEL treats anything that is not a literal as a reference and attempts to look up the value.
+
+Code is always executed "inside" a registry.  So registries are both a data type and determine the scope of code, what values are available to it.
 
 * Language
 
