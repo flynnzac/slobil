@@ -35,14 +35,16 @@ new_content ()
 }
 
 registry*
-new_registry (registry* up, size_t hash_size)
+new_registry (registry* up, size_t hash_size, task* t)
 {
   registry* r = malloc(sizeof(registry));
   r->up = up;
   r->hash_size = hash_size;
   r->objects = malloc(sizeof(content*)*hash_size);
   r->elements = 0;
-
+  r->task = t;
+  r->being_modified = false;
+  
   for (int i = 0; i < hash_size; i++)
     {
       r->objects[i] = NULL;
@@ -87,7 +89,7 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       reg->elements++;
-      if (arbel_rehash && rehash_flag &&
+      if (reg->task->task->arbel_rehash && rehash_flag &&
           (reg->elements > (ARBEL_LOAD_FACTOR*(reg->hash_size))))
         {
           rehash(reg);
@@ -102,8 +104,6 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
       return c;
     }
 
-
-
   return NULL;
 
 }
@@ -117,7 +117,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (hash_name == arbel_hash_underscore)
     {
       data* d;
-      assign_registry(&d, reg, false);
+      assign_registry(&d, reg, false, reg->task);
       return d;
     }
   content* c = reg->objects[hash_name % reg->hash_size];
@@ -182,7 +182,7 @@ mov (registry* reg, regstr* old, regstr* new)
   if (cur == NULL)
     return NULL;
   cur = cur->right;
-  
+
   while (cur != NULL)
     {
       if (cur->key == old->key)
@@ -305,12 +305,12 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
                          (strlen("Value at register / not found.")
                           + strlen(name[0]) + 1));
       sprintf(msg, "Value at register /%s not found.", name[0]);
-      do_error(msg);
+      do_error(msg, reg->task->task);
       free(msg);
     }
   else if (d->type != Registry && levels > 1)
     {
-      do_error("Cannot get registers in non-registry.");
+      do_error("Cannot get registers in non-registry.", reg->task->task);
     }
   else
     {
@@ -318,13 +318,15 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
         {
           if (d == NULL)
             {
-              do_error("Register not found in registry.");
+              do_error("Register not found in registry.",
+                       reg->task->task);
               return NULL;
             }
 
           if (d->type != Registry)
             {
-              do_error("Cannot get registers in non-registry.");
+              do_error("Cannot get registers in non-registry.",
+                       reg->task->task);
               return NULL;
             }
 
@@ -337,7 +339,8 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
               data* d1 = get(reg, hash_name[i], 1);
               if (d1 == NULL || d1->type != Register)
                 {
-                  do_error("Cannot use `:` with non-register.");
+                  do_error("Cannot use `:` with non-register.",
+                           reg->task->task);
                   return NULL;
                 }
               else
@@ -351,7 +354,8 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 
       if (d == NULL)
         {
-          do_error("Register not found in registry.");
+          do_error("Register not found in registry.",
+                   reg->task->task);
           return NULL;
         }
 		  
