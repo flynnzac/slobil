@@ -14,11 +14,6 @@ run-task t1 .
 queue /hello "Hi!" t1 .
 accept /current t1 .
 
-
-queue t1 /hello "Bye!" .
-queue t1 /hello 1342 .
-queue t1 /hello ( add 1 2 . ) .
-
 task /t2
      (
        set /continue True .
@@ -42,7 +37,7 @@ task /t2
      [ registry . ] .
 
 run-task t2 .
-queue t2 /double 3 .
-queue t2 /triple 10 .
-queue t2 /double 7 .
-queue t2 /end .
+queue /double 3 t2 .
+queue /triple 10 t2 .
+queue /double 7 t2 .
+queue /end Nothing t2 .
