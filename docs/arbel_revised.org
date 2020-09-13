@@ -18,14 +18,12 @@ When you start ARBEL, you are greeted by the prompt.
 
 Initially, the code you enter at this prompt is executed in the /root/ registry.  Later, it may be executed in other registries.
 
-An ARBEL statement with no substatements has a highly regular structure.  It consists of a number of data values each separated by whitespace ending with a period (separated from the last data element by whitespace as well).
+An ARBEL statement with no substatements has a highly regular structure.  It consists of a number of data values each separated by whitespace ending with a period, itself separated from the last data element by whitespace.
 #+BEGIN_SRC arbel
 ... data1 data2 data3 data4 .
 #+END_SRC
 
-The first element in an ARBEL statement is always an /operation/, except for one exception made for convenience discussed shortly.  Operations perform actions using the data elements.
-
-The first element can also be an /instruction/ which is the data type containing arbitrary code.  Similarly, instructions perform actions using the data elements when they are used in this way, but they are more flexible than operations and can be used for other tasks as well.
+The first element in an ARBEL statement is usually an /operation/.  Operations perform actions using the rest of the data elements in the statement. The first element can also be an /instruction/ which is the data type for ARBEL code.  Instructions perform actions using the data elements when they are used in this way, but they are more flexible than operations and can be used in other contexts.
 
 ARBEL code is executed inside a data set called a registry.  Registries are tables with values entered in /registers/. The programmer enters commands to modify the contents of the registry and possibly send the results of any computations performed on the data to another registry.
 
@@ -38,7 +36,7 @@ requires that the registry contains data located at the =print= and =x= register
 
 * Syntax
 
-ARBEL code consists of a number of statements.  Each statement contains a series of data values, either literals or values located in the current registry, separated by whitespace and ending with a period.  All elements of a statement must be separated by whitespace from the preceding element, including the terminating period.
+  A single line of ARBEL code is a statement. Each statement contains a series of data values, either literals or locations to look for data, separated by whitespace and ending with a period.  All elements of a statement must be separated by whitespace from the preceding element, including the terminating period.
 #+BEGIN_SRC arbel
 ... data1 data2 data3 data4 .
 #+END_SRC
@@ -51,7 +49,7 @@ ans = 3
 Hello
 #+END_SRC
 
-The first element of a statement is an operation that performs some transformation of the other data elements in the statement and the contents of the registry in which the statement is executed.  The first statement uses the operation located at the =add= register.  The second uses the operation located at the =add= register.  The numbers and the the string ="Hello"= are literals.
+The first statement uses the operation located at the =add= register.  The second uses the operation located at the =print= register.  The numbers and the the string ="Hello"= are data literals.
 
 ** Literals and Names
 
@@ -117,7 +115,6 @@ ARBEL statements can contain two forms of substatements in place of a data eleme
  #+END_SRC
 
  This code block illustrates the difference between active instructions and immediate substatements.  The =if= operation accesses and returns its second argument if the first argument is =True= and the third argument if the first is =False=.  So, only the first active instruction is executed in the first line of code and only the second active instruction is executed in the second line.  The third line uses immediate substatements instead.  These are executed as soon as they are encountered regardless of whether the =if= operation accesses their value.
-
 
 * Registries
 
@@ -310,7 +307,6 @@ ans = /element11
 ... previous /element10 .
 ans = /element9
 #+END_SRC
-
 
 
 * Instructions
@@ -767,7 +763,6 @@ Alternatively, the =select= operation executes one of several instructions if da
 2
 #+END_SRC
 
-
 * Interacting with the User and the Shell
 
 One of ARBEL's strengths is in rapidly-developing interactive programs.  ARBEL's syntax is command-like so interaction in such a program can often be done using ARBEL's prompt.  I use a simple program to keep track of my hours at work, an example of this type of program.  These types of programs often require input from the user and the ability to interact with other non-ARBEL programs on the computer.  
@@ -934,6 +929,7 @@ Now, the operation can be called in the following way:
 ... log1 1 .
 ans = 0.693147
 #+END_SRC
+
 
 
 
