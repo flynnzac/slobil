@@ -67,66 +67,6 @@ append_statement_element (element* current, statement* s)
   return e;
 }
 
-registry*
-gen_arg_reg (element* e, unsigned long** hash_bin, size_t** location)
-{
-  int n = 0;
-  char* name;
-  unsigned long hash_name;
-  element* e1 = e;
-
-  while (e1 != NULL)
-    {
-      n++;
-      e1 = e1->right;
-    }
-  *hash_bin = malloc(sizeof(unsigned long)*n);
-  *location = malloc(sizeof(size_t)*n);
-  n = 0;
-
-  registry* arg_reg = new_registry(NULL, new_hash_size(n));
-  registry* reg = arg_reg;
-
-
-  while (e != NULL)
-    {
-      name = argument_name(n);
-      hash_name = hash_str(name);
-      (*hash_bin)[n] = hash_name % reg->hash_size;
-
-      content* c;
-      if (reg->objects[hash_name % reg->hash_size] == NULL)
-        {
-          reg->objects[hash_name % reg->hash_size] = new_content();
-          c = reg->objects[hash_name % reg->hash_size];
-        }
-      else
-        {
-          c = head(reg->objects[hash_name % reg->hash_size]);
-        }
-      content* cprime = reg->objects[hash_name % reg->hash_size];
-      (*location)[n] = 1;
-      while (cprime->right != NULL)
-        {
-          (*location)[n]++;
-          cprime = cprime->right;
-        }
-      
-      c->right = new_content();
-      c->right->left = c;
-      c->right->name = name;
-      c->right->key = hash_name;
-      c->right->value = NULL;
-      e = e->right;
-
-      n++;
-    }
-
-  return arg_reg;
-  
-}
-
-
 statement*
 append_statement (statement* current, element* head)
 {
@@ -175,7 +115,8 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->data == NULL)
             {
-              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .");
+              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .",
+                       reg->task->task);
             }
           else
             {
@@ -190,7 +131,8 @@ execute_statement (statement* s, registry* reg)
               d = get(reg, arbel_hash_ans, 0);
               if (d == NULL)
                 {
-                  do_error("Instruction in [] did not set /ans register.");
+                  do_error("Instruction in [] did not set /ans register.",
+                           reg->task->task);
                 }
               else 
                 {
@@ -203,10 +145,11 @@ execute_statement (statement* s, registry* reg)
               d = get_by_levels(reg,
                                 e->hash_name, e->levels, e->is_regstr,
                                 e->name);
+              
             }
         }
 
-      if (!is_error(-1))
+      if (!is_error(-1, reg->task->task))
         {
           if (d != NULL && d->type == Instruction &&
               ((instruction*) d->data)->being_called && (arg_n == 0))
@@ -233,22 +176,16 @@ execute_statement (statement* s, registry* reg)
 
     }
 
-  if (!is_error(-1))
+  if (!is_error(-1, reg->task->task))
     compute(s->arg.arg_array[0], reg, s->arg);
-  else
-    {
-      /* printf("-> At statement: "); */
-      /* print_statement(s); */
-      /* printf("\n"); */
-    }
   
   free_arg_array_data(&s->arg, arg_n);
 
-  if (is_error(-1))
+  if (is_error(-1, reg->task->task))
     {
       data* err;
       mpz_t err_z;
-      mpz_init_set_si(err_z, is_error(-1));
+      mpz_init_set_si(err_z, is_error(-1, reg->task->task));
       assign_int(&err, err_z);
       set(reg, err, "error-code", 0);
     }
@@ -272,21 +209,21 @@ execute_code (statement* s, registry* reg)
   while (stmt != NULL)
     {
       execute_statement(stmt, reg);
-      error = is_error(-1) > error ? is_error(-1) : error;
-      if (arbel_stop_error_threshold > 0 &&
-          (error >= arbel_stop_error_threshold))
-	{
-	  printf("-> ");
-	  print_statement(stmt);
-	  printf("\n");
-	  break;
-	}
+      error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
+      if (reg->task->task->arbel_stop_error_threshold > 0 &&
+          (error >= reg->task->task->arbel_stop_error_threshold))
+        {
+          printf("-> ");
+          print_statement(stmt);
+          printf("\n");
+          break;
+        }
       else
-        is_error(0);
+        is_error(0, reg->task->task);
 
       stmt = stmt->right;
     }
 
-  is_error(error);
+  is_error(error, reg->task->task);
 
 }

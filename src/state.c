@@ -22,34 +22,32 @@
 #include "arbel.h"
 
 int
-is_error (int e)
+is_error (int e, task_vars* t)
 {
   if (e >= 0)
     {
-      arbel_error = e;
+      t->arbel_error = e;
     }
-  return arbel_error;
+  return t->arbel_error;
 }
 
 
 void
-do_error (const char* msg)
+do_error (const char* msg, task_vars* t)
 {
-  if (arbel_print_error_messages)
+  if (t->arbel_print_error_messages)
     fprintf(stderr, "Error: %s\n", msg);
   
-  (void) is_error(1);
+  (void) is_error(1, t);
 }
 
 int
-is_exit (int e)
+is_exit (int e, task_vars* t)
 {
-  static int do_exit = 0;
-
   if (e >= 0)
     {
-      do_exit = e;
+      t->do_exit = e;
     }
-  return do_exit;
+  return t->do_exit;
 }
 

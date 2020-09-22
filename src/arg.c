@@ -31,7 +31,7 @@ resolve (data* arg, registry* reg)
 }
 
 void
-check_length (arg* a, int length, char* op)
+check_length (arg* a, int length, char* op, task_vars* t)
 {
   if (a->length < length)
     {
@@ -44,7 +44,7 @@ check_length (arg* a, int length, char* op)
       sprintf(error_msg, "Number of arguments to <%s> is less than %d.",
               op, length-1);
           
-      do_error(error_msg);
+      do_error(error_msg, t);
       free(error_msg);
     }
 }

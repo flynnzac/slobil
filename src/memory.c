@@ -154,6 +154,11 @@ free_data (data* d)
       free(d->data);
       free(d);
     }
+  else if (d->type == Task)
+    {
+      free_task((task*) d->data);
+      free(d);
+    }
   else
     {
       if (d->data != NULL)
@@ -228,4 +233,28 @@ free_arg (arg* a)
   free(a->arg_array);
 }
   
+void
+free_task (task* t)
+{
 
+  if (t->task != NULL)
+    free_task_vars(t->task);
+
+  if (t->state != NULL)
+    free_registry(t->state);
+
+  if (t->code != NULL)
+    free_instruction(t->code);
+
+  if (t->queued_instruction != NULL)
+    free_registry(t->queued_instruction);
+
+  if (t->thread != NULL)
+    free(t->thread);
+}
+
+void
+free_task_vars (task_vars* t)
+{
+  int rc = end_task(t);
+}

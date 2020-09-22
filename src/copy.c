@@ -115,13 +115,13 @@ assign_op (data** d, const operation op,
 }
 
 void
-assign_registry (data** d, registry* r, bool copy)
+assign_registry (data** d, registry* r, bool copy, task* t)
 {
   *d = new_data();
   (*d)->type = Registry;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE);
+      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, t);
     }
   else if (copy)
     {
@@ -165,12 +165,26 @@ assign_boolean (data** d, bool val)
 
 
 void
+assign_task (data** d, task* t)
+{
+  *d = new_data();
+  (*d)->type = Task;
+  (*d)->data = malloc(sizeof(task));
+  ((task*) (*d)->data)->code = copy_instruction(t->code);
+  ((task*) (*d)->data)->state = copy_registry(t->state);
+  ((task*) (*d)->data)->task = copy_task_vars(t->task);
+  ((task*) (*d)->data)->pid = t->pid;
+
+}
+
+void
 assign_nothing (data** d)
 {
   *d = new_data();
   (*d)->type = Nothing;
   (*d)->data = NULL;
 }
+
 
 /* copy functions */
 
@@ -249,9 +263,9 @@ copy_registry(registry* r0)
 {
   registry* r1;
   if (update_hash_size(r0->elements, r0->hash_size))
-    r1 = new_registry(r0->up, 2*r0->hash_size);
+    r1 = new_registry(r0->up, 2*r0->hash_size, r0->task);
   else
-    r1 = new_registry(r0->up, r0->hash_size);
+    r1 = new_registry(r0->up, r0->hash_size, r0->task);
   
   data* d;
 
@@ -271,6 +285,39 @@ copy_registry(registry* r0)
     }
 
   return r1;
+}
+
+instruction*
+copy_instruction (instruction* inst0)
+{
+  instruction* inst1 = malloc(sizeof(instruction));
+  inst1->stmt = copy_statement(inst0->stmt);
+  inst1->code = malloc(sizeof(char)*(strlen(inst0->code)+1));
+  strcpy(inst1->code, inst0->code);
+  inst1->being_called = false;
+
+  return inst1;
+}
+
+task_vars*
+copy_task_vars (task_vars* task0)
+{
+  task_vars* task1 = malloc(sizeof(task_vars));
+
+  task1->current_parse_registry =
+    copy_registry(task0->current_parse_registry);
+
+  task1->source_code = malloc(sizeof(char)*(strlen(task0->source_code)+1));
+  strcpy(task1->source_code, task0->source_code);
+
+  task1->arbel_ll = malloc(sizeof(void*)*task0->arbel_ll_cnt);
+  for (int i=0; i < task0->arbel_ll_cnt; i++)
+    {
+      task1->arbel_ll[i] = task0->arbel_ll[i];
+    }
+
+  task1->arbel_ll_cnt = task0->arbel_ll_cnt;
+  return task1;
 }
 
 data*
@@ -294,7 +341,8 @@ copy_data (data* d_in)
                     ((regstr*) d_in->data)->key);
       break;
     case Registry:
-      assign_registry(&d, (registry*) d_in->data, true);
+      assign_registry(&d, (registry*) d_in->data, true,
+                      ((registry*) d_in->data)->task);
       break;
     case Operation:
       assign_op(&d, ((op_wrapper*) d_in->data)->op,

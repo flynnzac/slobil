@@ -78,6 +78,21 @@ print_data (data* d, print_settings settings)
     case Nothing:
       printf("Nothing.");
       break;
+    case Task:
+      printf("A Task with Body:\n");
+      printf("( %s )", ((task*) d->data)->code->code);
+      printf("\n");
+      pthread_mutex_lock(&((task*) d->data)->lock);
+      if (((task*) d->data)->thread==NULL)
+        {
+          printf("Task Running.");
+        }
+      else
+        {
+          printf("Task Not Running.");
+        }
+      pthread_mutex_unlock(&((task*) d->data)->lock);
+      break;
     default:
       break;
     }

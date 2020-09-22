@@ -1,0 +1,43 @@
+' Demonstrate tasks
+
+task /t1
+     (
+       while ( answer True . )
+             (
+               queue /current [ accept /hello . ] .
+             ) .
+     )
+     [ registry . ] .
+
+run-task t1 .
+
+queue /hello "Hi!" t1 .
+accept /current t1 .
+
+task /t2
+     (
+       set /continue True .
+       while ( answer continue . )
+             (
+               select 
+                      /double
+                      (
+                        print [ mul ans 2 . ] .
+                      )
+                      /triple
+                      (
+                        print [ mul ans 3 . ] .
+                      )
+                      /end
+                      (
+                        set /continue False .
+                      ) .
+             ) .
+     )
+     [ registry . ] .
+
+run-task t2 .
+queue /double 3 t2 .
+queue /triple 10 t2 .
+queue /double 7 t2 .
+queue /end Nothing t2 .

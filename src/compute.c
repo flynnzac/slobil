@@ -30,7 +30,7 @@ ret (registry* reg, data* d, const char* name)
     }
   else
     {
-      do_error("Cannot return from top-level.");
+      do_error("Cannot return from top-level.", reg->task->task);
     }
 }
 
@@ -58,11 +58,11 @@ _op_call (arg a, registry* reg, const int explicit)
 
   if (arg1 == NULL || (arg1->type != Instruction && arg1->type != Operation))
     {
-      do_error("First argument to `call` must be an instruction.");
+      do_error("First argument to `call` must be an instruction.", reg->task->task);
       return;
     }
 
-  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
+  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -74,7 +74,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
       if (d->type != Register)
         {
-          do_error("Expected a register");
+          do_error("Expected a register", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -92,7 +92,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
   data* ans;
 
-  if (!is_error(-1))
+  if (!is_error(-1, reg->task->task))
     {
       ans = get(r_new, arbel_hash_ans, 0);
       if (ans != NULL)
@@ -114,7 +114,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
     }
   else
     {
-      registry* r_new = new_registry(reg, ARBEL_HASH_SIZE);
+      registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
       data* d;
       size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
       for (int i=1; i < len; i++)
@@ -131,7 +131,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
       ((instruction*) op->instr->data)->being_called = false;
 
       data* ans;
-      if (!is_error(-1))
+      if (!is_error(-1, reg->task->task))
         {
           ans = get(r_new, arbel_hash_ans, 0);
           if (ans != NULL)
@@ -150,14 +150,14 @@ compute (data* cmd, registry* reg, arg a)
 {
   if (cmd == NULL)
     {
-      do_error("Cannot compute a statement that does not start with an operation or instruction.");
+      do_error("Cannot compute a statement that does not start with an operation or instruction.", reg->task->task);
       return;
     }
 
   switch (cmd->type)
     {
     case Operation:
-      if (is_error(-1))
+      if (is_error(-1, reg->task->task))
         return;
       do_operation((op_wrapper*) cmd->data, reg,a);
       break;
@@ -165,7 +165,7 @@ compute (data* cmd, registry* reg, arg a)
       _op_call(a, reg, 0);
       break;
     default:
-      do_error("Tried to compute something that is not an operation or instruction.");
+      do_error("Tried to compute something that is not an operation or instruction.", reg->task->task);
       break;
     }
 

@@ -26,10 +26,12 @@ AS_IF([test "x$enable_greedy_gc" = "xyes"], [],[
 
 # Checks for libraries.
 AC_CHECK_LIB([dl], [dlopen])
+AC_CHECK_LIB([pthread], [pthread_create])
 AC_CHECK_LIB([m], [floor])
 AC_CHECK_LIB([readline], [readline])
 AC_CHECK_LIB([unistring], [u8_next])
 AC_CHECK_LIB([gmp], [__gmpz_init])
+AC_CHECK_LIB([z], [gzopen])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
