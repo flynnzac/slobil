@@ -23,6 +23,19 @@
 #include <unistd.h>
 #include <signal.h>
 
+
+/* global variables */
+
+task* task0;
+bool reading;
+
+/* global constants */
+
+unsigned long arbel_hash_ans;
+unsigned long arbel_hash_t;
+unsigned long arbel_hash_underscore;
+
+
 int
 dummy_event ()
 {
