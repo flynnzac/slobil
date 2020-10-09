@@ -3256,7 +3256,7 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("milliseconds"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /milliseconds.");
+      do_error("No Integer data at /milliseconds.", reg->task->task);
       return;
     }
 
@@ -3267,7 +3267,7 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("seconds"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /seconds.");
+      do_error("No Integer data at /seconds.", reg->task->task);
       return;
     }
 
@@ -3276,7 +3276,7 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("minute"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /minute.");
+      do_error("No Integer data at /minute.", reg->task->task);
       return;
     }
 
@@ -3285,7 +3285,7 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("hour"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /hour.");
+      do_error("No Integer data at /hour.", reg->task->task);
       return;
     }
 
@@ -3294,7 +3294,7 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("day"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /day.");
+      do_error("No Integer data at /day.", reg->task->task);
       return;
     }
 
@@ -3303,17 +3303,17 @@ op_make_clock (arg a, registry* reg)
   d = get(r, hash_str("month"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /month.");
+      do_error("No Integer data at /month.", reg->task->task);
       return;
     }
 
-  time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) + 1;
+  time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) - 1;
   
 
   d = get(r, hash_str("year"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /year.");
+      do_error("No Integer data at /year.", reg->task->task);
       return;
     }
 

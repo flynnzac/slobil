@@ -6051,6 +6051,126 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
 }
 
 void
+op_make_clock (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "make-clock", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<make-clock> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<make-clock> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <make-clock> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <make-clock> should be of type Registry.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  struct tm time;
+
+  registry* r = (registry*) arg1->data;
+  data* d;
+
+  d = get(r, hash_str("milliseconds"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /milliseconds.", reg->task->task);
+      return;
+    }
+
+  mpz_t* z_ms;
+  z_ms = (mpz_t*) d->data;
+  time_t ms = mpz_get_si(*z_ms);
+
+  d = get(r, hash_str("seconds"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /seconds.", reg->task->task);
+      return;
+    }
+
+  time.tm_sec = mpz_get_si(*((mpz_t*) d->data));
+
+  d = get(r, hash_str("minute"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /minute.", reg->task->task);
+      return;
+    }
+
+  time.tm_min = mpz_get_si(*((mpz_t*) d->data));
+  
+  d = get(r, hash_str("hour"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /hour.", reg->task->task);
+      return;
+    }
+
+  time.tm_hour = mpz_get_si(*((mpz_t*) d->data));
+     
+  d = get(r, hash_str("day"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /day.", reg->task->task);
+      return;
+    }
+
+  time.tm_mday = mpz_get_si(*((mpz_t*) d->data));
+
+  d = get(r, hash_str("month"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /month.", reg->task->task);
+      return;
+    }
+
+  time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) - 1;
+  
+
+  d = get(r, hash_str("year"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /year.", reg->task->task);
+      return;
+    }
+
+  time.tm_year = mpz_get_si(*((mpz_t*) d->data)) - 1900;
+
+  time_t time_sec;
+  time_sec = mktime(&time);
+
+  time_sec = 1000*time_sec + ms;
+
+  mpz_t z;
+  mpz_init_set_si(z, time_sec);
+  assign_int(&d, z);
+  ret_ans(reg,d);
+}
+
+       
+
+void
 op_task (arg a, registry* reg)
 {
   
@@ -7026,6 +7146,9 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_make_time, NULL, NULL, 0);
   set(reg,d,"make-time",1);
+
+  assign_op(&d, op_make_clock, NULL, NULL, 0);
+  set(reg,d,"make-clock",1);
 
 
   /* Nothing operations */
