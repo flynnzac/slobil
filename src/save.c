@@ -217,7 +217,7 @@ read_registry (gzFile f, registry* reg)
           f_sub = fmemopen(cache, sizeof(char)*size, "r");
           state = fresh_state(0);
           stmt = NULL;
-          parse(f_sub, &state, &stmt, reg->task);
+          parse(f_sub, &state, &stmt, reg->task->task);
           fclose(f_sub);
 
           d = new_data();
@@ -243,7 +243,7 @@ read_registry (gzFile f, registry* reg)
           f_sub = fmemopen(cache, sizeof(char)*size, "r");
           state = fresh_state(0);
           stmt = NULL;
-          parse(f_sub, &state, &stmt, reg->task);
+          parse(f_sub, &state, &stmt, reg->task->task);
           fclose(f_sub);
 
           op_wrapper* op = malloc(sizeof(op_wrapper));

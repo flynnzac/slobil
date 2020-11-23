@@ -584,14 +584,14 @@ free_task_vars (task_vars* t);
 
 /* global variables */
 
-task* task0;
-bool reading;
+extern task* task0;
+extern bool reading;
 
 /* global constants */
 
-unsigned long arbel_hash_ans;
-unsigned long arbel_hash_t;
-unsigned long arbel_hash_underscore;
+extern unsigned long arbel_hash_ans;
+extern unsigned long arbel_hash_t;
+extern unsigned long arbel_hash_underscore;
 
 
 #ifdef GARBAGE
