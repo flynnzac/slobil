@@ -2997,9 +2997,9 @@ op_op (arg a, registry* reg)
 }
 
 void
-op_data (arg a, registry* reg)
+op_use (arg a, registry* reg)
 {
-  #op=data@
+  #op=use@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -3645,6 +3645,65 @@ op_accept_or (arg a, registry* reg)
       pthread_mutex_unlock(&t->lock);
     }
 }
+
+void
+op_rand (arg a, registry* reg)
+{
+  #op=rand@
+
+  if (a.length >= 2)
+    {
+      #num=1@
+      #type=Integer@
+      ##GETARG~$;
+      srand(mpz_get_si(*((mpz_t*) arg1->data)));
+    }
+
+  double r = ((double) rand()) / ((double) RAND_MAX);
+  data* d;
+  assign_real(&d, r);
+  ret_ans(reg,d);
+}
+
+void op_floor (arg a, registry* reg)
+{
+  #op=floor@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Real@
+  ##GETARG~$;
+
+  int r = (int) floor(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+void op_ceiling (arg a, registry* reg)
+{
+  #op=ceiling@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Real@
+  ##GETARG~$;
+
+  int r = (int) ceil(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+
   
 void
 add_basic_ops (registry* reg)
@@ -3700,8 +3759,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_range, NULL, NULL, 0);
   set(reg,d,"range",1);
 
-  assign_op(&d, op_data, NULL, NULL, 0);
-  set(reg,d,"data",1);
+  assign_op(&d, op_use, NULL, NULL, 0);
+  set(reg,d,"use",1);
 
 
   /* Numeric operations */
@@ -3759,6 +3818,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_decr, NULL, NULL, 0);
   set(reg,d,"decr",1);
+
+  assign_op(&d, op_floor, NULL, NULL, 0);
+  set(reg,d, "floor",1);
+
+  assign_op(&d, op_ceiling, NULL, NULL, 0);
+  set(reg,d, "ceiling",1);
+  
 
   /* Boolean operations */
 
@@ -3996,6 +4062,11 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_accept_or, NULL, NULL, 0);
   set(reg,d,"accept-or",1);
+
+  /* Random operations */
+
+  assign_op(&d, op_rand, NULL, NULL, 0);
+  set(reg, d, "rand", 1);
 
 
 }

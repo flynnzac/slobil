@@ -5587,11 +5587,11 @@ if (argi != NULL && true && (!(argi->type & Register)))
 }
 
 void
-op_data (arg a, registry* reg)
+op_use (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "data", reg->task->task);
+  check_length(&a, 1+1, "use", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
   
@@ -5604,8 +5604,8 @@ if (true)
     if (arg1 == NULL)
       {
         char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<data> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<data> requires at least %d arguments.", 1);
+        err_msg = malloc(sizeof(char)*(strlen("<use> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<use> requires at least %d arguments.", 1);
         do_error(err_msg, reg->task->task);
         free(err_msg);
         return ;
@@ -5613,8 +5613,8 @@ if (true)
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <data> should be of type String.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <data> should be of type String.", 1);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <use> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <use> should be of type String.", 1);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
@@ -6825,6 +6825,139 @@ if (arg3 != NULL && true && (!(arg3->type & Task)))
       pthread_mutex_unlock(&t->lock);
     }
 }
+
+void
+op_rand (arg a, registry* reg)
+{
+  
+
+  if (a.length >= 2)
+    {
+      
+      
+      
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<rand> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<rand> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <rand> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <rand> should be of type Integer.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+      srand(mpz_get_si(*((mpz_t*) arg1->data)));
+    }
+
+  double r = ((double) rand()) / ((double) RAND_MAX);
+  data* d;
+  assign_real(&d, r);
+  ret_ans(reg,d);
+}
+
+void op_floor (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "floor", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<floor> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<floor> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Real)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <floor> should be of type Real.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <floor> should be of type Real.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  int r = (int) floor(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+void op_ceiling (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "ceiling", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<ceiling> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<ceiling> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Real)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <ceiling> should be of type Real.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <ceiling> should be of type Real.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  int r = (int) ceil(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+
   
 void
 add_basic_ops (registry* reg)
@@ -6880,8 +7013,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_range, NULL, NULL, 0);
   set(reg,d,"range",1);
 
-  assign_op(&d, op_data, NULL, NULL, 0);
-  set(reg,d,"data",1);
+  assign_op(&d, op_use, NULL, NULL, 0);
+  set(reg,d,"use",1);
 
 
   /* Numeric operations */
@@ -6939,6 +7072,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_decr, NULL, NULL, 0);
   set(reg,d,"decr",1);
+
+  assign_op(&d, op_floor, NULL, NULL, 0);
+  set(reg,d, "floor",1);
+
+  assign_op(&d, op_ceiling, NULL, NULL, 0);
+  set(reg,d, "ceiling",1);
+  
 
   /* Boolean operations */
 
@@ -7176,6 +7316,11 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_accept_or, NULL, NULL, 0);
   set(reg,d,"accept-or",1);
+
+  /* Random operations */
+
+  assign_op(&d, op_rand, NULL, NULL, 0);
+  set(reg, d, "rand", 1);
 
 
 }

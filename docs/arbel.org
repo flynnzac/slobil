@@ -3,9 +3,11 @@
 #+AUTHOR: Zach Flynn
 #+DESCRIPTION: ARBEL is a registry-based environment and language. It is "generic-by-default" and is centered around a single flexible data structure: the registry (a hash table).  This manual describes how to use the language.
 
-* Rationale
+* Introduction
 
-Rationale for ARBEL.  What it is for.  To be added.
+ARBEL is an environment and programming language designed to make it easy to create command-line interactive programs.  
+
+The language has a command-like syntax and is based around a data type ARBEL calls /registries/.  Some other languages call registries, /maps/, /tables/, or /dictionaries/.   Commands modify data in the active registry.  ARBEL can save registries to disk to be read in later.
 
 * The Language
 ** Statements and syntax
@@ -863,7 +865,7 @@ Example of using Tasks:
 
     - =close REGISTER= --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
 
-    - =data STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
+    - =use STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
 
 
 

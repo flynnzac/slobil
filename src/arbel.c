@@ -9,7 +9,7 @@
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBLE is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <signal.h>
 
-
 /* global variables */
 
 task* task0;
@@ -34,7 +33,6 @@ bool reading;
 unsigned long arbel_hash_ans;
 unsigned long arbel_hash_t;
 unsigned long arbel_hash_underscore;
-
 
 int
 dummy_event ()
@@ -68,7 +66,8 @@ main (int argc, char** argv)
 #else
   mp_set_memory_functions(malloc, realloc, free);
 #endif
-  
+
+  srand((unsigned) time(NULL));
   rl_event_hook = dummy_event;
 
   arbel_hash_ans = hash_str("ans");
