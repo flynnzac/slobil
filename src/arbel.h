@@ -414,6 +414,9 @@ compute (data* cmd, registry* reg, arg arg);
 int
 save_registry (gzFile f, registry* reg);
 
+void
+read_outer (gzFile f, registry* reg);
+
 int
 read_registry (gzFile f, registry* reg);
 

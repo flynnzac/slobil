@@ -356,10 +356,20 @@ void
 save_outer (registry* reg, char* fname)
 {
   gzFile f = gzopen(fname, "w6");
+  double save_version = 1.0;
+  gzfwrite(&save_version, sizeof(double), 1, f);
+  
   save_registry(f, reg);
   data_type end = NotAType;
   gzfwrite(&end, sizeof(data_type), 1, f);
   gzclose(f);
 }
 
-  
+void
+read_outer (gzFile f, registry* reg)
+{
+  double version;
+  gzfread(&version, sizeof(double), 1, f);
+  printf("Save version: %f\n", version);
+  read_registry(f, reg);
+}

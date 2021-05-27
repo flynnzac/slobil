@@ -1488,11 +1488,11 @@ op_load (arg a, registry* reg)
       #type=Registry@
       ##GETARG~$;
 
-      read_registry(f, (registry*) arg2->data);
+      read_outer(f, (registry*) arg2->data);
     }
   else
     {
-      read_registry(f, reg);
+      read_outer(f, reg);
     }
   gzclose(f);
 

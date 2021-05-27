@@ -2770,11 +2770,11 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
 
 ;
 
-      read_registry(f, (registry*) arg2->data);
+      read_outer(f, (registry*) arg2->data);
     }
   else
     {
-      read_registry(f, reg);
+      read_outer(f, reg);
     }
   gzclose(f);
 
