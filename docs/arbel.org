@@ -817,9 +817,9 @@ t3 of type String, value: 3
 
 ** Linking C code
 
-It is possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+One of the big outstanding tasks with ARBEL is to write a more user-friendly /libarbel/ for adding extensions, but it is currently possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
 
-The following is an example of C code.
+The following is an example of C code (the =ARBEL_UGLY_HACK_API= macro is necessary).
 
 #+INCLUDE: "../examples/link.c" src c
 
@@ -1216,7 +1216,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Print output
 
-    - =print VALUE= --- prints =VALUE= to screen.
+    - =print VALUE <BOOLEAN>= --- prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
 
 *** Input and output files and state
 
@@ -1237,7 +1237,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =is-error INSTRUCTION= --- sets the =/ans= Register to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
 
-    - =push-through INSTRUCTION= --- execute each statement in =INSTRUCTION= even if there is one of the statements has an error.
+    - =push-through INSTRUCTION= --- execute each statement in =INSTRUCTION= even if one of the statements has an error.
 
 
 

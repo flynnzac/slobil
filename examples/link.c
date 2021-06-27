@@ -2,17 +2,11 @@
    A C Function to compute log(x+1) 
 */
 
+/* Change to whereever arbel.h is located or just "arbel.h" if it is on the path */
 #include "../src/arbel.h"
 #include <math.h>
 
 ARBEL_UGLY_HACK_API;
-
-unsigned long arbel_hash_ans;
-unsigned long arbel_hash_underscore;
-unsigned long arbel_hash_t;
-bool reading;
-task* task0;
-
 
 void
 log_plus_one (arg a, registry* reg)
