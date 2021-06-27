@@ -1,29 +1,29 @@
 
 ' Computes v^T w for a vector 
 set /dotproduct
-    (
+    < (
       do mul v w .
       collapse add ans  .
-    ) .
+    ) /v /w > .
 
 ' matrix-multiply A B computes A^T B
 set /matrix-multiply
-    (
+    < (
       set /i /t1 .
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do < ( dotproduct /v t1 /w B:i . ) /t1 > A .
+              do < ( dotproduct t1 B:i . ) /t1 > A .
               in out ( set i ans . ) .
               next i .
               move /ans /i .
             ) .
       answer out .
-    ) .
+    ) /A /B > .
 
 ' Computes A^T 
 set /transpose
-    (
+    < (
       set /i /t1 .
       set /out [ list . ] .
       while ( exist i A:/t1 . )
@@ -35,4 +35,4 @@ set /transpose
               move /ans /i .
             ) .
       answer out .
-    ) .
+    ) /A > .
