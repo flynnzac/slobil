@@ -32,7 +32,7 @@ set /partition
       answer i .
     ) .
 
-set /quicksort-internal
+set /-quicksort
     (
       if [ not [ register-eq start end . ] . ]
          {
@@ -40,12 +40,12 @@ set /quicksort-internal
            move /ans /p .
            if [ not [ register-eq p start . ] . ]
               {
-                quicksort-internal /input input /start start /end [ previous p . ] .
+                -quicksort /input input /start start /end [ previous p . ] .
               } .
 
            if [ not [ register-eq p end . ] . ]
               {
-                quicksort-internal /input input /start [ next p . ] /end end .
+                -quicksort /input input /start [ next p . ] /end end .
               } .
          } .
     ) .
@@ -71,7 +71,7 @@ set /quicksort
            error "Ending register not found in input." .
          } .
 
-      quicksort-internal /input input /start start /end end /compare compare .
+      -quicksort /input input /start start /end end /compare compare .
     ) .
 
          
