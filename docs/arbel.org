@@ -432,6 +432,379 @@ accept-or /hello ( set /hello "Hello." ) .
 2
    #+END_SRC
 
+
+* A Complete Example Program
+
+The following program is one I actually use daily to keep track of time spent on tasks.  I use the program to keep track of my time by choosing a client and then using =start= and =stop=. And then the =day-time= instruction to output the hours for each client by day.
+
+#+BEGIN_SRC arbel
+' Initial state
+
+set /current-client "Non-billable" .
+set /last-clock -1 .
+set /record [ registry . ] .
+set /running False .
+set /current-file Nothing .
+
+' Start a new record of work or load an old one
+
+set /init
+    < (
+      up set /current-file file .
+      please ( load file record . )
+             (
+               up set /record [ registry . ] .
+               up set /client-list [ registry . ] record .
+               print "Starting new file." .
+             ) .
+    ) /file > .
+
+' Save record of work in ARBEL format
+
+set /save-hours
+    (
+      in record ( save current-file . ) .
+    ) .
+
+' Set current client
+
+set /client
+    <
+    (
+      if [ not running . ]
+         {
+           if [ exist /name . ]
+              {
+                up set /current-client name .
+                add-client-to-list name .
+              }
+              {
+                up set /current-client [ choose-client . ] .
+              } .
+           up set /last-clock -1 .
+         }
+         {
+           print "Currently running, stop first." .
+         } .
+    )
+    /name
+    > .
+
+' Start clock for current client
+set /start
+    (
+      if [ not running . ]
+         {
+           up set /last-clock [ clock . ] .
+           up set /running True .
+           print [ string-append "Starting on " current-client " ..." . ] .
+         }
+         {
+           print "Currently running, stop first." .
+         } .
+    ) .
+
+' Stop clock for current client with a description of task.
+
+set /stop
+    (
+      if running
+         {
+           last record /r .
+           next ans .
+           set ans
+               [
+                 registry
+                   /client current-client
+                   /start-time last-clock
+                   /stop-time [ clock . ]
+                   /description desc
+                 .
+               ] record .
+           up set /running False .
+           save-hours .
+         }
+         {
+           print "Not currently running." .
+         } .
+    ) .
+
+
+' A map to day of week
+set /day-of-week-map
+    [
+      list
+        "Sunday"
+        "Monday"
+        "Tuesday"
+        "Wednesday"
+        "Thursday"
+        "Friday"
+        "Saturday"
+        "Sunday" .
+    ] .
+
+
+set /make-hours-day-time
+    < (
+      do < ( div t 1000.0 60 60 . ) /t > structure .
+    ) /structure > .
+
+      
+' Return a structure describing a single day of activity
+set /day-time
+    (
+      set /final [ registry . ] .
+      set /clock1
+          [
+            make-clock
+              [
+                registry
+                  /day day
+                  /month month
+                  /year year
+                  /hour 0
+                  /minute 0
+                  /seconds 0
+                  /milliseconds 0
+                . ] .
+          ] .
+
+      set /clock2
+          [
+            make-clock
+              [
+                registry
+                  /day day
+                  /month month
+                  /year year
+                  /hour 23
+                  /minute 59
+                  /seconds 59
+                  /milliseconds 999
+                . ] .
+          ] .
+
+      set /i /r1 .
+      while ( exist i record . )
+            (
+              if [ and
+                     [ gt-eq record:i:/start-time clock1 . ]
+                     [ lt-eq record:i:/start-time clock2 . ] . ]
+                 {
+                   set /client [ to-register record:i:/client . ] .
+                   set /elapsed [ sub record:i:/stop-time record:i:/start-time . ] .
+
+                   if [ exist client final . ]
+                      {
+                        set client [ add final:client elapsed . ] final .
+                      }
+                      {
+                        set client elapsed final .
+                      } .
+                 } .
+              set /i [ next i . ] .
+            ) .
+      make-hours-day-time final .
+    ) .
+
+
+
+' Output record in a CSV.
+set /output
+    (
+      if [ not [ exist /mode . ] . ]
+         {
+           set /mode "wb+" .
+         } .
+      
+      set /f [ open-file file mode . ] .
+      set /output-structure [ registry . ] .
+
+      set /i /t1 .
+
+      if [ not [ exist /cutoff . ] . ]
+         {
+           set /cut-off [
+                 sub [ clock . ]
+                     [ mul 1000.0 60 60 24 7 . ] .
+               ] .
+         } .
+      
+
+      while ( exist i day-of-week-map . )
+            (
+
+              set /day [ to-register day-of-week-map:i . ] .
+              set day [ registry . ] output-structure .
+              
+              set /j /c1 .
+              while ( exist j record:/client-list . )
+                    (
+                      set /client [ to-register record:/client-list:j . ] .
+                      
+                      set client 0.0 output-structure:day .
+                      set /j [ next j . ] .
+                    ) .
+              set /i [ next i . ] .
+            ) .
+      
+      set /i /r1 .
+      while ( exist i record . )
+            (
+              if [ gt-eq record:i:/start-time cut-off . ]
+                 {
+                   set /t [ local-time record:i:/start-time . ] .
+                   to-register [ add t:/day-of-week 1 . ] .
+                   to-register day-of-week-map:ans .
+                   set /day ans .
+
+                   set /client [ to-register record:i:/client . ] .
+
+                   set /elapsed [
+                         sub record:i:/stop-time record:i:/start-time .
+                       ] .
+                   set /elapsed [ div elapsed [ mul 1000.0 60.0 60.0 . ] . ] .
+
+                   set client [ add output-structure:day:client
+                                    elapsed . ] output-structure:day .
+                 } .
+              
+              set /i [ next i . ] .
+            ) .
+
+      set /i /t1 .
+
+      while ( exist i day-of-week-map . )
+            (
+              set /day [ to-register day-of-week-map:i . ] .
+              set /j /c1 .
+              
+              while ( exist j record:/client-list . )
+                    (
+                      set /client
+                          [ to-register record:/client-list:j . ] .
+                      
+                      write-string day-of-week-map:i f .
+                      write-string "," f .
+
+                      write-string record:/client-list:j f .
+                      write-string "," f .
+
+                      write-string
+                        [ to-string output-structure:day:client . ]
+                        f .
+                      write-string "\n" f .
+
+                      set /j [ next j . ] .
+                    ) .
+              
+              set /i [ next i . ] .
+            ) .
+      close /f .
+    ) .
+
+' Add client to client list
+set /add-client-to-list
+    < (
+      last record:/client-list /c .
+      next ans .
+      set ans client record:/client-list .
+    ) /client > .
+
+
+' Select client from menu
+set /choose-client
+    (
+      set /i /c1 .
+      while ( exist i record:/client-list . )
+            (
+              print
+                [
+                  string-append
+                    [ to-string [ to-number i . ] . ]
+                    ": " 
+                    record:/client-list:i .
+                ] .
+              set /i [ next i . ] .
+            ) .
+      print "Choose Client: " False .
+      input /num .
+      set /loc [ to-register [ string-append "c" num . ] . ] .
+      answer record:/client-list:loc .
+    ) .
+
+set /status
+    (
+      print [ string-append "Current client: " current-client . ] .
+      if running
+         {
+           print "Running a task." .
+         }
+         {
+           print "Not running." .
+         } .
+    ) .
+
+set /rename-client
+    (
+      ' Update client in list
+      set /i /c1 .
+      set /cont True .
+      while ( and [ exist i record:/client-list . ]
+                  cont . )
+            (
+              if [ string-eq record:/client-list:i client . ]
+                 {
+                   set i new-client record:/client-list .
+                   set /cont False .
+                 } .
+
+              set /i [ next i . ] .
+            ) .
+      
+      ' Update client in records
+
+      set /i /r1 .
+      while ( exist i record . )
+            (
+              if [ string-eq record:i:/client client . ]
+                 {
+                   set /client new-client record:i .
+                 } .
+              set /i [ next i . ] .
+            ) .
+    ) .
+          
+
+' Rewind X minutes from start
+
+set /start-back
+    < (
+      if [ not running . ]
+         {
+           print "Currently not running." .
+         }
+         {
+           up set /last-clock [ sub last-clock [ mul x 60 1000 . ] . ] .
+         } .
+    ) /x > .
+
+' Rewind X minutes from last entry
+
+set /rewind-last
+    < (
+
+      set /end [ last record /r . ] .
+      set /stop-time [ sub record:end:/stop-time [ mul x 60 1000 . ] . ]
+          record:end .
+    ) /x > .
+
+
+           
+           
+#+END_SRC
+
 * Examples
 
 ** Quicksort
@@ -563,7 +936,6 @@ Now, the operation can be called in the following way:
 ... log1 1 .
 ans = 0.693147
 #+END_SRC
-
 
 
 

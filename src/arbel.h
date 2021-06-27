@@ -79,16 +79,6 @@ struct data
 typedef struct data data;
 
 
-struct column
-{
-  data_type type;
-  data** data;
-  size_t length;
-};
-
-typedef struct column column;
-
-
 struct content
 {
   data* value;
@@ -284,11 +274,6 @@ assign_boolean (data** d, bool val);
 
 void
 assign_nothing (data** d);
-
-void
-assign_column (data** d, const data_type type,
-               data** content, const size_t length,
-               bool copy);
 
 void
 assign_file (data** d, FILE* f);
