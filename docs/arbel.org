@@ -167,7 +167,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
 ** Registries
 
-   In ARBEL, most of the action happens inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.  Code is always execute "inside" a registry. Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In ARBEL, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
    #+BEGIN_SRC arbel
    ... registry /hello "Hello, world!" /x 10 .
@@ -234,7 +234,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
             set /prod 1 .
             while ( lt-eq i t . )
                   (
-                    set /prod [ multiply i prod . ] .
+                    set /prod [ mul i prod . ] .
                     set /i [ add i 1 . ] .
                   ) .
             answer prod .
@@ -332,7 +332,7 @@ Error: Value at register /x not found.
 
 *** Interacting with the user
 
-    One of ARBEL's strengths is in rapidly-developing interactive programs.  ARBEL's syntax is command-like so interaction in such a program can often be done using ARBEL's prompt.  I use a simple program to keep track of my hours at work, an example of this type of program.  These types of programs often require input from the user and the ability to interact with other non-ARBEL programs on the computer.  
+    One of ARBEL's strengths is in rapidly-developing interactive programs.  ARBEL's syntax is command-like so interaction in such a program can often be done using ARBEL's prompt.  These types of programs often require input from the user and the ability to interact with other non-ARBEL programs on the computer.  
 
     The =input= operation accepts input from the user in the same way as ARBEL's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
 
@@ -360,9 +360,9 @@ file2.txt
     The =change-dir= operation changes the working directory of ARBEL and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
 
     #+BEGIN_SRC arbel
-... change-dir "/home/fzac" .
+... change-dir "/home/zlf" .
 ... current-dir .
-ans = "/home/fzac" 
+ans = "/home/zlf" 
     #+END_SRC
 
 ** Tasks (concurrent programs)
@@ -389,9 +389,9 @@ ans = "/home/fzac"
 
    Tasks /accept/ data when they take data from their queue and move it into their state registry.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
 
-   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
+   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
 
-   The =queue= operation moves data from one registry into the queue of another Task.  It tasks a registry to set in the queue registry, the data to use, and the task's queue to access.
+   The =queue= operation moves data from one registry into the queue of another Task.  Its arguments are a register to set in the queue registry, the data to send, and the task's queue to access.
 
    #+BEGIN_SRC arbel
 ... task /t1 ( print [ accept /hello . ] . ) .
@@ -400,7 +400,7 @@ ans = "/home/fzac"
 Hi!
    #+END_SRC
 
-   Because the =accept= operation blocks the thread until the data is entered into the queue, it cannot be used when the data is optional.  ARBEL provides two other operations.
+   Because the =accept= operation blocks the thread until the data is entered into the queue, it cannot be used when the data =accept= is looking for is optional.  
 
    The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction, in its state registry.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
 
@@ -432,7 +432,9 @@ accept-or /hello ( set /hello "Hello." ) .
 
 * A Complete Example Program
 
-The following program is one I actually use daily to keep track of time spent on tasks.  I use the program to keep track of my time by choosing a client and then using =start= and =stop=. And then the =day-time= instruction to output the hours for each client by day.
+The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the =start= and =stop= instructions. And then the =day-time= instruction to output the hours for each client by day.
+
+** Source Code
 
 #+BEGIN_SRC arbel
 ' Initial state
@@ -702,10 +704,25 @@ set /rewind-last
           record:end .
     ) /x > .
 
-
-           
-           
 #+END_SRC
+
+** Building the Code
+
+We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
+
+#+BEGIN_SRC arbel
+... source "billable.arb" .
+... save "~/.darbs/billable.darb" .
+#+END_SRC
+
+** Using the code
+
+Then, whenever we would like to load the code, we can simply do:
+#+BEGIN_SRC arbel
+... use "billable" .
+#+END_SRC
+
+Then all the instructions from the /billable/ program are available to us.
 
 * Examples
 
