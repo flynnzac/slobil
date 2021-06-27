@@ -38,7 +38,7 @@ TESTS += test/ops/op_last.arb
 
 
 lib_LTLIBRARIES = libarbel.la
-libarbel_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c
+libarbel_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c
 
 if PUSHMAC
 libarbel_la_SOURCES += src/operator.pshm

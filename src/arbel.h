@@ -595,4 +595,7 @@ extern unsigned long arbel_hash_underscore;
 #define free_arg(x)  
 #endif
 
+#define ARBEL_UGLY_HACK_API unsigned long arbel_hash_ans; unsigned long arbel_hash_underscore; unsigned long arbel_hash_t; bool reading; task* task0;
+
+
 #endif
