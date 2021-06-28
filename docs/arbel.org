@@ -741,9 +741,18 @@ t1 of type Integer, value: 1
 t2 of type Integer, value: 2
 t3 of type Integer, value: 3
 t4 of type Integer, value: 4
+... quicksort /input x /slice /t /compare gt .
+... print x .
+a registry with:
+t1 of type Integer, value: 4
+t2 of type Integer, value: 3
+t3 of type Integer, value: 2
+t4 of type Integer, value: 1
 #+END_SRC
 
 ** A Line-Oriented Text Editor
+
+This example is a simple method of building ARBEL applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
 
 #+INCLUDE: "../examples/arbed.arb" src arbel
 
@@ -768,7 +777,7 @@ Hello
 
 Example of use:
 #+BEGIN_SRC arbel
-... set /f ( power t 2 . ) .
+... set /f < ( power t 2 . ) /t > .
 ... deriv /f f /x 1.0
 ans = 2.0
 #+END_SRC
@@ -781,7 +790,35 @@ Example of use:
 #+BEGIN_SRC arbel
 ... factorial 5 .
 ans = 120
+... factorial-recurse /t 5 .
+ans = 120
 #+END_SRC
+
+*** Note on Recursion
+
+If an instruction is defined recursively as =factorial-recurse= is above, it matters that the Instruction we are executing is in the register =factorial-recurse=.  This will usually be the case, but suppose, after executing the above we ran the following code:
+
+#+BEGIN_SRC arbel
+... move /-factorial-recurse /+factorial-recurse .
+... factorial-recurse 5 .
+Error: Value at register /-factorial-recurse not found.
+-> -factorial-recurse /t  [ sub t 1 . ]  .
+Error: Instruction in [] did not set /ans register.
+-> mul t  [ -factorial-recurse /t  [ sub t 1 . ]  . ]  .
+-> if  [ eq t 1 . ]  1  .
+-> factorial-recurse 5 .
+#+END_SRC
+
+ARBEL is looking for =-factorial-recurse= in the current registry, but the value does not exist and so it cannot recurse.  But we could run:
+
+#+BEGIN_SRC arbel
+... +factorial-recurse /t 5 /-factorial-recurse +factorial-recurse .
+ans = 120
+#+END_SRC
+
+Because, like any instruction, we can define the environment in which the code operates.  So we can insert the value =+factorial-recurse= wherever there is a =-factorial-recurse=.
+
+ Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
 
 ** Numerical Integration
 
@@ -789,7 +826,7 @@ ans = 120
 
 Example of use:
 #+BEGIN_SRC arbel
-... integrate /f ( power t 2 . ) /lb 0.0 /ub 1.0 /n 1000 .
+... integrate /f < ( power t 2 . ) /t > /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
 #+END_SRC
 
@@ -872,7 +909,7 @@ Example of using Tasks:
 
   This section gives the full vocabulary of the language.  The grammar of the language is described in the previous sections.  I describe each type of data, and the operations associated with it. 
 
-  Throughout, I enclose an operation's optional arguments in angle brackets (<>). 
+  Throughout, I enclose an operation's optional arguments between bars (||). 
 
 ** Registries
 
@@ -894,7 +931,7 @@ Example of using Tasks:
 
 
 **** Insert, move, and remove data to and from registers
-     - =set REGISTER VALUE <REGISTRY>= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
+     - =set REGISTER VALUE |REGISTRY|= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
 
      - =move REGISTER1 REGISTER2= --- move the value located at =REGISTER1= to =REGISTER2=.  Does not copy the data so it is an efficient way to move data.
 
@@ -905,9 +942,9 @@ Example of using Tasks:
 
 **** Access data in Registry
 
-     - =get REGISTER <REGISTRY>= --- sets the =/ans= register to the value located at =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is not specified, get from the current registry.
+     - =get REGISTER |REGISTRY|= --- sets the =/ans= register to the value located at =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is not specified, get from the current registry.
 
-     - =exist REGISTER <REGISTRY>= --- set the =/ans= register to =True= if a value exists at the =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is omitted, check in the current registry.
+     - =exist REGISTER |REGISTRY|= --- set the =/ans= register to =True= if a value exists at the =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is omitted, check in the current registry.
 
      - =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY.
 
@@ -917,7 +954,7 @@ Example of using Tasks:
 
      - =do OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes arguments its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do= will only return results at Registers that exist in all Registries.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
-     - =collapse OPERATION REGISTRY <STRING>= --- sets the =/ans= register to the value of applying =OPERATION= to the value in the =REGISTRY= at Register =/STRING1= and =/STRING2= and then again to the result of that and to the value of  =/STRING3= and so on. For example, =collapse add [ list 1 2 3 . ] "t"= sets the =/ans= register to =6=.  If the =STRING= argument is omitted, it is assumed to be ="t"=.
+     - =collapse OPERATION REGISTRY |REGISTER|= --- sets the =/ans= register to the value of applying =OPERATION= to the value in the =REGISTRY= at Register =/REGISTER1= and =/REGISTER2= and then again to the result of that and to the value of  =/REGISTER3= and so on. For example, =collapse add [ list 1 2 3 . ] /t= sets the =/ans= register to =6=.  If the =REGISTER= argument is omitted, it is assumed to be =/t=.
 
 **** Execute code in a registry
 
@@ -951,7 +988,7 @@ Example of using Tasks:
 
 **** Technical
 
-     - =auto-rehash BOOLEAN= --- turns auto-rehashing of the underlying hash table ON (if the argument is =True=) or OFF (if the argument is =False=).  By default, ARBEL auto-rehashes the tables.
+     - =auto-rehash BOOLEAN= --- turns auto-rehashing of the underlying hash table ON (if the argument is =True=) or OFF (if the argument is =False=).  By default, ARBEL auto-rehashes registries.
 
      - =rehash REGISTRY= --- manually rehash the registry's underlying hash table.
 
@@ -979,9 +1016,9 @@ Example of using Tasks:
 
      - =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
 
-     - =incr INTEGER1 <INTEGER2>= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.
+     - =incr INTEGER1 |INTEGER2|= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.
 
-     - =decr INTEGER1 <INTEGER2>= --- decrement =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =sub= is that it modifies =INTEGER1= in place.
+     - =decr INTEGER1 |INTEGER2|= --- decrement =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =sub= is that it modifies =INTEGER1= in place.
 
 **** Comparison operations
      - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
@@ -1039,9 +1076,9 @@ Example of using Tasks:
 
      - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
-     - =match STRING1 STRING2 <INTEGER>= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
-     - =replace STRING1 STRING2 STRING3 <INTEGER>= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
+     - =replace STRING1 STRING2 STRING3 |INTEGER|= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
 **** String properties
 
@@ -1061,7 +1098,7 @@ Example of using Tasks:
 
 **** Convert to string
 
-     - =to-string INTEGER|REAL|REGISTER <INTEGER2>= --- sets the =/ans= Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
+     - =to-string INTEGER|REAL|REGISTER |INTEGER2|= --- sets the =/ans= Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
 
 **** Test if string
 
@@ -1158,7 +1195,7 @@ Example of using Tasks:
 
     - =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
 
-    - =open-file STRING1 <STRING2>= --- sets the =/ans= Register to a File object corresponding to the file named STRING1 with mode STRING2 (default: "r+").
+    - =open-file STRING1 |STRING2|= --- sets the =/ans= Register to a File object corresponding to the file named STRING1 with mode STRING2 (default: "r+").
 
     - =read FILE= --- read a byte from a file and set the =/ans= register to the result (an Integer).
 
@@ -1196,24 +1233,24 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Task operations
 
-- =task REGISTER INSTRUCTION <REGISTRY>= --- Sets =REGISTER= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =REGISTRY=.  If no =REGISTRY= argument is given, the initial state is a registry containing only the basic operations (the registry always contains the basic operations even if they are not in the initial registry passed to =Task=).
+- =task REGISTER INSTRUCTION |REGISTRY|= --- Sets =REGISTER= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =REGISTRY=.  If no =REGISTRY= argument is given, the initial state is a registry containing only the basic operations (the registry always contains the basic operations even if they are not in the initial registry passed to =Task=).
 
 - =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
 
-- =queue REGISTER DATA <TASK>= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main ARBEL Task.
+- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main ARBEL Task.
 
-- =accept REGISTER <TASK>= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
+- =accept REGISTER |TASK|= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
 
 - =select REGISTER1 INSTRUCTION1 REGISTER2 INSTRUCTION2 ... REGISTERN INSTRUCTIONN= --- Waits for the Queue in the current task to contain data at any of the Registers (it will prefer earlier Registers if data is available at both).  Once it receives data, it sets the =/ans= register to the data and executes the Instruction in the current registry.
 
-- =accept-or REGISTER INSTRUCTION <TASK>= --- Checks if =REGISTER= is set in =TASK='s Queue.  If it is, the =/ans= register is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
+- =accept-or REGISTER INSTRUCTION |TASK|= --- Checks if =REGISTER= is set in =TASK='s Queue.  If it is, the =/ans= register is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
 
 
 
 
 ** Control flow operations
 
-   - =if BOOLEAN VALUE1 <VALUE2>= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
+   - =if BOOLEAN VALUE1 |VALUE2|= --- if the first argument is =True=, sets the =/ans= register to =VALUE1=, if it is =False=, sets the =/ans= register to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
    - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
 
@@ -1235,7 +1272,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Print output
 
-    - =print VALUE <BOOLEAN>= --- prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
+    - =print VALUE |BOOLEAN|= --- prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
 
 *** Input and output files and state
 
@@ -1252,7 +1289,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Error handling
 
-    - =error STRING <INTEGER>= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
+    - =error STRING |INTEGER|= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
 
     - =is-error INSTRUCTION= --- sets the =/ans= Register to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
 
