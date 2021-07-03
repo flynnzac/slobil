@@ -8,27 +8,27 @@
 <html lang="en">
   <head>
     
-<meta name="description" contents="ARBEL is a registry-based programming language.">
-<meta name="keywords" contents="arbel,programming language,interactive programming language">
+<meta name="description" contents="WOB is a registry-based programming language.">
+<meta name="keywords" contents="wob,programming language,interactive programming language">
 <meta name="author" content="Zach Flynn">
 
     
-<link rel="stylesheet" href="arbel.css" text="text/css">
-    <title>ARBEL</title>
+<link rel="stylesheet" href="wob.css" text="text/css">
+    <title>WOB</title>
   </head>
   <body>
-  <h1>ARBEL</h1>
+  <h1>WOB</h1>
   <hr>
   <a href="index.html">Home</a>
-  <a href="arbel.html">Manual</a>
+  <a href="wob.html">Manual</a>
   <a href="examples.html">Examples</a>
   <hr>
-  <a href="https://github.com/flynnzac/arbel">Github</a>
+  <a href="https://github.com/flynnzac/WOB">Github</a>
   <hr>
 
 
 <p>
-  This page has several examples of ARBEL in action to give you a feel for the language.
+  This page has several examples of WOB in action to give you a feel for the language.
 </p>
 
 <ul>
@@ -41,44 +41,44 @@
 
 <pre>
 <code>
+
 ' Computes v^T w for a vector 
 set /dotproduct
-    (
-      do-to-all mul v w .
+    < (
+      do mul v w .
       collapse add ans  .
-    ) .
+    ) /v /w > .
 
-' matrix-multiply A B computes A^T B 
+' matrix-multiply A B computes A^T B
 set /matrix-multiply
-    (
+    < (
       set /i /t1 .
       set /out [ list . ] .
       while ( exist i B . )
             (
-              do-to-all < ( dotproduct /v t1 /w B:i . ) /v > A .
-              move /ans /res .
-              in out ( set i res . ) .
+              do < ( dotproduct t1 B:i . ) /t1 > A .
+              in out ( set i ans . ) .
               next i .
               move /ans /i .
             ) .
       answer out .
-    ) .
+    ) /A /B > .
 
 ' Computes A^T 
 set /transpose
-    (
+    < (
       set /i /t1 .
       set /out [ list . ] .
       while ( exist i A:/t1 . )
             (
-              do-to-all < ( answer t1:i . ) /t1 > A .
+              do < ( answer t1:i . ) /t1 > A .
               move /ans /res .
               in out ( set i res . ) .
               next i .
               move /ans /i .
             ) .
       answer out .
-    ) .
+    ) /A > .
 
 </code>
 </pre>
@@ -87,7 +87,7 @@ set /transpose
 
 <pre>
 <code>
-' takes a function as an argument and return left hand
+' takes an operation as an argument and return left hand
 ' riemmann sum over range
 
 set /integrate 
@@ -96,12 +96,13 @@ set /integrate
       set /x lb .
       set /int 0.0 .
       repeat n
-            (
-              set /int [ add int [ f /t x . ] . ] .
-              set /x [ add x delta . ] .
-            ) .
+             (
+               incr int [ f x . ] .
+               incr x delta .
+             ) .
       mul int delta .
     ) .
+
 
 </code>
 </pre>
