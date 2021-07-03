@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Register BASED ENVIRONMENT AND LANGUAGE
+   WOB is a Register BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBLE is distributed in the hope that it will be useful,
+   WOB is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "wob.h"
 
 #include <errno.h>
 
@@ -214,7 +214,7 @@ if (is_error(-1, reg->task->task)) return ;;
       
       if (d->type != Register)
         {
-          do_error("Expected a register", reg->task->task);
+          do_error("Expected a register.", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -1513,7 +1513,7 @@ if (is_error(-1, reg->task->task)) return ;;
     {
       arg_reg[i] = (registry*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE,
+  registry* ret_reg = new_registry(reg, WOB_HASH_SIZE,
                                    reg->task);
   data* d;
   arg a1;
@@ -1562,7 +1562,7 @@ if (is_error(-1, reg->task->task)) return ;;
             continue;
 
           compute(arg1, reg, a1);
-          d = lookup(reg, arbel_hash_ans, 0);
+          d = lookup(reg, wob_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans register.",
@@ -1877,7 +1877,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
 
   execute_0(arg2, (registry*) arg1->data);
   
-  data* ans = lookup((registry*) arg1->data, arbel_hash_ans, 0);
+  data* ans = lookup((registry*) arg1->data, wob_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1956,7 +1956,7 @@ if (arg2 != NULL && true && (!(arg2->type & Instruction)))
       if (is_error(-1, reg->task->task))
         break;
           
-      d = get(reg, arbel_hash_ans, 0);
+      d = get(reg, wob_hash_ans, 0);
 
       if (d == NULL)
         {
@@ -2226,7 +2226,7 @@ if (arg3 != NULL && true && (!(arg3->type & Register)))
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE, reg->task);
+  registry* r = new_registry(to_walk, WOB_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -2256,7 +2256,7 @@ if (arg3 != NULL && true && (!(arg3->type & Register)))
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, arbel_hash_ans, 0);
+      d1 = lookup(r, wob_hash_ans, 0);
 
       if (d1 == NULL)
         {
@@ -2268,7 +2268,7 @@ if (arg3 != NULL && true && (!(arg3->type & Register)))
       if (is_first)
         {
           free(first_name);
-          first_hash = arbel_hash_ans;
+          first_hash = wob_hash_ans;
           is_first = 0;
         }
       i++;
@@ -2276,7 +2276,7 @@ if (arg3 != NULL && true && (!(arg3->type & Register)))
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, arbel_hash_ans, 0);
+  d = lookup(r, wob_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -2770,11 +2770,11 @@ if (arg2 != NULL && true && (!(arg2->type & Registry)))
 
 ;
 
-      read_registry(f, (registry*) arg2->data);
+      read_outer(f, (registry*) arg2->data);
     }
   else
     {
-      read_registry(f, reg);
+      read_outer(f, reg);
     }
   gzclose(f);
 
@@ -4120,18 +4120,18 @@ if (arg3 != NULL && true && (!(arg3->type & String)))
   assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, (char*) arg3->data, 1);
 
-  if (reg->task->task->arbel_ll == NULL)
+  if (reg->task->task->wob_ll == NULL)
     {
       
-      reg->task->task->arbel_ll = malloc(sizeof(void*));
+      reg->task->task->wob_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->task->arbel_ll = realloc(reg->task->task->arbel_ll,
-                                    sizeof(void*)*(reg->task->task->arbel_ll_cnt+1));
+      reg->task->task->wob_ll = realloc(reg->task->task->wob_ll,
+                                    sizeof(void*)*(reg->task->task->wob_ll_cnt+1));
     }
-  reg->task->task->arbel_ll[reg->task->task->arbel_ll_cnt] = lib;
-  reg->task->task->arbel_ll_cnt++;
+  reg->task->task->wob_ll[reg->task->task->wob_ll_cnt] = lib;
+  reg->task->task->wob_ll_cnt++;
 
 }
 
@@ -4934,8 +4934,8 @@ if (arg3 != NULL && true && (!(arg3->type & Integer)))
   size_t length = u8_mbsnlen((unsigned char*) str,
                              byte_length-1);
 
-  start = arbel_location(start, length);
-  end = arbel_location(end, length);
+  start = wob_location(start, length);
+  end = wob_location(end, length);
 
   if ((start > length) || (start <= 0))
     {
@@ -5009,7 +5009,7 @@ if (is_error(-1, reg->task->task)) return ;;
 
   compute(a1.arg_array[0], reg->up, a1);
 
-  data* d = lookup(reg->up, arbel_hash_ans, 0);
+  data* d = lookup(reg->up, wob_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -5100,12 +5100,12 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 
 ;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->wob_stop_error_threshold;
+  reg->task->task->wob_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
   assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->wob_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
   is_error(0, reg->task->task);
@@ -5159,10 +5159,10 @@ if (arg1 != NULL && true && (!(arg1->type & Instruction)))
 
 ;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->wob_stop_error_threshold;
+  reg->task->task->wob_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->wob_stop_error_threshold = stop_thresh;
 }
 
 void
@@ -5210,9 +5210,9 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 ;
 
   if (*((bool*) arg1->data))
-    reg->task->task->arbel_print_error_messages = true;
+    reg->task->task->wob_print_error_messages = true;
   else
-    reg->task->task->arbel_print_error_messages = false;
+    reg->task->task->wob_print_error_messages = false;
 
 }
 
@@ -5312,7 +5312,7 @@ if (arg2 != NULL && true && (!(arg2->type & Operation)))
               assign_regstr(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
-              data* d = lookup(reg, arbel_hash_ans, 0);
+              data* d = lookup(reg, wob_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -5587,11 +5587,11 @@ if (argi != NULL && true && (!(argi->type & Register)))
 }
 
 void
-op_data (arg a, registry* reg)
+op_use (arg a, registry* reg)
 {
   
   
-  check_length(&a, 1+1, "data", reg->task->task);
+  check_length(&a, 1+1, "use", reg->task->task);
 if (is_error(-1, reg->task->task)) return ;;
 
   
@@ -5604,8 +5604,8 @@ if (true)
     if (arg1 == NULL)
       {
         char* err_msg;
-        err_msg = malloc(sizeof(char)*(strlen("<data> requires at least  arguments.")+digits(1)+1));
-        sprintf(err_msg, "<data> requires at least %d arguments.", 1);
+        err_msg = malloc(sizeof(char)*(strlen("<use> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<use> requires at least %d arguments.", 1);
         do_error(err_msg, reg->task->task);
         free(err_msg);
         return ;
@@ -5613,8 +5613,8 @@ if (true)
   }
 if (arg1 != NULL && true && (!(arg1->type & String)))
   {
-    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <data> should be of type String.")+digits(1)+1));
-    sprintf(err_msg, "Argument %d of <data> should be of type String.", 1);
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <use> should be of type String.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <use> should be of type String.", 1);
     do_error(err_msg, reg->task->task);
     free(err_msg);
     return ;
@@ -5625,9 +5625,9 @@ if (arg1 != NULL && true && (!(arg1->type & String)))
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen((char*) arg1->data)+
-                                     strlen(".darbs/")+
-                                     strlen("/.darb")+1));
-  sprintf(fname, "%s/.darbs/%s.darb", home, (char*) arg1->data);
+                                     strlen(".dwobs/")+
+                                     strlen("/.dwob")+1));
+  sprintf(fname, "%s/.dwobs/%s.dwob", home, (char*) arg1->data);
   gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
@@ -5894,7 +5894,7 @@ if (arg1 != NULL && true && (!(arg1->type & Boolean)))
 
 ;
 
-  reg->task->task->arbel_rehash = *((bool*) arg1->data);
+  reg->task->task->wob_rehash = *((bool*) arg1->data);
 }
 
 void
@@ -6006,7 +6006,7 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  registry* r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  registry* r = new_registry(reg, WOB_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -6049,6 +6049,126 @@ if (arg1 != NULL && true && (!(arg1->type & Integer)))
   ret_ans(reg, d);
   
 }
+
+void
+op_make_clock (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "make-clock", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<make-clock> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<make-clock> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Registry)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <make-clock> should be of type Registry.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <make-clock> should be of type Registry.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  struct tm time;
+
+  registry* r = (registry*) arg1->data;
+  data* d;
+
+  d = get(r, hash_str("milliseconds"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /milliseconds.", reg->task->task);
+      return;
+    }
+
+  mpz_t* z_ms;
+  z_ms = (mpz_t*) d->data;
+  time_t ms = mpz_get_si(*z_ms);
+
+  d = get(r, hash_str("seconds"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /seconds.", reg->task->task);
+      return;
+    }
+
+  time.tm_sec = mpz_get_si(*((mpz_t*) d->data));
+
+  d = get(r, hash_str("minute"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /minute.", reg->task->task);
+      return;
+    }
+
+  time.tm_min = mpz_get_si(*((mpz_t*) d->data));
+  
+  d = get(r, hash_str("hour"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /hour.", reg->task->task);
+      return;
+    }
+
+  time.tm_hour = mpz_get_si(*((mpz_t*) d->data));
+     
+  d = get(r, hash_str("day"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /day.", reg->task->task);
+      return;
+    }
+
+  time.tm_mday = mpz_get_si(*((mpz_t*) d->data));
+
+  d = get(r, hash_str("month"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /month.", reg->task->task);
+      return;
+    }
+
+  time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) - 1;
+  
+
+  d = get(r, hash_str("year"), 0);
+  if (d == NULL || (d->type != Integer))
+    {
+      do_error("No Integer data at /year.", reg->task->task);
+      return;
+    }
+
+  time.tm_year = mpz_get_si(*((mpz_t*) d->data)) - 1900;
+
+  time_t time_sec;
+  time_sec = mktime(&time);
+
+  time_sec = 1000*time_sec + ms;
+
+  mpz_t z;
+  mpz_init_set_si(z, time_sec);
+  assign_int(&d, z);
+  ret_ans(reg,d);
+}
+
+       
 
 void
 op_task (arg a, registry* reg)
@@ -6152,7 +6272,7 @@ if (arg3 != NULL && true && (!(arg3->type & Registry)))
   if (init_state == NULL)
     {
       t->state = new_registry(t->task->current_parse_registry,
-                              ARBEL_HASH_SIZE,
+                              WOB_HASH_SIZE,
                               t);
     }
   else
@@ -6164,7 +6284,7 @@ if (arg3 != NULL && true && (!(arg3->type & Registry)))
   t->task->current_parse_registry = t->state;
 
   t->code = copy_instruction((instruction*) arg2->data);
-  t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+  t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
   
   t->pid = -1;
   t->thread = NULL;
@@ -6705,6 +6825,164 @@ if (arg3 != NULL && true && (!(arg3->type & Task)))
       pthread_mutex_unlock(&t->lock);
     }
 }
+
+void
+op_rand (arg a, registry* reg)
+{
+  
+
+  if (a.length >= 2)
+    {
+      
+      
+      
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<rand> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<rand> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Integer)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <rand> should be of type Integer.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <rand> should be of type Integer.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+      srand(mpz_get_si(*((mpz_t*) arg1->data)));
+    }
+
+  double r = ((double) rand()) / ((double) RAND_MAX);
+  data* d;
+  assign_real(&d, r);
+  ret_ans(reg,d);
+}
+
+void op_floor (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "floor", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<floor> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<floor> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Real)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <floor> should be of type Real.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <floor> should be of type Real.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  int r = (int) floor(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+void op_ceiling (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 1+1, "ceiling", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  
+  
+  
+data* arg1 = resolve(a.arg_array[1], reg);
+
+if (true)
+  {
+    if (arg1 == NULL)
+      {
+        char* err_msg;
+        err_msg = malloc(sizeof(char)*(strlen("<ceiling> requires at least  arguments.")+digits(1)+1));
+        sprintf(err_msg, "<ceiling> requires at least %d arguments.", 1);
+        do_error(err_msg, reg->task->task);
+        free(err_msg);
+        return ;
+      }
+  }
+if (arg1 != NULL && true && (!(arg1->type & Real)))
+  {
+    char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <ceiling> should be of type Real.")+digits(1)+1));
+    sprintf(err_msg, "Argument %d of <ceiling> should be of type Real.", 1);
+    do_error(err_msg, reg->task->task);
+    free(err_msg);
+    return ;
+  }
+
+;
+
+  int r = (int) ceil(*((double*) arg1->data));
+  mpz_t res;
+  mpz_init(res);
+  mpz_set_si(res, r);
+  data* d;
+  assign_int(&d, res);
+  ret_ans(reg,d);
+}
+
+void
+op_interpreter (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 0+1, "interpreter", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  data* d1 = NULL;
+  data* d2 = NULL;
+
+  for (int i=1; i < a.length; i = i + 2)
+    {
+      d1 = a.arg_array[i];
+      if (d1->type != Register)
+        {
+          do_error("Expected a register.", reg->task->task);
+          return;
+        }
+
+      d2 = resolve(a.arg_array[i+1], reg);
+      d2 = copy_data(d2);
+      set(wob_options, d2, ((regstr*) d1->data)->name, 1);
+    }
+}
+
   
 void
 add_basic_ops (registry* reg)
@@ -6760,8 +7038,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_range, NULL, NULL, 0);
   set(reg,d,"range",1);
 
-  assign_op(&d, op_data, NULL, NULL, 0);
-  set(reg,d,"data",1);
+  assign_op(&d, op_use, NULL, NULL, 0);
+  set(reg,d,"use",1);
 
 
   /* Numeric operations */
@@ -6819,6 +7097,13 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_decr, NULL, NULL, 0);
   set(reg,d,"decr",1);
+
+  assign_op(&d, op_floor, NULL, NULL, 0);
+  set(reg,d, "floor",1);
+
+  assign_op(&d, op_ceiling, NULL, NULL, 0);
+  set(reg,d, "ceiling",1);
+  
 
   /* Boolean operations */
 
@@ -7027,6 +7312,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_make_time, NULL, NULL, 0);
   set(reg,d,"make-time",1);
 
+  assign_op(&d, op_make_clock, NULL, NULL, 0);
+  set(reg,d,"make-clock",1);
+
 
   /* Nothing operations */
 
@@ -7053,6 +7341,16 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_accept_or, NULL, NULL, 0);
   set(reg,d,"accept-or",1);
+
+  /* Random operations */
+
+  assign_op(&d, op_rand, NULL, NULL, 0);
+  set(reg, d, "rand", 1);
+
+  /* Interpreter options */
+
+  assign_op(&d, op_interpreter, NULL, NULL, 0);
+  set(reg, d, "interpreter", 1);
 
 
 }
