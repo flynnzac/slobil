@@ -1,9 +1,9 @@
 ACLOCAL_AMFLAGS=-I m4
 
-SUFFIXES = .pshm .arb
+SUFFIXES = .pshm .wob
 .pshm.c:
 	cat $< | pushmac > $@
-# .arb.log:
+# .wob.log:
 # 	./$< > $@
 
 
@@ -19,22 +19,22 @@ endif
 
 man1_MANS = docs/wob.1
 
-TESTS = test/ops/op_arithmetic.arb
-TESTS += test/ops/op_answer.arb
-TESTS += test/ops/op_comparison.arb
-TESTS += test/ops/op_delete.arb
-TESTS += test/ops/op_exist.arb
-TESTS += test/ops/op_get.arb
-TESTS += test/ops/op_if.arb
-TESTS += test/ops/op_list.arb
-TESTS += test/ops/op_move.arb
-TESTS += test/ops/op_registry.arb
-TESTS += test/ops/op_set.arb
-TESTS += test/ops/op_string_append.arb
-TESTS += test/ops/op_string_length.arb
-TESTS += test/ops/op_do.arb
-TESTS += test/ops/op_next.arb
-TESTS += test/ops/op_last.arb
+TESTS = test/ops/op_arithmetic.wob
+TESTS += test/ops/op_answer.wob
+TESTS += test/ops/op_comparison.wob
+TESTS += test/ops/op_delete.wob
+TESTS += test/ops/op_exist.wob
+TESTS += test/ops/op_get.wob
+TESTS += test/ops/op_if.wob
+TESTS += test/ops/op_list.wob
+TESTS += test/ops/op_move.wob
+TESTS += test/ops/op_registry.wob
+TESTS += test/ops/op_set.wob
+TESTS += test/ops/op_string_append.wob
+TESTS += test/ops/op_string_length.wob
+TESTS += test/ops/op_do.wob
+TESTS += test/ops/op_next.wob
+TESTS += test/ops/op_last.wob
 
 
 lib_LTLIBRARIES = libwob.la
