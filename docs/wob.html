@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-07-03 Sat 00:46 -->
+<!-- 2021-07-03 Sat 01:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>WOB</title>
@@ -272,7 +272,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-WOB<br>Zach Flynn<br>2021-07-03 Sat 00:46
+WOB<br>Zach Flynn<br>2021-07-03 Sat 01:02
 </div>
 <div id="content">
 <h1 class="title">WOB</h1>
@@ -280,144 +280,144 @@ WOB<br>Zach Flynn<br>2021-07-03 Sat 00:46
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc33f3da">1. Introduction</a>
+<li><a href="#orgf5d2a94">1. Introduction</a>
 <ul>
-<li><a href="#org7a9eaf2">1.1. Why is it called "WOB"?</a></li>
+<li><a href="#org2d6177b">1.1. Why is it called "WOB"?</a></li>
 </ul>
 </li>
-<li><a href="#orgabd5f95">2. The Language</a>
+<li><a href="#org65535b4">2. The Language</a>
 <ul>
-<li><a href="#orgeb25b4b">2.1. Statements and syntax</a>
+<li><a href="#org8f39348">2.1. Statements and syntax</a>
 <ul>
-<li><a href="#org456cc84">2.1.1. Instructions</a></li>
-<li><a href="#orgdf52bd7">2.1.2. Greedy substatements and the <code>/ans</code> register</a></li>
-<li><a href="#org2b874de">2.1.3. Lazy substatements</a></li>
-<li><a href="#org420d839">2.1.4. Convert an instruction to an operation</a></li>
-<li><a href="#org0d1c13e">2.1.5. Comments</a></li>
+<li><a href="#org44aa315">2.1.1. Instructions</a></li>
+<li><a href="#org3acbe77">2.1.2. Greedy substatements and the <code>/ans</code> register</a></li>
+<li><a href="#org57f6141">2.1.3. Lazy substatements</a></li>
+<li><a href="#org61ac6b0">2.1.4. Convert an instruction to an operation</a></li>
+<li><a href="#org01d3133">2.1.5. Comments</a></li>
 </ul>
 </li>
-<li><a href="#orgd4620a3">2.2. Registries</a>
+<li><a href="#orgb5a50f3">2.2. Registries</a>
 <ul>
-<li><a href="#org3eb140e">2.2.1. Additional details about colon notation</a></li>
+<li><a href="#org16bc2f5">2.2.1. Additional details about colon notation</a></li>
 </ul>
 </li>
-<li><a href="#orgccbd6b6">2.3. Registers</a></li>
-<li><a href="#orgcdd0c13">2.4. Environment</a>
+<li><a href="#org30243bd">2.3. Registers</a></li>
+<li><a href="#org8df17d4">2.4. Environment</a>
 <ul>
-<li><a href="#orgcf4906a">2.4.1. Saving state</a></li>
-<li><a href="#orgff4f50e">2.4.2. Interacting with the user</a></li>
+<li><a href="#orgc6ea7d1">2.4.1. Saving state</a></li>
+<li><a href="#org9e659f1">2.4.2. Interacting with the user</a></li>
 </ul>
 </li>
-<li><a href="#org971383b">2.5. Tasks (concurrent programs)</a></li>
+<li><a href="#org951efc1">2.5. Tasks (concurrent programs)</a></li>
 </ul>
 </li>
-<li><a href="#org603cf8f">3. A Complete Example Program</a>
+<li><a href="#orga76f313">3. A Complete Example Program</a>
 <ul>
-<li><a href="#org8ab5a5d">3.1. Source Code</a></li>
-<li><a href="#org68d3f79">3.2. Building the Code</a></li>
-<li><a href="#org14ddca9">3.3. Using the code</a></li>
+<li><a href="#org4fbb241">3.1. Source Code</a></li>
+<li><a href="#orgdbe5885">3.2. Building the Code</a></li>
+<li><a href="#org17caf8a">3.3. Using the code</a></li>
 </ul>
 </li>
-<li><a href="#org59e3c88">4. Examples</a>
+<li><a href="#org29bde56">4. Examples</a>
 <ul>
-<li><a href="#org1680385">4.1. Quicksort</a></li>
-<li><a href="#orgdb75108">4.2. A Line-Oriented Text Editor</a></li>
-<li><a href="#orgfa96086">4.3. Numerical Differentiation</a></li>
-<li><a href="#orgfbbe42f">4.4. Compute Factorial</a>
+<li><a href="#orgce12dbd">4.1. Quicksort</a></li>
+<li><a href="#org410977a">4.2. A Line-Oriented Text Editor</a></li>
+<li><a href="#org0dfd46b">4.3. Numerical Differentiation</a></li>
+<li><a href="#org5707bd5">4.4. Compute Factorial</a>
 <ul>
-<li><a href="#org680bbbc">4.4.1. Note on Recursion</a></li>
+<li><a href="#orgf532c22">4.4.1. Note on Recursion</a></li>
 </ul>
 </li>
-<li><a href="#org134e15b">4.5. Numerical Integration</a></li>
-<li><a href="#orgb6912ab">4.6. Basic Linear Algebra</a></li>
-<li><a href="#orgb9417c2">4.7. Split a String</a></li>
-<li><a href="#org3b10678">4.8. Linking C code</a></li>
-<li><a href="#orgacf9412">4.9. Concurrent Programming</a></li>
+<li><a href="#orgd7d10a7">4.5. Numerical Integration</a></li>
+<li><a href="#orgfac710d">4.6. Basic Linear Algebra</a></li>
+<li><a href="#orgb1cd753">4.7. Split a String</a></li>
+<li><a href="#org2b9eca7">4.8. Linking C code</a></li>
+<li><a href="#org9827152">4.9. Concurrent Programming</a></li>
 </ul>
 </li>
-<li><a href="#org142b0ee">5. Reference</a>
+<li><a href="#org692ecc8">5. Reference</a>
 <ul>
-<li><a href="#org4d8cc6c">5.1. Registries</a>
+<li><a href="#org4012926">5.1. Registries</a>
 <ul>
-<li><a href="#org627adfa">5.1.1. Short description</a></li>
-<li><a href="#org6d446d6">5.1.2. Implementation details</a></li>
-<li><a href="#org191e229">5.1.3. Registry operations</a></li>
+<li><a href="#org238c74a">5.1.1. Short description</a></li>
+<li><a href="#orgf493676">5.1.2. Implementation details</a></li>
+<li><a href="#org1880b7a">5.1.3. Registry operations</a></li>
 </ul>
 </li>
-<li><a href="#org7c3c504">5.2. Reals and Integers</a>
+<li><a href="#orgc2b551f">5.2. Reals and Integers</a>
 <ul>
-<li><a href="#org4218a49">5.2.1. Short description</a></li>
-<li><a href="#orgdb21fbd">5.2.2. Implementation details</a></li>
-<li><a href="#org4028817">5.2.3. Real and Integer operations</a></li>
+<li><a href="#org913f708">5.2.1. Short description</a></li>
+<li><a href="#org6d584f5">5.2.2. Implementation details</a></li>
+<li><a href="#org9dcd15c">5.2.3. Real and Integer operations</a></li>
 </ul>
 </li>
-<li><a href="#orgb8de40c">5.3. Strings</a>
+<li><a href="#org26c710c">5.3. Strings</a>
 <ul>
-<li><a href="#orgd5bbeca">5.3.1. Short description</a></li>
-<li><a href="#org21cba0b">5.3.2. Implementation details</a></li>
-<li><a href="#org1462fbb">5.3.3. String operations</a></li>
+<li><a href="#org1b4d7f7">5.3.1. Short description</a></li>
+<li><a href="#org46768cd">5.3.2. Implementation details</a></li>
+<li><a href="#orge9f90a0">5.3.3. String operations</a></li>
 </ul>
 </li>
-<li><a href="#org192e149">5.4. Registers</a>
+<li><a href="#org41e7316">5.4. Registers</a>
 <ul>
-<li><a href="#org24052be">5.4.1. Short description</a></li>
-<li><a href="#orge11fd52">5.4.2. Implementation details</a></li>
-<li><a href="#orgdd8811a">5.4.3. Register operations</a></li>
+<li><a href="#orgaa5540d">5.4.1. Short description</a></li>
+<li><a href="#org1c500f6">5.4.2. Implementation details</a></li>
+<li><a href="#orgaf0e041">5.4.3. Register operations</a></li>
 </ul>
 </li>
-<li><a href="#org54425e6">5.5. Booleans</a>
+<li><a href="#org480f839">5.5. Booleans</a>
 <ul>
-<li><a href="#org5098a2d">5.5.1. Short description</a></li>
-<li><a href="#orgf0ff6b0">5.5.2. Implementation details</a></li>
-<li><a href="#org9f4e7a8">5.5.3. Boolean operations</a></li>
+<li><a href="#orgbd22c39">5.5.1. Short description</a></li>
+<li><a href="#orgaab8550">5.5.2. Implementation details</a></li>
+<li><a href="#org4899b26">5.5.3. Boolean operations</a></li>
 </ul>
 </li>
-<li><a href="#org43c2c56">5.6. Instructions</a>
+<li><a href="#org27e8ad4">5.6. Instructions</a>
 <ul>
-<li><a href="#org38cf8fc">5.6.1. Short description</a></li>
-<li><a href="#org2869822">5.6.2. Implementation details</a></li>
-<li><a href="#org5aaf8f7">5.6.3. Instruction operations</a></li>
+<li><a href="#orgda3e231">5.6.1. Short description</a></li>
+<li><a href="#org3ac4687">5.6.2. Implementation details</a></li>
+<li><a href="#orgb3391bc">5.6.3. Instruction operations</a></li>
 </ul>
 </li>
-<li><a href="#orgfa792e3">5.7. Files</a>
+<li><a href="#org8cd3cb3">5.7. Files</a>
 <ul>
-<li><a href="#org5e510fc">5.7.1. Short description</a></li>
-<li><a href="#orgf9c946e">5.7.2. Implementation details</a></li>
-<li><a href="#orgc1d05a7">5.7.3. File operations</a></li>
+<li><a href="#org98b1315">5.7.1. Short description</a></li>
+<li><a href="#orga654ae4">5.7.2. Implementation details</a></li>
+<li><a href="#orged55a67">5.7.3. File operations</a></li>
 </ul>
 </li>
-<li><a href="#orgd69e706">5.8. Task Operations</a>
+<li><a href="#orgfc24c4b">5.8. Task Operations</a>
 <ul>
-<li><a href="#org863d651">5.8.1. Short description</a></li>
-<li><a href="#orgf91c6d7">5.8.2. Implementation details</a></li>
-<li><a href="#orgba8fd62">5.8.3. Task operations</a></li>
+<li><a href="#orga8e9ec6">5.8.1. Short description</a></li>
+<li><a href="#org75cda29">5.8.2. Implementation details</a></li>
+<li><a href="#orga115514">5.8.3. Task operations</a></li>
 </ul>
 </li>
-<li><a href="#org9460b8c">5.9. Control flow operations</a></li>
-<li><a href="#org659433e">5.10. Environment operations</a>
+<li><a href="#org5ecfcb1">5.9. Control flow operations</a></li>
+<li><a href="#org0501d3d">5.10. Environment operations</a>
 <ul>
-<li><a href="#org0aa8335">5.10.1. Modify the /ans register</a></li>
-<li><a href="#org736b46e">5.10.2. Exit WOB</a></li>
-<li><a href="#org0d9f127">5.10.3. Print output</a></li>
-<li><a href="#org7e3f643">5.10.4. Input and output files and state</a></li>
-<li><a href="#orgda54336">5.10.5. Error handling</a></li>
+<li><a href="#org03c95f2">5.10.1. Modify the /ans register</a></li>
+<li><a href="#orgc733553">5.10.2. Exit WOB</a></li>
+<li><a href="#org9bc1b5e">5.10.3. Print output</a></li>
+<li><a href="#org07ff355">5.10.4. Input and output files and state</a></li>
+<li><a href="#org81b7953">5.10.5. Error handling</a></li>
 </ul>
 </li>
-<li><a href="#org4ac93ad">5.11. System operations</a>
+<li><a href="#org4f089a8">5.11. System operations</a>
 <ul>
-<li><a href="#org8f45cca">5.11.1. Interacting with the shell</a></li>
-<li><a href="#org6afb36f">5.11.2. Time</a></li>
+<li><a href="#orgd499c17">5.11.1. Interacting with the shell</a></li>
+<li><a href="#orgc936be7">5.11.2. Time</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org0630b95">6. GNU Free Documentation License</a></li>
+<li><a href="#orgd67988d">6. GNU Free Documentation License</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc33f3da" class="outline-2">
-<h2 id="orgc33f3da"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgf5d2a94" class="outline-2">
+<h2 id="orgf5d2a94"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 WOB is an environment and programming language designed to make it easy to create interactive command-line programs.
@@ -445,22 +445,29 @@ Where <code>hours</code> and <code>report</code> are WOB commands that have been
 </p>
 </div>
 
-<div id="outline-container-org7a9eaf2" class="outline-3">
-<h3 id="org7a9eaf2"><span class="section-number-3">1.1</span> Why is it called "WOB"?</h3>
+<div id="outline-container-org2d6177b" class="outline-3">
+<h3 id="org2d6177b"><span class="section-number-3">1.1</span> Why is it called "WOB"?</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-It is called WOB because I wrote the original version of it on my morning bus ride to work.  WOB was <b>W</b>ritten <b>O</b>n a <b>B</b>us.  An earlier version of the language was called ARBEL (A Registry-Based Environment and Language) which was a good name, but (1) it is the name of a mountain in a country that I've never visited and (2) it had five letters while WOB has three letters.
+It is called WOB because I wrote the original version of it on my morning bus ride to work.  WOB was <b>W</b>ritten <b>O</b>n a <b>B</b>us.  
 </p>
+
+
+<div class="figure">
+<p><img src="bus699.jpg" alt="bus699.jpg" width="300px" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Where WOB was Developed</p>
+</div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgabd5f95" class="outline-2">
-<h2 id="orgabd5f95"><span class="section-number-2">2</span> The Language</h2>
+<div id="outline-container-org65535b4" class="outline-2">
+<h2 id="org65535b4"><span class="section-number-2">2</span> The Language</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgeb25b4b" class="outline-3">
-<h3 id="orgeb25b4b"><span class="section-number-3">2.1</span> Statements and syntax</h3>
+<div id="outline-container-org8f39348" class="outline-3">
+<h3 id="org8f39348"><span class="section-number-3">2.1</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A single line of WOB code is called a statement.  The first element of the statement is one of WOB's <i>operators</i> and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
@@ -517,8 +524,8 @@ There are four parenthesis types in WOB: open parentheis ("()"), closed parenthe
 </p>
 </div>
 
-<div id="outline-container-org456cc84" class="outline-4">
-<h4 id="org456cc84"><span class="section-number-4">2.1.1</span> Instructions</h4>
+<div id="outline-container-org44aa315" class="outline-4">
+<h4 id="org44aa315"><span class="section-number-4">2.1.1</span> Instructions</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 Open parenthesis store the code itself as an Instruction object to be executed later using the operation <code>call</code>.  For example,
@@ -561,8 +568,8 @@ Instruction objects can also be used in the <code>while</code> looping operation
 </div>
 </div>
 
-<div id="outline-container-orgdf52bd7" class="outline-4">
-<h4 id="orgdf52bd7"><span class="section-number-4">2.1.2</span> Greedy substatements and the <code>/ans</code> register</h4>
+<div id="outline-container-org3acbe77" class="outline-4">
+<h4 id="org3acbe77"><span class="section-number-4">2.1.2</span> Greedy substatements and the <code>/ans</code> register</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 Closed parenthesis ("[]") execute the statements inside of them immediately and evaluate to whatever the code sets the <code>/ans</code> register to.  The purpose of these statements is to avoid needing to define temporary registers for intermediate calculations.  For example,
@@ -602,8 +609,8 @@ The other reason that the <code>/ans</code> register is special is, as mentioned
 </div>
 </div>
 
-<div id="outline-container-org2b874de" class="outline-4">
-<h4 id="org2b874de"><span class="section-number-4">2.1.3</span> Lazy substatements</h4>
+<div id="outline-container-org57f6141" class="outline-4">
+<h4 id="org57f6141"><span class="section-number-4">2.1.3</span> Lazy substatements</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated <i>if</i> we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the <code>/ans</code> register to.  This form of evaluation is often called "lazy evaluation". We can think of closed parenthesis as marking expressions we want to "greedily evaluate" and curly parenthesis as marking expressions to "lazily evaluate".  Lazy evaluation is useful for the <code>if</code> operation and other, similar instructions.  For example,
@@ -633,8 +640,8 @@ If we had instead used closed parenthesis, both statements would execute everyti
 </div>
 </div>
 
-<div id="outline-container-org420d839" class="outline-4">
-<h4 id="org420d839"><span class="section-number-4">2.1.4</span> Convert an instruction to an operation</h4>
+<div id="outline-container-org61ac6b0" class="outline-4">
+<h4 id="org61ac6b0"><span class="section-number-4">2.1.4</span> Convert an instruction to an operation</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 Angle brackets (&lt;&gt;) transform an instruction object into an operation object.  Instructions are code blocks formed using open parenthesis <code>()</code> that operate within whatever registry the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the <code>op</code> operation provide two alternative ways of doing this.   For example:
@@ -661,8 +668,8 @@ Note that there is no period used to end an operation definition in the angle br
 </div>
 </div>
 
-<div id="outline-container-org0d1c13e" class="outline-4">
-<h4 id="org0d1c13e"><span class="section-number-4">2.1.5</span> Comments</h4>
+<div id="outline-container-org01d3133" class="outline-4">
+<h4 id="org01d3133"><span class="section-number-4">2.1.5</span> Comments</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <p>
 The last syntax element is the comment.  To write a comment in WOB, use a single quote (<code>'</code>) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
@@ -680,8 +687,8 @@ That is really it as far as syntax is concerned.  Periods terminate statements, 
 </div>
 </div>
 
-<div id="outline-container-orgd4620a3" class="outline-3">
-<h3 id="orgd4620a3"><span class="section-number-3">2.2</span> Registries</h3>
+<div id="outline-container-orgb5a50f3" class="outline-3">
+<h3 id="orgb5a50f3"><span class="section-number-3">2.2</span> Registries</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 In WOB, code is executed inside <i>registries</i>.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the <code>registry</code> operation,
@@ -803,8 +810,8 @@ Registries are flexible data structures.  They can be used to represent structur
 </p>
 </div>
 
-<div id="outline-container-org3eb140e" class="outline-4">
-<h4 id="org3eb140e"><span class="section-number-4">2.2.1</span> Additional details about colon notation</h4>
+<div id="outline-container-org16bc2f5" class="outline-4">
+<h4 id="org16bc2f5"><span class="section-number-4">2.2.1</span> Additional details about colon notation</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 The colon notation can be nested.
@@ -840,8 +847,8 @@ It can also choose the register by referencing the value of another register.
 </div>
 </div>
 
-<div id="outline-container-orgccbd6b6" class="outline-3">
-<h3 id="orgccbd6b6"><span class="section-number-3">2.3</span> Registers</h3>
+<div id="outline-container-org30243bd" class="outline-3">
+<h3 id="org30243bd"><span class="section-number-3">2.3</span> Registers</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in WOB.  For example, you can set other registers to registers and use those values wherever you would use registers.
@@ -879,12 +886,12 @@ Registers are data denoting locations so they are often useful ways to manipulat
 </div>
 </div>
 
-<div id="outline-container-orgcdd0c13" class="outline-3">
-<h3 id="orgcdd0c13"><span class="section-number-3">2.4</span> Environment</h3>
+<div id="outline-container-org8df17d4" class="outline-3">
+<h3 id="org8df17d4"><span class="section-number-3">2.4</span> Environment</h3>
 <div class="outline-text-3" id="text-2-4">
 </div>
-<div id="outline-container-orgcf4906a" class="outline-4">
-<h4 id="orgcf4906a"><span class="section-number-4">2.4.1</span> Saving state</h4>
+<div id="outline-container-orgc6ea7d1" class="outline-4">
+<h4 id="orgc6ea7d1"><span class="section-number-4">2.4.1</span> Saving state</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 WOB is not only a programming language. It is also an <i>environment</i>.  The current state of WOB &#x2014; the values and where they are located in the registry &#x2014; can be saved to disk and re-loaded later on, using the <code>save</code> and <code>load</code> operations.
@@ -921,8 +928,8 @@ Where <code>old-stuff</code> is a registry.
 </div>
 </div>
 
-<div id="outline-container-orgff4f50e" class="outline-4">
-<h4 id="orgff4f50e"><span class="section-number-4">2.4.2</span> Interacting with the user</h4>
+<div id="outline-container-org9e659f1" class="outline-4">
+<h4 id="org9e659f1"><span class="section-number-4">2.4.2</span> Interacting with the user</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 One of WOB's strengths is in rapidly-developing interactive programs.  WOB's syntax is command-like so interaction in such a program can often be done using WOB's prompt.  These types of programs often require input from the user and the ability to interact with other non-WOB programs on the computer.  
@@ -971,8 +978,8 @@ ans = <span style="color: #4E9A06;">"/home/zlf"</span>
 </div>
 </div>
 
-<div id="outline-container-org971383b" class="outline-3">
-<h3 id="org971383b"><span class="section-number-3">2.5</span> Tasks (concurrent programs)</h3>
+<div id="outline-container-org951efc1" class="outline-3">
+<h3 id="org951efc1"><span class="section-number-3">2.5</span> Tasks (concurrent programs)</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 WOB can be used to write concurrent (multi-threaded) programs using Task objects.  WOB's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
@@ -1093,16 +1100,16 @@ Alternatively, the <code>select</code> operation executes one of several instruc
 </div>
 </div>
 
-<div id="outline-container-org603cf8f" class="outline-2">
-<h2 id="org603cf8f"><span class="section-number-2">3</span> A Complete Example Program</h2>
+<div id="outline-container-orga76f313" class="outline-2">
+<h2 id="orga76f313"><span class="section-number-2">3</span> A Complete Example Program</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the <code>start</code> and <code>stop</code> instructions. And then the <code>day-time</code> instruction to output the hours for each client by day.
 </p>
 </div>
 
-<div id="outline-container-org8ab5a5d" class="outline-3">
-<h3 id="org8ab5a5d"><span class="section-number-3">3.1</span> Source Code</h3>
+<div id="outline-container-org4fbb241" class="outline-3">
+<h3 id="org4fbb241"><span class="section-number-3">3.1</span> Source Code</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-wob"><span style="color: #204A87;">' Initial state</span>
@@ -1377,8 +1384,8 @@ set <span style="color: #0084C8; font-weight: bold;">/rewind-last</span>
 </div>
 </div>
 
-<div id="outline-container-org68d3f79" class="outline-3">
-<h3 id="org68d3f79"><span class="section-number-3">3.2</span> Building the Code</h3>
+<div id="outline-container-orgdbe5885" class="outline-3">
+<h3 id="orgdbe5885"><span class="section-number-3">3.2</span> Building the Code</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We can then use a script like the following, supposing we have saved the above code in a file <i>billable.arb</i>, to build a binary version of the program in a convenient location.
@@ -1392,8 +1399,8 @@ We can then use a script like the following, supposing we have saved the above c
 </div>
 </div>
 
-<div id="outline-container-org14ddca9" class="outline-3">
-<h3 id="org14ddca9"><span class="section-number-3">3.3</span> Using the code</h3>
+<div id="outline-container-org17caf8a" class="outline-3">
+<h3 id="org17caf8a"><span class="section-number-3">3.3</span> Using the code</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Then, whenever we would like to load the code, we can simply do:
@@ -1410,12 +1417,12 @@ Then all the instructions from the <i>billable</i> program are available to us.
 </div>
 </div>
 
-<div id="outline-container-org59e3c88" class="outline-2">
-<h2 id="org59e3c88"><span class="section-number-2">4</span> Examples</h2>
+<div id="outline-container-org29bde56" class="outline-2">
+<h2 id="org29bde56"><span class="section-number-2">4</span> Examples</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org1680385" class="outline-3">
-<h3 id="org1680385"><span class="section-number-3">4.1</span> Quicksort</h3>
+<div id="outline-container-orgce12dbd" class="outline-3">
+<h3 id="orgce12dbd"><span class="section-number-3">4.1</span> Quicksort</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-wob">set <span style="color: #0084C8; font-weight: bold;">/swap</span>
@@ -1521,8 +1528,8 @@ t4 of type Integer, value: 1
 </div>
 </div>
 
-<div id="outline-container-orgdb75108" class="outline-3">
-<h3 id="orgdb75108"><span class="section-number-3">4.2</span> A Line-Oriented Text Editor</h3>
+<div id="outline-container-org410977a" class="outline-3">
+<h3 id="org410977a"><span class="section-number-3">4.2</span> A Line-Oriented Text Editor</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This example is a simple method of building WOB applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
@@ -1577,8 +1584,8 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-orgfa96086" class="outline-3">
-<h3 id="orgfa96086"><span class="section-number-3">4.3</span> Numerical Differentiation</h3>
+<div id="outline-container-org0dfd46b" class="outline-3">
+<h3 id="org0dfd46b"><span class="section-number-3">4.3</span> Numerical Differentiation</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-wob"><span style="color: #204A87;">' Compute the numerical derivative of an operation that takes an arg</span>
@@ -1607,8 +1614,8 @@ ans = 2.0
 </div>
 </div>
 
-<div id="outline-container-orgfbbe42f" class="outline-3">
-<h3 id="orgfbbe42f"><span class="section-number-3">4.4</span> Compute Factorial</h3>
+<div id="outline-container-org5707bd5" class="outline-3">
+<h3 id="org5707bd5"><span class="section-number-3">4.4</span> Compute Factorial</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-wob"><span style="color: #204A87;">' compute a factorial using while</span>
@@ -1652,8 +1659,8 @@ ans = 120
 </div>
 </div>
 
-<div id="outline-container-org680bbbc" class="outline-4">
-<h4 id="org680bbbc"><span class="section-number-4">4.4.1</span> Note on Recursion</h4>
+<div id="outline-container-orgf532c22" class="outline-4">
+<h4 id="orgf532c22"><span class="section-number-4">4.4.1</span> Note on Recursion</h4>
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 If an instruction is defined recursively as <code>factorial-recurse</code> is above, it matters that the Instruction we are executing is in the register <code>factorial-recurse</code>.  This will usually be the case, but suppose, after executing the above we ran the following code:
@@ -1692,8 +1699,8 @@ Operations cannot be directly defined recursively, but Instructions can be.  Tha
 </div>
 </div>
 
-<div id="outline-container-org134e15b" class="outline-3">
-<h3 id="org134e15b"><span class="section-number-3">4.5</span> Numerical Integration</h3>
+<div id="outline-container-orgd7d10a7" class="outline-3">
+<h3 id="orgd7d10a7"><span class="section-number-3">4.5</span> Numerical Integration</h3>
 <div class="outline-text-3" id="text-4-5">
 <div class="org-src-container">
 <pre class="src src-wob"><span style="color: #204A87;">' takes an operation as an argument and return left hand</span>
@@ -1725,8 +1732,8 @@ ans = 0.332834
 </div>
 </div>
 
-<div id="outline-container-orgb6912ab" class="outline-3">
-<h3 id="orgb6912ab"><span class="section-number-3">4.6</span> Basic Linear Algebra</h3>
+<div id="outline-container-orgfac710d" class="outline-3">
+<h3 id="orgfac710d"><span class="section-number-3">4.6</span> Basic Linear Algebra</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 This example demonstrates both application methods like <code>do</code> and <code>collapse</code> as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
@@ -1800,8 +1807,8 @@ t2 of type Integer, value: 25
 </div>
 </div>
 
-<div id="outline-container-orgb9417c2" class="outline-3">
-<h3 id="orgb9417c2"><span class="section-number-3">4.7</span> Split a String</h3>
+<div id="outline-container-orgb1cd753" class="outline-3">
+<h3 id="orgb1cd753"><span class="section-number-3">4.7</span> Split a String</h3>
 <div class="outline-text-3" id="text-4-7">
 <div class="org-src-container">
 <pre class="src src-wob"><span style="color: #204A87;">' Tokenize a string /line by splitting on string /sep</span>
@@ -1847,8 +1854,8 @@ t3 of type String, value: 3
 </div>
 </div>
 
-<div id="outline-container-org3b10678" class="outline-3">
-<h3 id="org3b10678"><span class="section-number-3">4.8</span> Linking C code</h3>
+<div id="outline-container-org2b9eca7" class="outline-3">
+<h3 id="org2b9eca7"><span class="section-number-3">4.8</span> Linking C code</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 One of the big outstanding tasks with WOB is to write a more user-friendly <i>libwob</i> for adding extensions, but it is currently possible to write WOB operations in C, using WOB's <code>link</code> operation to import the code.
@@ -1953,8 +1960,8 @@ ans = 0.693147
 
 
 
-<div id="outline-container-orgacf9412" class="outline-3">
-<h3 id="orgacf9412"><span class="section-number-3">4.9</span> Concurrent Programming</h3>
+<div id="outline-container-org9827152" class="outline-3">
+<h3 id="org9827152"><span class="section-number-3">4.9</span> Concurrent Programming</h3>
 <div class="outline-text-3" id="text-4-9">
 <p>
 Example of using Tasks:
@@ -2009,8 +2016,8 @@ queue <span style="color: #0084C8; font-weight: bold;">/end</span> Nothing t2 .
 </div>
 </div>
 
-<div id="outline-container-org142b0ee" class="outline-2">
-<h2 id="org142b0ee"><span class="section-number-2">5</span> Reference</h2>
+<div id="outline-container-org692ecc8" class="outline-2">
+<h2 id="org692ecc8"><span class="section-number-2">5</span> Reference</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This section gives the full vocabulary of the language.  The grammar of the language is described in the previous sections.  I describe each type of data, and the operations associated with it. 
@@ -2021,12 +2028,12 @@ Throughout, I enclose an operation's optional arguments between bars (||).
 </p>
 </div>
 
-<div id="outline-container-org4d8cc6c" class="outline-3">
-<h3 id="org4d8cc6c"><span class="section-number-3">5.1</span> Registries</h3>
+<div id="outline-container-org4012926" class="outline-3">
+<h3 id="org4012926"><span class="section-number-3">5.1</span> Registries</h3>
 <div class="outline-text-3" id="text-5-1">
 </div>
-<div id="outline-container-org627adfa" class="outline-4">
-<h4 id="org627adfa"><span class="section-number-4">5.1.1</span> Short description</h4>
+<div id="outline-container-org238c74a" class="outline-4">
+<h4 id="org238c74a"><span class="section-number-4">5.1.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 A registry contains data located at registers.  Data can be retrieved  from and inserted into registries.  Registries also defined the <i>scope</i> of WOB code because code is executed inside registries.  So the values of variables depend on which registry you are executing the code.  This allows the user to flexibly manipulate scope.
@@ -2034,8 +2041,8 @@ A registry contains data located at registers.  Data can be retrieved  from and 
 </div>
 </div>
 
-<div id="outline-container-org6d446d6" class="outline-4">
-<h4 id="org6d446d6"><span class="section-number-4">5.1.2</span> Implementation details</h4>
+<div id="outline-container-orgf493676" class="outline-4">
+<h4 id="orgf493676"><span class="section-number-4">5.1.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 Registries are hash tables.  The keys to the table are called registers.  The number of bins in the hash table grows as more elements are added.  This keeps lookup times low, but the registry will rehash as it grows.  Rehashing can be turned off by using the <code>auto-rehash</code> operation.
@@ -2043,12 +2050,12 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 </div>
 
-<div id="outline-container-org191e229" class="outline-4">
-<h4 id="org191e229"><span class="section-number-4">5.1.3</span> Registry operations</h4>
+<div id="outline-container-org1880b7a" class="outline-4">
+<h4 id="org1880b7a"><span class="section-number-4">5.1.3</span> Registry operations</h4>
 <div class="outline-text-4" id="text-5-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org09224ac"></a>Creation<br />
+<li><a id="org7910347"></a>Creation<br />
 <div class="outline-text-5" id="text-5-1-3-1">
 <ul class="org-ul">
 <li><code>registry REGISTER1 VALUE1 REGISTER2 VALUE2 ...</code> &#x2014; sets the <code>/ans</code> register to a registry with <code>VALUE1</code> located at <code>REGISTER1</code> and so on.</li>
@@ -2059,7 +2066,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </li>
 
 
-<li><a id="org4475694"></a>Insert, move, and remove data to and from registers<br />
+<li><a id="orgc71502e"></a>Insert, move, and remove data to and from registers<br />
 <div class="outline-text-5" id="text-5-1-3-2">
 <ul class="org-ul">
 <li><code>set REGISTER VALUE |REGISTRY|</code> &#x2014; sets the value at <code>REGISTER</code> to <code>VALUE</code> in the registry <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is omitted, then it will set the register in the current registry.</li>
@@ -2074,7 +2081,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </li>
 
 
-<li><a id="org0d49193"></a>Access data in Registry<br />
+<li><a id="org6fb86a0"></a>Access data in Registry<br />
 <div class="outline-text-5" id="text-5-1-3-3">
 <ul class="org-ul">
 <li><code>get REGISTER |REGISTRY|</code> &#x2014; sets the <code>/ans</code> register to the value located at <code>REGISTER</code> in <code>REGISTRY</code>.  If the <code>REGISTRY</code> argument is not specified, get from the current registry.</li>
@@ -2088,7 +2095,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 </li>
 
-<li><a id="org87a4bce"></a>Apply Operations to elements of a Registry<br />
+<li><a id="org68bf710"></a>Apply Operations to elements of a Registry<br />
 <div class="outline-text-5" id="text-5-1-3-4">
 <ul class="org-ul">
 <li><code>do OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN</code> &#x2014; execute <code>OPERATION</code> which takes arguments its arguments (1&#x2026;N) from each element in <code>REGISTRY1</code>, &#x2026;, <code>REGISTRYN</code>.  Sets the <code>/ans</code> register to a Registry which contains whatever the <code>OPERATION</code> evaluates to at the corresponding Registers.  For example, <code>do add [ list 1 2 3 . ] [ list 4 5 6 . ]</code> sets the <code>/ans</code> register to a Registry with elements (5,7,9) at registers <code>(/t1,/t2,/t3)</code>.  <code>do</code> will only return results at Registers that exist in all Registries.  So, for example, <code>do add [ list 1 2 3 . ] [ list 4 5 . ]</code> sets the <code>/ans</code> Register to <code>list 5 7</code>.</li>
@@ -2098,7 +2105,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 </li>
 
-<li><a id="orgb2687d9"></a>Execute code in a registry<br />
+<li><a id="orgce5bacc"></a>Execute code in a registry<br />
 <div class="outline-text-5" id="text-5-1-3-5">
 <ul class="org-ul">
 <li><code>in REGISTRY INSTRUCTION</code> &#x2014; call <code>INSTRUCTION</code> in <code>REGISTRY</code>.</li>
@@ -2122,7 +2129,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 </li>
 
-<li><a id="orga05ebaa"></a>Test if a registry<br />
+<li><a id="org63e2ecc"></a>Test if a registry<br />
 <div class="outline-text-5" id="text-5-1-3-6">
 <ul class="org-ul">
 <li><code>is-registry VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Registry and to <code>False</code> otherwise.</li>
@@ -2130,7 +2137,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 </li>
 
-<li><a id="orgbc3f249"></a>Classify a registry<br />
+<li><a id="org9dfb46c"></a>Classify a registry<br />
 <div class="outline-text-5" id="text-5-1-3-7">
 <ul class="org-ul">
 <li><code>of STRING REGISTRY</code> &#x2014; declare REGISTRY to be <code>of</code> kind STRING.</li>
@@ -2143,7 +2150,7 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </li>
 
 
-<li><a id="orgce70ea0"></a>Technical<br />
+<li><a id="orgf078192"></a>Technical<br />
 <div class="outline-text-5" id="text-5-1-3-8">
 <ul class="org-ul">
 <li><code>auto-rehash BOOLEAN</code> &#x2014; turns auto-rehashing of the underlying hash table ON (if the argument is <code>True</code>) or OFF (if the argument is <code>False</code>).  By default, WOB auto-rehashes registries.</li>
@@ -2157,12 +2164,12 @@ Registries are hash tables.  The keys to the table are called registers.  The nu
 </div>
 
 
-<div id="outline-container-org7c3c504" class="outline-3">
-<h3 id="org7c3c504"><span class="section-number-3">5.2</span> Reals and Integers</h3>
+<div id="outline-container-orgc2b551f" class="outline-3">
+<h3 id="orgc2b551f"><span class="section-number-3">5.2</span> Reals and Integers</h3>
 <div class="outline-text-3" id="text-5-2">
 </div>
-<div id="outline-container-org4218a49" class="outline-4">
-<h4 id="org4218a49"><span class="section-number-4">5.2.1</span> Short description</h4>
+<div id="outline-container-org913f708" class="outline-4">
+<h4 id="org913f708"><span class="section-number-4">5.2.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-2-1">
 <p>
 Real and Integer are distinct types in WOB.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is <i>not</i> an WOB type.
@@ -2170,8 +2177,8 @@ Real and Integer are distinct types in WOB.  A Real is a number with a decimal p
 </div>
 </div>
 
-<div id="outline-container-orgdb21fbd" class="outline-4">
-<h4 id="orgdb21fbd"><span class="section-number-4">5.2.2</span> Implementation details</h4>
+<div id="outline-container-org6d584f5" class="outline-4">
+<h4 id="org6d584f5"><span class="section-number-4">5.2.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-2-2">
 <p>
 A Real is a double-precision floating point value (equivalent to C's double).
@@ -2183,12 +2190,12 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </div>
 
-<div id="outline-container-org4028817" class="outline-4">
-<h4 id="org4028817"><span class="section-number-4">5.2.3</span> Real and Integer operations</h4>
+<div id="outline-container-org9dcd15c" class="outline-4">
+<h4 id="org9dcd15c"><span class="section-number-4">5.2.3</span> Real and Integer operations</h4>
 <div class="outline-text-4" id="text-5-2-3">
 </div>
 <ol class="org-ol">
-<li><a id="org81b4127"></a>Arithmetic operations<br />
+<li><a id="org8610498"></a>Arithmetic operations<br />
 <div class="outline-text-5" id="text-5-2-3-1">
 <ul class="org-ul">
 <li><code>add NUMBER1 NUMBER2 ...</code> &#x2014; adds all the numbers together and sets the <code>/ans</code> register to the result.</li>
@@ -2208,7 +2215,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org6c2b2e3"></a>Comparison operations<br />
+<li><a id="orgc43241a"></a>Comparison operations<br />
 <div class="outline-text-5" id="text-5-2-3-2">
 <ul class="org-ul">
 <li><code>gt NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> register to <code>True</code> if <code>NUMBER1</code> is greater than <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
@@ -2224,7 +2231,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org33c8bc9"></a>Conversion operations<br />
+<li><a id="org965cf4a"></a>Conversion operations<br />
 <div class="outline-text-5" id="text-5-2-3-3">
 <ul class="org-ul">
 <li><code>to-number STRING|REGISTER</code> &#x2014; if the argument is a String, try to convert to a number and set the <code>/ans</code> Register to the result.  If the argument is a Register and ends in a number, set the <code>/ans</code> Register to the result.</li>
@@ -2234,7 +2241,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="orgfa57098"></a>Test if type operations<br />
+<li><a id="org1a7bbb8"></a>Test if type operations<br />
 <div class="outline-text-5" id="text-5-2-3-4">
 <ul class="org-ul">
 <li><code>is-integer VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is an Integer and to <code>False</code> otherwise.</li>
@@ -2244,7 +2251,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org2a269e5"></a>Common mathematical operations<br />
+<li><a id="org3b4734b"></a>Common mathematical operations<br />
 <div class="outline-text-5" id="text-5-2-3-5">
 <ul class="org-ul">
 <li><code>log NUMBER</code> &#x2014; set the <code>/ans</code> Register to the natural logarithm of NUMBER.</li>
@@ -2260,12 +2267,12 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 
 
-<div id="outline-container-orgb8de40c" class="outline-3">
-<h3 id="orgb8de40c"><span class="section-number-3">5.3</span> Strings</h3>
+<div id="outline-container-org26c710c" class="outline-3">
+<h3 id="org26c710c"><span class="section-number-3">5.3</span> Strings</h3>
 <div class="outline-text-3" id="text-5-3">
 </div>
-<div id="outline-container-orgd5bbeca" class="outline-4">
-<h4 id="orgd5bbeca"><span class="section-number-4">5.3.1</span> Short description</h4>
+<div id="outline-container-org1b4d7f7" class="outline-4">
+<h4 id="org1b4d7f7"><span class="section-number-4">5.3.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-3-1">
 <p>
 Strings in WOB are text.  A string literal is enclosed in quotation marks.  WOB supports UTF-8 encoding in strings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
@@ -2324,8 +2331,8 @@ The escape sequences are:
 </div>
 </div>
 
-<div id="outline-container-org21cba0b" class="outline-4">
-<h4 id="org21cba0b"><span class="section-number-4">5.3.2</span> Implementation details</h4>
+<div id="outline-container-org46768cd" class="outline-4">
+<h4 id="org46768cd"><span class="section-number-4">5.3.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-3-2">
 <p>
 Strings are character arrays (effectively, byte arrays).  There is no character type in WOB so this is unlikely to be important for normal use.  You can probably figure out some way to use strings as a generic byte array from WOB&#x2026;  Happy hacking!
@@ -2333,12 +2340,12 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </div>
 
-<div id="outline-container-org1462fbb" class="outline-4">
-<h4 id="org1462fbb"><span class="section-number-4">5.3.3</span> String operations</h4>
+<div id="outline-container-orge9f90a0" class="outline-4">
+<h4 id="orge9f90a0"><span class="section-number-4">5.3.3</span> String operations</h4>
 <div class="outline-text-4" id="text-5-3-3">
 </div>
 <ol class="org-ol">
-<li><a id="org785177d"></a>Access, search, and modify string elements<br />
+<li><a id="orgf030cf5"></a>Access, search, and modify string elements<br />
 <div class="outline-text-5" id="text-5-3-3-1">
 <ul class="org-ul">
 <li><code>substring STRING INTEGER1 INTEGER2</code> &#x2014; sets the <code>/ans</code> Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in WOB so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if <code>INTEGER1</code> and <code>INTEGER2</code> are <code>0</code>, then it will set the <code>/ans</code> register to the last character in <code>STRING</code>.</li>
@@ -2350,7 +2357,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="orgc2a7969"></a>String properties<br />
+<li><a id="org0b9b204"></a>String properties<br />
 <div class="outline-text-5" id="text-5-3-3-2">
 <ul class="org-ul">
 <li><code>string-length STRING</code> &#x2014; sets the <code>/ans</code> register to the number of characters in <code>STRING</code>.</li>
@@ -2358,7 +2365,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="org19f1d43"></a>String comparison<br />
+<li><a id="org655109b"></a>String comparison<br />
 <div class="outline-text-5" id="text-5-3-3-3">
 <ul class="org-ul">
 <li><code>string-eq STRING1 STRING2</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the two strings are equal and to <code>False</code> otherwise.</li>
@@ -2370,7 +2377,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="org536123d"></a>Combine strings<br />
+<li><a id="org2901894"></a>Combine strings<br />
 <div class="outline-text-5" id="text-5-3-3-4">
 <ul class="org-ul">
 <li><code>string-append STRING1 STRING2</code> &#x2014; sets the <code>/ans</code> register to the concatenation of the two Strings so that the resulting string is <code>"STRING1STRING2"</code>.</li>
@@ -2378,7 +2385,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="org4b0d2f8"></a>Convert to string<br />
+<li><a id="orgdecb10a"></a>Convert to string<br />
 <div class="outline-text-5" id="text-5-3-3-5">
 <ul class="org-ul">
 <li><code>to-string INTEGER|REAL|REGISTER |INTEGER2|</code> &#x2014; sets the <code>/ans</code> Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.</li>
@@ -2386,7 +2393,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="orgb9f8256"></a>Test if string<br />
+<li><a id="org09aa102"></a>Test if string<br />
 <div class="outline-text-5" id="text-5-3-3-6">
 <ul class="org-ul">
 <li><code>is-string VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a String and to <code>False</code> otherwise.</li>
@@ -2394,7 +2401,7 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 </div>
 </li>
 
-<li><a id="orgcb08ff9"></a>Strings from User Input<br />
+<li><a id="org93a93d4"></a>Strings from User Input<br />
 <div class="outline-text-5" id="text-5-3-3-7">
 <ul class="org-ul">
 <li><code>input REGISTER</code> &#x2014; reads a line of text the user enters and sets the <code>/ans</code> Register to the result (always a String).</li>
@@ -2407,12 +2414,12 @@ Strings are character arrays (effectively, byte arrays).  There is no character 
 
 
 
-<div id="outline-container-org192e149" class="outline-3">
-<h3 id="org192e149"><span class="section-number-3">5.4</span> Registers</h3>
+<div id="outline-container-org41e7316" class="outline-3">
+<h3 id="org41e7316"><span class="section-number-3">5.4</span> Registers</h3>
 <div class="outline-text-3" id="text-5-4">
 </div>
-<div id="outline-container-org24052be" class="outline-4">
-<h4 id="org24052be"><span class="section-number-4">5.4.1</span> Short description</h4>
+<div id="outline-container-orgaa5540d" class="outline-4">
+<h4 id="orgaa5540d"><span class="section-number-4">5.4.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-4-1">
 <p>
 Registers are a type of data in WOB usually used to refer to locations in registers.  More generally, they are symbols.  They can be compared with one another and modified.  Registers are not "associated" with registries.  They are data without any associated context.
@@ -2420,8 +2427,8 @@ Registers are a type of data in WOB usually used to refer to locations in regist
 </div>
 </div>
 
-<div id="outline-container-orge11fd52" class="outline-4">
-<h4 id="orge11fd52"><span class="section-number-4">5.4.2</span> Implementation details</h4>
+<div id="outline-container-org1c500f6" class="outline-4">
+<h4 id="org1c500f6"><span class="section-number-4">5.4.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-4-2">
 <p>
 Registers are a structure containing the name of the registry and the hashed value of the name so they can be easily inserted into the registry hash table.  
@@ -2429,12 +2436,12 @@ Registers are a structure containing the name of the registry and the hashed val
 </div>
 </div>
 
-<div id="outline-container-orgdd8811a" class="outline-4">
-<h4 id="orgdd8811a"><span class="section-number-4">5.4.3</span> Register operations</h4>
+<div id="outline-container-orgaf0e041" class="outline-4">
+<h4 id="orgaf0e041"><span class="section-number-4">5.4.3</span> Register operations</h4>
 <div class="outline-text-4" id="text-5-4-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgc0f9176"></a>Operations on "list" registers<br />
+<li><a id="org192be38"></a>Operations on "list" registers<br />
 <div class="outline-text-5" id="text-5-4-3-1">
 <ul class="org-ul">
 <li><code>next REGISTER</code> &#x2014; if the <code>REGISTER</code> ends in a number, return the Register with that number incremented by 1.</li>
@@ -2446,7 +2453,7 @@ Registers are a structure containing the name of the registry and the hashed val
 </div>
 </li>
 
-<li><a id="org7f93ce7"></a>Convert to register<br />
+<li><a id="org11fd423"></a>Convert to register<br />
 <div class="outline-text-5" id="text-5-4-3-2">
 <ul class="org-ul">
 <li><code>to-register STRING|INTEGER</code> &#x2014; sets the <code>/ans</code> register to a Register named <code>STRING</code> or to <code>/tINTEGER</code>.</li>
@@ -2454,7 +2461,7 @@ Registers are a structure containing the name of the registry and the hashed val
 </div>
 </li>
 
-<li><a id="orgec86389"></a>Register comparison<br />
+<li><a id="orge2e1a21"></a>Register comparison<br />
 <div class="outline-text-5" id="text-5-4-3-3">
 <ul class="org-ul">
 <li><code>register-eq REGISTER1 REGISTER2</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the two Registers are the same and to <code>False</code> otherwise.</li>
@@ -2462,7 +2469,7 @@ Registers are a structure containing the name of the registry and the hashed val
 </div>
 </li>
 
-<li><a id="orgd61aa74"></a>Test if a register<br />
+<li><a id="org6ecd18d"></a>Test if a register<br />
 <div class="outline-text-5" id="text-5-4-3-4">
 <ul class="org-ul">
 <li><code>is-register VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Register and to <code>False</code> otherwise.</li>
@@ -2475,12 +2482,12 @@ Registers are a structure containing the name of the registry and the hashed val
 
 
 
-<div id="outline-container-org54425e6" class="outline-3">
-<h3 id="org54425e6"><span class="section-number-3">5.5</span> Booleans</h3>
+<div id="outline-container-org480f839" class="outline-3">
+<h3 id="org480f839"><span class="section-number-3">5.5</span> Booleans</h3>
 <div class="outline-text-3" id="text-5-5">
 </div>
-<div id="outline-container-org5098a2d" class="outline-4">
-<h4 id="org5098a2d"><span class="section-number-4">5.5.1</span> Short description</h4>
+<div id="outline-container-orgbd22c39" class="outline-4">
+<h4 id="orgbd22c39"><span class="section-number-4">5.5.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-5-1">
 <p>
 Booleans can take on two values: <code>True</code> or <code>False</code>.  Comparison and testing operations usually set the <code>/ans</code> register to a Boolean value.
@@ -2488,8 +2495,8 @@ Booleans can take on two values: <code>True</code> or <code>False</code>.  Compa
 </div>
 </div>
 
-<div id="outline-container-orgf0ff6b0" class="outline-4">
-<h4 id="orgf0ff6b0"><span class="section-number-4">5.5.2</span> Implementation details</h4>
+<div id="outline-container-orgaab8550" class="outline-4">
+<h4 id="orgaab8550"><span class="section-number-4">5.5.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-5-2">
 <p>
 Booleans are simply a binary value.  They use the C99 bool type internally.
@@ -2497,8 +2504,8 @@ Booleans are simply a binary value.  They use the C99 bool type internally.
 </div>
 </div>
 
-<div id="outline-container-org9f4e7a8" class="outline-4">
-<h4 id="org9f4e7a8"><span class="section-number-4">5.5.3</span> Boolean operations</h4>
+<div id="outline-container-org4899b26" class="outline-4">
+<h4 id="org4899b26"><span class="section-number-4">5.5.3</span> Boolean operations</h4>
 <div class="outline-text-4" id="text-5-5-3">
 <ul class="org-ul">
 <li><code>is-boolean VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a Boolean and to <code>False</code> otherwise.</li>
@@ -2513,12 +2520,12 @@ Booleans are simply a binary value.  They use the C99 bool type internally.
 </div>
 </div>
 
-<div id="outline-container-org43c2c56" class="outline-3">
-<h3 id="org43c2c56"><span class="section-number-3">5.6</span> Instructions</h3>
+<div id="outline-container-org27e8ad4" class="outline-3">
+<h3 id="org27e8ad4"><span class="section-number-3">5.6</span> Instructions</h3>
 <div class="outline-text-3" id="text-5-6">
 </div>
-<div id="outline-container-org38cf8fc" class="outline-4">
-<h4 id="org38cf8fc"><span class="section-number-4">5.6.1</span> Short description</h4>
+<div id="outline-container-orgda3e231" class="outline-4">
+<h4 id="orgda3e231"><span class="section-number-4">5.6.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-6-1">
 <p>
 Instructions are code objects which have not yet been executed.  They can be called or executed in different registries.
@@ -2526,8 +2533,8 @@ Instructions are code objects which have not yet been executed.  They can be cal
 </div>
 </div>
 
-<div id="outline-container-org2869822" class="outline-4">
-<h4 id="org2869822"><span class="section-number-4">5.6.2</span> Implementation details</h4>
+<div id="outline-container-org3ac4687" class="outline-4">
+<h4 id="org3ac4687"><span class="section-number-4">5.6.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-6-2">
 <p>
 Instructions are internally "compiled" code.  They are then supplied with an environment (a registry) before they are executed.  The compiled code object is a linked list of statements each of which is a linked list of elements.  Elements are either literal data values or the names of registers to lookup in the environment.
@@ -2536,8 +2543,8 @@ Instructions are internally "compiled" code.  They are then supplied with an env
 </div>
 
 
-<div id="outline-container-org5aaf8f7" class="outline-4">
-<h4 id="org5aaf8f7"><span class="section-number-4">5.6.3</span> Instruction operations</h4>
+<div id="outline-container-orgb3391bc" class="outline-4">
+<h4 id="orgb3391bc"><span class="section-number-4">5.6.3</span> Instruction operations</h4>
 <div class="outline-text-4" id="text-5-6-3">
 <ul class="org-ul">
 <li><code>call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...</code> &#x2014; executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.</li>
@@ -2550,12 +2557,12 @@ Instructions are internally "compiled" code.  They are then supplied with an env
 </div>
 </div>
 
-<div id="outline-container-orgfa792e3" class="outline-3">
-<h3 id="orgfa792e3"><span class="section-number-3">5.7</span> Files</h3>
+<div id="outline-container-org8cd3cb3" class="outline-3">
+<h3 id="org8cd3cb3"><span class="section-number-3">5.7</span> Files</h3>
 <div class="outline-text-3" id="text-5-7">
 </div>
-<div id="outline-container-org5e510fc" class="outline-4">
-<h4 id="org5e510fc"><span class="section-number-4">5.7.1</span> Short description</h4>
+<div id="outline-container-org98b1315" class="outline-4">
+<h4 id="org98b1315"><span class="section-number-4">5.7.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-7-1">
 <p>
 Files are stream objects that you can write to and read from.
@@ -2563,8 +2570,8 @@ Files are stream objects that you can write to and read from.
 </div>
 </div>
 
-<div id="outline-container-orgf9c946e" class="outline-4">
-<h4 id="orgf9c946e"><span class="section-number-4">5.7.2</span> Implementation details</h4>
+<div id="outline-container-orga654ae4" class="outline-4">
+<h4 id="orga654ae4"><span class="section-number-4">5.7.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-7-2">
 <p>
 Files are like the C FILE type.  
@@ -2572,8 +2579,8 @@ Files are like the C FILE type.
 </div>
 </div>
 
-<div id="outline-container-orgc1d05a7" class="outline-4">
-<h4 id="orgc1d05a7"><span class="section-number-4">5.7.3</span> File operations</h4>
+<div id="outline-container-orged55a67" class="outline-4">
+<h4 id="orged55a67"><span class="section-number-4">5.7.3</span> File operations</h4>
 <div class="outline-text-4" id="text-5-7-3">
 <ul class="org-ul">
 <li><code>is-file VALUE</code> &#x2014; sets the <code>/ans</code> Register to <code>True</code> if the <code>Value</code> is a File and to <code>False</code> otherwise.</li>
@@ -2602,12 +2609,12 @@ Files are like the C FILE type.
 
 
 
-<div id="outline-container-orgd69e706" class="outline-3">
-<h3 id="orgd69e706"><span class="section-number-3">5.8</span> Task Operations</h3>
+<div id="outline-container-orgfc24c4b" class="outline-3">
+<h3 id="orgfc24c4b"><span class="section-number-3">5.8</span> Task Operations</h3>
 <div class="outline-text-3" id="text-5-8">
 </div>
-<div id="outline-container-org863d651" class="outline-4">
-<h4 id="org863d651"><span class="section-number-4">5.8.1</span> Short description</h4>
+<div id="outline-container-orga8e9ec6" class="outline-4">
+<h4 id="orga8e9ec6"><span class="section-number-4">5.8.1</span> Short description</h4>
 <div class="outline-text-4" id="text-5-8-1">
 <p>
 Tasks are objects that allow you to execute code in another thread and share data between threads.
@@ -2615,8 +2622,8 @@ Tasks are objects that allow you to execute code in another thread and share dat
 </div>
 </div>
 
-<div id="outline-container-orgf91c6d7" class="outline-4">
-<h4 id="orgf91c6d7"><span class="section-number-4">5.8.2</span> Implementation details</h4>
+<div id="outline-container-org75cda29" class="outline-4">
+<h4 id="org75cda29"><span class="section-number-4">5.8.2</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-8-2">
 <p>
 Tasks contain three elements:
@@ -2634,8 +2641,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgba8fd62" class="outline-4">
-<h4 id="orgba8fd62"><span class="section-number-4">5.8.3</span> Task operations</h4>
+<div id="outline-container-orga115514" class="outline-4">
+<h4 id="orga115514"><span class="section-number-4">5.8.3</span> Task operations</h4>
 <div class="outline-text-4" id="text-5-8-3">
 <ul class="org-ul">
 <li><code>task REGISTER INSTRUCTION |REGISTRY|</code> &#x2014; Sets <code>REGISTER</code> to contain a new Task with its Body given by the <code>INSTRUCTION</code> and the initial state being set to <code>REGISTRY</code>.  If no <code>REGISTRY</code> argument is given, the initial state is a registry containing only the basic operations (the registry always contains the basic operations even if they are not in the initial registry passed to <code>Task</code>).</li>
@@ -2657,8 +2664,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 
 
-<div id="outline-container-org9460b8c" class="outline-3">
-<h3 id="org9460b8c"><span class="section-number-3">5.9</span> Control flow operations</h3>
+<div id="outline-container-org5ecfcb1" class="outline-3">
+<h3 id="org5ecfcb1"><span class="section-number-3">5.9</span> Control flow operations</h3>
 <div class="outline-text-3" id="text-5-9">
 <ul class="org-ul">
 <li><code>if BOOLEAN VALUE1 |VALUE2|</code> &#x2014; if the first argument is <code>True</code>, sets the <code>/ans</code> register to <code>VALUE1</code>, if it is <code>False</code>, sets the <code>/ans</code> register to <code>VALUE2</code>.  If <code>VALUE2</code> is omitted, do nothing if the first argument is <code>False</code>.</li>
@@ -2672,12 +2679,12 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org659433e" class="outline-3">
-<h3 id="org659433e"><span class="section-number-3">5.10</span> Environment operations</h3>
+<div id="outline-container-org0501d3d" class="outline-3">
+<h3 id="org0501d3d"><span class="section-number-3">5.10</span> Environment operations</h3>
 <div class="outline-text-3" id="text-5-10">
 </div>
-<div id="outline-container-org0aa8335" class="outline-4">
-<h4 id="org0aa8335"><span class="section-number-4">5.10.1</span> Modify the /ans register</h4>
+<div id="outline-container-org03c95f2" class="outline-4">
+<h4 id="org03c95f2"><span class="section-number-4">5.10.1</span> Modify the /ans register</h4>
 <div class="outline-text-4" id="text-5-10-1">
 <ul class="org-ul">
 <li><code>answer VALUE</code> &#x2014; set the <code>/ans</code> register to <code>VALUE</code>.</li>
@@ -2687,8 +2694,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org736b46e" class="outline-4">
-<h4 id="org736b46e"><span class="section-number-4">5.10.2</span> Exit WOB</h4>
+<div id="outline-container-orgc733553" class="outline-4">
+<h4 id="orgc733553"><span class="section-number-4">5.10.2</span> Exit WOB</h4>
 <div class="outline-text-4" id="text-5-10-2">
 <ul class="org-ul">
 <li><code>exit</code> &#x2014; exit WOB.</li>
@@ -2696,8 +2703,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org0d9f127" class="outline-4">
-<h4 id="org0d9f127"><span class="section-number-4">5.10.3</span> Print output</h4>
+<div id="outline-container-org9bc1b5e" class="outline-4">
+<h4 id="org9bc1b5e"><span class="section-number-4">5.10.3</span> Print output</h4>
 <div class="outline-text-4" id="text-5-10-3">
 <ul class="org-ul">
 <li><code>print VALUE |BOOLEAN|</code> &#x2014; prints <code>VALUE</code> to screen.  If <code>BOOLEAN</code> is <code>False</code>, then omit the newline (default: add newline after printing value).</li>
@@ -2705,8 +2712,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org7e3f643" class="outline-4">
-<h4 id="org7e3f643"><span class="section-number-4">5.10.4</span> Input and output files and state</h4>
+<div id="outline-container-org07ff355" class="outline-4">
+<h4 id="org07ff355"><span class="section-number-4">5.10.4</span> Input and output files and state</h4>
 <div class="outline-text-4" id="text-5-10-4">
 <ul class="org-ul">
 <li><code>source STRING</code> &#x2014; executes WOB code in the file named by STRING.</li>
@@ -2723,8 +2730,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 
 
-<div id="outline-container-orgda54336" class="outline-4">
-<h4 id="orgda54336"><span class="section-number-4">5.10.5</span> Error handling</h4>
+<div id="outline-container-org81b7953" class="outline-4">
+<h4 id="org81b7953"><span class="section-number-4">5.10.5</span> Error handling</h4>
 <div class="outline-text-4" id="text-5-10-5">
 <ul class="org-ul">
 <li><code>error STRING |INTEGER|</code> &#x2014; outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is <code>1</code>).</li>
@@ -2739,12 +2746,12 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 
 
-<div id="outline-container-org4ac93ad" class="outline-3">
-<h3 id="org4ac93ad"><span class="section-number-3">5.11</span> System operations</h3>
+<div id="outline-container-org4f089a8" class="outline-3">
+<h3 id="org4f089a8"><span class="section-number-3">5.11</span> System operations</h3>
 <div class="outline-text-3" id="text-5-11">
 </div>
-<div id="outline-container-org8f45cca" class="outline-4">
-<h4 id="org8f45cca"><span class="section-number-4">5.11.1</span> Interacting with the shell</h4>
+<div id="outline-container-orgd499c17" class="outline-4">
+<h4 id="orgd499c17"><span class="section-number-4">5.11.1</span> Interacting with the shell</h4>
 <div class="outline-text-4" id="text-5-11-1">
 <ul class="org-ul">
 <li><code>shell STRING</code> &#x2014; execute the shell command STRING.</li>
@@ -2756,8 +2763,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org6afb36f" class="outline-4">
-<h4 id="org6afb36f"><span class="section-number-4">5.11.2</span> Time</h4>
+<div id="outline-container-orgc936be7" class="outline-4">
+<h4 id="orgc936be7"><span class="section-number-4">5.11.2</span> Time</h4>
 <div class="outline-text-4" id="text-5-11-2">
 <ul class="org-ul">
 <li><code>clock</code> &#x2014; set the <code>/ans</code> register to the current time in milliseconds from January 1, 1970.</li>
@@ -2769,8 +2776,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org0630b95" class="outline-2">
-<h2 id="org0630b95"><span class="section-number-2">6</span> GNU Free Documentation License</h2>
+<div id="outline-container-orgd67988d" class="outline-2">
+<h2 id="orgd67988d"><span class="section-number-2">6</span> GNU Free Documentation License</h2>
 <div class="outline-text-2" id="text-6">
 
 <h3 style="text-align: center;">GNU Free Documentation License</h3>
@@ -3254,7 +3261,7 @@ to permit their use in free software.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2021-07-03 Sat 00:46</p>
+<p class="date">Created: 2021-07-03 Sat 01:02</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
