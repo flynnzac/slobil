@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBLE is distributed in the hope that it will be useful,
+   WOB is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "wob.h"
 
 int
 save_registry (gzFile f, registry* reg)
@@ -198,7 +198,7 @@ read_registry (gzFile f, registry* reg)
           free(cache);          
           break;
         case Registry:
-          r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+          r = new_registry(reg, WOB_HASH_SIZE, reg->task);
           read_registry(f, r);
           assign_registry(&d, r, false, reg->task);
           break;
@@ -287,7 +287,7 @@ read_registry (gzFile f, registry* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_registry(t->task->current_parse_registry, ARBEL_HASH_SIZE, t);
+            t->state = new_registry(t->task->current_parse_registry, WOB_HASH_SIZE, t);
             read_registry(f, t->state);
             cache = malloc(sizeof(int));
             gzfread(cache, sizeof(int), 1, f);
@@ -312,7 +312,7 @@ read_registry (gzFile f, registry* reg)
             free(cache);
 
             t->task->current_parse_registry = t->state;
-            t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+            t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();

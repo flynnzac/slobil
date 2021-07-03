@@ -1,0 +1,20 @@
+#!./wob -c
+source "src/library/assert.wob" .
+error-messages False .
+
+print "Start <answer> test." .
+
+' Tests with correct usage
+
+assert /test ( eq 10.0 [ answer 10.0 . ] . ) .
+assert /test ( answer True . ) .
+assert /test ( not [ answer False . ] . ) .
+
+' Test with wrong argument type
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( answer . ) . ) .
+
+print "Finished <answer> test." .
+

@@ -1,0 +1,27 @@
+' Line-oriented text editor
+set /wobed [ registry . ] .
+in wobed
+   (
+     set /buffer [ list . ] . 
+     set /cur-line 1 . 
+     set /n ( up set /cur-line [ add cur-line 1 . ] . ) .
+     set /p ( up set /cur-line [ sub cur-line 1 . ] . ) .
+     set /i
+         [ op
+             (
+               set /wobed-str s buffer .
+               in buffer
+                  (
+                    to-register cur-line .
+                    set ans wobed-str .
+                  ) .
+             )
+             /s . ] .
+     set /o
+         (
+           to-register cur-line . 
+           print [ get ans buffer . ] .
+         ) .
+   ) .
+
+     

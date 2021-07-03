@@ -2,15 +2,12 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([ARBEL], [0.0.1], [github.com/flynnzac/arbel])
-AC_CONFIG_SRCDIR([src/arbel.c])
+AC_INIT([WOB], [0.0.1], [github.com/flynnzac/wob])
+AC_CONFIG_SRCDIR([src/wob.c])
 AC_CONFIG_MACRO_DIRS([m4])
+AC_CONFIG_SUBDIRS([pushmac])
 
 LT_INIT
-# Checks for pushmac
-
-AC_CHECK_PROG([pushmac_avail], [pushmac], [true], [false])
-AM_CONDITIONAL([PUSHMAC], [test x$pushmac_avail = xtrue])
 
 # Checks for programs.
 AC_PROG_CC
