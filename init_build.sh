@@ -2,4 +2,5 @@
 
 libtoolize && aclocal && autoconf && automake --add-missing
 
-sh pushmac/init_build.sh
+git submodule update
+cd pushmac && sh init_build.sh && cd ..
