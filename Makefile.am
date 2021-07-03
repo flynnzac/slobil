@@ -1,8 +1,9 @@
 ACLOCAL_AMFLAGS=-I m4
+SUBDIRS = pushmac
 
 SUFFIXES = .pshm .wob
 .pshm.c:
-	cat $< | pushmac > $@
+	cat $< | pushmac/pushmac > $@
 # .wob.log:
 # 	./$< > $@
 
@@ -11,11 +12,7 @@ bin_PROGRAMS = wob
 wob_SOURCES = src/wob.c src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c
 wob_CFLAGS = $(AM_CFLAGS)
 
-if PUSHMAC
 wob_SOURCES += src/operator.pshm
-else
-wob_SOURCES += src/operator.expand.c
-endif
 
 man1_MANS = docs/wob.1
 
@@ -40,10 +37,6 @@ TESTS += test/ops/op_last.wob
 lib_LTLIBRARIES = libwob.la
 libwob_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c
 
-if PUSHMAC
 libwob_la_SOURCES += src/operator.pshm
-else
-libwob_la_SOURCES += src/operator.expand.c
-endif
 
 
