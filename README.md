@@ -48,7 +48,7 @@ WOB accepts the following command-line switches:
 - `-c FILE` like `-s` but treats the first line of the FILE as a comment (allows you to use the sha-bang syntax `#!/usr/bin/wob -c` to execute the file as a script).
 - `-n` do not start the interpreter. Exit after any loading.
 - `-m` do not print out information unless explicitly using a `print` instruction.
-- `-d` do not save code as entered. This option prevents using commands to write out the code you have entered interactivel, but might give a small performance boost. Implied by `-s`.
+- `-d` do not save code as entered. This option prevents using commands to write out the code you have entered interactively, but might give a small performance boost. Implied by `-s`.
 
 # Emacs
 
