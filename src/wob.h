@@ -1,10 +1,10 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
@@ -15,16 +15,16 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#ifndef ARBEL_H
-#define ARBEL_H
+#ifndef WOB_H
+#define WOB_H
 #define _GNU_SOURCE
-#define ARBEL_HASH_SIZE 31
-#define ARBEL_LOAD_FACTOR 0.75
+#define WOB_HASH_SIZE 31
+#define WOB_LOAD_FACTOR 0.75
 
 
 #include <stdio.h>
@@ -96,15 +96,15 @@ struct task_vars
 {
   struct registry* current_parse_registry;
   char* source_code;
-  void** arbel_ll;
-  int arbel_ll_cnt;
+  void** wob_ll;
+  int wob_ll_cnt;
 
-  size_t arbel_stop_error_threshold;
-  bool arbel_print_error_messages;
-  bool arbel_rehash;
+  size_t wob_stop_error_threshold;
+  bool wob_print_error_messages;
+  bool wob_rehash;
 
   data* last_ans;
-  int arbel_error;
+  int wob_error;
   int do_exit;
 };
 
@@ -525,7 +525,7 @@ data*
 new_data();
 
 int
-arbel_location(int loc, int n);
+wob_location(int loc, int n);
 
 int
 digits (int n);
@@ -577,13 +577,13 @@ extern bool reading;
 
 /* global constants */
 
-extern unsigned long arbel_hash_ans;
-extern unsigned long arbel_hash_t;
-extern unsigned long arbel_hash_underscore;
+extern unsigned long wob_hash_ans;
+extern unsigned long wob_hash_t;
+extern unsigned long wob_hash_underscore;
 
 /* interpreter internal registry */
 
-extern registry* arbel_options;
+extern registry* wob_options;
 
 
 #ifdef GARBAGE
@@ -599,7 +599,7 @@ extern registry* arbel_options;
 #define free_arg(x)  
 #endif
 
-#define ARBEL_UGLY_HACK_API unsigned long arbel_hash_ans; unsigned long arbel_hash_underscore; unsigned long arbel_hash_t; bool reading; task* task0;
+#define WOB_UGLY_HACK_API unsigned long wob_hash_ans; unsigned long wob_hash_underscore; unsigned long wob_hash_t; bool reading; task* task0;
 
 
 #endif

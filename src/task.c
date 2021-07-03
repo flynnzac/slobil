@@ -1,20 +1,20 @@
-#include "arbel.h"
+#include "wob.h"
 
 task_vars*
 new_task (task* t0)
 {
   task_vars* t = malloc(sizeof(task_vars));
-  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE, t0);
+  registry* reg = new_registry(NULL, WOB_HASH_SIZE, t0);
 
   is_exit(0, t);
   t->current_parse_registry = reg;
 
-  t->arbel_stop_error_threshold = 1;
-  t->arbel_print_error_messages = true;
-  t->arbel_error = 0;
-  t->arbel_rehash = true;
-  t->arbel_ll = NULL;
-  t->arbel_ll_cnt = 0;
+  t->wob_stop_error_threshold = 1;
+  t->wob_print_error_messages = true;
+  t->wob_error = 0;
+  t->wob_rehash = true;
+  t->wob_ll = NULL;
+  t->wob_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
 
@@ -209,15 +209,15 @@ end_task (task_vars* t)
   if (t->source_code != NULL)
     free(t->source_code);
 
-  if (t->arbel_ll != NULL)
+  if (t->wob_ll != NULL)
     {
       int i;
-      for (i=0; i < t->arbel_ll_cnt; i++)
+      for (i=0; i < t->wob_ll_cnt; i++)
         {
-          dlclose(t->arbel_ll[i]);
+          dlclose(t->wob_ll[i]);
         }
 
-      free(t->arbel_ll);
+      free(t->wob_ll);
     }
 
   free_registry(t->current_parse_registry);

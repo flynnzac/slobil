@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   WOB is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "wob.h"
 #include <unistd.h>
 #include <signal.h>
 
@@ -27,13 +27,13 @@
 
 task* task0;
 bool reading;
-registry* arbel_options;
+registry* wob_options;
 
 /* global constants */
 
-unsigned long arbel_hash_ans;
-unsigned long arbel_hash_t;
-unsigned long arbel_hash_underscore;
+unsigned long wob_hash_ans;
+unsigned long wob_hash_t;
+unsigned long wob_hash_underscore;
 
 int
 dummy_event ()
@@ -71,9 +71,9 @@ main (int argc, char** argv)
   srand((unsigned) time(NULL));
   rl_event_hook = dummy_event;
 
-  arbel_hash_ans = hash_str("ans");
-  arbel_hash_t = hash_str("t");
-  arbel_hash_underscore = hash_str("_");
+  wob_hash_ans = hash_str("ans");
+  wob_hash_t = hash_str("t");
+  wob_hash_underscore = hash_str("_");
 
 
 
@@ -86,7 +86,7 @@ main (int argc, char** argv)
   task0->queued_instruction = NULL;
   task0->pid = 0;
 
-  arbel_options = new_registry(NULL, ARBEL_HASH_SIZE, task0);
+  wob_options = new_registry(NULL, WOB_HASH_SIZE, task0);
 
   char* code = NULL;
   char* prompt = "... ";
@@ -217,7 +217,7 @@ main (int argc, char** argv)
 
   int retcode = end_task(task0->task);
   free_state(&state);
-  free_registry(arbel_options);
+  free_registry(wob_options);
   
   return retcode;
   

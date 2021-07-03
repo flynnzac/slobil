@@ -1,4 +1,4 @@
-#!./arbel -c
+#!./wob -c
 source "src/library/assert.arb" .
 error-messages False .
 
@@ -6,13 +6,13 @@ print "Start <list> test." .
 ' Tests with correct usage
 
 set /x [ list 1 2 3 . ] .
-assert /test ( eq x:/#1 1 . ) .
-assert /test ( eq x:/#2 2 . ) .
-assert /test ( eq x:/#3 3 . ) .
-assert /test ( register-eq [ last x "#" . ] /#3 . ) .
+assert /test ( eq x:/t1 1 . ) .
+assert /test ( eq x:/t2 2 . ) .
+assert /test ( eq x:/t3 3 . ) .
+assert /test ( register-eq [ last x /t . ] /t3 . ) .
 
 set /y [ list . ] .
-assert /test ( not [ exist /#0 y . ] . ) .
+assert /test ( not [ exist /t0 y . ] . ) .
 
 ' Test with wrong argument type
 ' - Not Appliable

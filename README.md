@@ -1,11 +1,13 @@
-# ARBEL
+# WOB
 
-ARBEL is a programming language based on a named-list data type called a registry and instructions to modify the contents of that registry.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. ARBEL is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+WOB is a programming language based on a named-list data type called a registry and instructions to modify the contents of that registry.  Data is stored at named locations in the registry called registers.  The language has a highly regular syntax where each statement is an instruction to modify the current registry or move between different registries. WOB is an interpreted language and much of its design is focused on being easy to use interactively.  The language contains instructions for writing the output of an interactive session out to disk enabling interactive creation of programs.
+
+WOB is an acronym for Written On Bus. It is called that because I wrote it on the bus to work. The first version in something like its current form in roughly Fall/Winter 2019.
 
 For a manual see: 
 
 
-http://www.zflynn.com/arbel/arbel.html 
+http://www.zflynn.com/wob/wob.html 
 
 
 # Installation
@@ -30,7 +32,7 @@ The `configure` script takes all the usual options (`--prefix`, for example).
 
 The program is built in the current directory. To start the interpreter, type:
 ```
-$ ./arbel
+$ ./wob
 ```
 
 To install the program, type:
@@ -40,18 +42,18 @@ $ sudo make install
 
 # Command-line Switches
 
-ARBEL accepts the following command-line switches:
+WOB accepts the following command-line switches:
 
 - `-l FILE` executes the file before starting the interpreter.
 - `-s FILE` executes the file after any loading done by an `-l` option and exits after executing the script.
-- `-c FILE` like `-s` but treats the first line of the FILE as a comment (allows you to use the sha-bang syntax `#!/usr/bin/arbel -c` to execute the file as a script).
+- `-c FILE` like `-s` but treats the first line of the FILE as a comment (allows you to use the sha-bang syntax `#!/usr/bin/wob -c` to execute the file as a script).
 - `-n` do not start the interpreter. Exit after any loading.
 - `-m` do not print out information unless explicitly using a `print` instruction.
 - `-d` do not save code as entered. This option prevents using commands to write out the code you have entered interactivel, but might give a small performance boost. Implied by `-s`.
 
 # Emacs
 
-ARBEL has an Emacs mode! It has syntax highlighting, indentation, and you can spawn ARBEL sessions and send code from the buffer to the interpreter. The emacs mode is in the `emacs` folder. It requires `isend-mode` which you can get from MELPA.
+WOB has an Emacs mode! It has syntax highlighting, indentation, and you can spawn WOB sessions and send code from the buffer to the interpreter. The emacs mode is in the `emacs` folder. It requires `isend-mode` which you can get from MELPA.
 
 
 

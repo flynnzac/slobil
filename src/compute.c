@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBLE is distributed in the hope that it will be useful,
+   WOB is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "wob.h"
 
 void
 ret (registry* reg, data* d, const char* name)
@@ -62,7 +62,7 @@ _op_call (arg a, registry* reg, const int explicit)
       return;
     }
 
-  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  registry* r_new = new_registry(reg, WOB_HASH_SIZE, reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -70,7 +70,7 @@ _op_call (arg a, registry* reg, const int explicit)
 
   for (i=(explicit+1); i < a.length; i=i+2)
     {
-      d = resolve(a.arg_array[i], reg);
+      d = a.arg_array[i];
 
       if (d->type != Register)
         {
@@ -94,10 +94,10 @@ _op_call (arg a, registry* reg, const int explicit)
 
   if (!is_error(-1, reg->task->task))
     {
-      ans = get(r_new, arbel_hash_ans, 0);
+      ans = get(r_new, wob_hash_ans, 0);
       if (ans != NULL)
         {
-          mark_do_not_free(r_new, arbel_hash_ans);
+          mark_do_not_free(r_new, wob_hash_ans);
           ret_ans(reg, ans);
         }
     }
@@ -114,7 +114,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
     }
   else
     {
-      registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+      registry* r_new = new_registry(reg, WOB_HASH_SIZE, reg->task);
       data* d;
       size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
       for (int i=1; i < len; i++)
@@ -133,10 +133,10 @@ do_operation (op_wrapper* op, registry* reg, arg a)
       data* ans;
       if (!is_error(-1, reg->task->task))
         {
-          ans = get(r_new, arbel_hash_ans, 0);
+          ans = get(r_new, wob_hash_ans, 0);
           if (ans != NULL)
             {
-              mark_do_not_free(r_new, arbel_hash_ans);
+              mark_do_not_free(r_new, wob_hash_ans);
               ret_ans(reg, ans);
             }
         }

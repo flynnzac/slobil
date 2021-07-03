@@ -1,4 +1,4 @@
-#include "arbel.h"
+#include "wob.h"
 
 element*
 append_literal_element (element* current, data* d)
@@ -115,7 +115,7 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->data == NULL)
             {
-              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .",
+              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/wob .",
                        reg->task->task);
             }
           else
@@ -128,7 +128,7 @@ execute_statement (statement* s, registry* reg)
           if (e->statement)
             {
               execute_code(e->s, reg);
-              d = get(reg, arbel_hash_ans, 0);
+              d = get(reg, wob_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans register.",
@@ -136,8 +136,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else 
                 {
-                  del(reg, arbel_hash_ans, 0, false);
-                  /* mark_do_not_free(reg, arbel_hash_ans); */
+                  del(reg, wob_hash_ans, 0, false);
+                  /* mark_do_not_free(reg, wob_hash_ans); */
                 }
             }
           else
@@ -210,8 +210,8 @@ execute_code (statement* s, registry* reg)
     {
       execute_statement(stmt, reg);
       error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
-      if (reg->task->task->arbel_stop_error_threshold > 0 &&
-          (error >= reg->task->task->arbel_stop_error_threshold))
+      if (reg->task->task->wob_stop_error_threshold > 0 &&
+          (error >= reg->task->task->wob_stop_error_threshold))
         {
           printf("-> ");
           print_statement(stmt);

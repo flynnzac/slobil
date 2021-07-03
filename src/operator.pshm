@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Register BASED ENVIRONMENT AND LANGUAGE
+   WOB is a Register BASED ENVIRONMENT AND LANGUAGE
    Copyright 2019 Zach Flynn
 
-   This file is part of ARBEL.
+   This file is part of WOB.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   WOB is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBLE is distributed in the hope that it will be useful,
+   WOB is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-`#include "arbel.h"'
+`#include "wob.h"'
 
 `#include <errno.h>'
 
@@ -870,7 +870,7 @@ op_do (arg a, registry* reg)
     {
       arg_reg[i] = (registry*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE,
+  registry* ret_reg = new_registry(reg, WOB_HASH_SIZE,
                                    reg->task);
   data* d;
   arg a1;
@@ -919,7 +919,7 @@ op_do (arg a, registry* reg)
             continue;
 
           compute(arg1, reg, a1);
-          d = lookup(reg, arbel_hash_ans, 0);
+          d = lookup(reg, wob_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans register.",
@@ -1086,7 +1086,7 @@ op_in (arg a, registry* reg)
 
   execute_0(arg2, (registry*) arg1->data);
   
-  data* ans = lookup((registry*) arg1->data, arbel_hash_ans, 0);
+  data* ans = lookup((registry*) arg1->data, wob_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1116,7 +1116,7 @@ op_while (arg a, registry* reg)
       if (is_error(-1, reg->task->task))
         break;
           
-      d = get(reg, arbel_hash_ans, 0);
+      d = get(reg, wob_hash_ans, 0);
 
       if (d == NULL)
         {
@@ -1239,7 +1239,7 @@ op_collapse (arg a, registry* reg)
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE, reg->task);
+  registry* r = new_registry(to_walk, WOB_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -1269,7 +1269,7 @@ op_collapse (arg a, registry* reg)
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, arbel_hash_ans, 0);
+      d1 = lookup(r, wob_hash_ans, 0);
 
       if (d1 == NULL)
         {
@@ -1281,7 +1281,7 @@ op_collapse (arg a, registry* reg)
       if (is_first)
         {
           free(first_name);
-          first_hash = arbel_hash_ans;
+          first_hash = wob_hash_ans;
           is_first = 0;
         }
       i++;
@@ -1289,7 +1289,7 @@ op_collapse (arg a, registry* reg)
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, arbel_hash_ans, 0);
+  d = lookup(r, wob_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -2220,18 +2220,18 @@ op_link (arg a, registry* reg)
   assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, (char*) arg3->data, 1);
 
-  if (reg->task->task->arbel_ll == NULL)
+  if (reg->task->task->wob_ll == NULL)
     {
       
-      reg->task->task->arbel_ll = malloc(sizeof(void*));
+      reg->task->task->wob_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->task->arbel_ll = realloc(reg->task->task->arbel_ll,
-                                    sizeof(void*)*(reg->task->task->arbel_ll_cnt+1));
+      reg->task->task->wob_ll = realloc(reg->task->task->wob_ll,
+                                    sizeof(void*)*(reg->task->task->wob_ll_cnt+1));
     }
-  reg->task->task->arbel_ll[reg->task->task->arbel_ll_cnt] = lib;
-  reg->task->task->arbel_ll_cnt++;
+  reg->task->task->wob_ll[reg->task->task->wob_ll_cnt] = lib;
+  reg->task->task->wob_ll_cnt++;
 
 }
 
@@ -2642,8 +2642,8 @@ op_substring (arg a, registry* reg)
   size_t length = u8_mbsnlen((unsigned char*) str,
                              byte_length-1);
 
-  start = arbel_location(start, length);
-  end = arbel_location(end, length);
+  start = wob_location(start, length);
+  end = wob_location(end, length);
 
   if ((start > length) || (start <= 0))
     {
@@ -2716,7 +2716,7 @@ op_up (arg a, registry* reg)
 
   compute(a1.arg_array[0], reg->up, a1);
 
-  data* d = lookup(reg->up, arbel_hash_ans, 0);
+  data* d = lookup(reg->up, wob_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -2757,12 +2757,12 @@ op_is_error (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->wob_stop_error_threshold;
+  reg->task->task->wob_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
   assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->wob_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
   is_error(0, reg->task->task);
@@ -2790,10 +2790,10 @@ op_ignore_errors (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->wob_stop_error_threshold;
+  reg->task->task->wob_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->wob_stop_error_threshold = stop_thresh;
 }
 
 void
@@ -2816,9 +2816,9 @@ op_error_messages (arg a, registry* reg)
   ##GETARG~$;
 
   if (*((bool*) arg1->data))
-    reg->task->task->arbel_print_error_messages = true;
+    reg->task->task->wob_print_error_messages = true;
   else
-    reg->task->task->arbel_print_error_messages = false;
+    reg->task->task->wob_print_error_messages = false;
 
 }
 
@@ -2869,7 +2869,7 @@ op_find (arg a, registry* reg)
               assign_regstr(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
-              data* d = lookup(reg, arbel_hash_ans, 0);
+              data* d = lookup(reg, wob_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3010,9 +3010,9 @@ op_use (arg a, registry* reg)
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen((char*) arg1->data)+
-                                     strlen(".darbs/")+
-                                     strlen("/.darb")+1));
-  sprintf(fname, "%s/.darbs/%s.darb", home, (char*) arg1->data);
+                                     strlen(".dwobs/")+
+                                     strlen("/.dwob")+1));
+  sprintf(fname, "%s/.dwobs/%s.dwob", home, (char*) arg1->data);
   gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
@@ -3132,7 +3132,7 @@ op_auto_rehash (arg a, registry* reg)
   #type=Boolean@
   ##GETARG~$;
 
-  reg->task->task->arbel_rehash = *((bool*) arg1->data);
+  reg->task->task->wob_rehash = *((bool*) arg1->data);
 }
 
 void
@@ -3193,7 +3193,7 @@ op_make_time (arg a, registry* reg)
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  registry* r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  registry* r = new_registry(reg, WOB_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -3361,7 +3361,7 @@ op_task (arg a, registry* reg)
   if (init_state == NULL)
     {
       t->state = new_registry(t->task->current_parse_registry,
-                              ARBEL_HASH_SIZE,
+                              WOB_HASH_SIZE,
                               t);
     }
   else
@@ -3373,7 +3373,7 @@ op_task (arg a, registry* reg)
   t->task->current_parse_registry = t->state;
 
   t->code = copy_instruction((instruction*) arg2->data);
-  t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+  t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
   
   t->pid = -1;
   t->thread = NULL;
@@ -3724,7 +3724,7 @@ op_interpreter (arg a, registry* reg)
 
       d2 = resolve(a.arg_array[i+1], reg);
       d2 = copy_data(d2);
-      set(arbel_options, d2, ((regstr*) d1->data)->name, 1);
+      set(wob_options, d2, ((regstr*) d1->data)->name, 1);
     }
 }
 

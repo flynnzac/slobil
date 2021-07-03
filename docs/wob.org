@@ -1,37 +1,41 @@
 # -*- org-html-preamble-format: (("en" "%t<br>%a<br>%T")); -*-
-#+TITLE: ARBEL
+#+TITLE: WOB
 #+AUTHOR: Zach Flynn
-#+DESCRIPTION: ARBEL is a registry-based environment and language. This manual describes how to use the language.
+#+DESCRIPTION: WOB is a registry-based environment and language. This manual describes how to use the language.
 #+SETUPFILE: theme-readtheorg-local.setup
 
 * Introduction
 
-ARBEL (A Registry-Based Environment and Language) is an environment and programming language designed to make it easy to create interactive command-line programs.
+WOB is an environment and programming language designed to make it easy to create interactive command-line programs.
 
-ARBEL is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  ARBEL code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of ARBEL instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  ARBEL allows you to make such modifications without the author of the code ever deciding to allow that option.  
+WOB is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  WOB code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of WOB instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  WOB allows you to make such modifications without the author of the code ever deciding to allow that option.  
 
-While ARBEL can be run in scripting mode, it is primarily intended to be used interactively.  ARBEL programs are written to provide new commands in the ARBEL shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the ARBEL environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
+While WOB can be run in scripting mode, it is primarily intended to be used interactively.  WOB programs are written to provide new commands in the WOB shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the WOB environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
 
-ARBEL's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid ARBEL code snippets:
-#+BEGIN_SRC arbel
+WOB's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid WOB code snippets:
+#+BEGIN_SRC wob
 ... report /project "The Big One" /from "2020-01-01" /to "2020-12-31" /output "annual_report_2020.csv" .
 ... hours /day 14 /month 6 /year 2021 .
 #+END_SRC 
 
-Where =hours= and =report= are ARBEL commands that have been written by the user.
+Where =hours= and =report= are WOB commands that have been written by the user.
+
+** Why is it called "WOB"?
+
+It is called WOB because I wrote the original version of it on my morning bus ride to work.  WOB was @@html:<b>@@W@@html:</b>@@ritten @@html:<b>@@O@@html:</b>@@n a @@html:<b>@@B@@html:</b>@@us.  An earlier version of the language was called ARBEL (A Registry-Based Environment and Language) which was a good name, but (1) it is the name of a mountain in a country that I've never visited and (2) it had five letters while WOB has three letters.
 
 * The Language
 ** Statements and syntax
 
-   A single line of ARBEL code is called a statement.  The first element of the statement is one of ARBEL's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
+   A single line of WOB code is called a statement.  The first element of the statement is one of WOB's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
   
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... set /hello "Hello, world!" .
    #+END_SRC
 
-   =set= is the ARBEL operation to set a register to a certain value.  The above code sets the register =/hello= to the String value ="Hello, world!=. Names that have a forward slash preceeding them are /registers/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in ARBEL:
+   =set= is the WOB operation to set a register to a certain value.  The above code sets the register =/hello= to the String value ="Hello, world!=. Names that have a forward slash preceeding them are /registers/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in WOB:
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... set /days-in-week 7 .
    ... set /penny 0.01 .
    ... set /facts True .
@@ -42,14 +46,14 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
    An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, "(" and ")").  Instructions can be executed later inside registries perhaps different than the registries in which they were initially defined.
 
    To use the value located in a registry, simply type the name of the register without the preceeding forward slash.  For example,
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
   ... print days-in-week .
   7
    #+END_SRC
 
-   All code elements must be separated by whitespace in ARBEL including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
+   All code elements must be separated by whitespace in WOB including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 	' All are WRONG:
 	print days-in-week.
 	set /add-one (add t 1 .) .
@@ -57,19 +61,19 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
-   There are four parenthesis types in ARBEL: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
+   There are four parenthesis types in WOB: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
    
 *** Instructions
 
     Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
      ans = 11
     #+END_SRC
 
     =call= takes an instruction and then assigns each of the registers that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of registers to set for any Instruction.  For example, 
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
      ans = 11
@@ -79,8 +83,8 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
     Any object in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
 
-    Because there is no ambiguity, you do not actually need to use the =call= operation directly.  ARBEL will insert it for you if the first argument is an instruction.  So the following would work as well,
-    #+BEGIN_SRC arbel
+    Because there is no ambiguity, you do not actually need to use the =call= operation directly.  WOB will insert it for you if the first argument is an instruction.  So the following would work as well,
+    #+BEGIN_SRC wob
      ... add-one /t 10 .
      ans = 11
     #+END_SRC
@@ -90,19 +94,19 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 *** Greedy substatements and the =/ans= register
 
     Closed parenthesis ("[]") execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= register to.  The purpose of these statements is to avoid needing to define temporary registers for intermediate calculations.  For example,
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... add [ sub 5 3 . ] [ mul 2 3 . ] .
      ans = 8
     #+END_SRC
 
-    You may have noticed the =ans = ...= after entering some commands.  This tells you the current value of the =/ans= register which is special in ARBEL.  Operations often write to the =/ans= register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the =/ans= register in the current registry by using the =answer= operation.
-    #+BEGIN_SRC arbel
+    You may have noticed the =ans = ...= after entering some commands.  This tells you the current value of the =/ans= register which is special in WOB.  Operations often write to the =/ans= register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the =/ans= register in the current registry by using the =answer= operation.
+    #+BEGIN_SRC wob
      ... answer 10 .
      ans = 10
     #+END_SRC
 
     The =/ans= register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... add 10 12 .
      ans = 22
      ... set /add-one ( add t 1 . ) .
@@ -112,12 +116,12 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
      11
     #+END_SRC
 
-    The other reason that the =/ans= register is special is, as mentioned, closed parenthesis evaluate to the value the statements inside them set the =/ans= register to.  Because =subtract 5 3 .= sets the =/ans= register to =2= and =multiply 2 3 .= sets the =/ans= register to =6=, =add [ subtract 5 3 . ] [ multiply 2 3 . ] .= sets the =/ans= register to =8=.
+    The other reason that the =/ans= register is special is, as mentioned, closed parenthesis evaluate to the value the statements inside them set the =/ans= register to.  Because =sub 5 3 .= sets the =/ans= register to =2= and =mul 2 3 .= sets the =/ans= register to =6=, =add [ sub 5 3 . ] [ mul 2 3 . ] .= sets the =/ans= register to =8=.
 
 *** Lazy substatements     
 
     Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the =/ans= register to.  This form of evaluation is often called "lazy evaluation". We can think of closed parenthesis as marking expressions we want to "greedily evaluate" and curly parenthesis as marking expressions to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... set /gt-4
      (
        set /str-t [ to-string t . ] . 
@@ -138,7 +142,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 *** Convert an instruction to an operation
 
     Angle brackets (<>) transform an instruction object into an operation object.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever registry the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the =op= operation provide two alternative ways of doing this.   For example:
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
      ans = 0.25
@@ -157,8 +161,8 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
 *** Comments
 
-    The last syntax element is the comment.  To write a comment in ARBEL, use a single quote (='=) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
-    #+BEGIN_SRC arbel
+    The last syntax element is the comment.  To write a comment in WOB, use a single quote (='=) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
+    #+BEGIN_SRC wob
    ... ' This is a correct comment
    ... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Register /'This
     #+END_SRC
@@ -167,15 +171,15 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
 ** Registries
 
-   In ARBEL, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In WOB, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... registry /hello "Hello, world!" /x 10 .
    #+END_SRC
 
    The =registry= operation puts a new registry in the =/ans= register.  This registry has a =/hello= register bound to the value ="Hello, world!"= and the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
    
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... registry /hello "Hello, world!" /x 10 .
    ... move /ans /my-registry .
    ... ' Or:
@@ -184,7 +188,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    To access values in a registry, you can either use the =get= operation or the "colon notation":
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... get /hello my-registry .
    ans = Hello, world!
    ... print my-registry:/hello
@@ -195,7 +199,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    From the last line, we can see that the value =hello= exists only in the registry located at =/my-registry= which we are not currently in.  So we cannot access its =/hello= register directly.  We can change which registry we are in with the =go-in= operation.
    
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... go-in hello .
    ... print hello .
    Hello, world!
@@ -203,7 +207,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    We can go back to the registry we were in previously by using the =go-out= operation.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... go-out .
    ... print hello 
    Error: Value at `/hello` not found.
@@ -211,7 +215,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    We can import values from one registry into their corresponding registers in the current registry by using the =import= operation.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... import my-registry .
    ... print hello
    Hello, world!
@@ -219,14 +223,14 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
    
    We can also execute an instruction inside a certain registry by using the =in= command.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... in my-registry ( print [ string-append hello " Goodbye!" . ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
 
-   Aside from being a useful data structure, registries are also how ARBEL does /namespaces/.  For example,
+   Aside from being a useful data structure, registries are also how WOB does /namespaces/.  For example,
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... set /math [ registry . ] .
    ... set /factorial
           (
@@ -247,7 +251,7 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
    Of course, if you don't need to worry about name collisions, you can just =import= it.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
    ... import math .
    ... factorial /t 5 .
    ans = 120
@@ -259,14 +263,14 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
 
     The colon notation can be nested.
     
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
     ... set /x [ registry /y [ registry /z 10 . ] . ] .
     ... print x:/y:/z .
     10
     #+END_SRC
 
     It can also choose the register by referencing the value of another register.
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
     ... set /x [ registry /y 10 . ] .
     ... set /z /y .
     ... print x:z .
@@ -274,16 +278,16 @@ Where =hours= and =report= are ARBEL commands that have been written by the user
     #+END_SRC
 
     /But/ we cannot use subexpressions in the colon notation:
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
     ... set /x [ registry /y 10 . ] .
     ... ' BAD! print x:[ answer /y . ] .
     #+END_SRC
 
 ** Registers   
 
-   Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in ARBEL.  For example, you can set other registers to registers and use those values wherever you would use registers.
+   Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in WOB.  For example, you can set other registers to registers and use those values wherever you would use registers.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 ... set /x /y .
 ... print x .
 /y
@@ -296,7 +300,7 @@ hello
 
    You can move data between Registers with the =move= command:
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 ... set /x "hello" .
 ... move /x /y .
 ... print y .
@@ -310,21 +314,21 @@ Error: Value at register /x not found.
 ** Environment
 
 *** Saving state
-    ARBEL is not only a programming language. It is also an /environment/.  The current state of ARBEL --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
+    WOB is not only a programming language. It is also an /environment/.  The current state of WOB --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
 
     To save the current registry to a file called /state.arb/,
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
  ... save "state.sarb" .
     #+END_SRC
 
     To load the registry back in:
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
  ... load "state.sarb" .
     #+END_SRC
 
     Optionally, a second argument can be provided to =load= to load the data into a specific registry, not just the current one.
 
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
  ... load "state.sarb" old-stuff .
     #+END_SRC
 
@@ -332,11 +336,11 @@ Error: Value at register /x not found.
 
 *** Interacting with the user
 
-    One of ARBEL's strengths is in rapidly-developing interactive programs.  ARBEL's syntax is command-like so interaction in such a program can often be done using ARBEL's prompt.  These types of programs often require input from the user and the ability to interact with other non-ARBEL programs on the computer.  
+    One of WOB's strengths is in rapidly-developing interactive programs.  WOB's syntax is command-like so interaction in such a program can often be done using WOB's prompt.  These types of programs often require input from the user and the ability to interact with other non-WOB programs on the computer.  
 
-    The =input= operation accepts input from the user in the same way as ARBEL's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
+    The =input= operation accepts input from the user in the same way as WOB's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
 
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
 ... set /get-name 
         (
           print "What is your name?" .
@@ -350,27 +354,27 @@ ans = "Zach"
 
     To call commands from the shell, use the =shell= operation.  The =shell= operation sets the =/ans= register to a string containing the output of the command.
 
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
 ... shell "ls" .
 ans = "file1.txt
 file2.txt
 "
     #+END_SRC
 
-    The =change-dir= operation changes the working directory of ARBEL and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
+    The =change-dir= operation changes the working directory of WOB and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
 
-    #+BEGIN_SRC arbel
+    #+BEGIN_SRC wob
 ... change-dir "/home/zlf" .
 ... current-dir .
 ans = "/home/zlf" 
     #+END_SRC
 
 ** Tasks (concurrent programs)
-   ARBEL can be used to write concurrent (multi-threaded) programs using Task objects.  ARBEL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
+   WOB can be used to write concurrent (multi-threaded) programs using Task objects.  WOB's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
 
    Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the register to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a registry defining the environment in which the task will run.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 ... task /my-task ( commands to run... ) [ registry . ] .
    #+END_SRC
 
@@ -380,7 +384,7 @@ ans = "/home/zlf"
 
    | Element | Description                                                                                              |
    |---------+----------------------------------------------------------------------------------------------------------|
-   | Body    | The instruction run in a separate thread from the main ARBEL thread.                                     |
+   | Body    | The instruction run in a separate thread from the main WOB thread.                                     |
    | State   | A Registry that contains the current state of the task.  The registry being modified by the Task's body. |
    | Queue   | A Registry that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
    |---------+----------------------------------------------------------------------------------------------------------|
@@ -393,7 +397,7 @@ ans = "/home/zlf"
 
    The =queue= operation moves data from one registry into the queue of another Task.  Its arguments are a register to set in the queue registry, the data to send, and the task's queue to access.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 ... task /t1 ( print [ accept /hello . ] . ) .
 ... run-task t1 .
 ... queue /hello "Hi!" t1 .
@@ -404,7 +408,7 @@ Hi!
 
    The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction, in its state registry.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 accept-or /hello ( set /hello "Hello." ) .
    #+END_SRC
 
@@ -412,7 +416,7 @@ accept-or /hello ( set /hello "Hello." ) .
 
    Alternatively, the =select= operation executes one of several instructions if data comes in at any number of registers.  =select= takes paired registers and instructions as its arguments.  It waits for data to appear in its queue at any of the registers listed.  The first register to receive data is "selected".  The instruction associated with the register is executed in the register's state registry after setting the =/ans= register to the value of the data located at the register in the queue.
 
-   #+BEGIN_SRC arbel
+   #+BEGIN_SRC wob
 ... task /t1 ( 
                 set /continue True .
                 while ( answer continue . )
@@ -435,7 +439,7 @@ The following program is one I use daily to keep track of time spent on client w
 
 ** Source Code
 
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ' Initial state
 
 set /current-client "Non-billable" .
@@ -457,7 +461,7 @@ set /init
              ) .
     ) /file > .
 
-' Save record of work in ARBEL format
+' Save record of work in WOB format
 
 set /save-hours
     (
@@ -709,7 +713,7 @@ set /rewind-last
 
 We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
 
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... source "billable.arb" .
 ... save "~/.darbs/billable.darb" .
 #+END_SRC
@@ -717,7 +721,7 @@ We can then use a script like the following, supposing we have saved the above c
 ** Using the code
 
 Then, whenever we would like to load the code, we can simply do:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... use "billable" .
 #+END_SRC
 
@@ -727,11 +731,11 @@ Then all the instructions from the /billable/ program are available to us.
 
 ** Quicksort
 
-#+INCLUDE: "../examples/quicksort.arb" src arbel
+#+INCLUDE: "../examples/quicksort.arb" src wob
 
 Example of use:
 
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... set /x [ list 3 2 4 1 . ] .
 ... quicksort /input x /slice /t /compare lt .
 ... print x .
@@ -751,12 +755,12 @@ t4 of type Integer, value: 1
 
 ** A Line-Oriented Text Editor
 
-This example is a simple method of building ARBEL applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
+This example is a simple method of building WOB applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
 
-#+INCLUDE: "../examples/arbed.arb" src arbel
+#+INCLUDE: "../examples/arbed.arb" src wob
 
 Example of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... go-in arbed .
 ... i /s "Hello" .
 ... o .
@@ -772,10 +776,10 @@ Hello
 
 ** Numerical Differentiation
 
-#+INCLUDE: "../examples/deriv.arb" src arbel
+#+INCLUDE: "../examples/deriv.arb" src wob
 
 Example of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... set /f < ( power t 2 . ) /t > .
 ... deriv /f f /x 1.0
 ans = 2.0
@@ -783,10 +787,10 @@ ans = 2.0
 
 ** Compute Factorial
 
-#+INCLUDE: "../examples/factorial.arb" src arbel
+#+INCLUDE: "../examples/factorial.arb" src wob
 
 Example of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... factorial 5 .
 ans = 120
 ... factorial-recurse /t 5 .
@@ -797,7 +801,7 @@ ans = 120
 
 If an instruction is defined recursively as =factorial-recurse= is above, it matters that the Instruction we are executing is in the register =factorial-recurse=.  This will usually be the case, but suppose, after executing the above we ran the following code:
 
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... move /-factorial-recurse /+factorial-recurse .
 ... factorial-recurse 5 .
 Error: Value at register /-factorial-recurse not found.
@@ -808,9 +812,9 @@ Error: Instruction in [] did not set /ans register.
 -> factorial-recurse 5 .
 #+END_SRC
 
-ARBEL is looking for =-factorial-recurse= in the current registry, but the value does not exist and so it cannot recurse.  But we could run:
+WOB is looking for =-factorial-recurse= in the current registry, but the value does not exist and so it cannot recurse.  But we could run:
 
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... +factorial-recurse /t 5 /-factorial-recurse +factorial-recurse .
 ans = 120
 #+END_SRC
@@ -821,10 +825,10 @@ Because, like any instruction, we can define the environment in which the code o
 
 ** Numerical Integration
 
-#+INCLUDE: "../examples/integrate.arb" src arbel
+#+INCLUDE: "../examples/integrate.arb" src wob
 
 Example of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... integrate /f < ( power t 2 . ) /t > /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
 #+END_SRC
@@ -833,10 +837,10 @@ ans = 0.332834
 
 This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 
-#+INCLUDE: "../examples/matrix.arb" src arbel
+#+INCLUDE: "../examples/matrix.arb" src wob
 
 Example of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
 ... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
 ... transpose A .
@@ -859,10 +863,10 @@ t2 of type Integer, value: 25
 
 ** Split a String
 
-#+INCLUDE: "../examples/tokenize.arb" src arbel
+#+INCLUDE: "../examples/tokenize.arb" src wob
 
 Examples of use:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
 t1 of type String, value: 1
@@ -872,24 +876,24 @@ t3 of type String, value: 3
 
 ** Linking C code
 
-One of the big outstanding tasks with ARBEL is to write a more user-friendly /libarbel/ for adding extensions, but it is currently possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+One of the big outstanding tasks with WOB is to write a more user-friendly /libwob/ for adding extensions, but it is currently possible to write WOB operations in C, using WOB's =link= operation to import the code.
 
-The following is an example of C code (the =ARBEL_UGLY_HACK_API= macro is necessary).
+The following is an example of C code (the =WOB_UGLY_HACK_API= macro is necessary).
 
 #+INCLUDE: "../examples/link.c" src c
 
-We then compile it into a shared object file, linking against =libarbel=.
+We then compile it into a shared object file, linking against =libwob=.
 
 #+INCLUDE: "../examples/link_compile.sh" src sh
 
-The code then can be loaded into ARBEL with the =link= operation like so:
+The code then can be loaded into WOB with the =link= operation like so:
 
-#+INCLUDE: "../examples/link.arb" src arbel
+#+INCLUDE: "../examples/link.arb" src wob
 
-The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
+The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the WOB operation will be.
 
 Now, the operation can be called in the following way:
-#+BEGIN_SRC arbel
+#+BEGIN_SRC wob
 ... log1 1 .
 ans = 0.693147
 #+END_SRC
@@ -902,7 +906,7 @@ ans = 0.693147
 ** Concurrent Programming
 
 Example of using Tasks:
-#+INCLUDE: "../examples/task.arb" src arbel
+#+INCLUDE: "../examples/task.arb" src wob
 
 * Reference
 
@@ -914,7 +918,7 @@ Example of using Tasks:
 
 *** Short description
 
-    A registry contains data located at registers.  Data can be retrieved  from and inserted into registries.  Registries also defined the /scope/ of ARBEL code because code is executed inside registries.  So the values of variables depend on which registry you are executing the code.  This allows the user to flexibly manipulate scope.
+    A registry contains data located at registers.  Data can be retrieved  from and inserted into registries.  Registries also defined the /scope/ of WOB code because code is executed inside registries.  So the values of variables depend on which registry you are executing the code.  This allows the user to flexibly manipulate scope.
 
 *** Implementation details
 
@@ -964,7 +968,7 @@ Example of using Tasks:
      - =go-out= --- leave the current Registry and move to the Registry above it.
 
      - =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
-       #+BEGIN_SRC arbel
+       #+BEGIN_SRC wob
        ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
        ... set /x 1 . 
        ... inc /x /x . 
@@ -987,7 +991,7 @@ Example of using Tasks:
 
 **** Technical
 
-     - =auto-rehash BOOLEAN= --- turns auto-rehashing of the underlying hash table ON (if the argument is =True=) or OFF (if the argument is =False=).  By default, ARBEL auto-rehashes registries.
+     - =auto-rehash BOOLEAN= --- turns auto-rehashing of the underlying hash table ON (if the argument is =True=) or OFF (if the argument is =False=).  By default, WOB auto-rehashes registries.
 
      - =rehash REGISTRY= --- manually rehash the registry's underlying hash table.
 
@@ -995,7 +999,7 @@ Example of using Tasks:
 ** Reals and Integers
 
 *** Short description
-    Real and Integer are distinct types in ARBEL.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ an ARBEL type.
+    Real and Integer are distinct types in WOB.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ an WOB type.
 
 *** Implementation details
 
@@ -1052,7 +1056,7 @@ Example of using Tasks:
 
 *** Short description
 
-    Strings in ARBEL are text.  A string literal is enclosed in quotation marks.  ARBEL supports UTF-8 encoding in strings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
+    Strings in WOB are text.  A string literal is enclosed in quotation marks.  WOB supports UTF-8 encoding in strings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
 
     The escape sequences are:
 
@@ -1068,12 +1072,12 @@ Example of using Tasks:
 
 *** Implementation details
 
-    Strings are character arrays (effectively, byte arrays).  There is no character type in ARBEL so this is unlikely to be important for normal use.  You can probably figure out some way to use strings as a generic byte array from ARBEL...  Happy hacking!
+    Strings are character arrays (effectively, byte arrays).  There is no character type in WOB so this is unlikely to be important for normal use.  You can probably figure out some way to use strings as a generic byte array from WOB...  Happy hacking!
 
 *** String operations
 **** Access, search, and modify string elements
 
-     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in ARBEL so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
+     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in WOB so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
      - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
@@ -1113,7 +1117,7 @@ Example of using Tasks:
 
 *** Short description
 
-    Registers are a type of data in ARBEL usually used to refer to locations in registers.  More generally, they are symbols.  They can be compared with one another and modified.  Registers are not "associated" with registries.  They are data without any associated context.
+    Registers are a type of data in WOB usually used to refer to locations in registers.  More generally, they are symbols.  They can be compared with one another and modified.  Registers are not "associated" with registries.  They are data without any associated context.
 
 *** Implementation details
 
@@ -1236,7 +1240,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 - =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
 
-- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main ARBEL Task.
+- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main WOB Task.
 
 - =accept REGISTER |TASK|= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
 
@@ -1265,9 +1269,9 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =sit= --- do nothing but lookup all arguments (causes Active Expressions --- instructions in curly brackets --- to be executed).
 
-*** Exit ARBEL
+*** Exit WOB
 
-    - =exit= --- exit ARBEL.
+    - =exit= --- exit WOB.
 
 *** Print output
 
@@ -1275,7 +1279,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Input and output files and state
 
-    - =source STRING= --- executes ARBEL code in the file named by STRING.
+    - =source STRING= --- executes WOB code in the file named by STRING.
 
     - =save FILENAME= --- save the contents of the current registry to file.
 

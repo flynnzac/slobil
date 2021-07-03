@@ -1,6 +1,6 @@
 set /assert
     (
-      push-through
+      please
 	      (
 	        test .
 	        if ans
@@ -17,5 +17,8 @@ set /assert
 		           answer False .
 		           exit 1 .
 		         } .
-	      ) .
+	      )
+        (
+          exit 1 .
+        ) .
     ) .
