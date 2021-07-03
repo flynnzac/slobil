@@ -1,6 +1,6 @@
 ' Line-oriented text editor
-set /arbed [ registry . ] .
-in arbed
+set /wobed [ registry . ] .
+in wobed
    (
      set /buffer [ list . ] . 
      set /cur-line 1 . 
@@ -9,11 +9,11 @@ in arbed
      set /i
          [ op
              (
-               set /arbed-str s buffer .
+               set /wobed-str s buffer .
                in buffer
                   (
                     to-register cur-line .
-                    set ans arbed-str .
+                    set ans wobed-str .
                   ) .
              )
              /s . ] .

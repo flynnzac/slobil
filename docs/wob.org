@@ -320,7 +320,7 @@ Error: Value at register /x not found.
 *** Saving state
     WOB is not only a programming language. It is also an /environment/.  The current state of WOB --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
 
-    To save the current registry to a file called /state.arb/,
+    To save the current registry to a file called /state.wob/,
     #+BEGIN_SRC wob
  ... save "state.sarb" .
     #+END_SRC
@@ -715,10 +715,10 @@ set /rewind-last
 
 ** Building the Code
 
-We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
+We can then use a script like the following, supposing we have saved the above code in a file /billable.wob/, to build a binary version of the program in a convenient location.
 
 #+BEGIN_SRC wob
-... source "billable.arb" .
+... source "billable.wob" .
 ... save "~/.darbs/billable.darb" .
 #+END_SRC
 
@@ -735,7 +735,7 @@ Then all the instructions from the /billable/ program are available to us.
 
 ** Quicksort
 
-#+INCLUDE: "../examples/quicksort.arb" src wob
+#+INCLUDE: "../examples/quicksort.wob" src wob
 
 Example of use:
 
@@ -761,11 +761,11 @@ t4 of type Integer, value: 1
 
 This example is a simple method of building WOB applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
 
-#+INCLUDE: "../examples/arbed.arb" src wob
+#+INCLUDE: "../examples/wobed.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
-... go-in arbed .
+... go-in wobed .
 ... i /s "Hello" .
 ... o .
 Hello
@@ -780,7 +780,7 @@ Hello
 
 ** Numerical Differentiation
 
-#+INCLUDE: "../examples/deriv.arb" src wob
+#+INCLUDE: "../examples/deriv.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
@@ -791,7 +791,7 @@ ans = 2.0
 
 ** Compute Factorial
 
-#+INCLUDE: "../examples/factorial.arb" src wob
+#+INCLUDE: "../examples/factorial.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
@@ -829,7 +829,7 @@ Because, like any instruction, we can define the environment in which the code o
 
 ** Numerical Integration
 
-#+INCLUDE: "../examples/integrate.arb" src wob
+#+INCLUDE: "../examples/integrate.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
@@ -841,7 +841,7 @@ ans = 0.332834
 
 This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 
-#+INCLUDE: "../examples/matrix.arb" src wob
+#+INCLUDE: "../examples/matrix.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
@@ -867,7 +867,7 @@ t2 of type Integer, value: 25
 
 ** Split a String
 
-#+INCLUDE: "../examples/tokenize.arb" src wob
+#+INCLUDE: "../examples/tokenize.wob" src wob
 
 Examples of use:
 #+BEGIN_SRC wob
@@ -892,7 +892,7 @@ We then compile it into a shared object file, linking against =libwob=.
 
 The code then can be loaded into WOB with the =link= operation like so:
 
-#+INCLUDE: "../examples/link.arb" src wob
+#+INCLUDE: "../examples/link.wob" src wob
 
 The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the WOB operation will be.
 
@@ -906,11 +906,10 @@ ans = 0.693147
 
 
 
-
 ** Concurrent Programming
 
 Example of using Tasks:
-#+INCLUDE: "../examples/task.arb" src wob
+#+INCLUDE: "../examples/task.wob" src wob
 
 * Reference
 
