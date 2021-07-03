@@ -165,7 +165,7 @@ op_registry (arg a, registry* reg)
       
       if (d->type != Register)
         {
-          do_error("Expected a register", reg->task->task);
+          do_error("Expected a register.", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -3703,6 +3703,30 @@ void op_ceiling (arg a, registry* reg)
   ret_ans(reg,d);
 }
 
+void
+op_interpreter (arg a, registry* reg)
+{
+  #op=interpreter@
+  #length=0@
+  ##CHECK_ARGS~$;
+
+  data* d1 = NULL;
+  data* d2 = NULL;
+
+  for (int i=1; i < a.length; i = i + 2)
+    {
+      d1 = a.arg_array[i];
+      if (d1->type != Register)
+        {
+          do_error("Expected a register.", reg->task->task);
+          return;
+        }
+
+      d2 = resolve(a.arg_array[i+1], reg);
+      d2 = copy_data(d2);
+      set(arbel_options, d2, ((regstr*) d1->data)->name, 1);
+    }
+}
 
   
 void
@@ -4067,6 +4091,11 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_rand, NULL, NULL, 0);
   set(reg, d, "rand", 1);
+
+  /* Interpreter options */
+
+  assign_op(&d, op_interpreter, NULL, NULL, 0);
+  set(reg, d, "interpreter", 1);
 
 
 }

@@ -214,7 +214,7 @@ if (is_error(-1, reg->task->task)) return ;;
       
       if (d->type != Register)
         {
-          do_error("Expected a register", reg->task->task);
+          do_error("Expected a register.", reg->task->task);
           free_registry(r_new);
           return;
         }
@@ -6957,6 +6957,31 @@ if (arg1 != NULL && true && (!(arg1->type & Real)))
   ret_ans(reg,d);
 }
 
+void
+op_interpreter (arg a, registry* reg)
+{
+  
+  
+  check_length(&a, 0+1, "interpreter", reg->task->task);
+if (is_error(-1, reg->task->task)) return ;;
+
+  data* d1 = NULL;
+  data* d2 = NULL;
+
+  for (int i=1; i < a.length; i = i + 2)
+    {
+      d1 = a.arg_array[i];
+      if (d1->type != Register)
+        {
+          do_error("Expected a register.", reg->task->task);
+          return;
+        }
+
+      d2 = resolve(a.arg_array[i+1], reg);
+      d2 = copy_data(d2);
+      set(arbel_options, d2, ((regstr*) d1->data)->name, 1);
+    }
+}
 
   
 void
@@ -7321,6 +7346,11 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_rand, NULL, NULL, 0);
   set(reg, d, "rand", 1);
+
+  /* Interpreter options */
+
+  assign_op(&d, op_interpreter, NULL, NULL, 0);
+  set(reg, d, "interpreter", 1);
 
 
 }

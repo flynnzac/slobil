@@ -581,6 +581,10 @@ extern unsigned long arbel_hash_ans;
 extern unsigned long arbel_hash_t;
 extern unsigned long arbel_hash_underscore;
 
+/* interpreter internal registry */
+
+extern registry* arbel_options;
+
 
 #ifdef GARBAGE
 #include <gc.h>

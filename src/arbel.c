@@ -27,6 +27,7 @@
 
 task* task0;
 bool reading;
+registry* arbel_options;
 
 /* global constants */
 
@@ -74,6 +75,8 @@ main (int argc, char** argv)
   arbel_hash_t = hash_str("t");
   arbel_hash_underscore = hash_str("_");
 
+
+
   reading = true;
 
   task0 = malloc(sizeof(task));
@@ -82,6 +85,8 @@ main (int argc, char** argv)
   task0->code = NULL;
   task0->queued_instruction = NULL;
   task0->pid = 0;
+
+  arbel_options = new_registry(NULL, ARBEL_HASH_SIZE, task0);
 
   char* code = NULL;
   char* prompt = "... ";
@@ -212,7 +217,8 @@ main (int argc, char** argv)
 
   int retcode = end_task(task0->task);
   free_state(&state);
-
+  free_registry(arbel_options);
+  
   return retcode;
   
 }

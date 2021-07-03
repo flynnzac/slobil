@@ -508,7 +508,19 @@ interact (FILE* f, parser_state* state, registry* reg)
               d = get(reg, arbel_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  print_data(d, (PRINT_ANSWER | PRINT_QUOTES | PRINT_NEWLINE));
+                  data* opt = get(arbel_options,
+                                  hash_str("print-ans"),
+                                  0);
+                  bool print_out = true;
+                  if (opt != NULL && opt->type == Boolean)
+                    {
+                      print_out = *((bool*) opt->data);
+                    }
+                  if (print_out)
+                    {
+                      print_data(d, (PRINT_ANSWER | PRINT_QUOTES | PRINT_NEWLINE));
+                    }
+
                   reg->task->task->last_ans = d;
                 }
             }
