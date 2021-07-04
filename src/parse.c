@@ -505,10 +505,10 @@ interact (FILE* f, parser_state* state, registry* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, wob_hash_ans, 0);
+              d = get(reg, reg->task->task->wob_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  data* opt = get(wob_options,
+                  data* opt = get(reg->task->task->wob_options,
                                   hash_str("print-ans"),
                                   0);
                   bool print_out = true;

@@ -43,7 +43,7 @@ resolve (data* arg, registry* reg)
       ((instruction*) arg->data)->being_called = true;
       execute_code(((instruction*) arg->data)->stmt, reg);
       ((instruction*) arg->data)->being_called = false;
-      return get(reg, wob_hash_ans, 0);
+      return get(reg, reg->task->task->wob_hash_ans, 0);
     }
   else
     {

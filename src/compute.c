@@ -94,10 +94,10 @@ _op_call (arg a, registry* reg, const int explicit)
 
   if (!is_error(-1, reg->task->task))
     {
-      ans = get(r_new, wob_hash_ans, 0);
+      ans = get(r_new, reg->task->task->wob_hash_ans, 0);
       if (ans != NULL)
         {
-          mark_do_not_free(r_new, wob_hash_ans);
+          mark_do_not_free(r_new, reg->task->task->wob_hash_ans);
           ret_ans(reg, ans);
         }
     }
@@ -133,10 +133,10 @@ do_operation (op_wrapper* op, registry* reg, arg a)
       data* ans;
       if (!is_error(-1, reg->task->task))
         {
-          ans = get(r_new, wob_hash_ans, 0);
+          ans = get(r_new, reg->task->task->wob_hash_ans, 0);
           if (ans != NULL)
             {
-              mark_do_not_free(r_new, wob_hash_ans);
+              mark_do_not_free(r_new, reg->task->task->wob_hash_ans);
               ret_ans(reg, ans);
             }
         }

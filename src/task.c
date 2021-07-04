@@ -17,7 +17,10 @@ new_task (task* t0)
   t->wob_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
-
+  t->wob_options = new_registry(NULL, WOB_HASH_SIZE, t0);
+  t->wob_hash_ans = hash_str("ans");
+  t->wob_hash_t = hash_str("t");
+  t->wob_hash_underscore = hash_str("_");
   t0->task = t;
 
   add_basic_ops(reg);
@@ -221,6 +224,7 @@ end_task (task_vars* t)
     }
 
   free_registry(t->current_parse_registry);
+  free_registry(t->wob_options);
 
   if (is_exit(-1, t)==0)
     return 0;

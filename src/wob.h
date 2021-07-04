@@ -106,6 +106,12 @@ struct task_vars
   data* last_ans;
   int wob_error;
   int do_exit;
+  
+  struct registry* wob_options;
+
+  unsigned long wob_hash_ans;
+  unsigned long wob_hash_t;
+  unsigned long wob_hash_underscore;
 };
 
 typedef struct task_vars task_vars;
@@ -577,13 +583,7 @@ extern bool reading;
 
 /* global constants */
 
-extern unsigned long wob_hash_ans;
-extern unsigned long wob_hash_t;
-extern unsigned long wob_hash_underscore;
-
 /* interpreter internal registry */
-
-extern registry* wob_options;
 
 
 #ifdef GARBAGE

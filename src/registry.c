@@ -114,7 +114,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-  if (hash_name == wob_hash_underscore)
+  if (hash_name == reg->task->task->wob_hash_underscore)
     {
       data* d;
       assign_registry(&d, reg, false, reg->task);

@@ -75,8 +75,6 @@ main (int argc, char** argv)
   wob_hash_t = hash_str("t");
   wob_hash_underscore = hash_str("_");
 
-
-
   reading = true;
 
   task0 = malloc(sizeof(task));
@@ -85,8 +83,6 @@ main (int argc, char** argv)
   task0->code = NULL;
   task0->queued_instruction = NULL;
   task0->pid = 0;
-
-  wob_options = new_registry(NULL, WOB_HASH_SIZE, task0);
 
   char* code = NULL;
   char* prompt = "... ";
@@ -217,10 +213,9 @@ main (int argc, char** argv)
 
   int retcode = end_task(task0->task);
   free_state(&state);
-  free_registry(wob_options);
   
   return retcode;
-  
+
 }
 
   

@@ -128,7 +128,7 @@ execute_statement (statement* s, registry* reg)
           if (e->statement)
             {
               execute_code(e->s, reg);
-              d = get(reg, wob_hash_ans, 0);
+              d = get(reg, reg->task->task->wob_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans register.",
@@ -136,7 +136,7 @@ execute_statement (statement* s, registry* reg)
                 }
               else 
                 {
-                  del(reg, wob_hash_ans, 0, false);
+                  del(reg, reg->task->task->wob_hash_ans, 0, false);
                   /* mark_do_not_free(reg, wob_hash_ans); */
                 }
             }

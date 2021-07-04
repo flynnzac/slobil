@@ -919,7 +919,7 @@ op_do (arg a, registry* reg)
             continue;
 
           compute(arg1, reg, a1);
-          d = lookup(reg, wob_hash_ans, 0);
+          d = lookup(reg, reg->task->task->wob_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans register.",
@@ -1086,7 +1086,7 @@ op_in (arg a, registry* reg)
 
   execute_0(arg2, (registry*) arg1->data);
   
-  data* ans = lookup((registry*) arg1->data, wob_hash_ans, 0);
+  data* ans = lookup((registry*) arg1->data, reg->task->task->wob_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1116,7 +1116,7 @@ op_while (arg a, registry* reg)
       if (is_error(-1, reg->task->task))
         break;
           
-      d = get(reg, wob_hash_ans, 0);
+      d = get(reg, reg->task->task->wob_hash_ans, 0);
 
       if (d == NULL)
         {
@@ -1269,7 +1269,7 @@ op_collapse (arg a, registry* reg)
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, wob_hash_ans, 0);
+      d1 = lookup(r, reg->task->task->wob_hash_ans, 0);
 
       if (d1 == NULL)
         {
@@ -1281,7 +1281,7 @@ op_collapse (arg a, registry* reg)
       if (is_first)
         {
           free(first_name);
-          first_hash = wob_hash_ans;
+          first_hash = reg->task->task->wob_hash_ans;
           is_first = 0;
         }
       i++;
@@ -1289,7 +1289,7 @@ op_collapse (arg a, registry* reg)
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, wob_hash_ans, 0);
+  d = lookup(r, reg->task->task->wob_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -2716,7 +2716,7 @@ op_up (arg a, registry* reg)
 
   compute(a1.arg_array[0], reg->up, a1);
 
-  data* d = lookup(reg->up, wob_hash_ans, 0);
+  data* d = lookup(reg->up, reg->task->task->wob_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -2869,7 +2869,7 @@ op_find (arg a, registry* reg)
               assign_regstr(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
-              data* d = lookup(reg, wob_hash_ans, 0);
+              data* d = lookup(reg, reg->task->task->wob_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3724,7 +3724,8 @@ op_interpreter (arg a, registry* reg)
 
       d2 = resolve(a.arg_array[i+1], reg);
       d2 = copy_data(d2);
-      set(wob_options, d2, ((regstr*) d1->data)->name, 1);
+      set(reg->task->task->wob_options,
+          d2, ((regstr*) d1->data)->name, 1);
     }
 }
 
