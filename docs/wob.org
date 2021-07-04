@@ -565,6 +565,7 @@ set /day-of-week-map
     ] .
 
 
+' Convert milliseconds to hours
 set /make-hours-day-time
     < (
       do < ( div t 1000.0 60 60 . ) /t > structure .
@@ -659,6 +660,7 @@ set /choose-client
       answer record:/client-list:loc .
     ) .
 
+' Get current status (client, whether running)
 set /status
     (
       print [ string-append "Current client: " current-client . ] .
@@ -671,6 +673,7 @@ set /status
          } .
     ) .
 
+' Rename a client
 set /rename-client
     (
       ' Update client in list
@@ -733,7 +736,7 @@ We can then use a script like the following, supposing we have saved the above c
 
 #+BEGIN_SRC wob
 ... source "billable.wob" .
-... save "~/.darbs/billable.darb" .
+... save "~/.dwobs/billable.dwob" .
 #+END_SRC
 
 ** Using the code
