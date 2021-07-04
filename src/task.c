@@ -21,6 +21,7 @@ new_task (task* t0)
   t->wob_hash_ans = hash_str("ans");
   t->wob_hash_t = hash_str("t");
   t->wob_hash_underscore = hash_str("_");
+  t->reading = false;
   t0->task = t;
 
   add_basic_ops(reg);
