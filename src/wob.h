@@ -599,7 +599,7 @@ extern bool reading;
 #define free_arg(x)  
 #endif
 
-#define WOB_UGLY_HACK_API unsigned long wob_hash_ans; unsigned long wob_hash_underscore; unsigned long wob_hash_t; bool reading; task* task0;
+#define WOB_UGLY_HACK_API bool reading; task* task0;
 
 
 #endif
