@@ -257,7 +257,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
             while ( lt-eq i t . )
                   (
                     set /prod [ mul i prod . ] .
-                    set /i [ add i 1 . ] .
+                    incr i .
                   ) .
             answer prod .
           ) math .
@@ -780,11 +780,11 @@ This example is a simple method of building WOB applications that have their own
 Example of use:
 #+BEGIN_SRC wob
 ... go-in wobed .
-... i /s "Hello" .
+... i "Hello" .
 ... o .
 Hello
 ... n .
-... i /s "Goodbye" .
+... i "Goodbye" .
 ... o .
 Goodbye
 ... p .
@@ -816,28 +816,6 @@ ans = 120
 #+END_SRC
 
 *** Note on Recursion
-
-If an instruction is defined recursively as =factorial-recurse= is above, it matters that the Instruction we are executing is in the register =factorial-recurse=.  This will usually be the case, but suppose, after executing the above we ran the following code:
-
-#+BEGIN_SRC wob
-... move /-factorial-recurse /+factorial-recurse .
-... factorial-recurse 5 .
-Error: Value at register /-factorial-recurse not found.
--> -factorial-recurse /t  [ sub t 1 . ]  .
-Error: Instruction in [] did not set /ans register.
--> mul t  [ -factorial-recurse /t  [ sub t 1 . ]  . ]  .
--> if  [ eq t 1 . ]  1  .
--> factorial-recurse 5 .
-#+END_SRC
-
-WOB is looking for =-factorial-recurse= in the current registry, but the value does not exist and so it cannot recurse.  But we could run:
-
-#+BEGIN_SRC wob
-... +factorial-recurse /t 5 /-factorial-recurse +factorial-recurse .
-ans = 120
-#+END_SRC
-
-Because, like any instruction, we can define the environment in which the code operates.  So we can insert the value =+factorial-recurse= wherever there is a =-factorial-recurse=.
 
  Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
 
@@ -894,7 +872,7 @@ t3 of type String, value: 3
 
 ** Linking C code
 
-One of the big outstanding tasks with WOB is to write a more user-friendly /libwob/ for adding extensions, but it is currently possible to write WOB operations in C, using WOB's =link= operation to import the code.
+One of the big outstanding tasks with WOB is to write a more user-friendly (and documented) /libwob/ for adding extensions, but it is currently possible to write WOB operations in C, using WOB's =link= operation to import the code.
 
 The following is an example of C code.
 
@@ -966,13 +944,13 @@ Example of using Tasks:
 
      - =exist REGISTER |REGISTRY|= --- set the =/ans= register to =True= if a value exists at the =REGISTER= in =REGISTRY=.  If the =REGISTRY= argument is omitted, check in the current registry.
 
-     - =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in REGISTRY.
+     - =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in =REGISTRY=.
 
-     - =find REGISTRY OPERATION= --- set the =/ans= register to a Registry containing all the elements in the registry such that the OPERATION when passed the element of the Registry sets the =/ans= register to =True=.
+     - =find REGISTRY OPERATION= --- set the =/ans= register to a Registry containing all the elements in =REGISTRY= such that the =OPERATION= applied to the element of the Registry sets the =/ans= register to =True=.
 
 **** Apply Operations to elements of a Registry
 
-     - =do OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes arguments its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do= will only return results at Registers that exist in all Registries.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
+     - =do OPERATION REGISTRY1 REGISTRY2 ... REGISTRYN= --- execute =OPERATION= which takes its arguments (1...N) from each element in =REGISTRY1=, ..., =REGISTRYN=.  Sets the =/ans= register to a Registry which contains whatever the =OPERATION= evaluates to at the corresponding Registers.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= register to a Registry with elements (5,7,9) at registers =(/t1,/t2,/t3)=.  =do= will only return results at Registers that exist in all Registries.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Register to =list 5 7=.
 
      - =collapse OPERATION REGISTRY |REGISTER|= --- sets the =/ans= register to the value of applying =OPERATION= to the value in the =REGISTRY= at Register =/REGISTER1= and =/REGISTER2= and then again to the result of that and to the value of  =/REGISTER3= and so on. For example, =collapse add [ list 1 2 3 . ] /t= sets the =/ans= register to =6=.  If the =REGISTER= argument is omitted, it is assumed to be =/t=.
 
@@ -995,15 +973,15 @@ Example of using Tasks:
 
 **** Test if a registry
 
-     - =is-registry VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Registry and to =False= otherwise.
+     - =is-registry VALUE= --- sets the =/ans= Register to =True= if =VALUE= is a Registry and to =False= otherwise.
 
 **** Classify a registry
 
-     - =of STRING REGISTRY= --- declare REGISTRY to be =of= kind STRING.
+     - =of STRING REGISTRY= --- declare =REGISTRY= to be of kind =STRING=.
 
-     - =is-of STRING REGISTRY= --- set the =/ans= Register to =True= if REGISTRY is of kind STRING.
+     - =is-of STRING REGISTRY= --- set the =/ans= Register to =True= if =REGISTRY= is of kind =STRING=.
 
-     - =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called STRING corresponding to VALUE.  In other words if =dispatch "f" 10=, sets the =/ans= register to Instruction at =/f+Integer=.
+     - =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called =STRING= corresponding to =VALUE=.  For example, =dispatch "f" 10= sets the =/ans= register to the Instruction located at =/f+Integer=.
 
 
 **** Technical
@@ -1016,7 +994,7 @@ Example of using Tasks:
 ** Reals and Integers
 
 *** Short description
-    Real and Integer are distinct types in WOB.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ an WOB type.
+    Real and Integer are distinct types in WOB.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ a WOB type.
 
 *** Implementation details
 
@@ -1054,7 +1032,7 @@ Example of using Tasks:
 **** Conversion operations
      - =to-number STRING|REGISTER= --- if the argument is a String, try to convert to a number and set the =/ans= Register to the result.  If the argument is a Register and ends in a number, set the =/ans= Register to the result.
 
-     - =to-real INTEGER= --- set the =/ans= Register to a Real representing the INTEGER.
+     - =to-real INTEGER= --- set the =/ans= Register to a Real representing the =INTEGER=.
 
 **** Test if type operations
      - =is-integer VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Integer and to =False= otherwise.
@@ -1062,11 +1040,11 @@ Example of using Tasks:
      - =is-real VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Real and to =False= otherwise.
 
 **** Common mathematical operations
-     - =log NUMBER= --- set the =/ans= Register to the natural logarithm of NUMBER.
+     - =log NUMBER= --- set the =/ans= Register to the natural logarithm of =NUMBER=.
 
-     - =exp NUMBER= --- set the =/ans= Register to the NUMBER power of the natural base.
+     - =exp NUMBER= --- set the =/ans= Register to the =NUMBER= power of the natural base.
 
-     - =power NUMBER1 NUMBER2= --- set the =/ans= Register to NUMBER1 raised to the NUMBER2 power.
+     - =power NUMBER1 NUMBER2= --- set the =/ans= Register to =NUMBER1= raised to the =NUMBER2= power.
 
 
 ** Strings
@@ -1089,16 +1067,16 @@ Example of using Tasks:
 
 *** Implementation details
 
-    Strings are character arrays (effectively, byte arrays).  There is no character type in WOB so this is unlikely to be important for normal use.  You can probably figure out some way to use strings as a generic byte array from WOB...  Happy hacking!
+    Strings are character arrays (effectively, byte arrays).  The String operations all allow for these arrays to be UTF-8 encoded. There is no character type in WOB so a character is a string of length 1.
 
 *** String operations
 **** Access, search, and modify string elements
 
-     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of STRING where the characters included are determined by INTEGER1 and INTEGER2.  Strings are 1-indexed in WOB so the first character is at location 1.  If the INTEGER is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
+     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in WOB so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
-     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression STRING1 in String STRING2.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
-     - =replace STRING1 STRING2 STRING3 |INTEGER|= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression STRING1 with STRING2 in STRING3.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
+     - =replace STRING1 STRING2 STRING3 |INTEGER|= --- set the =/ans= Register to a String formed by replacing all occurences of regular expression =STRING1= with =STRING2= in =STRING3=.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
 **** String properties
 
@@ -1114,21 +1092,19 @@ Example of using Tasks:
 
 **** Combine strings
 
-     - =string-append STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting string is ="STRING1STRING2"=.
+     - =string-append STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting String is ="STRING1STRING2"=.
 
 **** Convert to string
 
-     - =to-string INTEGER|REAL|REGISTER |INTEGER2|= --- sets the =/ans= Register to a String representing the INTEGER or REAL or REGISTER provided as the first argument.  The second argument is optional if a REAL argument is provided.  INTEGER2 gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
+     - =to-string INTEGER|REAL|REGISTER |INTEGER2|= --- sets the =/ans= Register to a String representing the =INTEGER= or =REAL= or =REGISTER= provided as the first argument.  The second argument is used if a =REAL= argument is provided.  =INTEGER2= gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
 
 **** Test if string
 
-     - =is-string VALUE= --- sets the =/ans= Register to =True= if the =Value= is a String and to =False= otherwise.
+     - =is-string VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is a String and to =False= otherwise.
 
 **** Strings from User Input
 
-     - =input REGISTER= --- reads a line of text the user enters and sets the =/ans= Register to the result (always a String).
-
-
+     - =input REGISTER= --- reads a line of text the user enters and sets =REGISTER= to that value (always a String).
 
 ** Registers
 
@@ -1139,7 +1115,7 @@ Example of using Tasks:
 *** Implementation details
 
     Registers are a structure containing the name of the registry and the hashed value of the name so they can be easily inserted into the registry hash table.  
-
+    
 *** Register operations
 
 **** Operations on "list" registers
@@ -1158,7 +1134,7 @@ Example of using Tasks:
      - =register-eq REGISTER1 REGISTER2= --- sets the =/ans= Register to =True= if the two Registers are the same and to =False= otherwise.
 
 **** Test if a register
-     - =is-register VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Register and to =False= otherwise.
+     - =is-register VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is a Register and to =False= otherwise.
 
 
 
@@ -1171,10 +1147,10 @@ Example of using Tasks:
 *** Implementation details
 
     Booleans are simply a binary value.  They use the C99 bool type internally.
-
+    
 *** Boolean operations
 
-    - =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =Value= is a Boolean and to =False= otherwise.
+    - =is-boolean VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is a Boolean and to =False= otherwise.
 
     - =and BOOLEAN1 BOOLEAN2= --- sets the =/ans= Register to =True= if BOOLEAN1 and BOOLEAN2 are =True= and to =False= otherwise.
 
@@ -1192,12 +1168,11 @@ Example of using Tasks:
 
     Instructions are internally "compiled" code.  They are then supplied with an environment (a registry) before they are executed.  The compiled code object is a linked list of statements each of which is a linked list of elements.  Elements are either literal data values or the names of registers to lookup in the environment.
 
-
 *** Instruction operations
 
-    - =call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- executes INSTRUCTION in a Registry with REGISTER1 assigned to VALUE1 and so on.
+    - =call INSTRUCTION REGISTER1 VALUE1 REGISTER2 VALUE2 ...= --- executes =INSTRUCTION= in a Registry with =REGISTER1= assigned to =VALUE1= and so on.
 
-    - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =Value= is an Instruction and to =False= otherwise.
+    - =is-instruction VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is an Instruction and to =False= otherwise.
 
     - =op INSTRUCTION REGISTER1 ... REGISTERN= --- set the =/ans= register to an operation that calls =INSTRUCTION= after binding =REGISTER1= to the first argument, and so on.
 
@@ -1213,9 +1188,9 @@ Example of using Tasks:
 
 *** File operations
 
-    - =is-file VALUE= --- sets the =/ans= Register to =True= if the =Value= is a File and to =False= otherwise.
+    - =is-file VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is a File and to =False= otherwise.
 
-    - =open-file STRING1 |STRING2|= --- sets the =/ans= Register to a File object corresponding to the file named STRING1 with mode STRING2 (default: "r+").
+    - =open-file STRING1 |STRING2|= --- sets the =/ans= Register to a File object corresponding to the file named =STRING1= with mode =STRING2= (default: "r+").
 
     - =read FILE= --- read a byte from a file and set the =/ans= register to the result (an Integer).
 
@@ -1227,12 +1202,9 @@ Example of using Tasks:
 
     - =write-string STRING FILE= --- Write a =STRING= to =FILE= using UTF-8 encoding. 
 
-    - =close REGISTER= --- if a File object is located at REGISTER, close the File and remove its reference from the REGISTER.
+    - =close REGISTER= --- if a File object is located at =REGISTER=, close the File and remove its reference from the =REGISTER=.
 
-    - =use STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
-
-
-
+    - =use STRING= --- load a saved registry in =~/.dwobs/= with the extension =.dwob= into the current registry. The file being loaded is: =~/.dwobs/STRING.dwob=.
 
 
 ** Task Operations
@@ -1274,7 +1246,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
    - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Registry. If it sets its =/ans= register to =True=, call =INSTRUCTION2=.  Repeat.
 
-   - =repeat INTEGER INSTRUCTION= --- call INSTRUCTION INTEGER times.
+   - =repeat INTEGER INSTRUCTION= --- call =INSTRUCTION= =INTEGER= times.
 
    - =please INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1=.  If there is an error, then call =INSTRUCTION2=.
 
@@ -1293,7 +1265,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 *** Print output
 
     - =print VALUE |BOOLEAN|= --- prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
-
+      
 *** Input and output files and state
 
     - =source STRING= --- executes WOB code in the file named by STRING.
@@ -1320,9 +1292,9 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 ** System operations
 *** Interacting with the shell
 
-    - =shell STRING= --- execute the shell command STRING.
+    - =shell STRING= --- execute the shell command =STRING=.
 
-    - =change-dir STRING= --- change directory to the location given in STRING.
+    - =change-dir STRING= --- change directory to the location given in =STRING=.
 
     - =current-dir= --- set the =/ans= Register to a String giving the current directory.
 

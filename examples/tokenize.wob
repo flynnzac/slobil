@@ -5,7 +5,7 @@ set /tokenize
       set /len [ string-length line . ] .
       set /cur-reg /t1 .
       set /tokened [ list . ] .
-      set /init 1 .
+      set /init True .
       while ( lt-eq i len . )
             (
               set /d [ substring line i i . ] .
@@ -13,10 +13,11 @@ set /tokenize
                  {
                    in tokened ( set cur-reg buffer . ) .
                    set /cur-reg [ next cur-reg . ] .
-                   set /init 1 .
+                   set /init True .
                  }
                  {
-                   if [ eq init 1 . ] { set /buffer d . set /init 0 . }
+                   if init
+                      { set /buffer d . set /init False . }
                       { set /buffer [ string-append buffer d . ] . } .
                  } .
               set /i [ add i 1 . ] .
