@@ -146,6 +146,16 @@ It is called WOB because I wrote the original version of it on my morning bus ri
     It works this way because the =if= operation returns the second value if the first value is =True= and the third value if the first value is =False=.  So it tries to access the second value when =t= is =10=, executing the statements in the second argument, and similarly for the third argument when =t= is =3=.
 
     If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
+
+    Unlike instructions, lazy substatements are evaluated in the registry calling them instead of a temporary registry inside the calling registry. So, for example they can move registers in the calling registry:
+
+    #+BEGIN_SRC wob
+    ... set /test ( set /x 2 . sit y . print z . ) .
+    ... test /y { move /x /z . } .
+    2
+    #+END_SRC
+
+    Note: =sit= is an operation that does nothing but evaluate any substatements in its arguments.
      
 *** Convert an instruction to an operation
 
