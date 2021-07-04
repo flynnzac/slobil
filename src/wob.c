@@ -23,17 +23,9 @@
 #include <unistd.h>
 #include <signal.h>
 
-/* global variables */
+/* static variables */
 
-task* task0;
-bool reading;
-registry* wob_options;
-
-/* global constants */
-
-unsigned long wob_hash_ans;
-unsigned long wob_hash_t;
-unsigned long wob_hash_underscore;
+static task* task0;
 
 int
 dummy_event ()
@@ -45,7 +37,7 @@ void
 interrupt_handler (int status)
 {
   signal(SIGINT, interrupt_handler);
-  if (reading)
+  if (task0->task->reading)
     {
       rl_replace_line("",0);
       rl_done = 1;
@@ -71,18 +63,14 @@ main (int argc, char** argv)
   srand((unsigned) time(NULL));
   rl_event_hook = dummy_event;
 
-  wob_hash_ans = hash_str("ans");
-  wob_hash_t = hash_str("t");
-  wob_hash_underscore = hash_str("_");
-
-  reading = true;
-
   task0 = malloc(sizeof(task));
   task0->task = new_task(task0);
   task0->state = NULL;
   task0->code = NULL;
   task0->queued_instruction = NULL;
   task0->pid = 0;
+
+  task0->task->reading = true;
 
   char* code = NULL;
   char* prompt = "... ";

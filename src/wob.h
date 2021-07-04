@@ -112,6 +112,8 @@ struct task_vars
   unsigned long wob_hash_ans;
   unsigned long wob_hash_t;
   unsigned long wob_hash_underscore;
+
+  bool reading;
 };
 
 typedef struct task_vars task_vars;
@@ -578,11 +580,6 @@ free_task_vars (task_vars* t);
 
 /* global variables */
 
-extern task* task0;
-extern bool reading;
-
-/* global constants */
-
 /* interpreter internal registry */
 
 
@@ -598,8 +595,5 @@ extern bool reading;
 #define free_arg_array_data(x,n)
 #define free_arg(x)  
 #endif
-
-#define WOB_UGLY_HACK_API bool reading; task* task0;
-
 
 #endif

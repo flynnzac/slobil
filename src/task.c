@@ -62,9 +62,9 @@ input_code (task_vars* task, char* code, bool save_code,
     }
 
   f = fmemopen(code, sizeof(char)*strlen(code), "r");
-  reading = false;
+  task->reading = false;
   int complete = interact(f, state, task->current_parse_registry);
-  reading = true;
+  task->reading = true;
   fclose(f);
 
 #ifdef GARBAGE
@@ -112,7 +112,7 @@ run_task_socket (task_vars* task, int port, bool save_code,
       /* remove gc garbage collection because later code assumes readline
          string which is stdlib malloc'd */
 
-      reading = false;
+      task->reading = false;
 
 #ifdef GARBAGE
 #undef realloc

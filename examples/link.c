@@ -6,8 +6,6 @@
 #include "../src/wob.h"
 #include <math.h>
 
-WOB_UGLY_HACK_API;
-
 void
 log_plus_one (arg a, registry* reg)
 {
