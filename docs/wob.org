@@ -334,20 +334,20 @@ Error: Value at register /x not found.
 *** Saving state
     WOB is not only a programming language. It is also an /environment/.  The current state of WOB --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
 
-    To save the current registry to a file called /state.wob/,
+    To save the current registry to a file called /state.dwob/,
     #+BEGIN_SRC wob
- ... save "state.sarb" .
+ ... save "state.dwob" .
     #+END_SRC
 
     To load the registry back in:
     #+BEGIN_SRC wob
- ... load "state.sarb" .
+ ... load "state.dwob" .
     #+END_SRC
 
     Optionally, a second argument can be provided to =load= to load the data into a specific registry, not just the current one.
 
     #+BEGIN_SRC wob
- ... load "state.sarb" old-stuff .
+ ... load "state.dwob" old-stuff .
     #+END_SRC
 
     Where =old-stuff= is a registry.
