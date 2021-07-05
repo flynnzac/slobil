@@ -121,11 +121,11 @@ str_type (data_type type)
     case Instruction:
       s = "Instruction";
       break;
-    case Active_Instruction:
-      s = "Active-Instruction";
+    case Expression:
+      s = "Expression";
       break;
     case Operation:
-      s = "Instruction";
+      s = "Operation";
       break;
     case Nothing:
       s = "Nothing";

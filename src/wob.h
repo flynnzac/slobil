@@ -57,7 +57,7 @@ enum data_type
    Register = 8,
    Registry = 16,
    Instruction = 32,
-   Active_Instruction = 64,
+   Expression = 64,
    Operation = 128,
    File = 256,
    Boolean = 512,
@@ -396,7 +396,7 @@ bool
 is_nothing (const char* str);
 
 void
-assign_active (data** d, statement* s);
+assign_expression (data** d, statement* s);
 
 data*
 lookup (registry* reg, unsigned long hash_name, int recursive);

@@ -38,7 +38,7 @@ gen_arg (int length, int def_free)
 data*
 resolve (data* arg, registry* reg)
 {
-  if (arg->type == Active_Instruction)
+  if (arg->type == Expression)
     {
       ((instruction*) arg->data)->being_called = true;
       execute_code(((instruction*) arg->data)->stmt, reg);

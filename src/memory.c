@@ -142,7 +142,7 @@ free_data (data* d)
       free_instruction((instruction*) d->data);
       free(d);
     }
-  else if (d->type == Active_Instruction)
+  else if (d->type == Expression)
     {
       free_statement(((instruction*) d->data)->stmt);
       free(d->data);

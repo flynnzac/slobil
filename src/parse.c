@@ -191,7 +191,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                           e = add_literal_argument(&head, e, d);
                           break;
                         case '{':
-                          assign_active(&d, NULL);
+                          assign_expression(&d, NULL);
                           ((instruction*) d->data)->stmt = sub_stmt;
                           e = add_literal_argument(&head, e, d);
                           break;

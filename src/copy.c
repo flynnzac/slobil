@@ -74,10 +74,10 @@ assign_instr (data** d, statement* s, const char* code)
 }
 
 void
-assign_active (data** d, statement* s)
+assign_expression (data** d, statement* s)
 {
   *d = new_data();
-  (*d)->type = Active_Instruction;
+  (*d)->type = Expression;
   (*d)->data = malloc(sizeof(instruction));
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->being_called = false;
@@ -354,8 +354,8 @@ copy_data (data* d_in)
       assign_instr(&d, ((instruction*) d_in->data)->stmt,
                    ((instruction*) d_in->data)->code);
       break;
-    case Active_Instruction:
-      assign_active(&d, ((instruction*) d_in->data)->stmt);
+    case Expression:
+      assign_expression(&d, ((instruction*) d_in->data)->stmt);
       break;
     case File:
       assign_file(&d, (FILE*) d_in->data);

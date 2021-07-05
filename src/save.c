@@ -42,7 +42,7 @@ save_content (gzFile f, content* reg)
 
   while (reg != NULL)
     {
-      if ((reg->value->type != Active_Instruction) &&
+      if ((reg->value->type != Expression) &&
           (reg->value->type != File) &&
           ((reg->value->type != Operation) || ((op_wrapper*) reg->value->data)->instr != NULL))
         {
