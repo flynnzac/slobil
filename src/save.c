@@ -155,7 +155,10 @@ save_content (gzFile f, content* reg)
               }
               break;
             case Boolean:
-              gzfwrite(reg->value->data, sizeof(bool), 1, f);
+              {
+                uint8_t* u8 = reg->value->data;
+                gzfwrite(u8, sizeof(uint8_t), 1, f);
+              }
               break;
             default:
               break;
@@ -371,10 +374,12 @@ read_registry (gzFile f, registry* reg)
           }
           break;
         case Boolean:
-          cache = malloc(sizeof(bool));
-          gzfread(cache, sizeof(bool), 1, f);
-          assign_boolean(&d, *(bool*) cache);
-          free(cache);
+          {
+            cache = malloc(sizeof(uint8_t));
+            gzfread(cache, sizeof(uint8_t), 1, f);
+            assign_boolean(&d, (bool) *((uint8_t*) cache));
+            free(cache);
+          }
           break;
         case Nothing:
           assign_nothing(&d);
