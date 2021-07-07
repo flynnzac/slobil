@@ -63,7 +63,7 @@ save_content (gzFile f, content* reg)
           ((reg->value->type != Operation) || ((op_wrapper*) reg->value->data)->instr != NULL))
         {
 
-          uint32_t type = htobe32(reg->value->type);
+          uint32_t type = htole32(reg->value->type);
           gzfwrite(&type, sizeof(uint32_t), 1, f);
       
           switch (reg->value->type)
@@ -75,7 +75,7 @@ save_content (gzFile f, content* reg)
                 char* s = malloc(size);
                 mpz_get_str(s, 10, *z);
                 size = (uint64_t) strlen8(s, CHAR_BIT);
-                size = htobe64(size);
+                size = htole64(size);
                 gzfwrite(&size, sizeof(uint64_t), 1, f);
                 gzfwrite(s, sizeof(char), strlen(s), f);
                 free(s);
@@ -84,14 +84,14 @@ save_content (gzFile f, content* reg)
             case Real:
               {
                 uint64_t* inp = (double*) reg->value->data;
-                uint64_t u = htobe64(*inp);
+                uint64_t u = htole64(*inp);
                 gzfwrite(&u, sizeof(uint64_t), 1, f);
               }
               break;
             case String:
               size = (uint64_t) strlen8((char*) reg->value->data,
                                         CHAR_BIT);
-              size = htobe64(size);
+              size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(reg->value->data, sizeof(char),
                      strlen((char*) reg->value->data), f);
@@ -99,20 +99,20 @@ save_content (gzFile f, content* reg)
             case Register:
               size = (uint64_t) strlen8(((regstr*) reg->value->data)->name,
                                         CHAR_BIT);
-              size = htobe64(size);
+              size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(reg->value->data, sizeof(char),
                      strlen(((regstr*) reg->value->data)->name), f);
               break;
             case Registry:
               save_registry(f, (registry*) reg->value->data);
-              size = htobe32((uint32_t) NotAType);
+              size = htole32((uint32_t) NotAType);
               gzfwrite(&size, sizeof(uint32_t), 1, f);
               break;
             case Instruction:
               size = (uint64_t) strlen8(((instruction*) reg->value->data)->code,
                                         CHAR_BIT);
-              size = htobe64(size);
+              size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(((instruction*) reg->value->data)->code, sizeof(char),
                      strlen(((instruction*) reg->value->data)->code), f);
@@ -124,18 +124,18 @@ save_content (gzFile f, content* reg)
                   break;
                 size = (uint64_t) strlen8(((instruction*) op->instr->data)->code,
                                           CHAR_BIT);
-                uint64_t size_out = htobe64(size);
+                uint64_t size_out = htole64(size);
 
                 gzfwrite(&size_out, sizeof(uint64_t), 1, f);
                 gzfwrite(((instruction*) op->instr->data)->code, sizeof(char),
                          strlen(((instruction*) op->instr->data)->code), f);
-                uint64_t narg = htobe64((uint64_t) op->n_arg);
+                uint64_t narg = htole64((uint64_t) op->n_arg);
                 gzfwrite(&narg, sizeof(uint64_t), 1, f);
 
                 for (int i=0; i < op->n_arg; i++)
                   {
                     size = (uint64_t) strlen8(((regstr*) op->args[i]->data)->name, CHAR_BIT);
-                    size_out = htobe64(size);
+                    size_out = htole64(size);
                     gzfwrite(&size_out, sizeof(uint64_t), 1, f);
                     gzfwrite(((regstr*) op->args[i]->data)->name,
                              sizeof(char), strlen(((regstr*) op->args[i]->data)->name), f);
@@ -146,10 +146,10 @@ save_content (gzFile f, content* reg)
               {
                 task* t = (task*) reg->value->data;
                 save_registry(f, t->state);
-                size = htobe32((uint32_t) NotAType);
+                size = htole32((uint32_t) NotAType);
                 gzfwrite(&size, sizeof(uint32_t),1,f);
                 size = (uint64_t) strlen8(t->code->code, CHAR_BIT);
-                uint64_t size_out = htobe64(size);
+                uint64_t size_out = htole64(size);
                 gzfwrite(&size_out, sizeof(uint64_t), 1, f);
                 gzfwrite(t->code->code, sizeof(char), strlen(t->code->code), f);
               }
@@ -165,7 +165,7 @@ save_content (gzFile f, content* reg)
             }
 
           size = (uint64_t) strlen8(reg->name, CHAR_BIT);
-          size = htobe64(size);
+          size = htole64(size);
           gzfwrite(&size, sizeof(uint64_t), 1, f);
           gzfwrite(reg->name, sizeof(char), strlen(reg->name), f);
 
@@ -192,7 +192,7 @@ read_registry (gzFile f, registry* reg)
   char* code;
   while (gzfread(type_cache, sizeof(uint32_t), 1, f))
     {
-      uint32_t _type = be32toh(*type_cache);
+      uint32_t _type = le32toh(*type_cache);
       data_type type = (int) _type;
 
       if (type == NotAType)
@@ -205,7 +205,7 @@ read_registry (gzFile f, registry* reg)
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
             size = *((uint64_t*) cache);
-            size = be64toh(size);
+            size = le64toh(size);
             free(cache);
             cache = malloc(sizeof(uint8_t)*(size+1));
             gzfread(cache, sizeof(uint8_t), size, f);
@@ -222,7 +222,7 @@ read_registry (gzFile f, registry* reg)
 
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
-            uint64_t tmp = be64toh(*((uint64_t*) cache));
+            uint64_t tmp = le64toh(*((uint64_t*) cache));
             double* to_assign = &tmp;
 
             assign_real(&d, *to_assign);
@@ -232,7 +232,7 @@ read_registry (gzFile f, registry* reg)
         case String:
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
-          size = be64toh(*((uint64_t*) cache));
+          size = le64toh(*((uint64_t*) cache));
           free(cache);
           cache = malloc(BYT(size)+1);
           gzfread(cache, 1, BYT(size), f);
@@ -242,7 +242,7 @@ read_registry (gzFile f, registry* reg)
         case Register:
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
-          size = be64toh(*((uint64_t*) cache));
+          size = le64toh(*((uint64_t*) cache));
           free(cache);
           cache = malloc(BYT(size)+1);
           gzfread(cache, 1, BYT(size), f);
@@ -258,7 +258,7 @@ read_registry (gzFile f, registry* reg)
         case Instruction:
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
-          size = be64toh(*((uint64_t*) cache));
+          size = le64toh(*((uint64_t*) cache));
           free(cache);
           
           cache = malloc(BYT(size)+1);
@@ -284,7 +284,7 @@ read_registry (gzFile f, registry* reg)
         case Operation:
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
-          size = be64toh(*((uint64_t*) cache));
+          size = le64toh(*((uint64_t*) cache));
           free(cache);
 
           cache = malloc(BYT(size)+1);
@@ -310,7 +310,7 @@ read_registry (gzFile f, registry* reg)
 
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
-          op->n_arg = be64toh(*((uint64_t*) cache));
+          op->n_arg = le64toh(*((uint64_t*) cache));
           free(cache);
 
           op->args = malloc(sizeof(data*)*(op->n_arg));
@@ -319,7 +319,7 @@ read_registry (gzFile f, registry* reg)
             {
               cache = malloc(sizeof(uint64_t));
               gzfread(cache, sizeof(uint64_t), 1, f);
-              size = be64toh(*((uint64_t*) cache));
+              size = le64toh(*((uint64_t*) cache));
               free(cache);
 
               char* name = malloc(BYT(size)+1);
@@ -344,7 +344,7 @@ read_registry (gzFile f, registry* reg)
             read_registry(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
-            size = be64toh(*((uint64_t*) cache));
+            size = le64toh(*((uint64_t*) cache));
             free(cache);
 
             cache = malloc(BYT(size)+1);
@@ -389,7 +389,7 @@ read_registry (gzFile f, registry* reg)
         }
       cache = malloc(sizeof(uint64_t));
       gzfread(cache, sizeof(uint64_t), 1, f);
-      size = be64toh(*((uint64_t*) cache));
+      size = le64toh(*((uint64_t*) cache));
       free(cache);
       cache = malloc(BYT(size)+1);
       gzfread(cache, 1, BYT(size), f);
@@ -413,12 +413,12 @@ save_outer (registry* reg, char* fname)
   gzFile f = gzopen(fname, "w6");
   double save_version = 1.1;
   uint64_t* inp = &save_version;
-  uint64_t u = htobe64(*inp);
+  uint64_t u = htole64(*inp);
   gzfwrite(&u, sizeof(uint64_t), 1, f);
   
   save_registry(f, reg);
   data_type end = NotAType;
-  uint32_t end_u = htobe32((uint32_t) end);
+  uint32_t end_u = htole32((uint32_t) end);
   gzfwrite(&end_u, sizeof(uint32_t), 1, f);
   gzclose(f);
 }
@@ -429,7 +429,7 @@ read_outer (gzFile f, registry* reg)
   double version;
   uint64_t tmp;
   gzfread(&tmp, sizeof(uint64_t), 1, f);
-  tmp = be64toh(tmp);
+  tmp = le64toh(tmp);
   version = *((double*) &tmp);
   
   read_registry(f, reg);

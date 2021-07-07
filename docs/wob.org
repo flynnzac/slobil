@@ -402,7 +402,7 @@ ans = "/home/zlf"
 
    | Element | Description                                                                                              |
    |---------+----------------------------------------------------------------------------------------------------------|
-   | Body    | The instruction run in a separate thread from the main WOB thread.                                     |
+   | Body    | The instruction run in a separate thread from the main WOB thread.                                       |
    | State   | A Registry that contains the current state of the task.  The registry being modified by the Task's body. |
    | Queue   | A Registry that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
    |---------+----------------------------------------------------------------------------------------------------------|
@@ -1305,6 +1305,14 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
     - =clock= --- set the =/ans= register to the current time in milliseconds from January 1, 1970.
 
     - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31), 
+
+
+* Saved Registries
+
+
+*Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting WOB in any case; it has no permanent information.  All other data types are written to disk.
+
+This section will describe the storage format for WOB saved files.  A user or programmer will never need to know the internal structure of the save file, but it will be provided here to have complete documentation and to perhaps be useful to people writing a C extension to WOB.
 
 * GNU Free Documentation License
 
