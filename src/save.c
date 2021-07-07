@@ -20,7 +20,6 @@
 */
 
 #include "wob.h"
-#include <inttypes.h>
 #define BYT8 nbytes(8)
 #define BYT(s) nbytes(8*s)
 
