@@ -47,7 +47,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <zlib.h>
-
+#include <endian.h>
 
 enum data_type
   {
