@@ -79,7 +79,6 @@ _op_call (arg a, registry* reg, const int explicit)
           return;
         }
       d_data = a.arg_array[i+1];
-      /* d_new = copy_data(d_data); */
       d_new = d_data;
       content* c = set(r_new, d_new, ((regstr*) d->data)->name, 1);
       c->do_not_free_data = 1;
@@ -126,9 +125,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
           c->do_not_free_data = 1;
         }
 
-      ((instruction*) op->instr->data)->being_called = true;
-      execute_code(((instruction*) op->instr->data)->stmt, r_new);
-      ((instruction*) op->instr->data)->being_called = false;
+      execute_0(op->instr, r_new);
 
       data* ans;
       if (!is_error(-1, reg->task->task))

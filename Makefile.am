@@ -15,7 +15,7 @@ wob_CFLAGS = $(AM_CFLAGS) -L. -lwob
 
 man1_MANS = docs/wob.1
 
-noinst_PROGRAMS = test/unit/test_arg
+noinst_PROGRAMS = test/unit/test_arg test/unit/test_copy
 
 
 TESTS = test/ops/op_arithmetic.wob
@@ -35,6 +35,7 @@ TESTS += test/ops/op_do.wob
 TESTS += test/ops/op_next.wob
 TESTS += test/ops/op_last.wob
 TESTS += test/unit/test_arg
+TESTS += test/unit/test_copy
 
 
 
@@ -47,5 +48,9 @@ libwob_la_SOURCES += src/operator.pshm
 test_unit_test_arg_SOURCES = test/unit/test_arg.c
 test_unit_test_arg_DEPENDENCIES = libwob.la
 test_unit_test_arg_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lwob
+
+test_unit_test_copy_SOURCES = test/unit/test_copy.c
+test_unit_test_copy_DEPENDENCIES = libwob.la
+test_unit_test_copy_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lwob
 
 
