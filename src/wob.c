@@ -94,7 +94,7 @@ main (int argc, char** argv)
           complete = interact(f, &state,
                               task0->task->current_parse_registry);
           fclose(f);
-          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".darb")+1));
+          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".dwob")+1));
           for (int idx = 0; idx < strlen(optarg); idx++)
             {
               if (optarg[idx]=='.')
@@ -111,7 +111,7 @@ main (int argc, char** argv)
                   newname[idx+1] = '\0';
                 }
             }
-          strcat(newname, ".darb");
+          strcat(newname, ".dwob");
           save_outer(task0->task->current_parse_registry, newname);
           early_stop = true;
           break;
