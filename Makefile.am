@@ -9,10 +9,9 @@ SUFFIXES = .pshm .wob
 
 
 bin_PROGRAMS = wob
-wob_SOURCES = src/wob.c src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c
-wob_CFLAGS = $(AM_CFLAGS)
-
-wob_SOURCES += src/operator.pshm
+wob_SOURCES = src/wob.c
+wob_DEPENDENCIES = libwob.la
+wob_CFLAGS = $(AM_CFLAGS) -L. -lwob
 
 man1_MANS = docs/wob.1
 
