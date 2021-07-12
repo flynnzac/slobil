@@ -12,7 +12,7 @@ task /t1
 run-task t1 .
 
 queue /hello "Hi!" t1 .
-accept /current t1 .
+accept-or /current ( print "Result not ready yet." . ) t1 .
 
 task /t2
      (

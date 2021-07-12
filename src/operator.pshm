@@ -3473,6 +3473,14 @@ op_accept (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
+  if (reg->task->queued_instruction==NULL)
+    {
+      /* We are in the main task. */
+      do_error("Use <accept-or> from the main task.",
+               reg->task->task);
+      return;
+    }
+  
   task* t;
   if (a.length >= 3)
     {

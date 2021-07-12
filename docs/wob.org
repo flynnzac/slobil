@@ -227,7 +227,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
    #+BEGIN_SRC wob
    ... go-out .
-   ... print hello 
+   ... print hello .
    Error: Value at `/hello` not found.
    #+END_SRC
 
@@ -235,7 +235,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
    #+BEGIN_SRC wob
    ... import my-registry .
-   ... print hello
+   ... print hello .
    Hello, world!
    #+END_SRC
    
@@ -411,7 +411,7 @@ ans = "/home/zlf"
 
    Tasks /accept/ data when they take data from their queue and move it into their state registry.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
 
-   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.
+   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.  WOB does not allow running =accept= in the main task because there is no way to exit the blocking.  =accept-or= can be used instead.
 
    The =queue= operation moves data from one registry into the queue of another Task.  Its arguments are a register to set in the queue registry, the data to send, and the task's queue to access.
 
@@ -899,11 +899,15 @@ ans = 0.693147
 
 
 
-
 ** Concurrent Programming
 
-Example of using Tasks:
+WOB uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
+
 #+INCLUDE: "../examples/task.wob" src wob
+
+The following task that can be used to run any code in the background.  
+
+#+INCLUDE: "../examples/background.wob" src wob
 
 * Reference
 
