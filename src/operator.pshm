@@ -1046,6 +1046,15 @@ op_last (arg a, registry* reg)
   char* root = ((regstr*) arg2->data)->name;
   name = vector_name(root, i);
   unsigned long hash_name = hash_str(name);
+
+  while ((d = get(arg_reg, hash_name, 0)) == NULL)
+    {
+      i++;
+      free(name);
+      name = vector_name(root, i);
+      hash_name = hash_str(name);
+    }
+
   while ((d = get(arg_reg, hash_name, 0)) != NULL)
     {
       i++;
