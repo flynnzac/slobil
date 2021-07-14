@@ -370,6 +370,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
         }
       else if (c == ']' && !state->in_quote)
         {
+          printf("%s\n", state->buffer);
           state->in_instr--;
           if (state->in_instr == 0)
             {
@@ -414,17 +415,22 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
               add_to_state_buffer(state, c, true);
             }
         }
-      else if (c == '"' && !state->in_instr)
+      else if (c == '"')
         {
           if (state->in_quote)
             {
               state->in_quote = 0;
-              state->after_quote = 1;
+              if (!state->in_instr)
+                state->after_quote = 1;
             }
           else
             {
               state->in_quote = 1;
             }
+
+          if (state->in_instr)
+            add_to_state_buffer(state,c,true);
+              
         }
       else
         {
