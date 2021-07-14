@@ -370,7 +370,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
         }
       else if (c == ']' && !state->in_quote)
         {
-          printf("%s\n", state->buffer);
           state->in_instr--;
           if (state->in_instr == 0)
             {
