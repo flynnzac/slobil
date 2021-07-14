@@ -532,8 +532,8 @@ print_statement (statement* s);
 data*
 new_data();
 
-int
-wob_location(int loc, int n);
+void
+wob_location(mpz_t loc, int n);
 
 int
 digits (int n);

@@ -1334,6 +1334,77 @@ op_string_eq (arg a, registry* reg)
 }
 
 void
+op_char_eq (arg a, registry* reg)
+{
+  #op=char-eq@
+  #length=3@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=String@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Integer@
+  ##GETARG~$;
+
+  #num=3@
+  #type=String@
+  ##GETARG~$;
+
+  unsigned char* str = (unsigned char*) arg1->data;
+  unsigned char* str_cmp = (unsigned char*) arg3->data;
+
+  mpz_t start;
+  mpz_init_set(start, *((mpz_t*) arg2->data));
+
+  size_t byte_length = strlen((char*) str)+1;
+  size_t length = u8_mbsnlen((unsigned char*) str,
+                             byte_length-1);
+
+  wob_location(start, length);
+
+  if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
+    {
+      do_error("Index out of range.", reg->task->task);
+      return;
+    }
+
+  unsigned char* first = str;
+  ucs4_t c;
+  for (int i=0; mpz_cmp_si(start, i+1) > 0; i++)
+    {
+      first = u8_next(&c, first);
+    }
+
+  size_t sz = u8_mblen(first, byte_length);
+  unsigned char* tmp_str = malloc(sizeof(char)*(sz+1));
+
+  for (int i = 0; i < sz; i++)
+    {
+      tmp_str[i] = (char) first[i];
+    }
+
+  tmp_str[sz] = '\0';
+
+  data* d = NULL;
+  if (u8_strcmp(tmp_str,str_cmp)==0)
+    {
+      assign_boolean(&d, true);
+    }
+  else
+    {
+      assign_boolean(&d, false);
+    }
+
+  ret_ans(reg,d);
+
+  free(tmp_str);
+  mpz_clear(start);
+
+}
+
+void
 op_string_lt (arg a, registry* reg)
 {
   #op=string-lt@
@@ -2638,30 +2709,34 @@ op_substring (arg a, registry* reg)
   ##GETARG~$;
 
   unsigned char* str = (unsigned char*) arg1->data;
-  int start = mpz_get_si(*((mpz_t*) arg2->data));
-  int end = mpz_get_si(*((mpz_t*) arg3->data));
+  mpz_t start;
+  mpz_t end;
+
+  mpz_init_set(start, *((mpz_t*) arg2->data));
+  mpz_init_set(end, *((mpz_t*) arg3->data));
+  
 
   size_t byte_length = strlen((char*) str)+1;
   size_t length = u8_mbsnlen((unsigned char*) str,
                              byte_length-1);
 
-  start = wob_location(start, length);
-  end = wob_location(end, length);
+  wob_location(start, length);
+  wob_location(end, length);
 
-  if ((start > length) || (start <= 0))
+  if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
       do_error("Index out of range.", reg->task->task);
       return;
     }
 
 
-  if ((end > length) || (end <= 0))
+  if ((mpz_cmp_ui(end,length)>0) || (mpz_cmp_si(end,0) <= 0))
     {
       do_error("Index out of range.", reg->task->task);
       return;
     }
 
-  if (start > end)
+  if (mpz_cmp(start,end) > 0)
     {
       do_error("The starting position of the substring is greater than the ending position.", reg->task->task);
       return;
@@ -2669,14 +2744,18 @@ op_substring (arg a, registry* reg)
 
   unsigned char* first = str;
   ucs4_t c;
-  for (int i=0; i < (start-1); i++)
+  for (int i=0; mpz_cmp_si(start, i+1)>0; i++)
     {
       first = u8_next(&c, first);
     }
 
   unsigned char* last = first;
   int sz = u8_mblen(last, byte_length);
-  for (int i=0; i < (end-start); i++)
+
+  mpz_t diff;
+  mpz_init(diff);
+  mpz_sub(diff, end, start);
+  for (int i=0; mpz_cmp_si(diff, i)>0; i++)
     {
       last = u8_next(&c, last);
       sz += u8_mblen(last, byte_length);
@@ -2694,6 +2773,9 @@ op_substring (arg a, registry* reg)
   data* d;
   assign_str(&d, result, 0);
   ret_ans(reg, d);
+
+  mpz_clear(start);
+  mpz_clear(end);
   
 }
 
@@ -3946,6 +4028,10 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_to_real, NULL, NULL, 0);
   set(reg,d,"to-real",1);
 
+  assign_op(&d, op_char_eq, NULL, NULL, 0);
+  set(reg,d,"char-eq",1);
+
+  
   /* State and environment operations */
 
   assign_op(&d, op_exit, NULL, NULL, 0);

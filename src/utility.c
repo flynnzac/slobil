@@ -115,20 +115,19 @@ escape_str (char* str)
 
 }
 
-int
-wob_location (int loc, const int n)
+void
+wob_location (mpz_t loc, const int n)
 {
-  if (loc <= 0)
+  if (mpz_cmp_si(loc,0) <= 0)
     {
-      loc += n;
+      mpz_add_ui(loc, loc, n);
     }
-  if ((loc > 0) && (loc <= n))
+  if ((mpz_cmp_si(loc,0) > 0) && (mpz_cmp_si(loc,n) <= 0))
     {
-      return loc;
     }
   else
     {
-      return -1;
+      mpz_set_si(loc, -1);
     }
 }
 
