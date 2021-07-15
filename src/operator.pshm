@@ -1371,10 +1371,9 @@ op_char_eq (arg a, registry* reg)
     }
 
   unsigned char* first = str;
-  ucs4_t c;
   for (int i=0; mpz_cmp_si(start, i+1) > 0; i++)
     {
-      first = u8_next(&c, first);
+      first += u8_strmblen(first);
     }
 
   size_t sz = u8_mblen(first, byte_length);
@@ -2743,10 +2742,9 @@ op_substring (arg a, registry* reg)
     }
 
   unsigned char* first = str;
-  ucs4_t c;
   for (int i=0; mpz_cmp_si(start, i+1)>0; i++)
     {
-      first = u8_next(&c, first);
+      first += u8_strmblen(first);
     }
 
   unsigned char* last = first;
@@ -2757,8 +2755,9 @@ op_substring (arg a, registry* reg)
   mpz_sub(diff, end, start);
   for (int i=0; mpz_cmp_si(diff, i)>0; i++)
     {
-      last = u8_next(&c, last);
-      sz += u8_mblen(last, byte_length);
+      int len = u8_strmblen(last);
+      last += len;
+      sz += len;
     }
 
   char* result = malloc(sizeof(char)*(sz + 1));
