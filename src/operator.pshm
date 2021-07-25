@@ -1377,29 +1377,25 @@ op_char_eq (arg a, registry* reg)
     }
 
   size_t sz = u8_mblen(first, byte_length);
-  unsigned char* tmp_str = malloc(sizeof(char)*(sz+1));
+  bool res = sz == strlen(str_cmp);
 
-  for (int i = 0; i < sz; i++)
+
+  if (res)
     {
-      tmp_str[i] = (char) first[i];
+      for (int i = 0; i < sz; i++)
+        {
+          if (str_cmp[i] != first[i])
+            {
+              res = false;
+              break;
+            }
+        }
     }
-
-  tmp_str[sz] = '\0';
-
+          
   data* d = NULL;
-  if (u8_strcmp(tmp_str,str_cmp)==0)
-    {
-      assign_boolean(&d, true);
-    }
-  else
-    {
-      assign_boolean(&d, false);
-    }
+  assign_boolean(&d, res);
 
   ret_ans(reg,d);
-
-  free(tmp_str);
-  mpz_clear(start);
 
 }
 
@@ -4030,7 +4026,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_char_eq, NULL, NULL, 0);
   set(reg,d,"char-eq",1);
 
-  
   /* State and environment operations */
 
   assign_op(&d, op_exit, NULL, NULL, 0);
