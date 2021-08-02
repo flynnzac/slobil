@@ -264,7 +264,7 @@ void
 assign_int (data** d, const mpz_t num);
 
 void
-assign_str (data** d, const char* str, int copy);
+assign_str (data** d, const uint32_t* str, int copy);
 
 void
 assign_op (data** d, const operation op,

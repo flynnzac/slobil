@@ -35,9 +35,9 @@ print_data (data* d, print_settings settings)
       break;
     case String:
       if (settings & PRINT_QUOTES)
-        printf("\"%s\"", (const char*) d->data);
+        ulc_fprintf(stdout, "\"%llU\"", (uint32_t*) d->data);
       else
-        printf("%s", (const char*) d->data);
+        ulc_fprintf(stdout, "%llU", (uint32_t*) d->data);
       break;
     case Real:
       printf("%f", *((double*) d->data));

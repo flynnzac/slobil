@@ -45,19 +45,19 @@ assign_int (data** d, const mpz_t num)
 }
 
 void
-assign_str (data** d, const char* str, int copy)
+assign_str (data** d, const uint32_t* str, int copy)
 {
   *d = new_data();
   (*d)->type = String;
   
   if (copy)
     {
-      (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
-      strcpy((char*) (*d)->data, str);
+      (*d)->data = malloc(sizeof(uint32_t)*(u32_strlen(str)+1));
+      u32_strcpy((uint32_t*) (*d)->data, str);
     }
   else
     {
-      (*d)->data = (char*) str;
+      (*d)->data = (uint32_t*) str;
     }
 }
 

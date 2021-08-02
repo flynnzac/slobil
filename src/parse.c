@@ -219,12 +219,16 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   state->after_quote = 0;
                   if (strlen(state->buffer)==0)
                     {
-                      assign_str(&d, "", 1);
+                      uint32_t* ut = malloc(sizeof(uint32_t));
+                      *ut = 0;
+                      assign_str(&d, ut, 0);
                     }
                   else
                     {
                       str = escape_str(state->buffer);
-                      assign_str(&d, str,1);
+                      size_t length = 0;
+                      uint32_t* str32 = u8_to_u32(str, strlen(str)+1, NULL, &length);
+                      assign_str(&d, str32,1);
                     }
                   e = add_literal_argument(&head, e, d);
                 }
