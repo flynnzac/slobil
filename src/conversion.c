@@ -1,5 +1,6 @@
-#include "wob.h"
 #include <errno.h>
+#include "wob.h"
+
 
 uint32_t *
 wob_u8_to_u32 (const uint8_t *s, size_t n)
@@ -53,7 +54,7 @@ wob_u8_to_u32 (const uint8_t *s, size_t n)
               return NULL;
             }
           if (result == NULL && length > 0)
-            memcpy ((char *) memory, (char *) result,
+            memcpy ((uint32_t *) memory, (uint32_t *) result,
                     length * sizeof (uint32_t));
           result = memory;
         }
@@ -141,7 +142,7 @@ wob_u32_to_u8 (const uint32_t *s, size_t n)
               return NULL;
             }
           if (result == NULL && length > 0)
-            memcpy ((char *) memory, (char *) result,
+            memcpy ((uint8_t *) memory, (uint8_t *) result,
                     length * sizeof (uint8_t));
           result = memory;
         }

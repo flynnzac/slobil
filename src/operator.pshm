@@ -805,7 +805,7 @@ op_source (arg a, registry* reg)
 
   
   char* file = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
 
   FILE* f = fopen(file, "r");
   
@@ -824,7 +824,6 @@ op_source (arg a, registry* reg)
   interact(f, &state, reg);
   free_state(&state);
   free(file);
-  
   fclose(f);
 
 }
@@ -1205,7 +1204,7 @@ op_to_register (arg a, registry* reg)
   if (arg1->type == String)
     {
       char* str = wob_u32_to_u8((uint32_t*) arg1->data,
-                                u32_strlen((uint32_t*) arg1->data)+1);
+                                u32_strlen((uint32_t*) arg1->data));
       assign_regstr(&d, str, hash_str(str));
       free(str);
     }
@@ -1526,9 +1525,8 @@ op_save (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  size_t length = 0;
   char* file = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
              
   save_outer(reg, file);
 
@@ -1548,7 +1546,7 @@ op_load (arg a, registry* reg)
   ##GETARG~$;
 
   char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
-                              u32_strlen((uint32_t*) arg1->data)+1);
+                              u32_strlen((uint32_t*) arg1->data));
   
   gzFile f = gzopen(fname, "r");
   if (f == NULL)
@@ -1650,7 +1648,7 @@ op_to_string (arg a, registry* reg)
       strcpy(result, regstr_name);
     }
 
-  uint32_t* res32 = wob_u8_to_u32(result, strlen(result)+1);
+  uint32_t* res32 = wob_u8_to_u32(result, strlen(result));
   data* d;
   assign_str(&d, res32, 0);
   ret_ans(reg, d);
@@ -1673,8 +1671,7 @@ op_to_number (arg a, registry* reg)
   if (arg1->type == String)
     {
       uint32_t* value = (uint32_t*) arg1->data;
-      size_t length = 0;
-      char* u8_value = wob_u32_to_u8(value, u32_strlen(value)+1);
+      char* u8_value = wob_u32_to_u8(value, u32_strlen(value));
       data* d;
       if (is_integer(u8_value))
         {
@@ -1744,9 +1741,8 @@ op_to_real (arg a, registry* reg)
     d = copy_data(arg1);
   else
     {
-      size_t length = 0;
       char* u8value = wob_u32_to_u8((uint32_t*) arg1->data,
-                                    u32_strlen((uint32_t*) arg1->data)+1);
+                                    u32_strlen((uint32_t*) arg1->data));
 
       double result = atof(u8value);
       assign_real(&d, result);
@@ -1772,9 +1768,8 @@ op_output_code (arg a, registry* reg)
 
   if (reg->task->task->source_code != NULL)
     {
-      size_t length = 0;
       char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
-                                  u32_strlen((uint32_t*) arg1->data)+1);
+                                  u32_strlen((uint32_t*) arg1->data));
       FILE* f = fopen(fname, "w");
       fwrite(reg->task->task->source_code, sizeof(char),
              strlen(reg->task->task->source_code), f);
@@ -1809,9 +1804,8 @@ op_error (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  size_t length = 0;
   char* err_msg = wob_u32_to_u8((uint32_t*) arg1->data,
-                                u32_strlen((uint32_t*) arg1->data)+1);
+                                u32_strlen((uint32_t*) arg1->data));
   
   do_error(err_msg, reg->task->task);
   free(err_msg);
@@ -1928,9 +1922,8 @@ op_open_file (arg a, registry* reg)
   ##GETARG~$;
 
   FILE* f;
-  size_t length = 0;
   char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
-                              u32_strlen((uint32_t*) arg1->data)+1);
+                              u32_strlen((uint32_t*) arg1->data));
   if (a.length >= 3)
     {
       #num=2@
@@ -2021,7 +2014,7 @@ op_read_char (arg a, registry* reg)
   else
     {
       c[nbytes] = '\0';
-      uint32_t* c32 = wob_u8_to_u32(c, strlen(c)+1);
+      uint32_t* c32 = wob_u8_to_u32(c, strlen(c));
       assign_str(&d, c32, 0);
     }
   ret_ans(reg,d);
@@ -2161,11 +2154,11 @@ op_read_line (arg a, registry* reg)
       if (!feof((FILE*) arg1->data))
         line[strlen(line)-1] = '\0';
 
-      uint32_t* u32_line = wob_u8_to_u32(line, strlen(line)+1);
+      uint32_t* u32_line = wob_u8_to_u32(line, strlen(line));
       assign_str(&d, u32_line, 0);
 
-			#data=line@
-      ##FREE~$;
+			/* #data=line@ */
+      /* ##FREE~$; */
       ret_ans(reg,d);
     }
   else
@@ -2173,8 +2166,8 @@ op_read_line (arg a, registry* reg)
       assign_nothing(&d);
       ret_ans(reg,d);
 
-      #data=line@
-      ##FREE~$;
+      /* #data=line@ */
+      /* ##FREE~$; */
 
     }
 }
@@ -2194,7 +2187,6 @@ op_write_string (arg a, registry* reg)
   #type=File@
   ##GETARG~$;
 
-  size_t length = 0;
   char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
 
@@ -2250,8 +2242,7 @@ op_input (arg a, registry* reg)
   char* input = readline("");
   data* d;
 
-  size_t length = 0;
-  uint32_t* str = wob_u8_to_u32(input, strlen(input)+1);
+  uint32_t* str = wob_u8_to_u32(input, strlen(input));
                                 
   assign_str(&d, str, 0);
   
@@ -2272,8 +2263,10 @@ op_shell (arg a, registry* reg)
   ##GETARG~$;
 
   char* cmd = wob_u32_to_u8((uint32_t*) arg1->data,
-                            u32_strlen((uint32_t*) arg1->data)+1);
+                            u32_strlen((uint32_t*) arg1->data));
   FILE* f = popen(cmd, "r");
+
+  uint32_t* raw;
   
   if (f == NULL)
     {
@@ -2288,16 +2281,13 @@ op_shell (arg a, registry* reg)
     {
       if (d == NULL)
         {
-          size_t length = 0;
-          uint32_t* raw = wob_u8_to_u32(buffer, strlen(buffer)+1);
+          raw = wob_u8_to_u32(buffer, strlen(buffer));
           assign_str(&d, raw, 0);
         }
       else
         {
-          size_t length = 0;
-          uint32_t* raw = wob_u8_to_u32(buffer, strlen(buffer)+1);
-
-          d->data = realloc(d->data, sizeof(uint32_t)*(u32_strlen((uint32_t*) d->data)+length+1));
+          raw = wob_u8_to_u32(buffer, strlen(buffer));
+          d->data = realloc(d->data, sizeof(uint32_t)*(u32_strlen((uint32_t*) d->data)+u32_strlen(raw)+1));
           u32_strcat((uint32_t*) d->data, raw);
           free(raw);
         }
@@ -2330,7 +2320,7 @@ op_link (arg a, registry* reg)
   ##GETARG~$;
 
   char* file = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
   
   void* lib = dlopen(file, RTLD_LAZY);
 
@@ -2342,7 +2332,7 @@ op_link (arg a, registry* reg)
     }
 
   char* op_name = wob_u32_to_u8((uint32_t*) arg2->data,
-                                u32_strlen((uint32_t*) arg2->data)+1);
+                                u32_strlen((uint32_t*) arg2->data));
   
   operation new_op = dlsym(lib, op_name);
   if (new_op == NULL)
@@ -2353,7 +2343,7 @@ op_link (arg a, registry* reg)
     }
 
   char* wob_op_name = wob_u32_to_u8((uint32_t*) arg3->data,
-                                    u32_strlen((uint32_t*) arg3->data)+1);
+                                    u32_strlen((uint32_t*) arg3->data));
   data* d;
   assign_op(&d, new_op, NULL, NULL, 0);
   set(reg, d, wob_op_name, 1);
@@ -2390,10 +2380,10 @@ op_match (arg a, registry* reg)
   ##GETARG~$;
 
   char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
 
   char* str2 = wob_u32_to_u8((uint32_t*) arg2->data,
-                             u32_strlen((uint32_t*) arg2->data)+1);
+                             u32_strlen((uint32_t*) arg2->data));
   
 
   int max_matches = 0;
@@ -2455,7 +2445,7 @@ op_match (arg a, registry* reg)
                   to_add[j-matches[i].rm_so] = '\0';
 
                   uint32_t* u32_add = wob_u8_to_u32(to_add,
-                                                    strlen(to_add)+1);
+                                                    strlen(to_add));
                   
                   assign_str(&d_str, u32_add, 0);
 
@@ -2503,15 +2493,14 @@ op_replace (arg a, registry* reg)
   #num=3@
   ##GETARG~$;
 
-  size_t length = 0;
   char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
 
   char* str2 = wob_u32_to_u8((uint32_t*) arg2->data,
-                             u32_strlen((uint32_t*) arg2->data)+1);
+                             u32_strlen((uint32_t*) arg2->data));
 
   char* str3 = wob_u32_to_u8((uint32_t*) arg3->data,
-                             u32_strlen((uint32_t*) arg3->data)+1);
+                             u32_strlen((uint32_t*) arg3->data));
 
 
   int max_replace = 0;
@@ -2611,7 +2600,7 @@ op_replace (arg a, registry* reg)
   final[final_sz] = '\0';
 
   uint32_t* u32_final = wob_u8_to_u32(final,
-                                      strlen(final)+1);
+                                      strlen(final));
   
   assign_str(&d, u32_final, 0);
   ret_ans(reg,d);
@@ -2723,9 +2712,8 @@ op_change_dir (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  size_t length = 0;
   char* dir = wob_u32_to_u8((uint32_t*) arg1->data,
-                            u32_strlen((uint32_t*) arg1->data)+1);
+                            u32_strlen((uint32_t*) arg1->data));
 
   int error = chdir(dir);
 
@@ -2790,11 +2778,11 @@ op_current_dir (arg a, registry* reg)
       return;
     }
   data* d;
-  uint32_t* u32dir = wob_u8_to_u32(dir, strlen(dir)+1);
+  uint32_t* u32dir = wob_u8_to_u32(dir, strlen(dir));
   assign_str(&d, u32dir, 0);
 
-  #data=dir@
-  ##FREE~$;
+  /* #data=dir@ */
+  /* ##FREE~$; */
 
   ret_ans(reg,d);
 }
@@ -2920,9 +2908,8 @@ op_code (arg a, registry* reg)
   ##GETARG~$;
 
   data* d;
-  size_t length = 0;
   char* code = ((instruction*) arg1->data)->code;
-  uint32_t* u32code = wob_u8_to_u32(code, strlen(code)+1);
+  uint32_t* u32code = wob_u8_to_u32(code, strlen(code));
   
   assign_str(&d, u32code, 0);
 
@@ -2984,9 +2971,8 @@ void
 op_version (arg a, registry* reg)
 {
   data* d;
-  size_t length = 0;
   uint32_t* u32version = wob_u8_to_u32(PACKAGE_VERSION,
-                                       strlen(PACKAGE_VERSION)+1);
+                                       strlen(PACKAGE_VERSION));
   assign_str(&d, u32version, 0);
 
   ret_ans(reg, d);
@@ -3197,7 +3183,7 @@ op_use (arg a, registry* reg)
   ##GETARG~$;
 
   char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
-                             u32_strlen((uint32_t*) arg1->data)+1);
+                             u32_strlen((uint32_t*) arg1->data));
 
 
   char* home = getenv("HOME");

@@ -122,8 +122,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
   FILE* f_sub = NULL;
   parser_state sub_state;
   char* str;
-
-
+  uint32_t* str32;
+  
   /* Go to end of current element list. */
   while (e != NULL)
     {
@@ -219,15 +219,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   state->after_quote = 0;
                   if (strlen(state->buffer)==0)
                     {
-                      uint32_t* ut = malloc(sizeof(uint32_t));
-                      *ut = 0;
-                      assign_str(&d, ut, 0);
+                      str32 = malloc(sizeof(uint32_t));
+                      *str32 = (uint32_t) 0;
+                      assign_str(&d, str32, 1);
                     }
                   else
                     {
                       str = escape_str(state->buffer);
-                      uint32_t* str32 = wob_u8_to_u32(str, strlen(str)+1);
-                      assign_str(&d, str32, 0);
+                      str32 = wob_u8_to_u32(str, strlen(str));
+                      assign_str(&d, str32, 1);
                     }
                   e = add_literal_argument(&head, e, d);
                 }

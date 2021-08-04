@@ -85,7 +85,7 @@ main (int argc, char** argv)
   bool listen_socket = false;
   int port = 0;
   bool early_stop = false;
-  while ((k = getopt(argc, argv, "l:s:nmvc:p:b:")) != -1)
+  while ((k = getopt(argc, argv, "l:s:nmdvc:p:b:")) != -1)
     {
       switch (k)
         {
