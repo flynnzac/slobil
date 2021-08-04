@@ -88,11 +88,18 @@ save_content (gzFile f, content* reg)
               }
               break;
             case String:
-              size = (uint64_t) u32_strlen((uint32_t*) reg->value->data);
-              size = htole64(size);
-              gzfwrite(&size, sizeof(uint64_t), 1, f);
-              gzfwrite(reg->value->data, sizeof(uint32_t),
-                       u32_strlen((uint32_t*) reg->value->data), f);
+              {
+                size = (uint64_t) u32_strlen((uint32_t*) reg->value->data);
+                size = htole64(size);
+                gzfwrite(&size, sizeof(uint64_t), 1, f);
+                uint32_t* u32 = u32_str_to_le
+                  ((uint32_t*) reg->value->data);
+                
+                gzfwrite(reg->value->data, sizeof(uint32_t),
+                         u32_strlen(u32), f);
+
+                free(u32);
+              }
               break;
             case Register:
               size = (uint64_t) strlen8(((regstr*) reg->value->data)->name,
@@ -228,14 +235,18 @@ read_registry (gzFile f, registry* reg)
           }
           break;
         case String:
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-          cache = malloc((size+1)*sizeof(uint32_t));
-          gzfread(cache, sizeof(uint32_t), size, f);
-          *((uint32_t*)(cache)+size) = '\0';
-          assign_str(&d, (uint32_t*) cache, 0);
+          {
+            cache = malloc(sizeof(uint64_t));
+            gzfread(cache, sizeof(uint64_t), 1, f);
+            size = le64toh(*((uint64_t*) cache));
+            free(cache);
+            cache = malloc((size+1)*sizeof(uint32_t));
+            gzfread(cache, sizeof(uint32_t), size, f);
+            *((uint32_t*)(cache)+size) = (uint32_t) 0;
+            uint32_t* u32 = u32_str_to_h((uint32_t*) cache);
+            assign_str(&d, (uint32_t*) cache, 0);
+            free(cache);
+          }
           break;
         case Register:
           cache = malloc(sizeof(uint64_t));

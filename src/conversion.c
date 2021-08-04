@@ -174,3 +174,29 @@ wob_u32_to_u8 (const uint32_t *s, size_t n)
 
   return result;
 }
+
+uint32_t*
+u32_str_to_le (const uint32_t* str)
+{
+  uint32_t* result = malloc(sizeof(uint32_t)*(u32_strlen(str)+1));
+
+  for (size_t i=0; i < u32_strlen(str); i++)
+    {
+      result[i] = htole32(str[i]);
+    }
+  return result;
+}
+
+
+uint32_t*
+u32_str_to_h (const uint32_t* str)
+{
+  uint32_t* result = malloc(sizeof(uint32_t)*(u32_strlen(str)+1));
+
+  for (size_t i=0; i < u32_strlen(str); i++)
+    {
+      result[i] = le32toh(str[i]);
+    }
+  return result;
+}
+

@@ -586,6 +586,12 @@ wob_u8_to_u32 (const uint8_t* s, size_t n);
 uint8_t*
 wob_u32_to_u8 (const uint32_t* s, size_t n);
 
+uint32_t*
+u32_str_to_le (const uint32_t* str);
+
+uint32_t*
+u32_str_to_h (const uint32_t* str);
+
 /* interpreter internal registry */
 
 

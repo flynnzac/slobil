@@ -2157,8 +2157,8 @@ op_read_line (arg a, registry* reg)
       uint32_t* u32_line = wob_u8_to_u32(line, strlen(line));
       assign_str(&d, u32_line, 0);
 
-			/* #data=line@ */
-      /* ##FREE~$; */
+			#data=line@ 
+      ##FREE~$;
       ret_ans(reg,d);
     }
   else
@@ -2166,8 +2166,8 @@ op_read_line (arg a, registry* reg)
       assign_nothing(&d);
       ret_ans(reg,d);
 
-      /* #data=line@ */
-      /* ##FREE~$; */
+      #data=line@ 
+      ##FREE~$;
 
     }
 }
@@ -2781,8 +2781,8 @@ op_current_dir (arg a, registry* reg)
   uint32_t* u32dir = wob_u8_to_u32(dir, strlen(dir));
   assign_str(&d, u32dir, 0);
 
-  /* #data=dir@ */
-  /* ##FREE~$; */
+  #data=dir@ 
+  ##FREE~$; 
 
   ret_ans(reg,d);
 }
