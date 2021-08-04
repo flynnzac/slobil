@@ -36,8 +36,13 @@ START_TEST(test_assign_str)
   data* d = NULL;
 
   char* str = "Hello, world!";
+  size_t length = 0;
+  uint32_t* str32 = u8_to_u32(str, strlen(str)+1,
+                              NULL, &length);
 
-  assign_str(&d, str, 1);
+  assign_str(&d, str32, 1);
+
+  free(str32);
 
   ck_assert_str_eq((char*) d->data, "Hello, world!");
   ck_assert_str_ne((char*) d->data, "Hello, world! Goodbye.");

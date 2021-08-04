@@ -578,7 +578,13 @@ free_task (task* t);
 void
 free_task_vars (task_vars* t);
 
-/* global variables */
+/* string conversions */
+
+uint32_t*
+wob_u8_to_u32 (const uint8_t* s, size_t n);
+
+uint8_t*
+wob_u32_to_u8 (const uint32_t* s, size_t n);
 
 /* interpreter internal registry */
 

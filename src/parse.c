@@ -226,9 +226,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   else
                     {
                       str = escape_str(state->buffer);
-                      size_t length = 0;
-                      uint32_t* str32 = u8_to_u32(str, strlen(str)+1, NULL, &length);
-                      assign_str(&d, str32,1);
+                      uint32_t* str32 = wob_u8_to_u32(str, strlen(str)+1);
+                      assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
                 }

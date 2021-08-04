@@ -334,7 +334,7 @@ copy_data (data* d_in)
       assign_real(&d, *((double*) d_in->data));
       break;
     case String:
-      assign_str(&d, (const char*) d_in->data, 1);
+      assign_str(&d, (uint32_t*) d_in->data, 1);
       break;
     case Register:
       assign_regstr(&d, ((regstr*) d_in->data)->name,

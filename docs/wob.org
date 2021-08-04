@@ -1057,7 +1057,7 @@ The following task that can be used to run any code in the background.
 
 *** Short description
 
-    Strings in WOB are text.  A string literal is enclosed in quotation marks.  WOB supports UTF-8 encoding in strings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
+    Strings in WOB are text.  A string literal is enclosed in quotation marks.  WOB supports UTF-8 encodings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
 
     The escape sequences are:
 
@@ -1073,7 +1073,7 @@ The following task that can be used to run any code in the background.
 
 *** Implementation details
 
-    Strings are character arrays (effectively, byte arrays).  The String operations all allow for these arrays to be UTF-8 encoded. There is no character type in WOB so a character is a string of length 1.
+    Strings are internally UTF-32 encoded to enable faster access by index number and because it makes creating substrings faster.  WOB accepts UTF-8 as input because that is more common in terminals and in file-encodings.
 
 *** String operations
 **** Access, search, and modify string elements
@@ -1309,7 +1309,6 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
     - =clock= --- set the =/ans= register to the current time in milliseconds from January 1, 1970.
 
     - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31), 
-
 
 * Saved Registries
 

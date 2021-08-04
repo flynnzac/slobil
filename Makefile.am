@@ -41,7 +41,7 @@ TESTS += test/unit/test_copy
 
 
 lib_LTLIBRARIES = libwob.la
-libwob_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c
+libwob_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
 
 libwob_la_SOURCES += src/operator.pshm
 
