@@ -34,6 +34,12 @@ TESTS += test/ops/op_string_length.wob
 TESTS += test/ops/op_do.wob
 TESTS += test/ops/op_next.wob
 TESTS += test/ops/op_last.wob
+TESTS += test/ops/op_is_registry.wob
+TESTS += test/ops/op_import.wob
+TESTS += test/ops/op_filter.wob
+TESTS += test/ops/op_range.wob
+TESTS += test/ops/op_to_string.wob
+TESTS += test/ops/op_is_integer.wob
 TESTS += test/unit/test_arg
 TESTS += test/unit/test_copy
 

@@ -221,13 +221,13 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                     {
                       str32 = malloc(sizeof(uint32_t));
                       *str32 = (uint32_t) 0;
-                      assign_str(&d, str32, 1);
+                      assign_str(&d, str32, 0);
                     }
                   else
                     {
                       str = escape_str(state->buffer);
                       str32 = wob_u8_to_u32(str, strlen(str));
-                      assign_str(&d, str32, 1);
+                      assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
                 }

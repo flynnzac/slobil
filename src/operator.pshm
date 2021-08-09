@@ -1483,37 +1483,6 @@ op_register_eq (arg a, registry* reg)
 }
 
 
-
-void
-op_go_in (arg a, registry* reg)
-{
-  #op=go-in@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Registry@
-  ##GETARG~$;
-
-  ((registry*) arg1->data)->up = reg;
-
-  reg->task->task->current_parse_registry = (registry*) arg1->data;
-  
-}
-
-void
-op_go_out (arg a, registry* reg)
-{
-  if (reg->task->task->current_parse_registry->up == NULL)
-    {
-      do_error("Already at top level registry.",
-               reg->task->task);
-      return;
-    }
-
-  reg->task->task->current_parse_registry = reg->task->task->current_parse_registry->up;
-}
-
 void
 op_save (arg a, registry* reg)
 {
@@ -2998,9 +2967,9 @@ op_error_messages (arg a, registry* reg)
 }
 
 void
-op_find (arg a, registry* reg)
+op_filter (arg a, registry* reg)
 {
-  #op=find@
+  #op=filter@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -3945,12 +3914,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_list, NULL, NULL, 0);
   set(reg,d,"list",1);
 
-  assign_op(&d, op_go_in, NULL, NULL, 0);
-  set(reg,d,"go-in",1);
-
-  assign_op(&d, op_go_out, NULL, NULL, 0);
-  set(reg,d,"go-out",1);
-
   assign_op(&d, op_is_registry, NULL, NULL, 0);
   set(reg,d,"is-registry",1);
 
@@ -3960,8 +3923,8 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_free, NULL, NULL, 0);
   set(reg,d,"free",1);
 
-  assign_op(&d, op_find, NULL, NULL, 0);
-  set(reg,d,"find",1);
+  assign_op(&d, op_filter, NULL, NULL, 0);
+  set(reg,d,"filter",1);
 
   assign_op(&d, op_auto_rehash, NULL, NULL, 0);
   set(reg,d,"auto-rehash",1);

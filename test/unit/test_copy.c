@@ -40,13 +40,15 @@ START_TEST(test_assign_str)
   uint32_t* str32 = u8_to_u32(str, strlen(str)+1,
                               NULL, &length);
 
+  uint32_t* str32_alt = u8_to_u32("Hello", strlen(str)+1,
+                                  NULL, &length);
   assign_str(&d, str32, 1);
 
-  free(str32);
+  ck_assert(u32_strcmp(str32, (uint32_t*) d->data)==0);
+  ck_assert(u32_strcmp(str32_alt, (uint32_t*) d->data) != 0);
 
-  ck_assert_str_eq((char*) d->data, "Hello, world!");
-  ck_assert_str_ne((char*) d->data, "Hello, world! Goodbye.");
-  
+  free(str32_alt);
+  free(str32);  
   free_data(d);  
   
 }
@@ -95,7 +97,7 @@ START_TEST(test_assign_file)
 {
   data* d = NULL;
 
-  FILE* f = fopen("Makefile", "r+");
+  FILE* f = fopen("Makefile", "r");
   assign_file(&d, f);
 
   ck_assert_ptr_eq(d->data, f);
