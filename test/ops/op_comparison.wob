@@ -26,15 +26,23 @@ assert /test ( not [ eq 4 3 . ] . ) .
 assert /test ( eq 3 3.0 . ) .
 assert /test ( eq 3 3 . ) .
 
+assert /test ( or [ eq 3 3 . ] [ lt 2 1 . ] . ) .
+assert /test ( not [ and [ eq 3 3 . ] [ lt 2 1 . ] . ] . ) .
+
 ' Test with wrong argument type
 
 assert /test ( is-error ( eq "hello" "hello" . ) . ) .
 assert /test ( is-error ( eq 97 "a" . ) . ) .
 
+assert /test ( is-error ( and True 1 . ) . ) .
+assert /test ( is-error ( or 1 True . ) . ) .
+
 ' Test with incorrect number of arguments
 
 assert /test ( is-error ( eq 23 . ) . ) .
 assert /test ( is-error ( eq . ) . ) .
+assert /test ( is-error ( and True . ) . ) .
+assert /test ( is-error ( or True . ) . ) .
 
 print "Finished <comparison> test." .
 

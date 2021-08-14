@@ -3065,46 +3065,19 @@ op_mod (arg a, registry* reg)
   ##CHECK_ARGS~$;
   
   #num=1@
-  #type=`(Real | Integer)'@
+  #type=`Integer'@
   ##GETARG~$;
 
   #num=2@
-  #type=`(Real | Integer)'@
+  #type=`Integer'@
   ##GETARG~$;
 
   data* d;
-  if (arg1->type == Real)
-    {
-      if (arg2->type == Real)
-        {
-          double res = fmod(*((double*) arg1->data),
-                            *((double*) arg2->data));
-          assign_real(&d, res);
-        }
-      else
-        {
-          double res = fmod(*((double*) arg1->data),
-                            mpz_get_d(*((mpz_t*) arg2->data)));
-          assign_real(&d, res);
-        }
-    }
-  else
-    {
-      if (arg2->type == Real)
-        {
-          double res = fmod((double) *((int*) arg1->data),
-                            *((double*) arg2->data));
-          assign_real(&d, res);
-        }
-      else
-        {
-          mpz_t res;
-          mpz_init(res);
-          mpz_fdiv_r(res, *((mpz_t*) arg1->data),
-                     *((mpz_t*) arg2->data));
-          assign_int(&d, res);
-        }
-    }
+  mpz_t res;
+  mpz_init(res);
+  mpz_fdiv_r(res, *((mpz_t*) arg1->data),
+             *((mpz_t*) arg2->data));
+  assign_int(&d, res);
 
   ret_ans(reg,d);
 }
@@ -3238,37 +3211,6 @@ op_incr (arg a, registry* reg)
       *((double*) arg1->data) += inc;
     }
 }
-
-
-void
-op_decr (arg a, registry* reg)
-{
-  #op=decr@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Integer@
-  ##GETARG~$;
-
-  if (a.length >= 3)
-    {
-      #num=2@
-      #type=Integer@
-      ##GETARG~$;
-      mpz_t m;
-      mpz_init_set(m, *((mpz_t*) arg2->data));
-      mpz_neg(m, m);
-      incr(arg1, &m);
-    }
-  else
-    {
-      mpz_t m;
-      mpz_init_set_si(m, -1);
-      incr(arg1, &m);
-    }
-}
-
 
 void
 op_auto_rehash (arg a, registry* reg)
@@ -3991,9 +3933,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_incr, NULL, NULL, 0);
   set(reg,d,"incr",1);
-
-  assign_op(&d, op_decr, NULL, NULL, 0);
-  set(reg,d,"decr",1);
 
   assign_op(&d, op_floor, NULL, NULL, 0);
   set(reg,d, "floor",1);

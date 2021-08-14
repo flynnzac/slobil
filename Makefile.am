@@ -40,6 +40,17 @@ TESTS += test/ops/op_filter.wob
 TESTS += test/ops/op_range.wob
 TESTS += test/ops/op_to_string.wob
 TESTS += test/ops/op_is_integer.wob
+TESTS += test/ops/op_is_real.wob
+TESTS += test/ops/op_log.wob
+TESTS += test/ops/op_exp.wob
+TESTS += test/ops/op_power.wob
+TESTS += test/ops/op_mod.wob
+TESTS += test/ops/op_incr.wob
+TESTS += test/ops/op_floor.wob
+TESTS += test/ops/op_ceiling.wob
+TESTS += test/ops/op_is_boolean.wob
+TESTS += test/ops/op_in.wob
+TESTS += test/ops/op_while.wob
 TESTS += test/unit/test_arg
 TESTS += test/unit/test_copy
 
