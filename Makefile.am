@@ -52,6 +52,14 @@ TESTS += test/ops/op_is_boolean.wob
 TESTS += test/ops/op_in.wob
 TESTS += test/ops/op_while.wob
 TESTS += test/ops/op_collapse.wob
+TESTS += test/ops/op_code.wob
+TESTS += test/ops/op_call.wob
+TESTS += test/ops/op_op.wob
+TESTS += test/ops/op_is_instruction.wob
+TESTS += test/ops/op_repeat.wob
+TESTS += test/ops/op_to_register.wob
+TESTS += test/ops/op_register_eq.wob
+TESTS += test/ops/op_is_register.wob
 TESTS += test/unit/test_arg
 TESTS += test/unit/test_copy
 

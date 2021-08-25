@@ -1805,8 +1805,7 @@ op_is_type (arg a, registry* reg, const data_type type)
   ##GETARG~$;
   #checktype=true@
   data* d;
-  if (arg1->type == type || ((type==Instruction) &&
-                             (arg1->type==Operation)))
+  if (arg1->type == type)
     {
       assign_boolean(&d, true);
     }
