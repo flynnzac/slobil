@@ -3143,7 +3143,7 @@ op_use (arg a, registry* reg)
     }
 
   free(str1);
-  read_registry(f, reg);
+  read_outer(f, reg);
   gzclose(f);
   free(fname);
 }
@@ -3827,6 +3827,40 @@ op_interpreter (arg a, registry* reg)
     }
 }
 
+void
+op_build (arg a, registry* reg)
+{
+  #op=build@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=String@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Registry@
+  ##GETARG~$;
+  
+
+  char* loc = wob_u32_to_u8((uint32_t*) arg1->data,
+                            u32_strlen(arg1->data));
+
+
+  char* home = getenv("HOME");
+  char* fname = malloc(sizeof(char)*(strlen(home)+
+                                     strlen(loc)+
+                                     strlen(".dwobs/")+
+                                     strlen("/.dwob")+1));
+  sprintf(fname, "%s/.dwobs/%s.dwob", home, loc);
+  
+  save_outer((registry*) arg2->data, fname);
+  
+  free(loc);
+  free(fname);
+  
+}
+
   
 void
 add_basic_ops (registry* reg)
@@ -4190,6 +4224,9 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_interpreter, NULL, NULL, 0);
   set(reg, d, "interpreter", 1);
 
+  assign_op(&d, op_build, NULL, NULL, 0);
+  set(reg, d, "build", 1);
 
+  
 }
   

@@ -85,7 +85,7 @@ main (int argc, char** argv)
   bool listen_socket = false;
   int port = 0;
   bool early_stop = false;
-  while ((k = getopt(argc, argv, "l:s:nmdvc:p:b:")) != -1)
+  while ((k = getopt(argc, argv, "l:s:nmudvc:p:b:")) != -1)
     {
       switch (k)
         {
@@ -155,6 +155,11 @@ main (int argc, char** argv)
         case 'v':
           printf("%s\n", PACKAGE_STRING);
           is_exit(1, task0->task);
+          break;
+        case 'u':
+          early_stop = true;
+          script = "Make.wob";
+          save_code = 0;
           break;
         default:
           fprintf(stderr, "Option not recognized.\n");
