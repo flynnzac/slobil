@@ -1898,15 +1898,19 @@ op_open_file (arg a, registry* reg)
       #type=String@
       ##GETARG~$;
 
-      f = fopen((char*) arg1->data, (char*) arg2->data);
+      char* mode = wob_u32_to_u8((uint32_t*) arg2->data,
+                                 u32_strlen((uint32_t*) arg2->data));
+
+      f = fopen(fname, mode);
+      free(mode);
     }
   else
     {
-      f = fopen((char*) arg1->data, "r+");
+      f = fopen(fname, "r+");
     }
 
   free(fname);
-  
+
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.",
@@ -2155,15 +2159,11 @@ op_write_string (arg a, registry* reg)
   #type=File@
   ##GETARG~$;
 
-  char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
-                              u32_strlen((uint32_t*) arg1->data));
+  char* text = wob_u32_to_u8((uint32_t*) arg1->data,
+                             u32_strlen((uint32_t*) arg1->data));
 
-  char* text = wob_u32_to_u8((uint32_t*) arg2->data,
-                             u32_strlen((uint32_t*) arg2->data));
+  fwrite(text, sizeof(char), strlen(text), (FILE*) arg2->data);
 
-  fwrite((char*) arg1->data, sizeof(char), strlen((char*) arg1->data), (FILE*) arg2->data);
-
-  free(fname);
   free(text);
 
 }
