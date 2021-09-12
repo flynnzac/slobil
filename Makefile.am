@@ -60,6 +60,7 @@ TESTS += test/ops/op_repeat.wob
 TESTS += test/ops/op_to_register.wob
 TESTS += test/ops/op_register_eq.wob
 TESTS += test/ops/op_is_register.wob
+TESTS += test/ops/op_string_compare.wob
 TESTS += test/unit/test_arg
 TESTS += test/unit/test_copy
 
