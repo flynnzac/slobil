@@ -3976,13 +3976,8 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_ceiling, NULL, NULL, 0);
   set(reg,d, "ceiling",1);
-  
-  
-  
 
   /* Boolean operations */
-
-  
 
   assign_op(&d, op_and, NULL, NULL, 0);
   set(reg,d,"and",1);
@@ -4012,8 +4007,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(reg,d,"is-operation",1);
-
-
 
   /* String operations */
 
@@ -4046,7 +4039,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_char_eq, NULL, NULL, 0);
   set(reg,d,"char-eq",1);
-
 
   /** Combine Strings **/
 
@@ -4176,15 +4168,14 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_write_string, NULL, NULL, 0);
   set(reg,d,"write-string",1);
 
+  /* System operations */
 
-  /* Input, Output, Shell, and System */
+
+  /** Shell operations */
 
 
   assign_op(&d, op_shell, NULL, NULL, 0);
   set(reg,d,"shell",1);
-
-  assign_op(&d, op_link, NULL, NULL, 0);
-  set(reg,d,"link",1);
 
   assign_op(&d, op_change_dir, NULL, NULL, 0);
   set(reg,d,"change-dir",1);
@@ -4194,7 +4185,7 @@ add_basic_ops (registry* reg)
 
 
 
-  /* Time operations */
+  /** Time operations **/
   
   assign_op(&d, op_clock, NULL, NULL, 0);
   set(reg,d,"clock",1);
@@ -4205,6 +4196,10 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_make_clock, NULL, NULL, 0);
   set(reg,d,"make-clock",1);
 
+  /** Random operations **/
+
+  assign_op(&d, op_rand, NULL, NULL, 0);
+  set(reg, d, "rand", 1);
 
   /* Nothing operations */
 
@@ -4246,10 +4241,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_please, NULL, NULL, 0);
   set(reg,d,"please",1);
 
-  /* Random operations */
-
-  assign_op(&d, op_rand, NULL, NULL, 0);
-  set(reg, d, "rand", 1);
 
   /* Interpreter options */
 
@@ -4263,6 +4254,10 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_use, NULL, NULL, 0);
   set(reg,d,"use",1);
+
+  assign_op(&d, op_link, NULL, NULL, 0);
+  set(reg,d,"link",1);
+
   
 }
   

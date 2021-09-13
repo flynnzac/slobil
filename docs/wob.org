@@ -1206,6 +1206,16 @@ The following task that can be used to run any code in the background.
 
     - =close REGISTER= --- if a File object is located at =REGISTER=, close the File and remove its reference from the =REGISTER=.
 
+** Nothing 
+
+*** Short description
+
+=Nothing= is a value that is not any other value and is a different type than any other value.
+
+*** Nothing operations
+
+- =is-nothing VALUE= --- sets the =/ans= register to =True= if the value is =Nothing= and to =False= otherwise.
+
 ** Task Operations
 
 *** Short description
@@ -1302,9 +1312,33 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31),
 
+    - =make-clock REGISTRY= --- make a clock value in milliseconds from a registry describing the time (like the registry returned by =make-time=)
+
+*** Random numbers
+
+- =rand |INTEGER|= --- set the =/ans= Register to a uniformly distributed random Real between 0 and 1.  If =INTEGER= is provided, set the seed to the =INTEGER= before drawing random value.
+
 ** Package operations
 
     - =use STRING= --- load a saved registry in =~/.dwobs/= with the extension =.dwob= into the current registry. The file being loaded is: =~/.dwobs/STRING.dwob=.
+
+    - =build STRING REGISTRY= --- saves contents of registry to =~/.dwobs/STRING.dwob= so that it can be loaded as a package.
+
+    - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into WOB operation named =STRING3=.  
+
+** Interpreter options
+
+*** Operation
+
+- =interpreter REGISTER VALUE= --- sets interpreter option =REGISTER= to =VALUE=.
+
+*** List of options
+
+- =/print-ans= --- if =True= (default) or any non-Boolean value, then print the value of the =/ans= Register at the end of commands, if =False= suppress printing.
+
+- =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash registries automatically as they grow in size.  If =False= do not rehash automatically.
+
+- =/print-errors= --- if =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
 
 * Saved Registries
 
