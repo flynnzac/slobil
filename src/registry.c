@@ -89,10 +89,18 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       reg->elements++;
-      if (reg->task->task->wob_rehash && rehash_flag &&
-          (reg->elements > (WOB_LOAD_FACTOR*(reg->hash_size))))
+      if (rehash_flag && (reg->elements > (WOB_LOAD_FACTOR*(reg->hash_size))))
         {
-          rehash(reg);
+          data* check_hash = get(reg->task->task->wob_options,
+                                 hash_str("auto-rehash"), 0);
+          bool check = true;
+
+          if (!(check_hash == NULL || check_hash->type != Boolean))
+            {
+              check = *((bool*) check_hash->data);
+            }
+          if (check)
+            rehash(reg);
         }
 
       return new_c;

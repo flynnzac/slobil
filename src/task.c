@@ -10,9 +10,7 @@ new_task (task* t0)
   t->current_parse_registry = reg;
 
   t->wob_stop_error_threshold = 1;
-  t->wob_print_error_messages = true;
   t->wob_error = 0;
-  t->wob_rehash = true;
   t->wob_ll = NULL;
   t->wob_ll_cnt = 0;
   t->last_ans = NULL;

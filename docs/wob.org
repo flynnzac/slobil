@@ -933,6 +933,8 @@ The following task that can be used to run any code in the background.
 
      - =list VALUE1 VALUE2 ...= --- set the =/ans= register to a Registry with =VALUE1= at Register =/t1=, =VALUE2= at Register =/t2=, and so on.
 
+     - =range INTEGER1 INTEGER2 |INTEGER3|= --- set the =/ans= register to a Registry with =INTEGER1= at =/t1= and =INTEGER1 + INTEGER3= at =/t2= and so on so long as the value is less than or equal to =INTEGER2=.
+
 
 **** Insert, move, and remove data to and from registers
      - =set REGISTER VALUE |REGISTRY|= --- sets the value at =REGISTER= to =VALUE= in the registry =REGISTRY=.  If the =REGISTRY= argument is omitted, then it will set the register in the current registry.
@@ -952,7 +954,7 @@ The following task that can be used to run any code in the background.
 
      - =import REGISTRY= --- set the Registers in the current Registry to hold the same values that they hold in =REGISTRY=.
 
-     - =find REGISTRY OPERATION= --- set the =/ans= register to a Registry containing all the elements in =REGISTRY= such that the =OPERATION= applied to the element of the Registry sets the =/ans= register to =True=.
+     - =filter REGISTRY OPERATION= --- set the =/ans= register to a Registry containing all the elements in =REGISTRY= such that the =OPERATION= applied to the element of the Registry sets the =/ans= register to =True=.
 
 **** Apply Operations to elements of a Registry
 
@@ -963,10 +965,6 @@ The following task that can be used to run any code in the background.
 **** Execute code in a registry
 
      - =in REGISTRY INSTRUCTION= --- call =INSTRUCTION= in =REGISTRY=.
-
-     - =go-in REGISTRY= --- make =REGISTRY= the new current registry.
-
-     - =go-out= --- leave the current Registry and move to the Registry above it.
 
      - =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
        #+BEGIN_SRC wob
@@ -981,18 +979,7 @@ The following task that can be used to run any code in the background.
 
      - =is-registry VALUE= --- sets the =/ans= Register to =True= if =VALUE= is a Registry and to =False= otherwise.
 
-**** Classify a registry
-
-     - =of STRING REGISTRY= --- declare =REGISTRY= to be of kind =STRING=.
-
-     - =is-of STRING REGISTRY= --- set the =/ans= Register to =True= if =REGISTRY= is of kind =STRING=.
-
-     - =dispatch STRING VALUE= --- set the =/ans= Register to the Instruction called =STRING= corresponding to =VALUE=.  For example, =dispatch "f" 10= sets the =/ans= register to the Instruction located at =/f+Integer=.
-
-
 **** Technical
-
-     - =auto-rehash BOOLEAN= --- turns auto-rehashing of the underlying hash table ON (if the argument is =True=) or OFF (if the argument is =False=).  By default, WOB auto-rehashes registries.
 
      - =rehash REGISTRY= --- manually rehash the registry's underlying hash table.
 
@@ -1020,9 +1007,8 @@ The following task that can be used to run any code in the background.
 
      - =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
 
-     - =incr INTEGER1 |INTEGER2|= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.
+     - =incr INTEGER1 |INTEGER2|= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.  =INTEGER2= can be a negative number.
 
-     - =decr INTEGER1 |INTEGER2|= --- decrement =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =sub= is that it modifies =INTEGER1= in place.
 
 **** Comparison operations
      - =gt NUMBER1 NUMBER2= --- set the =/ans= register to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
@@ -1051,6 +1037,10 @@ The following task that can be used to run any code in the background.
      - =exp NUMBER= --- set the =/ans= Register to the =NUMBER= power of the natural base.
 
      - =power NUMBER1 NUMBER2= --- set the =/ans= Register to =NUMBER1= raised to the =NUMBER2= power.
+
+     - =floor REAL1= --- set the =/ans= Register to the greatest Integer less than =REAL1=.
+
+     - =ceiling REAL1= --- set the =/ans= Register to smallest Integer greater than =REAL1=.
 
 
 ** Strings
@@ -1095,6 +1085,8 @@ The following task that can be used to run any code in the background.
      - =string-lt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is less than =STRING2= in the sense that the ASCII characters have lower values.
 
      - =string-gt STRING1 STRING2= --- sets the =/ans= Register to =True= if =STRING1= is greater than =STRING2= in the sense that the ASCII characters have lower values.
+
+     - =char-eq STRING1 INTEGER STRING2= --- test if character =INTEGER= of string (using same index numbers as for =substring=) is equal to =STRING2=.  This is a slight performance improvement over testing whether the =substring= with only one character is equal to the string.
 
 **** Combine strings
 
@@ -1182,6 +1174,10 @@ The following task that can be used to run any code in the background.
 
     - =op INSTRUCTION REGISTER1 ... REGISTERN= --- set the =/ans= register to an operation that calls =INSTRUCTION= after binding =REGISTER1= to the first argument, and so on.
 
+    - =code INSTRUCTION= --- sets the =/ans= register to a String containing the code for the =INSTRUCTION=.
+
+    - =is-operation VALUE= --- sets the =/ans= Register to =True= if the =VALUE= is an Operation and to =False= otherwise.
+
 ** Files
 
 *** Short description
@@ -1209,9 +1205,6 @@ The following task that can be used to run any code in the background.
     - =write-string STRING FILE= --- Write a =STRING= to =FILE= using UTF-8 encoding. 
 
     - =close REGISTER= --- if a File object is located at =REGISTER=, close the File and remove its reference from the =REGISTER=.
-
-    - =use STRING= --- load a saved registry in =~/.dwobs/= with the extension =.dwob= into the current registry. The file being loaded is: =~/.dwobs/STRING.dwob=.
-
 
 ** Task Operations
 
@@ -1242,9 +1235,6 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 - =select REGISTER1 INSTRUCTION1 REGISTER2 INSTRUCTION2 ... REGISTERN INSTRUCTIONN= --- Waits for the Queue in the current task to contain data at any of the Registers (it will prefer earlier Registers if data is available at both).  Once it receives data, it sets the =/ans= register to the data and executes the Instruction in the current registry.
 
 - =accept-or REGISTER INSTRUCTION |TASK|= --- Checks if =REGISTER= is set in =TASK='s Queue.  If it is, the =/ans= register is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
-
-
-
 
 ** Control flow operations
 
@@ -1291,9 +1281,11 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =is-error INSTRUCTION= --- sets the =/ans= Register to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
 
-    - =push-through INSTRUCTION= --- execute each statement in =INSTRUCTION= even if one of the statements has an error.
+    - =ignore-errors INSTRUCTION= --- ignore any errors while executing the instruction, i.e. go to the next statement if one statement errors.
 
+*** Version
 
+- =version= --- sets the =/ans= Register to a String giving the version of WOB.
 
 ** System operations
 *** Interacting with the shell
@@ -1308,7 +1300,11 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =clock= --- set the =/ans= register to the current time in milliseconds from January 1, 1970.
 
-    - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31), 
+    - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a registry with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31),
+
+** Package operations
+
+    - =use STRING= --- load a saved registry in =~/.dwobs/= with the extension =.dwob= into the current registry. The file being loaded is: =~/.dwobs/STRING.dwob=.
 
 * Saved Registries
 

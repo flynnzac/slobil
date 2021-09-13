@@ -2948,24 +2948,6 @@ op_version (arg a, registry* reg)
 }
 
 void
-op_error_messages (arg a, registry* reg)
-{
-  #op=error-messages@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Boolean@
-  ##GETARG~$;
-
-  if (*((bool*) arg1->data))
-    reg->task->task->wob_print_error_messages = true;
-  else
-    reg->task->task->wob_print_error_messages = false;
-
-}
-
-void
 op_filter (arg a, registry* reg)
 {
   #op=filter@
@@ -3209,20 +3191,6 @@ op_incr (arg a, registry* reg)
         }
       *((double*) arg1->data) += inc;
     }
-}
-
-void
-op_auto_rehash (arg a, registry* reg)
-{
-  #op=auto-rehash@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Boolean@
-  ##GETARG~$;
-
-  reg->task->task->wob_rehash = *((bool*) arg1->data);
 }
 
 void
@@ -3868,14 +3836,23 @@ add_basic_ops (registry* reg)
   data* d;
 
   /* Registry operations */
-  assign_op(&d, op_set, NULL, NULL, 0);
-  set(reg, d, "set",1);
+
+  /** Creation **/
 
   assign_op(&d, op_registry, NULL, NULL, 0);
   set(reg,d,"registry",1);
 
-  assign_op(&d, op_get, NULL, NULL, 0);
-  set(reg,d,"get",1);
+  assign_op(&d, op_list, NULL, NULL, 0);
+  set(reg,d,"list",1);
+
+  assign_op(&d, op_range, NULL, NULL, 0);
+  set(reg,d,"range",1);
+
+
+  /** Insert, Move, and Remove **/
+  
+  assign_op(&d, op_set, NULL, NULL, 0);
+  set(reg, d, "set",1);
 
   assign_op(&d, op_move, NULL, NULL, 0);
   set(reg,d,"move",1);
@@ -3883,36 +3860,54 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_delete, NULL, NULL, 0);
   set(reg,d,"delete",1);
 
+  assign_op(&d, op_free, NULL, NULL, 0);
+  set(reg,d,"free",1);
+
+  /** Access Data **/
+
+  assign_op(&d, op_get, NULL, NULL, 0);
+  set(reg,d,"get",1);
+
   assign_op(&d, op_exist, NULL, NULL, 0);
   set(reg,d,"exist",1);
-
-  assign_op(&d, op_list, NULL, NULL, 0);
-  set(reg,d,"list",1);
-
-  assign_op(&d, op_is_registry, NULL, NULL, 0);
-  set(reg,d,"is-registry",1);
 
   assign_op(&d, op_import, NULL, NULL, 0);
   set(reg,d,"import",1);
 
-  assign_op(&d, op_free, NULL, NULL, 0);
-  set(reg,d,"free",1);
-
   assign_op(&d, op_filter, NULL, NULL, 0);
   set(reg,d,"filter",1);
 
-  assign_op(&d, op_auto_rehash, NULL, NULL, 0);
-  set(reg,d,"auto-rehash",1);
+  /** Apply Operations **/
 
+  assign_op(&d, op_do, NULL, NULL, 0);
+  set(reg,d,"do",1);
+  
+  assign_op(&d, op_collapse, NULL, NULL, 0);
+  set(reg,d,"collapse",1);
+
+  /** Execute Code in Registry **/
+
+  assign_op(&d, op_in, NULL, NULL, 0);
+  set(reg,d,"in",1);
+
+  assign_op(&d, op_up, NULL, NULL, 0);
+  set(reg,d,"up",1);
+
+  /** Test if registry **/
+  
+  assign_op(&d, op_is_registry, NULL, NULL, 0);
+  set(reg,d,"is-registry",1);
+
+
+  /** Technical **/
+  
   assign_op(&d, op_rehash, NULL, NULL, 0);
   set(reg,d,"rehash",1);
 
-  assign_op(&d, op_range, NULL, NULL, 0);
-  set(reg,d,"range",1);
-
-
 
   /* Numeric operations */
+
+  /** Arithmetic **/
   
   assign_op(&d, op_add, NULL, NULL, 0);
   set(reg,d,"add",1);
@@ -3925,6 +3920,15 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_div, NULL, NULL, 0);
   set(reg,d,"div",1);
+
+  assign_op(&d, op_mod, NULL, NULL, 0);
+  set(reg,d,"mod",1);
+
+  assign_op(&d, op_incr, NULL, NULL, 0);
+  set(reg,d,"incr",1);
+
+  /** Comparison **/
+
 
   assign_op(&d, op_gt, NULL, NULL, 0);
   set(reg,d,"gt",1);
@@ -3941,15 +3945,23 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_gt_eq, NULL, NULL, 0);
   set(reg,d,"gt-eq",1);
 
-  assign_op(&d, op_to_string, NULL, NULL, 0);
-  set(reg,d,"to-string",1);
-  
+  /** Conversion **/
+
+  assign_op(&d, op_to_number, NULL, NULL, 0);
+  set(reg,d,"to-number",1);
+
+  assign_op(&d, op_to_real, NULL, NULL, 0);
+  set(reg,d,"to-real",1);
+
+  /** Test if type **/
+
   assign_op(&d, op_is_integer, NULL, NULL, 0);
   set(reg,d,"is-integer",1);
 
   assign_op(&d, op_is_real, NULL, NULL, 0);
   set(reg,d,"is-real",1);
 
+  /** Common math operations **/
   assign_op(&d, op_log, NULL, NULL, 0);
   set(reg,d,"log",1);
 
@@ -3959,23 +3971,18 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_power, NULL, NULL, 0);
   set(reg,d,"power",1);
 
-  assign_op(&d, op_mod, NULL, NULL, 0);
-  set(reg,d,"mod",1);
-
-  assign_op(&d, op_incr, NULL, NULL, 0);
-  set(reg,d,"incr",1);
-
   assign_op(&d, op_floor, NULL, NULL, 0);
   set(reg,d, "floor",1);
 
   assign_op(&d, op_ceiling, NULL, NULL, 0);
   set(reg,d, "ceiling",1);
   
+  
+  
 
   /* Boolean operations */
 
-  assign_op(&d, op_if, NULL, NULL, 0);
-  set(reg,d,"if",1);
+  
 
   assign_op(&d, op_and, NULL, NULL, 0);
   set(reg,d,"and",1);
@@ -3991,18 +3998,6 @@ add_basic_ops (registry* reg)
 
   /* Instruction operations */
 
-  assign_op(&d, op_do, NULL, NULL, 0);
-  set(reg,d,"do",1);
-
-  assign_op(&d, op_in, NULL, NULL, 0);
-  set(reg,d,"in",1);
-
-  assign_op(&d, op_while, NULL, NULL, 0);
-  set(reg,d,"while",1);
-
-  assign_op(&d, op_collapse, NULL, NULL, 0);
-  set(reg,d,"collapse",1);
-
   assign_op(&d, op_code, NULL, NULL, 0);
   set(reg,d,"code",1);
 
@@ -4015,20 +4010,31 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_is_instruction, NULL, NULL, 0);
   set(reg,d,"is-instruction",1);
 
-  assign_op(&d, op_repeat, NULL, NULL, 0);
-  set(reg,d,"repeat",1);
-
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(reg,d,"is-operation",1);
 
+
+
   /* String operations */
 
+  /** Access, search, and modify **/
+
+  assign_op(&d, op_substring, NULL, NULL, 0);
+  set(reg,d,"substring",1);
+
+  assign_op(&d, op_match, NULL, NULL, 0);
+  set(reg,d,"match",1);
+
+  assign_op(&d, op_replace, NULL, NULL, 0);
+  set(reg,d,"replace",1);
+
+  /** String Properties **/
+  
   assign_op(&d, op_string_length, NULL, NULL, 0);
   set(reg,d,"string-length",1);
 
-  assign_op(&d, op_string_append, NULL, NULL, 0);
-  set(reg,d,"string-append",1);
-
+  /** String Comparison **/
+  
   assign_op(&d, op_string_eq, NULL, NULL, 0);
   set(reg,d,"string-eq",1);
 
@@ -4038,37 +4044,52 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_string_lt, NULL, NULL, 0);
   set(reg,d,"string-lt",1);
 
-  assign_op(&d, op_to_number, NULL, NULL, 0);
-  set(reg,d,"to-number",1);
+  assign_op(&d, op_char_eq, NULL, NULL, 0);
+  set(reg,d,"char-eq",1);
+
+
+  /** Combine Strings **/
+
+  assign_op(&d, op_string_append, NULL, NULL, 0);
+  set(reg,d,"string-append",1);
+
+  /** Convert to Strings **/
+
+  assign_op(&d, op_to_string, NULL, NULL, 0);
+  set(reg,d,"to-string",1);
+
+  /** Test if string **/
 
   assign_op(&d, op_is_string, NULL, NULL, 0);
   set(reg,d,"is-string",1);
 
-  assign_op(&d, op_match, NULL, NULL, 0);
-  set(reg,d,"match",1);
+  /** Strings from User Input **/
 
-  assign_op(&d, op_replace, NULL, NULL, 0);
-  set(reg,d,"replace",1);
+  assign_op(&d, op_input, NULL, NULL, 0);
+  set(reg,d,"input",1);
 
-  assign_op(&d, op_substring, NULL, NULL, 0);
-  set(reg,d,"substring",1);
 
-  assign_op(&d, op_to_real, NULL, NULL, 0);
-  set(reg,d,"to-real",1);
+  /* Environment operations */
 
-  assign_op(&d, op_char_eq, NULL, NULL, 0);
-  set(reg,d,"char-eq",1);
-
-  /* State and environment operations */
-
-  assign_op(&d, op_exit, NULL, NULL, 0);
-  set(reg,d,"exit",1);
+  /** Modify the /ans register **/
 
   assign_op(&d, op_answer, NULL, NULL, 0);
   set(reg,d,"answer",1);
 
   assign_op(&d, op_sit, NULL, NULL, 0);
   set(reg,d,"sit",1);
+
+  /** Exit WOB **/
+  
+  assign_op(&d, op_exit, NULL, NULL, 0);
+  set(reg,d,"exit",1);
+
+  /** Print output **/
+  
+  assign_op(&d, op_print, NULL, NULL, 0);
+  set(reg,d,"print",1);
+
+  /** Input and output files and state **/
 
   assign_op(&d, op_save, NULL, NULL, 0);
   set(reg,d,"save",1);
@@ -4082,32 +4103,29 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_clear_code, NULL, NULL, 0);
   set(reg,d,"clear-code",1);
 
+  assign_op(&d, op_source, NULL, NULL, 0);
+  set(reg,d,"source",1);
+
+  /** Error handling **/
+
   assign_op(&d, op_error, NULL, NULL, 0);
   set(reg,d,"error",1);
-
-  assign_op(&d, op_up, NULL, NULL, 0);
-  set(reg,d,"up",1);
 
   assign_op(&d, op_ignore_errors, NULL, NULL, 0);
   set(reg,d,"ignore-errors",1);
 
-  assign_op(&d, op_error_messages, NULL, NULL, 0);
-  set(reg,d,"error-messages",1);
-
-  assign_op(&d, op_please, NULL, NULL, 0);
-  set(reg,d,"please",1);
-
-  assign_op(&d, op_source, NULL, NULL, 0);
-  set(reg,d,"source",1);
 
   assign_op(&d, op_is_error, NULL, NULL, 0);
   set(reg,d,"is-error",1);
+
+  /** Version **/
 
   assign_op(&d, op_version, NULL, NULL, 0);
   set(reg,d,"version",1);
 
   /* Register operations */
 
+  /** Operations on "list" registers **/
   assign_op(&d, op_next, NULL, NULL, 0);
   set(reg,d,"next",1);
 
@@ -4117,11 +4135,17 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_last, NULL, NULL, 0);
   set(reg,d,"last",1);
 
+  /** Convert to register **/
+
   assign_op(&d, op_to_register, NULL, NULL, 0);
   set(reg,d,"to-register",1);
 
+  /** Register Comparison **/
+
   assign_op(&d, op_register_eq, NULL, NULL, 0);
   set(reg,d,"register-eq",1);
+
+  /** Test if register **/
 
   assign_op(&d, op_is_register, NULL, NULL, 0);
   set(reg,d,"is-register",1);
@@ -4155,8 +4179,6 @@ add_basic_ops (registry* reg)
 
   /* Input, Output, Shell, and System */
 
-  assign_op(&d, op_input, NULL, NULL, 0);
-  set(reg,d,"input",1);
 
   assign_op(&d, op_shell, NULL, NULL, 0);
   set(reg,d,"shell",1);
@@ -4170,8 +4192,6 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_current_dir, NULL, NULL, 0);
   set(reg,d,"current-dir",1);
 
-  assign_op(&d, op_print, NULL, NULL, 0);
-  set(reg,d,"print",1);
 
 
   /* Time operations */
@@ -4212,6 +4232,20 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_accept_or, NULL, NULL, 0);
   set(reg,d,"accept-or",1);
 
+  /* Control flow operations */
+
+  assign_op(&d, op_if, NULL, NULL, 0);
+  set(reg,d,"if",1);
+
+  assign_op(&d, op_while, NULL, NULL, 0);
+  set(reg,d,"while",1);
+  
+  assign_op(&d, op_repeat, NULL, NULL, 0);
+  set(reg,d,"repeat",1);
+  
+  assign_op(&d, op_please, NULL, NULL, 0);
+  set(reg,d,"please",1);
+
   /* Random operations */
 
   assign_op(&d, op_rand, NULL, NULL, 0);
@@ -4229,7 +4263,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_use, NULL, NULL, 0);
   set(reg,d,"use",1);
-
   
 }
   

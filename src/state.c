@@ -35,7 +35,15 @@ is_error (int e, task_vars* t)
 void
 do_error (const char* msg, task_vars* t)
 {
-  if (t->wob_print_error_messages)
+  data* d = get(t->wob_options,
+                hash_str("print-errors"),
+                0);
+  bool print_error = true;
+  if (!(d==NULL || d->type != Boolean))
+    {
+      print_error = *((bool*) d->data);
+    }
+  if (print_error)
     fprintf(stderr, "Error: %s\n", msg);
   
   (void) is_error(1, t);

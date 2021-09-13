@@ -100,8 +100,6 @@ struct task_vars
   int wob_ll_cnt;
 
   size_t wob_stop_error_threshold;
-  bool wob_print_error_messages;
-  bool wob_rehash;
 
   data* last_ans;
   int wob_error;
