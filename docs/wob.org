@@ -134,8 +134,8 @@ It is called WOB because I wrote the original version of it on my morning bus ri
      (
        set /str-t [ to-string t . ] . 
        if [ gt t 4 . ]
-          { print [ string-append str-t " is greater than 4.\n" . ] . }
-          { print [ string-append str-t " is less than or equal to 4.\n" . ] . } .
+          { print [ combine str-t " is greater than 4.\n" . ] . }
+          { print [ combine str-t " is less than or equal to 4.\n" . ] . } .
      ) .
     ... gt-4 /t 10 .
     10 is greater than 4.
@@ -242,7 +242,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
    We can also execute an instruction inside a certain registry by using the =in= command.
 
    #+BEGIN_SRC wob
-   ... in my-registry ( print [ string-append hello " Goodbye!" . ] . ) .
+   ... in my-registry ( print [ combine hello " Goodbye!" . ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
 
@@ -517,7 +517,7 @@ set /start
          {
            up set /last-clock [ clock . ] .
            up set /running True .
-           print [ string-append "Starting on " current-client " ..." . ] .
+           print [ combine "Starting on " current-client " ..." . ] .
          }
          {
            print "Currently running, stop first." .
@@ -647,7 +647,7 @@ set /choose-client
             (
               print
                 [
-                  string-append
+                  combine
                     [ to-string [ to-number i . ] . ]
                     ": " 
                     record:/client-list:i .
@@ -656,14 +656,14 @@ set /choose-client
             ) .
       print "Choose Client: " False .
       input /num .
-      set /loc [ to-register [ string-append "c" num . ] . ] .
+      set /loc [ to-register [ combine "c" num . ] . ] .
       answer record:/client-list:loc .
     ) .
 
 ' Get current status (client, whether running)
 set /status
     (
-      print [ string-append "Current client: " current-client . ] .
+      print [ combine "Current client: " current-client . ] .
       if running
          {
            print "Running a task." .
@@ -1076,7 +1076,7 @@ The following task that can be used to run any code in the background.
 
 **** String properties
 
-     - =string-length STRING= --- sets the =/ans= register to the number of characters in =STRING=.
+     - =length STRING= --- sets the =/ans= register to the number of characters in =STRING=.
 
 **** String comparison
 
@@ -1090,7 +1090,7 @@ The following task that can be used to run any code in the background.
 
 **** Combine strings
 
-     - =string-append STRING1 STRING2= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting String is ="STRING1STRING2"=.
+     - =combine STRING1 STRING2 ... STRINGN= --- sets the =/ans= register to the concatenation of the two Strings so that the resulting String is ="STRING1STRING2"=.
 
 **** Convert to string
 

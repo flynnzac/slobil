@@ -738,9 +738,9 @@ op_print (arg a, registry* reg)
 }
 
 void
-op_string_length (arg a, registry* reg)
+op_length (arg a, registry* reg)
 {
-  #op=string-length@
+  #op=length@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -760,9 +760,9 @@ op_string_length (arg a, registry* reg)
 }
 
 void
-op_string_append (arg a, registry* reg)
+op_concat (arg a, registry* reg)
 {
-  #op=string-append@
+  #op=concat@
   #length=2@
   ##CHECK_ARGS~$;
 
@@ -4023,8 +4023,8 @@ add_basic_ops (registry* reg)
 
   /** String Properties **/
   
-  assign_op(&d, op_string_length, NULL, NULL, 0);
-  set(reg,d,"string-length",1);
+  assign_op(&d, op_length, NULL, NULL, 0);
+  set(reg,d,"length",1);
 
   /** String Comparison **/
   
@@ -4042,8 +4042,8 @@ add_basic_ops (registry* reg)
 
   /** Combine Strings **/
 
-  assign_op(&d, op_string_append, NULL, NULL, 0);
-  set(reg,d,"string-append",1);
+  assign_op(&d, op_combine, NULL, NULL, 0);
+  set(reg,d,"combine",1);
 
   /** Convert to Strings **/
 

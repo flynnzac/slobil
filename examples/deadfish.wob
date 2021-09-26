@@ -3,7 +3,7 @@ set /run-deadfish-program
     < (
       set /acc 0 .
       set /loc 1 .
-      while ( lt-eq loc [ string-length input . ] . )
+      while ( lt-eq loc [ length input . ] . )
             (
               set /cur [ substring input loc loc . ] .
 
