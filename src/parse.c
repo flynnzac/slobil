@@ -169,9 +169,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                       state->open_paren = '[';
                     }
 
-                  /* Add closing . if omitted */
-
-
                   /* Stream the sub expression into parse so we can make it a sequence of
                      statements itself. */
                   f_sub = fmemopen(str,
