@@ -189,8 +189,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                                        sizeof(char)*strlen(ending),
                                        "r");
                       sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
-                      free(ending);
                       fclose(f_sub);
+                      free(ending);
                     }
 
                   free_state(&sub_state);
