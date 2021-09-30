@@ -169,6 +169,9 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                       state->open_paren = '[';
                     }
 
+                  /* Add closing . if omitted */
+
+
                   /* Stream the sub expression into parse so we can make it a sequence of
                      statements itself. */
                   f_sub = fmemopen(str,
@@ -177,12 +180,25 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   sub_stmt = NULL;
                   sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
                   fclose(f_sub);
+
+                  if (!sub_complete)
+                    {
+                      char* ending = malloc(sizeof(char)*(strlen(" . ")+1));
+                      strcpy(ending, " . ");
+                      f_sub = fmemopen(ending,
+                                       sizeof(char)*strlen(ending),
+                                       "r");
+                      sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
+                      free(ending);
+                      fclose(f_sub);
+                    }
+
                   free_state(&sub_state);
                   free(str);
-                  
-                  if (sub_complete)
+                  if (sub_complete & sub_stmt != NULL)
                     {
                       /* We have a complete substatement.  React accordingly. */
+
                       switch (state->open_paren)
                         {
                         case '(':
