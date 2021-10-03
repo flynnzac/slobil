@@ -10,11 +10,11 @@ set /dotproduct
 set /matrix-multiply
     < (
       set /i /t1 .
-      set /out [ list . ] .
-      while ( exist i B . )
+      set /out [ list ] .
+      while ( exist i B )
             (
-              do < ( dotproduct t1 B:i . ) /t1 > A .
-              in out ( set i ans . ) .
+              do < ( dotproduct t1 B:i ) /t1 > A .
+              in out ( set i ans ) .
               next i .
               move /ans /i .
             ) .
@@ -25,12 +25,12 @@ set /matrix-multiply
 set /transpose
     < (
       set /i /t1 .
-      set /out [ list . ] .
-      while ( exist i A:/t1 . )
+      set /out [ list ] .
+      while ( exist i A:/t1 )
             (
-              do < ( answer t1:i . ) /t1 > A .
+              do < ( answer t1:i ) /t1 > A .
               move /ans /res .
-              in out ( set i res . ) .
+              in out ( set i res ) .
               next i .
               move /ans /i .
             ) .

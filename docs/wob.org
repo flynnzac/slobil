@@ -70,7 +70,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
    There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
    There are four parenthesis types in WOB: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
-   
+
 *** Instructions
 
     Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
@@ -187,6 +187,21 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
     That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and registers start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
 
+
+*** Ending Last Statement in a Substatement
+
+In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
+#+BEGIN_SRC wob
+... add 1 [ mul 2 3 ] .
+#+END_SRC
+
+is a valid statement.  If there are multiple statements, it is usually good practice to end all with a period, but the period can be omitted from the last one.  For example,
+#+BEGIN_SRC wob
+... add 1 [ add 1 1 . mul ans 3 ] .
+#+END_SRC
+
+is valid.
+
 ** Registries
 
    In WOB, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
@@ -201,7 +216,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
    ... registry /hello "Hello, world!" /x 10 .
    ... move /ans /my-registry .
    ... ' Or:
-   ... set /my-registry [ registry /hello "Hello, world!" /x 10 . ] .
+   ... set /my-registry [ registry /hello "Hello, world!" /x 10 ] .
    #+END_SRC
 
    To access values in a registry, you can either use the =get= operation or the "colon notation":
@@ -242,21 +257,21 @@ It is called WOB because I wrote the original version of it on my morning bus ri
    We can also execute an instruction inside a certain registry by using the =in= command.
 
    #+BEGIN_SRC wob
-   ... in my-registry ( print [ combine hello " Goodbye!" . ] . ) .
+   ... in my-registry ( print [ combine hello " Goodbye!" ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
 
    Aside from being a useful data structure, registries are also how WOB does /namespaces/.  For example,
 
    #+BEGIN_SRC wob
-   ... set /math [ registry . ] .
+   ... set /math [ registry ] .
    ... set /factorial
           (
             set /i 2 .
             set /prod 1 .
-            while ( lt-eq i t . )
+            while ( lt-eq i t )
                   (
-                    set /prod [ mul i prod . ] .
+                    set /prod [ mul i prod ] .
                     incr i .
                   ) .
             answer prod .
@@ -282,14 +297,14 @@ It is called WOB because I wrote the original version of it on my morning bus ri
     The colon notation can be nested.
     
     #+BEGIN_SRC wob
-    ... set /x [ registry /y [ registry /z 10 . ] . ] .
+    ... set /x [ registry /y [ registry /z 10 ] ] .
     ... print x:/y:/z .
     10
     #+END_SRC
 
     It can also choose the register by referencing the value of another register.
     #+BEGIN_SRC wob
-    ... set /x [ registry /y 10 . ] .
+    ... set /x [ registry /y 10 ] .
     ... set /z /y .
     ... print x:z .
     10
@@ -297,8 +312,8 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
     /But/ we cannot use subexpressions in the colon notation:
     #+BEGIN_SRC wob
-    ... set /x [ registry /y 10 . ] .
-    ... ' BAD! print x:[ answer /y . ] .
+    ... set /x [ registry /y 10 ] .
+    ... ' BAD! print x:[ answer /y ] .
     #+END_SRC
 
 ** Registers   
@@ -416,7 +431,7 @@ ans = "/home/zlf"
    The =queue= operation moves data from one registry into the queue of another Task.  Its arguments are a register to set in the queue registry, the data to send, and the task's queue to access.
 
    #+BEGIN_SRC wob
-... task /t1 ( print [ accept /hello . ] . ) .
+... task /t1 ( print [ accept /hello ] . ) .
 ... run-task t1 .
 ... queue /hello "Hi!" t1 .
 Hi!
@@ -437,11 +452,11 @@ accept-or /hello ( set /hello "Hello." ) .
    #+BEGIN_SRC wob
 ... task /t1 ( 
                 set /continue True .
-                while ( answer continue . )
+                while ( answer continue )
                       (
-                        select /add-one ( print [ add ans 1 . ] . ) 
-                               /sub-one ( print [ sub ans 1 . ] . )
-                               /continue ( set /continue ans . ) .
+                        select /add-one ( print [ add ans 1 ] ) 
+                               /sub-one ( print [ sub ans 1 ] )
+                               /continue ( set /continue ans ) .
                       ) .
              ) .
 ... run-task t1 .
@@ -462,7 +477,7 @@ The following program is one I use daily to keep track of time spent on client w
 
 set /current-client "Non-billable" .
 set /last-clock -1 .
-set /record [ registry . ] .
+set /record [ registry ] .
 set /running False .
 set /current-file Nothing .
 
@@ -471,10 +486,10 @@ set /current-file Nothing .
 set /init
     < (
       up set /current-file file .
-      please ( load file record . )
+      please ( load file record )
              (
-               up set /record [ registry . ] .
-               up set /client-list [ registry . ] record .
+               up set /record [ registry ] .
+               up set /client-list [ registry ] record .
                print "Starting new file." .
              ) .
     ) /file > .
@@ -483,7 +498,7 @@ set /init
 
 set /save-hours
     (
-      in record ( save current-file . ) .
+      in record ( save current-file ) .
     ) .
 
 ' Set current client
@@ -491,15 +506,15 @@ set /save-hours
 set /client
     <
     (
-      if [ not running . ]
+      if [ not running ]
          {
-           if [ exist /name . ]
+           if [ exist /name ]
               {
                 up set /current-client name .
                 add-client-to-list name .
               }
               {
-                up set /current-client [ choose-client . ] .
+                up set /current-client [ choose-client ] .
               } .
            up set /last-clock -1 .
          }
@@ -513,11 +528,11 @@ set /client
 ' Start clock for current client
 set /start
     (
-      if [ not running . ]
+      if [ not running ]
          {
-           up set /last-clock [ clock . ] .
+           up set /last-clock [ clock ] .
            up set /running True .
-           print [ combine "Starting on " current-client " ..." . ] .
+           print [ combine "Starting on " current-client " ..." ] .
          }
          {
            print "Currently running, stop first." .
@@ -539,7 +554,6 @@ set /stop
                    /start-time last-clock
                    /stop-time [ clock . ]
                    /description desc
-                 .
                ] record .
            up set /running False .
            save-hours .
@@ -561,21 +575,21 @@ set /day-of-week-map
         "Thursday"
         "Friday"
         "Saturday"
-        "Sunday" .
+        "Sunday" 
     ] .
 
 
 ' Convert milliseconds to hours
 set /make-hours-day-time
     < (
-      do < ( div t 1000.0 60 60 . ) /t > structure .
+      do < ( div t 1000.0 60 60 ) /t > structure .
     ) /structure > .
 
       
 ' Return a structure describing a single day of activity
 set /day-time
     (
-      set /final [ registry . ] .
+      set /final [ registry ] .
       set /clock1
           [
             make-clock
@@ -607,24 +621,24 @@ set /day-time
           ] .
 
       set /i /r1 .
-      while ( exist i record . )
+      while ( exist i record )
             (
               if [ and
-                     [ gt-eq record:i:/start-time clock1 . ]
-                     [ lt-eq record:i:/start-time clock2 . ] . ]
+                     [ gt-eq record:i:/start-time clock1 ]
+                     [ lt-eq record:i:/start-time clock2 ] ]
                  {
-                   set /client [ to-register record:i:/client . ] .
-                   set /elapsed [ sub record:i:/stop-time record:i:/start-time . ] .
+                   set /client [ to-register record:i:/client ] .
+                   set /elapsed [ sub record:i:/stop-time record:i:/start-time ] .
 
-                   if [ exist client final . ]
+                   if [ exist client final ]
                       {
-                        set client [ add final:client elapsed . ] final .
+                        set client [ add final:client elapsed ] final .
                       }
                       {
                         set client elapsed final .
                       } .
                  } .
-              set /i [ next i . ] .
+              set /i [ next i ] .
             ) .
       make-hours-day-time final .
     ) .
@@ -643,12 +657,12 @@ set /add-client-to-list
 set /choose-client
     (
       set /i /c1 .
-      while ( exist i record:/client-list . )
+      while ( exist i record:/client-list )
             (
               print
                 [
                   combine
-                    [ to-string [ to-number i . ] . ]
+                    [ to-string [ to-number i ] ]
                     ": " 
                     record:/client-list:i .
                 ] .
@@ -656,14 +670,14 @@ set /choose-client
             ) .
       print "Choose Client: " False .
       input /num .
-      set /loc [ to-register [ combine "c" num . ] . ] .
+      set /loc [ to-register [ combine "c" num ] ] .
       answer record:/client-list:loc .
     ) .
 
 ' Get current status (client, whether running)
 set /status
     (
-      print [ combine "Current client: " current-client . ] .
+      print [ combine "Current client: " current-client ] .
       if running
          {
            print "Running a task." .
@@ -679,28 +693,28 @@ set /rename-client
       ' Update client in list
       set /i /c1 .
       set /cont True .
-      while ( and [ exist i record:/client-list . ]
-                  cont . )
+      while ( and [ exist i record:/client-list ]
+                  cont )
             (
-              if [ string-eq record:/client-list:i client . ]
+              if [ string-eq record:/client-list:i client ]
                  {
                    set i new-client record:/client-list .
                    set /cont False .
                  } .
 
-              set /i [ next i . ] .
+              set /i [ next i ] .
             ) .
       
       ' Update client in records
 
       set /i /r1 .
-      while ( exist i record . )
+      while ( exist i record )
             (
-              if [ string-eq record:i:/client client . ]
+              if [ string-eq record:i:/client client ]
                  {
                    set /client new-client record:i .
                  } .
-              set /i [ next i . ] .
+              set /i [ next i ] .
             ) .
     ) .
           
@@ -709,12 +723,12 @@ set /rename-client
 
 set /start-back
     < (
-      if [ not running . ]
+      if [ not running ]
          {
            print "Currently not running." .
          }
          {
-           up set /last-clock [ sub last-clock [ mul x 60 1000 . ] . ] .
+           up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
          } .
     ) /x > .
 
@@ -723,8 +737,8 @@ set /start-back
 set /rewind-last
     < (
 
-      set /end [ last record /r . ] .
-      set /stop-time [ sub record:end:/stop-time [ mul x 60 1000 . ] . ]
+      set /end [ last record /r ] .
+      set /stop-time [ sub record:end:/stop-time [ mul x 60 1000 ] ]
           record:end .
     ) /x > .
 
@@ -756,7 +770,7 @@ Then all the instructions from the /billable/ program are available to us.
 Example of use:
 
 #+BEGIN_SRC wob
-... set /x [ list 3 2 4 1 . ] .
+... set /x [ list 3 2 4 1 ] .
 ... quicksort /input x /slice /t /compare lt .
 ... print x .
 ans = a registry with:
@@ -775,13 +789,13 @@ t4 of type Integer, value: 1
 
 ** A Line-Oriented Text Editor
 
-This example is a simple method of building WOB applications that have their own environment.  The user enters the text editor environment and enters commands to edit a buffer.
+This example is a simple interactive program where the user enters commands to edit a buffer. 
 
 #+INCLUDE: "../examples/wobed.wob" src wob
 
 Example of use:
 #+BEGIN_SRC wob
-... go-in wobed .
+... import wobed .
 ... i "Hello" .
 ... o .
 Hello
@@ -800,7 +814,7 @@ Hello
 
 Example of use:
 #+BEGIN_SRC wob
-... set /f < ( power t 2 . ) /t > .
+... set /f < ( power t 2 ) /t > .
 ... deriv /f f /x 1.0
 ans = 2.0
 #+END_SRC
@@ -827,7 +841,7 @@ ans = 120
 
 Example of use:
 #+BEGIN_SRC wob
-... integrate /f < ( power t 2 . ) /t > /lb 0.0 /ub 1.0 /n 1000 .
+... integrate /f < ( power t 2 ) /t > /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
 #+END_SRC
 
@@ -839,8 +853,8 @@ This example demonstrates both application methods like =do= and =collapse= as w
 
 Example of use:
 #+BEGIN_SRC wob
-... set /A [ list [ list 1 2 . ] [ list 3 4 . ] . ] .
-... set /B [ list [ list 6 2 . ] [ list 3 4 . ] . ] .
+... set /A [ list [ list 1 2 ] [ list 3 4 ] ] .
+... set /B [ list [ list 6 2 ] [ list 3 4 ] ] .
 ... transpose A .
 ans = a registry with:
 t1 of type Registry, value: a registry with:
@@ -895,9 +909,6 @@ Now, the operation can be called in the following way:
 ... log1 1 .
 ans = 0.693147
 #+END_SRC
-
-
-
 
 ** Concurrent Programming
 

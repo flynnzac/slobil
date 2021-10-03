@@ -3,12 +3,12 @@
 
 set /integrate 
     ( 
-      set /delta [ div [ sub ub lb . ] n . ] .
+      set /delta [ div [ sub ub lb ] n ] .
       set /x lb .
       set /int 0.0 .
       repeat n
              (
-               incr int [ f x . ] .
+               incr int [ f x ] .
                incr x delta .
              ) .
       mul int delta .

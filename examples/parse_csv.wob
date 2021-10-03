@@ -6,15 +6,15 @@ set /parse-csv
     (
       open-text-file name .
       set /file ans .
-      set /parsed [ list . ] .
+      set /parsed [ list ] .
       set /cur-reg /#1 . 
 
-      while ( set /cur-line [ read-line file . ] .
+      while ( set /cur-line [ read-line file ] .
 	      is-string cur-line . )
             (
               tokenize /line cur-line /sep "," .
-              in parsed ( set cur-reg ans . ) .
-              set /cur-reg [ next cur-reg . ] .
+              in parsed ( set cur-reg ans ) .
+              set /cur-reg [ next cur-reg ] .
             ) .
 
       
