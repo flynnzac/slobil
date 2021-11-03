@@ -1,7 +1,7 @@
 task /t1
      (
-       accept /instruction .
-       move /ans /instr .
+       set /instr [ accept /instruction ] .
+       print "HELLO" .
        accept /context .
        import ans .
        instr .
@@ -13,7 +13,7 @@ run-task t1 .
 queue /instruction ( add x y ) t1 .
 queue /context [ registry /x 2 /y 4 ] t1 .
 accept-or /result ( print "Result not ready yet." ) t1 .
-
+accept-or /result ( print "Result not ready yet." ) t1 .
 
 
 

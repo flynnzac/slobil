@@ -594,7 +594,10 @@ u32_str_to_h (const uint32_t* str);
 
 
 #ifdef GARBAGE
-#include <gc.h>
+#define GC_PTHREADS
+#include <gc/gc.h>
+#define pthread_create GC_pthread_create
+#define pthread_exit GC_pthread_exit
 #define malloc(x) GC_MALLOC(x)
 #define realloc(x,y) GC_REALLOC(x,y)
 #define free(x)
