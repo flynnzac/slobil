@@ -1,10 +1,10 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of WOB.
+   This file is part of BRIPLE.
 
-   WOB is free software: you can redistribute it and/or modify
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
@@ -15,16 +15,16 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#ifndef WOB_H
-#define WOB_H
+#ifndef BRIPLE_H
+#define BRIPLE_H
 #define _GNU_SOURCE
-#define WOB_HASH_SIZE 31
-#define WOB_LOAD_FACTOR 0.75
+#define BRIPLE_HASH_SIZE 31
+#define BRIPLE_LOAD_FACTOR 0.75
 
 
 #include <stdio.h>
@@ -96,20 +96,20 @@ struct task_vars
 {
   struct registry* current_parse_registry;
   char* source_code;
-  void** wob_ll;
-  int wob_ll_cnt;
+  void** briple_ll;
+  int briple_ll_cnt;
 
-  size_t wob_stop_error_threshold;
+  size_t briple_stop_error_threshold;
 
   data* last_ans;
-  int wob_error;
+  int briple_error;
   int do_exit;
   
-  struct registry* wob_options;
+  struct registry* briple_options;
 
-  unsigned long wob_hash_ans;
-  unsigned long wob_hash_t;
-  unsigned long wob_hash_underscore;
+  unsigned long briple_hash_ans;
+  unsigned long briple_hash_t;
+  unsigned long briple_hash_underscore;
 
   bool reading;
 };
@@ -531,7 +531,7 @@ data*
 new_data();
 
 void
-wob_location(mpz_t loc, int n);
+briple_location(mpz_t loc, int n);
 
 int
 digits (int n);
@@ -579,10 +579,10 @@ free_task_vars (task_vars* t);
 /* string conversions */
 
 uint32_t*
-wob_u8_to_u32 (const uint8_t* s, size_t n);
+briple_u8_to_u32 (const uint8_t* s, size_t n);
 
 uint8_t*
-wob_u32_to_u8 (const uint32_t* s, size_t n);
+briple_u32_to_u8 (const uint32_t* s, size_t n);
 
 uint32_t*
 u32_str_to_le (const uint32_t* str);

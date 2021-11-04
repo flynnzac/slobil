@@ -1,25 +1,25 @@
 /* 
-   WOB is a Register BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of WOB.
+   This file is part of BRIPLE.
 
-   WOB is free software: you can redistribute it and/or modify
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-`#include "wob.h"'
+`#include "briple.h"'
 
 `#include <errno.h>'
 
@@ -804,7 +804,7 @@ op_source (arg a, registry* reg)
   ##GETARG~$;
 
   
-  char* file = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* file = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
   FILE* f = fopen(file, "r");
@@ -885,7 +885,7 @@ op_do (arg a, registry* reg)
     {
       arg_reg[i] = (registry*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, WOB_HASH_SIZE,
+  registry* ret_reg = new_registry(reg, BRIPLE_HASH_SIZE,
                                    reg->task);
   data* d;
   arg a1;
@@ -934,7 +934,7 @@ op_do (arg a, registry* reg)
             continue;
 
           compute(arg1, reg, a1);
-          d = lookup(reg, reg->task->task->wob_hash_ans, 0);
+          d = lookup(reg, reg->task->task->briple_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans register.",
@@ -1104,7 +1104,7 @@ op_in (arg a, registry* reg)
 
   execute_0(arg2, (registry*) arg1->data);
   
-  data* ans = lookup((registry*) arg1->data, reg->task->task->wob_hash_ans, 0);
+  data* ans = lookup((registry*) arg1->data, reg->task->task->briple_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1134,7 +1134,7 @@ op_while (arg a, registry* reg)
       if (is_error(-1, reg->task->task))
         break;
           
-      d = get(reg, reg->task->task->wob_hash_ans, 0);
+      d = get(reg, reg->task->task->briple_hash_ans, 0);
 
       if (d == NULL)
         {
@@ -1203,7 +1203,7 @@ op_to_register (arg a, registry* reg)
 
   if (arg1->type == String)
     {
-      char* str = wob_u32_to_u8((uint32_t*) arg1->data,
+      char* str = briple_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
       assign_regstr(&d, str, hash_str(str));
       free(str);
@@ -1259,7 +1259,7 @@ op_collapse (arg a, registry* reg)
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk, WOB_HASH_SIZE, reg->task);
+  registry* r = new_registry(to_walk, BRIPLE_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -1289,7 +1289,7 @@ op_collapse (arg a, registry* reg)
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, reg->task->task->wob_hash_ans, 0);
+      d1 = lookup(r, reg->task->task->briple_hash_ans, 0);
 
       if (d1 == NULL)
         {
@@ -1301,7 +1301,7 @@ op_collapse (arg a, registry* reg)
       if (is_first)
         {
           free(first_name);
-          first_hash = reg->task->task->wob_hash_ans;
+          first_hash = reg->task->task->briple_hash_ans;
           is_first = 0;
         }
       i++;
@@ -1309,7 +1309,7 @@ op_collapse (arg a, registry* reg)
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, reg->task->task->wob_hash_ans, 0);
+  d = lookup(r, reg->task->task->briple_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -1377,7 +1377,7 @@ op_char_eq (arg a, registry* reg)
 
   size_t length = u32_strlen(str);
 
-  wob_location(start, length);
+  briple_location(start, length);
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
@@ -1494,7 +1494,7 @@ op_save (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* file = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* file = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
              
   save_outer(reg, file);
@@ -1514,7 +1514,7 @@ op_load (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* fname = briple_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
   
   gzFile f = gzopen(fname, "r");
@@ -1617,7 +1617,7 @@ op_to_string (arg a, registry* reg)
       strcpy(result, regstr_name);
     }
 
-  uint32_t* res32 = wob_u8_to_u32(result, strlen(result));
+  uint32_t* res32 = briple_u8_to_u32(result, strlen(result));
   data* d;
   assign_str(&d, res32, 0);
   ret_ans(reg, d);
@@ -1640,7 +1640,7 @@ op_to_number (arg a, registry* reg)
   if (arg1->type == String)
     {
       uint32_t* value = (uint32_t*) arg1->data;
-      char* u8_value = wob_u32_to_u8(value, u32_strlen(value));
+      char* u8_value = briple_u32_to_u8(value, u32_strlen(value));
       data* d;
       if (is_integer(u8_value))
         {
@@ -1710,7 +1710,7 @@ op_to_real (arg a, registry* reg)
     d = copy_data(arg1);
   else
     {
-      char* u8value = wob_u32_to_u8((uint32_t*) arg1->data,
+      char* u8value = briple_u32_to_u8((uint32_t*) arg1->data,
                                     u32_strlen((uint32_t*) arg1->data));
 
       double result = atof(u8value);
@@ -1737,7 +1737,7 @@ op_output_code (arg a, registry* reg)
 
   if (reg->task->task->source_code != NULL)
     {
-      char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
+      char* fname = briple_u32_to_u8((uint32_t*) arg1->data,
                                   u32_strlen((uint32_t*) arg1->data));
       FILE* f = fopen(fname, "w");
       fwrite(reg->task->task->source_code, sizeof(char),
@@ -1773,7 +1773,7 @@ op_error (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* err_msg = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* err_msg = briple_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
   
   do_error(err_msg, reg->task->task);
@@ -1890,7 +1890,7 @@ op_open_file (arg a, registry* reg)
   ##GETARG~$;
 
   FILE* f;
-  char* fname = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* fname = briple_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
   if (a.length >= 3)
     {
@@ -1898,7 +1898,7 @@ op_open_file (arg a, registry* reg)
       #type=String@
       ##GETARG~$;
 
-      char* mode = wob_u32_to_u8((uint32_t*) arg2->data,
+      char* mode = briple_u32_to_u8((uint32_t*) arg2->data,
                                  u32_strlen((uint32_t*) arg2->data));
 
       f = fopen(fname, mode);
@@ -1986,7 +1986,7 @@ op_read_char (arg a, registry* reg)
   else
     {
       c[nbytes] = '\0';
-      uint32_t* c32 = wob_u8_to_u32(c, strlen(c));
+      uint32_t* c32 = briple_u8_to_u32(c, strlen(c));
       assign_str(&d, c32, 0);
     }
   ret_ans(reg,d);
@@ -2126,7 +2126,7 @@ op_read_line (arg a, registry* reg)
       if (!feof((FILE*) arg1->data))
         line[strlen(line)-1] = '\0';
 
-      uint32_t* u32_line = wob_u8_to_u32(line, strlen(line));
+      uint32_t* u32_line = briple_u8_to_u32(line, strlen(line));
       assign_str(&d, u32_line, 0);
 
 			#data=line@ 
@@ -2159,7 +2159,7 @@ op_write_string (arg a, registry* reg)
   #type=File@
   ##GETARG~$;
 
-  char* text = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* text = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
   fwrite(text, sizeof(char), strlen(text), (FILE*) arg2->data);
@@ -2210,7 +2210,7 @@ op_input (arg a, registry* reg)
   char* input = readline("");
   data* d;
 
-  uint32_t* str = wob_u8_to_u32(input, strlen(input));
+  uint32_t* str = briple_u8_to_u32(input, strlen(input));
                                 
   assign_str(&d, str, 0);
   
@@ -2230,7 +2230,7 @@ op_shell (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* cmd = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* cmd = briple_u32_to_u8((uint32_t*) arg1->data,
                             u32_strlen((uint32_t*) arg1->data));
   FILE* f = popen(cmd, "r");
 
@@ -2249,12 +2249,12 @@ op_shell (arg a, registry* reg)
     {
       if (d == NULL)
         {
-          raw = wob_u8_to_u32(buffer, strlen(buffer));
+          raw = briple_u8_to_u32(buffer, strlen(buffer));
           assign_str(&d, raw, 0);
         }
       else
         {
-          raw = wob_u8_to_u32(buffer, strlen(buffer));
+          raw = briple_u8_to_u32(buffer, strlen(buffer));
           d->data = realloc(d->data, sizeof(uint32_t)*(u32_strlen((uint32_t*) d->data)+u32_strlen(raw)+1));
           u32_strcat((uint32_t*) d->data, raw);
           free(raw);
@@ -2287,7 +2287,7 @@ op_link (arg a, registry* reg)
   #num=3@
   ##GETARG~$;
 
-  char* file = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* file = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
   
   void* lib = dlopen(file, RTLD_LAZY);
@@ -2299,7 +2299,7 @@ op_link (arg a, registry* reg)
       return;
     }
 
-  char* op_name = wob_u32_to_u8((uint32_t*) arg2->data,
+  char* op_name = briple_u32_to_u8((uint32_t*) arg2->data,
                                 u32_strlen((uint32_t*) arg2->data));
   
   operation new_op = dlsym(lib, op_name);
@@ -2310,25 +2310,25 @@ op_link (arg a, registry* reg)
       return;
     }
 
-  char* wob_op_name = wob_u32_to_u8((uint32_t*) arg3->data,
+  char* briple_op_name = briple_u32_to_u8((uint32_t*) arg3->data,
                                     u32_strlen((uint32_t*) arg3->data));
   data* d;
   assign_op(&d, new_op, NULL, NULL, 0);
-  set(reg, d, wob_op_name, 1);
+  set(reg, d, briple_op_name, 1);
 
-  if (reg->task->task->wob_ll == NULL)
+  if (reg->task->task->briple_ll == NULL)
     {
-      reg->task->task->wob_ll = malloc(sizeof(void*));
+      reg->task->task->briple_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->task->wob_ll = realloc(reg->task->task->wob_ll,
-                                    sizeof(void*)*(reg->task->task->wob_ll_cnt+1));
+      reg->task->task->briple_ll = realloc(reg->task->task->briple_ll,
+                                    sizeof(void*)*(reg->task->task->briple_ll_cnt+1));
     }
-  reg->task->task->wob_ll[reg->task->task->wob_ll_cnt] = lib;
-  reg->task->task->wob_ll_cnt++;
+  reg->task->task->briple_ll[reg->task->task->briple_ll_cnt] = lib;
+  reg->task->task->briple_ll_cnt++;
 
-  free(wob_op_name);
+  free(briple_op_name);
   free(op_name);
   free(file);
 }
@@ -2347,10 +2347,10 @@ op_match (arg a, registry* reg)
   #num=2@
   ##GETARG~$;
 
-  char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
-  char* str2 = wob_u32_to_u8((uint32_t*) arg2->data,
+  char* str2 = briple_u32_to_u8((uint32_t*) arg2->data,
                              u32_strlen((uint32_t*) arg2->data));
   
 
@@ -2412,7 +2412,7 @@ op_match (arg a, registry* reg)
                     }
                   to_add[j-matches[i].rm_so] = '\0';
 
-                  uint32_t* u32_add = wob_u8_to_u32(to_add,
+                  uint32_t* u32_add = briple_u8_to_u32(to_add,
                                                     strlen(to_add));
                   
                   assign_str(&d_str, u32_add, 0);
@@ -2461,13 +2461,13 @@ op_replace (arg a, registry* reg)
   #num=3@
   ##GETARG~$;
 
-  char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
-  char* str2 = wob_u32_to_u8((uint32_t*) arg2->data,
+  char* str2 = briple_u32_to_u8((uint32_t*) arg2->data,
                              u32_strlen((uint32_t*) arg2->data));
 
-  char* str3 = wob_u32_to_u8((uint32_t*) arg3->data,
+  char* str3 = briple_u32_to_u8((uint32_t*) arg3->data,
                              u32_strlen((uint32_t*) arg3->data));
 
 
@@ -2567,7 +2567,7 @@ op_replace (arg a, registry* reg)
     }
   final[final_sz] = '\0';
 
-  uint32_t* u32_final = wob_u8_to_u32(final,
+  uint32_t* u32_final = briple_u8_to_u32(final,
                                       strlen(final));
   
   assign_str(&d, u32_final, 0);
@@ -2680,7 +2680,7 @@ op_change_dir (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* dir = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* dir = briple_u32_to_u8((uint32_t*) arg1->data,
                             u32_strlen((uint32_t*) arg1->data));
 
   int error = chdir(dir);
@@ -2746,7 +2746,7 @@ op_current_dir (arg a, registry* reg)
       return;
     }
   data* d;
-  uint32_t* u32dir = wob_u8_to_u32(dir, strlen(dir));
+  uint32_t* u32dir = briple_u8_to_u32(dir, strlen(dir));
   assign_str(&d, u32dir, 0);
 
   #data=dir@ 
@@ -2783,8 +2783,8 @@ op_substring (arg a, registry* reg)
 
   size_t length = u32_strlen(str);
 
-  wob_location(start, length);
-  wob_location(end, length);
+  briple_location(start, length);
+  briple_location(end, length);
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
@@ -2852,7 +2852,7 @@ op_up (arg a, registry* reg)
 
   compute(a1.arg_array[0], reg->up, a1);
 
-  data* d = lookup(reg->up, reg->task->task->wob_hash_ans, 0);
+  data* d = lookup(reg->up, reg->task->task->briple_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -2877,7 +2877,7 @@ op_code (arg a, registry* reg)
 
   data* d;
   char* code = ((instruction*) arg1->data)->code;
-  uint32_t* u32code = wob_u8_to_u32(code, strlen(code));
+  uint32_t* u32code = briple_u8_to_u32(code, strlen(code));
   
   assign_str(&d, u32code, 0);
 
@@ -2896,12 +2896,12 @@ op_is_error (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->wob_stop_error_threshold;
-  reg->task->task->wob_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->briple_stop_error_threshold;
+  reg->task->task->briple_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
   assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
-  reg->task->task->wob_stop_error_threshold = stop_thresh;
+  reg->task->task->briple_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
   is_error(0, reg->task->task);
@@ -2929,17 +2929,17 @@ op_ignore_errors (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->wob_stop_error_threshold;
-  reg->task->task->wob_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->briple_stop_error_threshold;
+  reg->task->task->briple_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  reg->task->task->wob_stop_error_threshold = stop_thresh;
+  reg->task->task->briple_stop_error_threshold = stop_thresh;
 }
 
 void
 op_version (arg a, registry* reg)
 {
   data* d;
-  uint32_t* u32version = wob_u8_to_u32(PACKAGE_VERSION,
+  uint32_t* u32version = briple_u8_to_u32(PACKAGE_VERSION,
                                        strlen(PACKAGE_VERSION));
   assign_str(&d, u32version, 0);
 
@@ -2994,7 +2994,7 @@ op_filter (arg a, registry* reg)
               assign_regstr(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
-              data* d = lookup(reg, reg->task->task->wob_hash_ans, 0);
+              data* d = lookup(reg, reg->task->task->briple_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3105,16 +3105,16 @@ op_use (arg a, registry* reg)
   #type=String@
   ##GETARG~$;
 
-  char* str1 = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = briple_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
 
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen(str1)+
-                                     strlen(".dwobs/")+
-                                     strlen("/.dwob")+1));
-  sprintf(fname, "%s/.dwobs/%s.dwob", home, str1);
+                                     strlen(".dbriples/")+
+                                     strlen("/.dbriple")+1));
+  sprintf(fname, "%s/.dbriples/%s.dbriple", home, str1);
   gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
@@ -3251,7 +3251,7 @@ op_make_time (arg a, registry* reg)
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  registry* r = new_registry(reg, WOB_HASH_SIZE, reg->task);
+  registry* r = new_registry(reg, BRIPLE_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -3419,7 +3419,7 @@ op_task (arg a, registry* reg)
   if (init_state == NULL)
     {
       t->state = new_registry(t->task->current_parse_registry,
-                              WOB_HASH_SIZE,
+                              BRIPLE_HASH_SIZE,
                               t);
     }
   else
@@ -3431,7 +3431,7 @@ op_task (arg a, registry* reg)
   t->task->current_parse_registry = t->state;
 
   t->code = copy_instruction((instruction*) arg2->data);
-  t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
+  t->queued_instruction = new_registry(NULL, BRIPLE_HASH_SIZE, t);
   
   t->pid = -1;
   t->thread = NULL;
@@ -3790,7 +3790,7 @@ op_interpreter (arg a, registry* reg)
 
       d2 = resolve(a.arg_array[i+1], reg);
       d2 = copy_data(d2);
-      set(reg->task->task->wob_options,
+      set(reg->task->task->briple_options,
           d2, ((regstr*) d1->data)->name, 1);
     }
 }
@@ -3811,16 +3811,16 @@ op_build (arg a, registry* reg)
   ##GETARG~$;
   
 
-  char* loc = wob_u32_to_u8((uint32_t*) arg1->data,
+  char* loc = briple_u32_to_u8((uint32_t*) arg1->data,
                             u32_strlen(arg1->data));
 
 
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen(loc)+
-                                     strlen(".dwobs/")+
-                                     strlen("/.dwob")+1));
-  sprintf(fname, "%s/.dwobs/%s.dwob", home, loc);
+                                     strlen(".dbriples/")+
+                                     strlen("/.dbriple")+1));
+  sprintf(fname, "%s/.dbriples/%s.dbriple", home, loc);
   
   save_outer((registry*) arg2->data, fname);
   
@@ -4071,7 +4071,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_sit, NULL, NULL, 0);
   set(reg,d,"sit",1);
 
-  /** Exit WOB **/
+  /** Exit BRIPLE **/
   
   assign_op(&d, op_exit, NULL, NULL, 0);
   set(reg,d,"exit",1);

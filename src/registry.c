@@ -1,25 +1,25 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of WOB.
+   This file is part of BRIPLE.
 
-   WOB is free software: you can redistribute it and/or modify
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "wob.h"
+#include "briple.h"
 
 content*
 new_content ()
@@ -89,9 +89,9 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       reg->elements++;
-      if (rehash_flag && (reg->elements > (WOB_LOAD_FACTOR*(reg->hash_size))))
+      if (rehash_flag && (reg->elements > (BRIPLE_LOAD_FACTOR*(reg->hash_size))))
         {
-          data* check_hash = get(reg->task->task->wob_options,
+          data* check_hash = get(reg->task->task->briple_options,
                                  hash_str("auto-rehash"), 0);
           bool check = true;
 
@@ -122,7 +122,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-  if (hash_name == reg->task->task->wob_hash_underscore)
+  if (hash_name == reg->task->task->briple_hash_underscore)
     {
       data* d;
       assign_registry(&d, reg, false, reg->task);
@@ -422,7 +422,7 @@ tail (content* c)
 int
 update_hash_size (size_t elements, size_t hash_size)
 {
-  return elements > (hash_size*WOB_LOAD_FACTOR);
+  return elements > (hash_size*BRIPLE_LOAD_FACTOR);
 }
     
   
@@ -430,9 +430,9 @@ update_hash_size (size_t elements, size_t hash_size)
 size_t
 new_hash_size (size_t elements)
 {
-  size_t hash_size = ceil((double) elements / WOB_LOAD_FACTOR);
-  size_t factor = (hash_size / WOB_HASH_SIZE) + 1;
-  return WOB_HASH_SIZE*factor;
+  size_t hash_size = ceil((double) elements / BRIPLE_LOAD_FACTOR);
+  size_t factor = (hash_size / BRIPLE_HASH_SIZE) + 1;
+  return BRIPLE_HASH_SIZE*factor;
 }
   
 void

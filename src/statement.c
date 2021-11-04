@@ -1,4 +1,26 @@
-#include "wob.h"
+/* 
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
+
+   This file is part of BRIPLE.
+
+   BRIPLE is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   BRIPLE is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   
+*/
+
+
+#include "briple.h"
 
 element*
 append_literal_element (element* current, data* d)
@@ -115,7 +137,7 @@ execute_statement (statement* s, registry* reg)
         {
           if (e->data == NULL)
             {
-              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/wob .",
+              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/briple .",
                        reg->task->task);
             }
           else
@@ -128,7 +150,7 @@ execute_statement (statement* s, registry* reg)
           if (e->statement)
             {
               execute_code(e->s, reg);
-              d = get(reg, reg->task->task->wob_hash_ans, 0);
+              d = get(reg, reg->task->task->briple_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans register.",
@@ -136,8 +158,8 @@ execute_statement (statement* s, registry* reg)
                 }
               else 
                 {
-                  del(reg, reg->task->task->wob_hash_ans, 0, false);
-                  /* mark_do_not_free(reg, wob_hash_ans); */
+                  del(reg, reg->task->task->briple_hash_ans, 0, false);
+                  /* mark_do_not_free(reg, briple_hash_ans); */
                 }
             }
           else
@@ -210,8 +232,8 @@ execute_code (statement* s, registry* reg)
     {
       execute_statement(stmt, reg);
       error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
-      if (reg->task->task->wob_stop_error_threshold > 0 &&
-          (error >= reg->task->task->wob_stop_error_threshold))
+      if (reg->task->task->briple_stop_error_threshold > 0 &&
+          (error >= reg->task->task->briple_stop_error_threshold))
         {
           printf("-> ");
           print_statement(stmt);

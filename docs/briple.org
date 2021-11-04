@@ -1,7 +1,7 @@
 # -*- org-html-preamble-format: (("en" "%t<br>%a<br>%T")); -*-
-#+TITLE: WOB
+#+TITLE: BRIPLE
 #+AUTHOR: Zach Flynn
-#+DESCRIPTION: WOB is a registry-based environment and language. This manual describes how to use the language.
+#+DESCRIPTION: BRIPLE is a Basic Registry-based Interactive Programming Language and Environment. This manual describes how to use the language.
 #+SETUPFILE: theme-readtheorg-local.setup
 
 #+HTML_HEAD: <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -10,40 +10,32 @@
 
 * Introduction
 
-The basic philosophy of WOB is that all computer users need a programming language to do their computing, not just for writing programs used by other people.  WOB provides a useful environment and language for creating personal programs.  "Personal programs" are programs primarily designed for an audience of one.  For example, suppose your job requires you to keep track of the hours you work for various clients.  The Personal Program approach to solve this problem is to write a simple program that keeps track of your hours.  WOB is a programming language and environment that makes it easy to write these kinds of programs.
+The basic philosophy of BRIPLE is that all computer users need a programming language to do their computing, not just for writing programs used by other people.  BRIPLE provides a useful environment and language for creating personal programs.  "Personal programs" are programs primarily designed for an audience of one.  For example, suppose your job requires you to keep track of the hours you work for various clients.  The Personal Program approach to solve this problem is to write a simple program that keeps track of your hours.  BRIPLE is a programming language and environment that makes it easy to write these kinds of programs.
 
-WOB is an environment and programming language designed to make it easy to create personal programs to accomplish your computing. It is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  WOB code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of WOB instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  WOB allows you to make such modifications without the author of the code ever deciding to allow that option.  
+BRIPLE is an environment and programming language designed to make it easy to create personal programs to accomplish your computing. It is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  BRIPLE code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of BRIPLE instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  BRIPLE allows you to make such modifications without the author of the code ever deciding to allow that option.  
 
-While WOB can be run in scripting mode, it is primarily intended to be used interactively.  WOB programs are written to provide new commands in the WOB shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the WOB environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
+While BRIPLE can be run in scripting mode, it is primarily intended to be used interactively.  BRIPLE programs are written to provide new commands in the BRIPLE shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the BRIPLE environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
 
-WOB's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid WOB code snippets:
-#+BEGIN_SRC wob
+BRIPLE's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid BRIPLE code snippets:
+#+BEGIN_SRC briple
 ... report /project "The Big One" /from "2020-01-01" /to "2020-12-31" /output "annual_report_2020.csv" .
 ... hours /day 14 /month 6 /year 2021 .
 #+END_SRC 
 
-Where =hours= and =report= are WOB commands that have been written by the user.
-
-** Why is it called "WOB"?
-
-It is called WOB because I wrote the original version of it on my morning bus ride to work.  WOB was @@html:<b>@@W@@html:</b>@@ritten @@html:<b>@@O@@html:</b>@@n a @@html:<b>@@B@@html:</b>@@us.  
-
-#+CAPTION: Where WOB was Developed
-#+ATTR_HTML: :width 300px
-[[file:bus699.jpg]]
+Where =hours= and =report= are BRIPLE commands that have been written by the user.
 
 * The Language
 ** Statements and syntax
 
-   A single line of WOB code is called a statement.  The first element of the statement is one of WOB's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
+   A single line of BRIPLE code is called a statement.  The first element of the statement is one of BRIPLE's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
   
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... set /hello "Hello, world!" .
    #+END_SRC
 
-   =set= is the WOB operation to set a register to a certain value.  The above code sets the register =/hello= to the String value ="Hello, world!=. Names that have a forward slash preceeding them are /registers/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in WOB:
+   =set= is the BRIPLE operation to set a register to a certain value.  The above code sets the register =/hello= to the String value ="Hello, world!=. Names that have a forward slash preceeding them are /registers/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in BRIPLE:
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... set /days-in-week 7 .
    ... set /penny 0.01 .
    ... set /facts True .
@@ -54,14 +46,14 @@ It is called WOB because I wrote the original version of it on my morning bus ri
    An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, "(" and ")").  Instructions can be executed later inside registries perhaps different than the registries in which they were initially defined.
 
    To use the value located in a registry, simply type the name of the register without the preceeding forward slash.  For example,
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
   ... print days-in-week .
   7
    #+END_SRC
 
-   All code elements must be separated by whitespace in WOB including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
+   All code elements must be separated by whitespace in BRIPLE including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 	' All are WRONG:
 	print days-in-week.
 	set /add-one (add t 1 .) .
@@ -69,19 +61,19 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
    There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
-   There are four parenthesis types in WOB: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
+   There are four parenthesis types in BRIPLE: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
 
 *** Instructions
 
     Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
      ans = 11
     #+END_SRC
 
     =call= takes an instruction and then assigns each of the registers that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of registers to set for any Instruction.  For example, 
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
      ans = 11
@@ -91,8 +83,8 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
     Any object in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
 
-    Because there is no ambiguity, you do not actually need to use the =call= operation directly.  WOB will insert it for you if the first argument is an instruction.  So the following would work as well,
-    #+BEGIN_SRC wob
+    Because there is no ambiguity, you do not actually need to use the =call= operation directly.  BRIPLE will insert it for you if the first argument is an instruction.  So the following would work as well,
+    #+BEGIN_SRC briple
      ... add-one /t 10 .
      ans = 11
     #+END_SRC
@@ -102,19 +94,19 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 *** Greedy substatements and the =/ans= register
 
     Closed parenthesis ("[]") execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= register to.  The purpose of these statements is to avoid needing to define temporary registers for intermediate calculations.  For example,
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
      ... add [ sub 5 3 . ] [ mul 2 3 . ] .
      ans = 8
     #+END_SRC
 
-    You may have noticed the =ans = ...= after entering some commands.  This tells you the current value of the =/ans= register which is special in WOB.  Operations often write to the =/ans= register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the =/ans= register in the current registry by using the =answer= operation.
-    #+BEGIN_SRC wob
+    You may have noticed the =ans = ...= after entering some commands.  This tells you the current value of the =/ans= register which is special in BRIPLE.  Operations often write to the =/ans= register in the registry from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the =/ans= register in the current registry by using the =answer= operation.
+    #+BEGIN_SRC briple
      ... answer 10 .
      ans = 10
     #+END_SRC
 
     The =/ans= register is special because, after an Instruction finishes running in its temporary registry, whatever the value at the =/ans= register is in that registry is moved to the =/ans= register in the registry that called the instruction.  For example,
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
      ... add 10 12 .
      ans = 22
      ... set /add-one ( add t 1 . ) .
@@ -128,8 +120,8 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
 *** Lazy substatements (Expressions)
 
-    Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the =/ans= register to.  This form of evaluation is often called "lazy evaluation".  WOB calls this data type an "Expression". We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
-    #+BEGIN_SRC wob
+    Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the =/ans= register to.  This form of evaluation is often called "lazy evaluation".  BRIPLE calls this data type an "Expression". We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
+    #+BEGIN_SRC briple
      ... set /gt-4
      (
        set /str-t [ to-string t . ] . 
@@ -149,7 +141,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
     Unlike instructions, expressions are evaluated in the registry calling them instead of a temporary registry inside the calling registry. So, for example they can move registers in the calling registry:
 
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
     ... set /test ( set /x 2 . sit y . print z . ) .
     ... test /y { move /x /z . } .
     2
@@ -160,7 +152,7 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 *** Convert an instruction to an operation
 
     Angle brackets (<>) transform an instruction object into an operation object.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever registry the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the registry the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the =op= operation provide two alternative ways of doing this.   For example:
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
      ans = 0.25
@@ -179,8 +171,8 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 
 *** Comments
 
-    The last syntax element is the comment.  To write a comment in WOB, use a single quote (='=) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
-    #+BEGIN_SRC wob
+    The last syntax element is the comment.  To write a comment in BRIPLE, use a single quote (='=) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
+    #+BEGIN_SRC briple
    ... ' This is a correct comment
    ... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Register /'This
     #+END_SRC
@@ -191,12 +183,12 @@ It is called WOB because I wrote the original version of it on my morning bus ri
 *** Ending Last Statement in a Substatement
 
 In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... add 1 [ mul 2 3 ] .
 #+END_SRC
 
 is a valid statement.  If there are multiple statements, it is usually good practice to end all with a period, but the period can be omitted from the last one.  For example,
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... add 1 [ add 1 1 . mul ans 3 ] .
 #+END_SRC
 
@@ -204,15 +196,15 @@ is valid.
 
 ** Registries
 
-   In WOB, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
+   In BRIPLE, code is executed inside /registries/.  Registries are both data structures and define what registers (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level registry.  To create a new one, use the =registry= operation,
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... registry /hello "Hello, world!" /x 10 .
    #+END_SRC
 
    The =registry= operation puts a new registry in the =/ans= register.  This registry has a =/hello= register bound to the value ="Hello, world!"= and the =/x= register bound to the value =10=.  Usually, you will want to bind the value to another register besides =/ans= which will be overwritten by subsequent statements. You can do either of:
    
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... registry /hello "Hello, world!" /x 10 .
    ... move /ans /my-registry .
    ... ' Or:
@@ -221,7 +213,7 @@ is valid.
 
    To access values in a registry, you can either use the =get= operation or the "colon notation":
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... get /hello my-registry .
    ans = Hello, world!
    ... print my-registry:/hello
@@ -232,7 +224,7 @@ is valid.
 
    From the last line, we can see that the value =hello= exists only in the registry located at =/my-registry= which we are not currently in.  So we cannot access its =/hello= register directly.  We can change which registry we are in with the =go-in= operation.
    
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... go-in hello .
    ... print hello .
    Hello, world!
@@ -240,7 +232,7 @@ is valid.
 
    We can go back to the registry we were in previously by using the =go-out= operation.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... go-out .
    ... print hello .
    Error: Value at `/hello` not found.
@@ -248,7 +240,7 @@ is valid.
 
    We can import values from one registry into their corresponding registers in the current registry by using the =import= operation.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... import my-registry .
    ... print hello .
    Hello, world!
@@ -256,14 +248,14 @@ is valid.
    
    We can also execute an instruction inside a certain registry by using the =in= command.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... in my-registry ( print [ combine hello " Goodbye!" ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
 
-   Aside from being a useful data structure, registries are also how WOB does /namespaces/.  For example,
+   Aside from being a useful data structure, registries are also how BRIPLE does /namespaces/.  For example,
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... set /math [ registry ] .
    ... set /factorial
           (
@@ -284,7 +276,7 @@ is valid.
 
    Of course, if you don't need to worry about name collisions, you can just =import= it.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
    ... import math .
    ... factorial /t 5 .
    ans = 120
@@ -296,14 +288,14 @@ is valid.
 
     The colon notation can be nested.
     
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
     ... set /x [ registry /y [ registry /z 10 ] ] .
     ... print x:/y:/z .
     10
     #+END_SRC
 
     It can also choose the register by referencing the value of another register.
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
     ... set /x [ registry /y 10 ] .
     ... set /z /y .
     ... print x:z .
@@ -311,16 +303,16 @@ is valid.
     #+END_SRC
 
     /But/ we cannot use subexpressions in the colon notation:
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
     ... set /x [ registry /y 10 ] .
     ... ' BAD! print x:[ answer /y ] .
     #+END_SRC
 
 ** Registers   
 
-   Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in WOB.  For example, you can set other registers to registers and use those values wherever you would use registers.
+   Registers are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in BRIPLE.  For example, you can set other registers to registers and use those values wherever you would use registers.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 ... set /x /y .
 ... print x .
 /y
@@ -333,7 +325,7 @@ hello
 
    You can move data between Registers with the =move= command:
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 ... set /x "hello" .
 ... move /x /y .
 ... print y .
@@ -347,33 +339,33 @@ Error: Value at register /x not found.
 ** Environment
 
 *** Saving state
-    WOB is not only a programming language. It is also an /environment/.  The current state of WOB --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
+    BRIPLE is not only a programming language. It is also an /environment/.  The current state of BRIPLE --- the values and where they are located in the registry --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
 
-    To save the current registry to a file called /state.dwob/,
-    #+BEGIN_SRC wob
- ... save "state.dwob" .
+    To save the current registry to a file called /state.dbrip/,
+    #+BEGIN_SRC briple
+ ... save "state.dbrip" .
     #+END_SRC
 
     To load the registry back in:
-    #+BEGIN_SRC wob
- ... load "state.dwob" .
+    #+BEGIN_SRC briple
+ ... load "state.dbrip" .
     #+END_SRC
 
     Optionally, a second argument can be provided to =load= to load the data into a specific registry, not just the current one.
 
-    #+BEGIN_SRC wob
- ... load "state.dwob" old-stuff .
+    #+BEGIN_SRC briple
+ ... load "state.dbrip" old-stuff .
     #+END_SRC
 
     Where =old-stuff= is a registry.
 
 *** Interacting with the user
 
-    One of WOB's strengths is in rapidly-developing interactive programs.  WOB's syntax is command-like so interaction in such a program can often be done using WOB's prompt.  These types of programs often require input from the user and the ability to interact with other non-WOB programs on the computer.  
+    One of BRIPLE's strengths is in rapidly-developing interactive programs.  BRIPLE's syntax is command-like so interaction in such a program can often be done using BRIPLE's prompt.  These types of programs often require input from the user and the ability to interact with other non-BRIPLE programs on the computer.  
 
-    The =input= operation accepts input from the user in the same way as WOB's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
+    The =input= operation accepts input from the user in the same way as BRIPLE's usual prompt.  It takes a register as an argument and assigns the String value the user enters to that register in the current registry.
 
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
 ... set /get-name 
         (
           print "What is your name?" .
@@ -387,27 +379,27 @@ ans = "Zach"
 
     To call commands from the shell, use the =shell= operation.  The =shell= operation sets the =/ans= register to a string containing the output of the command.
 
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
 ... shell "ls" .
 ans = "file1.txt
 file2.txt
 "
     #+END_SRC
 
-    The =change-dir= operation changes the working directory of WOB and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
+    The =change-dir= operation changes the working directory of BRIPLE and the =current-dir= operations sets the =/ans= register to a String giving the current working directory.
 
-    #+BEGIN_SRC wob
+    #+BEGIN_SRC briple
 ... change-dir "/home/zlf" .
 ... current-dir .
 ans = "/home/zlf" 
     #+END_SRC
 
 ** Tasks (concurrent programs)
-   WOB can be used to write concurrent (multi-threaded) programs using Task objects.  WOB's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
+   BRIPLE can be used to write concurrent (multi-threaded) programs using Task objects.  BRIPLE's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
 
    Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the register to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a registry defining the environment in which the task will run.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 ... task /my-task ( commands to run... ) [ registry . ] .
    #+END_SRC
 
@@ -417,7 +409,7 @@ ans = "/home/zlf"
 
    | Element | Description                                                                                              |
    |---------+----------------------------------------------------------------------------------------------------------|
-   | Body    | The instruction run in a separate thread from the main WOB thread.                                       |
+   | Body    | The instruction run in a separate thread from the main BRIPLE thread.                                       |
    | State   | A Registry that contains the current state of the task.  The registry being modified by the Task's body. |
    | Queue   | A Registry that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
    |---------+----------------------------------------------------------------------------------------------------------|
@@ -426,11 +418,11 @@ ans = "/home/zlf"
 
    Tasks /accept/ data when they take data from their queue and move it into their state registry.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
 
-   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.  WOB does not allow running =accept= in the main task because there is no way to exit the blocking.  =accept-or= can be used instead.
+   The =accept= operation takes a register as an argument and waits for data to be available at that register in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= register in the Task's state registry to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.  BRIPLE does not allow running =accept= in the main task because there is no way to exit the blocking.  =accept-or= can be used instead.
 
    The =queue= operation moves data from one registry into the queue of another Task.  Its arguments are a register to set in the queue registry, the data to send, and the task's queue to access.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 ... task /t1 ( print [ accept /hello ] . ) .
 ... run-task t1 .
 ... queue /hello "Hi!" t1 .
@@ -441,7 +433,7 @@ Hi!
 
    The =accept-or= operation checks whether data exists at a certain register in the queue, if it does, it sets the =/ans= register to the result.  If not, it executes its second argument, an instruction, in its state registry.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 accept-or /hello ( set /hello "Hello." ) .
    #+END_SRC
 
@@ -449,7 +441,7 @@ accept-or /hello ( set /hello "Hello." ) .
 
    Alternatively, the =select= operation executes one of several instructions if data comes in at any number of registers.  =select= takes paired registers and instructions as its arguments.  It waits for data to appear in its queue at any of the registers listed.  The first register to receive data is "selected".  The instruction associated with the register is executed in the register's state registry after setting the =/ans= register to the value of the data located at the register in the queue.
 
-   #+BEGIN_SRC wob
+   #+BEGIN_SRC briple
 ... task /t1 ( 
                 set /continue True .
                 while ( answer continue )
@@ -472,7 +464,7 @@ The following program is one I use daily to keep track of time spent on client w
 
 ** Source Code
 
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ' Initial state
 
 set /current-client "Non-billable" .
@@ -494,7 +486,7 @@ set /init
              ) .
     ) /file > .
 
-' Save record of work in WOB format
+' Save record of work in BRIPLE format
 
 set /save-hours
     (
@@ -746,17 +738,17 @@ set /rewind-last
 
 ** Building the Code
 
-We can then use a script like the following, supposing we have saved the above code in a file /billable.wob/, to build a binary version of the program in a convenient location.
+We can then use a script like the following, supposing we have saved the above code in a file /billable.brpl/, to build a binary version of the program in a convenient location.
 
-#+BEGIN_SRC wob
-... source "billable.wob" .
-... save "~/.dwobs/billable.dwob" .
+#+BEGIN_SRC briple
+... source "billable.brpl" .
+... save "~/.dbrips/billable.dbrip" .
 #+END_SRC
 
 ** Using the code
 
 Then, whenever we would like to load the code, we can simply do:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... use "billable" .
 #+END_SRC
 
@@ -765,11 +757,11 @@ Then all the instructions from the /billable/ program are available to us.
 * Examples
 ** Quicksort
 
-#+INCLUDE: "../examples/quicksort.wob" src wob
+#+INCLUDE: "../examples/quicksort.brpl" src briple
 
 Example of use:
 
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... set /x [ list 3 2 4 1 ] .
 ... quicksort /input x /slice /t /compare lt .
 ... print x .
@@ -791,11 +783,11 @@ t4 of type Integer, value: 1
 
 This example is a simple interactive program where the user enters commands to edit a buffer. 
 
-#+INCLUDE: "../examples/wobed.wob" src wob
+#+INCLUDE: "../examples/bripleed.brpl" src briple
 
 Example of use:
-#+BEGIN_SRC wob
-... import wobed .
+#+BEGIN_SRC briple
+... import bripleed .
 ... i "Hello" .
 ... o .
 Hello
@@ -810,10 +802,10 @@ Hello
 
 ** Numerical Differentiation
 
-#+INCLUDE: "../examples/deriv.wob" src wob
+#+INCLUDE: "../examples/deriv.brpl" src briple
 
 Example of use:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... set /f < ( power t 2 ) /t > .
 ... deriv /f f /x 1.0
 ans = 2.0
@@ -821,10 +813,10 @@ ans = 2.0
 
 ** Compute Factorial
 
-#+INCLUDE: "../examples/factorial.wob" src wob
+#+INCLUDE: "../examples/factorial.brpl" src briple
 
 Example of use:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... factorial 5 .
 ans = 120
 ... factorial-recurse /t 5 .
@@ -837,10 +829,10 @@ ans = 120
 
 ** Numerical Integration
 
-#+INCLUDE: "../examples/integrate.wob" src wob
+#+INCLUDE: "../examples/integrate.brpl" src briple
 
 Example of use:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... integrate /f < ( power t 2 ) /t > /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
 #+END_SRC
@@ -849,10 +841,10 @@ ans = 0.332834
 
 This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 
-#+INCLUDE: "../examples/matrix.wob" src wob
+#+INCLUDE: "../examples/matrix.brpl" src briple
 
 Example of use:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... set /A [ list [ list 1 2 ] [ list 3 4 ] ] .
 ... set /B [ list [ list 6 2 ] [ list 3 4 ] ] .
 ... transpose A .
@@ -875,10 +867,10 @@ t2 of type Integer, value: 25
 
 ** Split a String
 
-#+INCLUDE: "../examples/tokenize.wob" src wob
+#+INCLUDE: "../examples/tokenize.brpl" src briple
 
 Examples of use:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
 t1 of type String, value: 1
@@ -888,37 +880,37 @@ t3 of type String, value: 3
 
 ** Linking C code
 
-One of the big outstanding tasks with WOB is to write a more user-friendly (and documented) /libwob/ for adding extensions, but it is currently possible to write WOB operations in C, using WOB's =link= operation to import the code.
+One of the big outstanding tasks with BRIPLE is to write a more user-friendly (and documented) /libbriple/ for adding extensions, but it is currently possible to write BRIPLE operations in C, using BRIPLE's =link= operation to import the code.
 
 The following is an example of C code.
 
 #+INCLUDE: "../examples/link.c" src c
 
-We then compile it into a shared object file, linking against =libwob=.
+We then compile it into a shared object file, linking against =libbriple=.
 
 #+INCLUDE: "../examples/link_compile.sh" src sh
 
-The code then can be loaded into WOB with the =link= operation like so:
+The code then can be loaded into BRIPLE with the =link= operation like so:
 
-#+INCLUDE: "../examples/link.wob" src wob
+#+INCLUDE: "../examples/link.brpl" src briple
 
-The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the WOB operation will be.
+The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the BRIPLE operation will be.
 
 Now, the operation can be called in the following way:
-#+BEGIN_SRC wob
+#+BEGIN_SRC briple
 ... log1 1 .
 ans = 0.693147
 #+END_SRC
 
 ** Concurrent Programming
 
-WOB uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
+BRIPLE uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
 
-#+INCLUDE: "../examples/task.wob" src wob
+#+INCLUDE: "../examples/task.brpl" src briple
 
 The following task that can be used to run any code in the background.  
 
-#+INCLUDE: "../examples/background.wob" src wob
+#+INCLUDE: "../examples/background.brpl" src briple
 
 * Reference
 
@@ -930,7 +922,7 @@ The following task that can be used to run any code in the background.
 
 *** Short description
 
-    A registry contains data located at registers.  Data can be retrieved  from and inserted into registries.  Registries also defined the /scope/ of WOB code because code is executed inside registries.  So the values of variables depend on which registry you are executing the code.  This allows the user to flexibly manipulate scope.
+    A registry contains data located at registers.  Data can be retrieved  from and inserted into registries.  Registries also defined the /scope/ of BRIPLE code because code is executed inside registries.  So the values of variables depend on which registry you are executing the code.  This allows the user to flexibly manipulate scope.
 
 *** Implementation details
 
@@ -978,7 +970,7 @@ The following task that can be used to run any code in the background.
      - =in REGISTRY INSTRUCTION= --- call =INSTRUCTION= in =REGISTRY=.
 
      - =up STATEMENT= --- execute STATEMENT in the registry above the current one after resolving the values of the arguments of the statement in the current registry.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
-       #+BEGIN_SRC wob
+       #+BEGIN_SRC briple
        ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
        ... set /x 1 . 
        ... inc /x /x . 
@@ -998,7 +990,7 @@ The following task that can be used to run any code in the background.
 ** Reals and Integers
 
 *** Short description
-    Real and Integer are distinct types in WOB.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ a WOB type.
+    Real and Integer are distinct types in BRIPLE.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is /not/ a BRIPLE type.
 
 *** Implementation details
 
@@ -1058,7 +1050,7 @@ The following task that can be used to run any code in the background.
 
 *** Short description
 
-    Strings in WOB are text.  A string literal is enclosed in quotation marks.  WOB supports UTF-8 encodings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
+    Strings in BRIPLE are text.  A string literal is enclosed in quotation marks.  BRIPLE supports UTF-8 encodings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
 
     The escape sequences are:
 
@@ -1074,12 +1066,12 @@ The following task that can be used to run any code in the background.
 
 *** Implementation details
 
-    Strings are internally UTF-32 encoded to enable faster access by index number and because it makes creating substrings faster.  WOB accepts UTF-8 as input because that is more common in terminals and in file-encodings.
+    Strings are internally UTF-32 encoded to enable faster access by index number and because it makes creating substrings faster.  BRIPLE accepts UTF-8 as input because that is more common in terminals and in file-encodings.
 
 *** String operations
 **** Access, search, and modify string elements
 
-     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in WOB so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
+     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Register to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in BRIPLE so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= register to the last character in =STRING=.
 
      - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Register to a Registry with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
@@ -1119,7 +1111,7 @@ The following task that can be used to run any code in the background.
 
 *** Short description
 
-    Registers are a type of data in WOB usually used to refer to locations in registers.  More generally, they are symbols.  They can be compared with one another and modified.  Registers are not "associated" with registries.  They are data without any associated context.
+    Registers are a type of data in BRIPLE usually used to refer to locations in registers.  More generally, they are symbols.  They can be compared with one another and modified.  Registers are not "associated" with registries.  They are data without any associated context.
 
 *** Implementation details
 
@@ -1249,7 +1241,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 - =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
 
-- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main WOB Task.
+- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main BRIPLE Task.
 
 - =accept REGISTER |TASK|= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
 
@@ -1275,9 +1267,9 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
     - =sit= --- do nothing but lookup all arguments (causes Expressions --- instructions in curly brackets --- to be executed).
 
-*** Exit WOB
+*** Exit BRIPLE
 
-    - =exit= --- exit WOB.
+    - =exit= --- exit BRIPLE.
 
 *** Print output
 
@@ -1285,7 +1277,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
       
 *** Input and output files and state
 
-    - =source STRING= --- executes WOB code in the file named by STRING.
+    - =source STRING= --- executes BRIPLE code in the file named by STRING.
 
     - =save FILENAME= --- save the contents of the current registry to file.
 
@@ -1306,7 +1298,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Version
 
-- =version= --- sets the =/ans= Register to a String giving the version of WOB.
+- =version= --- sets the =/ans= Register to a String giving the version of BRIPLE.
 
 ** System operations
 *** Interacting with the shell
@@ -1331,11 +1323,11 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 ** Package operations
 
-    - =use STRING= --- load a saved registry in =~/.dwobs/= with the extension =.dwob= into the current registry. The file being loaded is: =~/.dwobs/STRING.dwob=.
+    - =use STRING= --- load a saved registry in =~/.dbrips/= with the extension =.dbrip= into the current registry. The file being loaded is: =~/.dbrips/STRING.dbrip=.
 
-    - =build STRING REGISTRY= --- saves contents of registry to =~/.dwobs/STRING.dwob= so that it can be loaded as a package.
+    - =build STRING REGISTRY= --- saves contents of registry to =~/.dbrips/STRING.dbrip= so that it can be loaded as a package.
 
-    - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into WOB operation named =STRING3=.  
+    - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into BRIPLE operation named =STRING3=.  
 
 ** Interpreter options
 
@@ -1354,9 +1346,9 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 * Saved Registries
 
 
-*Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting WOB in any case; it has no permanent information.  All other data types are written to disk.
+*Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting BRIPLE in any case; it has no permanent information.  All other data types are written to disk.
 
-This section will describe the storage format for WOB saved files.  A user or programmer will never need to know the internal structure of the save file, but it will be provided here to have complete documentation and to perhaps be useful to people writing a C extension to WOB.
+This section will describe the storage format for BRIPLE saved files.  A user or programmer will never need to know the internal structure of the save file, but it will be provided here to have complete documentation and to perhaps be useful to people writing a C extension to BRIPLE.
 
 * GNU Free Documentation License
 

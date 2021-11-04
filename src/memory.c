@@ -1,25 +1,26 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
 
-   This file is part of WOB.
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   WOB is free software: you can redistribute it and/or modify
+   This file is part of BRIPLE.
+
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "wob.h"
+#include "briple.h"
 #ifdef GARBAGE
 #undef malloc
 #undef realloc

@@ -1,25 +1,25 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of WOB.
+   This file is part of BRIPLE.
 
-   WOB is free software: you can redistribute it and/or modify
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "wob.h"
+#include "briple.h"
 #define BYT8 nbytes(8)
 #define BYT(s) nbytes(8*s)
 
@@ -260,7 +260,7 @@ read_registry (gzFile f, registry* reg)
           free(cache);
           break;
         case Registry:
-          r = new_registry(reg, WOB_HASH_SIZE, reg->task);
+          r = new_registry(reg, BRIPLE_HASH_SIZE, reg->task);
           read_registry(f, r);
           assign_registry(&d, r, false, reg->task);
           break;
@@ -349,7 +349,7 @@ read_registry (gzFile f, registry* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_registry(t->task->current_parse_registry, WOB_HASH_SIZE, t);
+            t->state = new_registry(t->task->current_parse_registry, BRIPLE_HASH_SIZE, t);
             read_registry(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
@@ -374,7 +374,7 @@ read_registry (gzFile f, registry* reg)
             free(cache);
 
             t->task->current_parse_registry = t->state;
-            t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
+            t->queued_instruction = new_registry(NULL, BRIPLE_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();
