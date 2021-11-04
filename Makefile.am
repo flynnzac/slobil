@@ -11,7 +11,7 @@ SUFFIXES = .pshm .brpl
 bin_PROGRAMS = briple
 briple_SOURCES = src/briple.c
 briple_DEPENDENCIES = libbriple.la
-briple_CFLAGS = $(AM_CFLAGS) -L. -lbriple
+briple_CFLAGS = $(AM_CFLAGS) -lbriple
 
 man1_MANS = docs/briple.1
 
