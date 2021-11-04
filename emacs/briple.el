@@ -1,23 +1,23 @@
-;;; wob.el --- WOB Emacs Lisp Mode               -*- lexical-binding: t; -*-
+;;; briple.el --- BRIPLE Emacs Lisp Mode               -*- lexical-binding: t; -*-
 
 
-;; WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
+;; BRIPLE is a REGISTER BASED ENVIRONMENT AND LANGUAGE
 ;; Copyright 2019 Zach Flynn <zlflynn@gmail.com>
 
-;; This file is part of WOB.
+;; This file is part of BRIPLE.
 
-;; WOB is free software: you can redistribute it and/or modify
+;; BRIPLE is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; WOB is distributed in the hope that it will be useful,
+;; BRIPLE is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+;; along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
 
 ;; Copyright (C) 2019  
 
@@ -26,20 +26,20 @@
 
 (require 'smie)
 (require 'isend-mode)
-(defvar wob-mode-syntax-table nil "Syntax table for `wob-mode'.")
+(defvar briple-mode-syntax-table nil "Syntax table for `briple-mode'.")
 
-(defvar wob-indent 2)
+(defvar briple-indent 2)
 
-(defvar wob-mode-map nil "Keymap for `wob-mode'")
+(defvar briple-mode-map nil "Keymap for `briple-mode'")
 
 (progn
-  (setq wob-mode-map (make-sparse-keymap))
-  (define-key wob-mode-map (kbd "C-c C-s") 'wob-start)
-  (define-key wob-mode-map (kbd "C-c C-a") 'wob-associate)
-  (define-key wob-mode-map (kbd "C-c C-r") 'isend-send)
-  (define-key wob-mode-map (kbd "C-c C-b") 'wob-send-buffer))
+  (setq briple-mode-map (make-sparse-keymap))
+  (define-key briple-mode-map (kbd "C-c C-s") 'briple-start)
+  (define-key briple-mode-map (kbd "C-c C-a") 'briple-associate)
+  (define-key briple-mode-map (kbd "C-c C-r") 'isend-send)
+  (define-key briple-mode-map (kbd "C-c C-b") 'briple-send-buffer))
 
-(defvar wob-grammar
+(defvar briple-grammar
   (smie-prec2->grammar
    (smie-bnf->prec2
     '((id)
@@ -50,7 +50,7 @@
       (insts (insts "." insts) (inst)))
     '((assoc ".")))))
 
-(setq wob-mode-syntax-table
+(setq briple-mode-syntax-table
       (let ((st (make-syntax-table)))
         (modify-syntax-entry ?\( "()" st)
         (modify-syntax-entry ?\) ")(" st)
@@ -71,7 +71,7 @@
         (modify-syntax-entry ?\n "> b" st)
         st))
 
-(setq wob-font-lock-keywords
+(setq briple-font-lock-keywords
       (let* (
 	           (register-regexp "\\(\/[^ \t\r\n\v\f]*\\)[ \t\r\n\v\f]*")
 	           (boolean-regexp (regexp-opt '("True" "False") 'words))
@@ -83,42 +83,42 @@
           (,op-def-regexp . font-lock-function-name-face)
 	        )))
 
-(define-derived-mode wob-mode prog-mode "wob"
-  "Major mode for editing code in the WOB language"
-  (setq-local font-lock-defaults '((wob-font-lock-keywords)))
-  (set-syntax-table wob-mode-syntax-table)
-  (smie-setup wob-grammar #'ignore)
-  (setq-local smie-indent-basic wob-indent)
+(define-derived-mode briple-mode prog-mode "briple"
+  "Major mode for editing code in the BRIPLE language"
+  (setq-local font-lock-defaults '((briple-font-lock-keywords)))
+  (set-syntax-table briple-mode-syntax-table)
+  (smie-setup briple-grammar #'ignore)
+  (setq-local smie-indent-basic briple-indent)
   (setq-local comment-start "' ")
-  (use-local-map wob-mode-map)
+  (use-local-map briple-mode-map)
   )
 
-(defvar wob-path "/usr/local/bin/wob")
+(defvar briple-path "/usr/local/bin/briple")
 
-(defun wob-start (b)
-  "Starts an wob process in a certain buffer."
-  (interactive "sBuffer (default: wob): ")
-  (if (string= b "") (setq b "wob"))
+(defun briple-start (b)
+  "Starts an briple process in a certain buffer."
+  (interactive "sBuffer (default: briple): ")
+  (if (string= b "") (setq b "briple"))
   (let ((text-buffer (current-buffer))
         (starred-name (concat "*" b "*")))
-    (ansi-term wob-path b)
+    (ansi-term briple-path b)
     (with-current-buffer text-buffer
       (isend-associate starred-name))))
 
-(defun wob-associate (b)
-  "Associates an wob code buffer with a certain wob process buffer."
+(defun briple-associate (b)
+  "Associates an briple code buffer with a certain briple process buffer."
   (interactive "bBuffer: ")
   (let ((text-buffer (current-buffer)))
     (isend-associate b)))
 
-(defun wob-send-buffer ()
+(defun briple-send-buffer ()
   "Sends whole buffer to current process associated with the buffer."
   (interactive)
   (mark-whole-buffer)
   (isend-send))
 
 
-(provide 'wob)
+(provide 'briple)
 
 
 
