@@ -1,25 +1,25 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of WOB.
+   This file is part of BRIPLE.
 
-   WOB is free software: you can redistribute it and/or modify
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "wob.h"
+#include "briple.h"
 #define BYT8 nbytes(8)
 #define BYT(s) nbytes(8*s)
 
@@ -88,12 +88,18 @@ save_content (gzFile f, content* reg)
               }
               break;
             case String:
-              size = (uint64_t) strlen8((char*) reg->value->data,
-                                        CHAR_BIT);
-              size = htole64(size);
-              gzfwrite(&size, sizeof(uint64_t), 1, f);
-              gzfwrite(reg->value->data, sizeof(char),
-                     strlen((char*) reg->value->data), f);
+              {
+                size = (uint64_t) u32_strlen((uint32_t*) reg->value->data);
+                size = htole64(size);
+                gzfwrite(&size, sizeof(uint64_t), 1, f);
+                uint32_t* u32 = u32_str_to_le
+                  ((uint32_t*) reg->value->data);
+                
+                gzfwrite(reg->value->data, sizeof(uint32_t),
+                         u32_strlen(u32), f);
+
+                free(u32);
+              }
               break;
             case Register:
               size = (uint64_t) strlen8(((regstr*) reg->value->data)->name,
@@ -229,14 +235,18 @@ read_registry (gzFile f, registry* reg)
           }
           break;
         case String:
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-          cache = malloc(BYT(size)+1);
-          gzfread(cache, 1, BYT(size), f);
-          *((char*) (cache+BYT(size))) = '\0';
-          assign_str(&d, (char*) cache, 0);
+          {
+            cache = malloc(sizeof(uint64_t));
+            gzfread(cache, sizeof(uint64_t), 1, f);
+            size = le64toh(*((uint64_t*) cache));
+            free(cache);
+            cache = malloc((size+1)*sizeof(uint32_t));
+            gzfread(cache, sizeof(uint32_t), size, f);
+            *((uint32_t*)(cache)+size) = (uint32_t) 0;
+            uint32_t* u32 = u32_str_to_h((uint32_t*) cache);
+            assign_str(&d, (uint32_t*) cache, 0);
+            free(cache);
+          }
           break;
         case Register:
           cache = malloc(sizeof(uint64_t));
@@ -250,7 +260,7 @@ read_registry (gzFile f, registry* reg)
           free(cache);
           break;
         case Registry:
-          r = new_registry(reg, WOB_HASH_SIZE, reg->task);
+          r = new_registry(reg, BRIPLE_HASH_SIZE, reg->task);
           read_registry(f, r);
           assign_registry(&d, r, false, reg->task);
           break;
@@ -339,7 +349,7 @@ read_registry (gzFile f, registry* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_registry(t->task->current_parse_registry, WOB_HASH_SIZE, t);
+            t->state = new_registry(t->task->current_parse_registry, BRIPLE_HASH_SIZE, t);
             read_registry(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
@@ -364,7 +374,7 @@ read_registry (gzFile f, registry* reg)
             free(cache);
 
             t->task->current_parse_registry = t->state;
-            t->queued_instruction = new_registry(NULL, WOB_HASH_SIZE, t);
+            t->queued_instruction = new_registry(NULL, BRIPLE_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();

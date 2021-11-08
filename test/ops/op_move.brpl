@@ -1,0 +1,27 @@
+#!./briple -c
+source "src/library/assert.brpl" .
+error-messages False .
+
+print "Start <move> test." .
+
+' Tests with correct usage
+
+set /x 10.0 .
+set /y "Hello." .
+
+assert /test ( eq x 10.0 . ) .
+assert /test ( string-eq y "Hello." . ) .
+move /x /y .
+assert /test ( is-real y . ) .
+assert /test ( eq y 10.0 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( move 2 /x . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( move /x . ) . ) .
+
+print "Finished <move> test." .
+

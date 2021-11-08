@@ -1,0 +1,20 @@
+#!./briple -c
+source "src/library/assert.brpl" .
+error-messages False .
+
+print "Start <import> test." .
+
+' Tests with correct usage
+
+assert /test ( import [ registry /x 1 . ] . eq x 1 . ) .
+assert /test ( not [ import [ registry /x 1 . ] . eq x 2 . ] . ) .
+
+' Test with wrong argument type
+assert /test ( is-error ( import 12 . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( import . ) . ) .
+
+print "Finished <import> test." .
+

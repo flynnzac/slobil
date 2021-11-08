@@ -1,26 +1,46 @@
-#include "wob.h"
+/* 
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
+
+   This file is part of BRIPLE.
+
+   BRIPLE is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   BRIPLE is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   
+*/
+
+
+#include "briple.h"
 
 task_vars*
 new_task (task* t0)
 {
   task_vars* t = malloc(sizeof(task_vars));
-  registry* reg = new_registry(NULL, WOB_HASH_SIZE, t0);
+  registry* reg = new_registry(NULL, BRIPLE_HASH_SIZE, t0);
 
   is_exit(0, t);
   t->current_parse_registry = reg;
 
-  t->wob_stop_error_threshold = 1;
-  t->wob_print_error_messages = true;
-  t->wob_error = 0;
-  t->wob_rehash = true;
-  t->wob_ll = NULL;
-  t->wob_ll_cnt = 0;
+  t->briple_stop_error_threshold = 1;
+  t->briple_error = 0;
+  t->briple_ll = NULL;
+  t->briple_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
-  t->wob_options = new_registry(NULL, WOB_HASH_SIZE, t0);
-  t->wob_hash_ans = hash_str("ans");
-  t->wob_hash_t = hash_str("t");
-  t->wob_hash_underscore = hash_str("_");
+  t->briple_options = new_registry(NULL, BRIPLE_HASH_SIZE, t0);
+  t->briple_hash_ans = hash_str("ans");
+  t->briple_hash_t = hash_str("t");
+  t->briple_hash_underscore = hash_str("_");
   t->reading = false;
   t0->task = t;
 
@@ -213,19 +233,19 @@ end_task (task_vars* t)
   if (t->source_code != NULL)
     free(t->source_code);
 
-  if (t->wob_ll != NULL)
+  if (t->briple_ll != NULL)
     {
       int i;
-      for (i=0; i < t->wob_ll_cnt; i++)
+      for (i=0; i < t->briple_ll_cnt; i++)
         {
-          dlclose(t->wob_ll[i]);
+          dlclose(t->briple_ll[i]);
         }
 
-      free(t->wob_ll);
+      free(t->briple_ll);
     }
 
   free_registry(t->current_parse_registry);
-  free_registry(t->wob_options);
+  free_registry(t->briple_options);
 
   if (is_exit(-1, t)==0)
     return 0;

@@ -1,0 +1,22 @@
+' FizzBuzz in WOB
+
+set /i 1 .
+while ( lt-eq i 100 )
+      (
+        print [ to-string i ] False .
+        print " " False .
+        if [ eq [ mod i 3 ] 0 ]
+           {
+             print "Fizz" False .
+           } .
+        
+        if [ eq [ mod i 5 ] 0 ]
+           {
+             print "Buzz" False .
+           } .
+        print "" .
+
+        set /i [ add i 1 ] .
+      ) .
+
+

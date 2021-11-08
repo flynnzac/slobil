@@ -1,4 +1,27 @@
-#include "wob.h"
+/* 
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   Copyright 2021 Zach Flynn <zlflynn@gmail.com>
+
+   This file is part of BRIPLE.
+
+   BRIPLE is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   BRIPLE is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   
+*/
+
+
+
+#include "briple.h"
 
 struct parser_state
 fresh_state (int print) 
@@ -122,8 +145,8 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
   FILE* f_sub = NULL;
   parser_state sub_state;
   char* str;
-
-
+  uint32_t* str32;
+  
   /* Go to end of current element list. */
   while (e != NULL)
     {
@@ -177,12 +200,25 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   sub_stmt = NULL;
                   sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
                   fclose(f_sub);
+
+                  if (!sub_complete)
+                    {
+                      char* ending = malloc(sizeof(char)*(strlen(" . ")+1));
+                      strcpy(ending, " . ");
+                      f_sub = fmemopen(ending,
+                                       sizeof(char)*strlen(ending),
+                                       "r");
+                      sub_complete = parse(f_sub, &sub_state, &sub_stmt, task);
+                      fclose(f_sub);
+                      free(ending);
+                    }
+
                   free_state(&sub_state);
                   free(str);
-                  
-                  if (sub_complete)
+                  if (sub_complete & sub_stmt != NULL)
                     {
                       /* We have a complete substatement.  React accordingly. */
+
                       switch (state->open_paren)
                         {
                         case '(':
@@ -219,12 +255,15 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   state->after_quote = 0;
                   if (strlen(state->buffer)==0)
                     {
-                      assign_str(&d, "", 1);
+                      str32 = malloc(sizeof(uint32_t));
+                      *str32 = (uint32_t) 0;
+                      assign_str(&d, str32, 0);
                     }
                   else
                     {
                       str = escape_str(state->buffer);
-                      assign_str(&d, str,1);
+                      str32 = briple_u8_to_u32(str, strlen(str));
+                      assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
                 }
@@ -510,10 +549,10 @@ interact (FILE* f, parser_state* state, registry* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, reg->task->task->wob_hash_ans, 0);
+              d = get(reg, reg->task->task->briple_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  data* opt = get(reg->task->task->wob_options,
+                  data* opt = get(reg->task->task->briple_options,
                                   hash_str("print-ans"),
                                   0);
                   bool print_out = true;

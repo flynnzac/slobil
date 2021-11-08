@@ -1,25 +1,26 @@
 /* 
-   WOB is a REGISTER BASED ENVIRONMENT AND LANGUAGE
-   Copyright 2019 Zach Flynn
+   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
 
-   This file is part of WOB.
+   Copyright 2021 Zach Flynn
 
-   WOB is free software: you can redistribute it and/or modify
+   This file is part of BRIPLE.
+
+   BRIPLE is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   WOB is distributed in the hope that it will be useful,
+   BRIPLE is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with WOB (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "wob.h"
+#include "briple.h"
 
 /* Assignment functions */
 
@@ -45,19 +46,19 @@ assign_int (data** d, const mpz_t num)
 }
 
 void
-assign_str (data** d, const char* str, int copy)
+assign_str (data** d, const uint32_t* str, int copy)
 {
   *d = new_data();
   (*d)->type = String;
   
   if (copy)
     {
-      (*d)->data = malloc(sizeof(char)*(strlen(str)+1));
-      strcpy((char*) (*d)->data, str);
+      (*d)->data = malloc(sizeof(uint32_t)*(u32_strlen(str)+1));
+      u32_strcpy((uint32_t*) (*d)->data, str);
     }
   else
     {
-      (*d)->data = (char*) str;
+      (*d)->data = (uint32_t*) str;
     }
 }
 
@@ -121,7 +122,7 @@ assign_registry (data** d, registry* r, bool copy, task* t)
   (*d)->type = Registry;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, WOB_HASH_SIZE, t);
+      (*d)->data = new_registry(NULL, BRIPLE_HASH_SIZE, t);
     }
   else if (copy)
     {
@@ -310,13 +311,13 @@ copy_task_vars (task_vars* task0)
   task1->source_code = malloc(sizeof(char)*(strlen(task0->source_code)+1));
   strcpy(task1->source_code, task0->source_code);
 
-  task1->wob_ll = malloc(sizeof(void*)*task0->wob_ll_cnt);
-  for (int i=0; i < task0->wob_ll_cnt; i++)
+  task1->briple_ll = malloc(sizeof(void*)*task0->briple_ll_cnt);
+  for (int i=0; i < task0->briple_ll_cnt; i++)
     {
-      task1->wob_ll[i] = task0->wob_ll[i];
+      task1->briple_ll[i] = task0->briple_ll[i];
     }
 
-  task1->wob_ll_cnt = task0->wob_ll_cnt;
+  task1->briple_ll_cnt = task0->briple_ll_cnt;
   return task1;
 }
 
@@ -334,7 +335,7 @@ copy_data (data* d_in)
       assign_real(&d, *((double*) d_in->data));
       break;
     case String:
-      assign_str(&d, (const char*) d_in->data, 1);
+      assign_str(&d, (uint32_t*) d_in->data, 1);
       break;
     case Register:
       assign_regstr(&d, ((regstr*) d_in->data)->name,

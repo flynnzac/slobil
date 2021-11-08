@@ -1,0 +1,74 @@
+set /swap
+    (
+      set /tmp input:i .
+      set i input:j input .
+      set j tmp input .
+    ) .
+
+set /partition
+    (
+      set /pivot input:end .
+      set /i start .
+      set /j start .
+      set /cont True .
+      while ( answer cont )
+            (
+              if [ compare input:j pivot ]
+                 {
+                   swap /input input /i i /j j .
+                   set /i [ next i ] .
+                 } .
+
+              if [ register-eq j end ]
+                 {
+                   set /cont False .
+                 } .
+              
+              set /j [ next j ] .
+            ) .
+
+      swap /input input /i i /j end .
+      answer i .
+    ) .
+
+set /-quicksort
+    (
+      if [ not [ register-eq start end ] ]
+         {
+           partition /input input /start start /end end /compare compare . 
+           move /ans /p .
+           if [ not [ register-eq p start ] ]
+              {
+                -quicksort /input input /start start /end [ previous p . ] .
+              } .
+
+           if [ not [ register-eq p end ] ]
+              {
+                -quicksort /input input /start [ next p . ] /end end .
+              } .
+         } .
+    ) .
+
+set /quicksort
+    (
+      if [ not [ exist /end ] ]
+         {
+           set /end [ last input slice . ] .
+         } .
+      if [ not [ exist /start ] ]
+         {
+           set /start [ next slice . ] . 
+         } .
+
+      if [ not [ exist start input ] ]
+         {
+           error "Starting register not found in input." .
+         } .
+
+      if [ not [ exist end input ] ]
+         {
+           error "Ending register not found in input." .
+         } .
+
+      -quicksort /input input /start start /end end /compare compare .
+    ) .

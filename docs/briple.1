@@ -1,0 +1,61 @@
+.\" Copyright (C) Zach Flynn, 2020  
+.\" You may distribute this file under the terms of the GNU Free
+.\" Documentation License.
+.TH BRIPLE 1 2020-01-13 
+.SH NAME
+BRIPLE \- A Registry Based Language and Environment
+.SH SYNOPSIS
+.B briple [-l FILE] [-s FILE] [-c FILE] [-n] [-m] [-d] [-v]
+
+.SH DESCRIPTION
+
+BRIPLE is an programming language and environment for manipulating data
+in registries.  For full documentation on the language itself, see
+the manual at: http://zflynn.com/briple/briple.html . This manpage
+describes the options for the interpreter.
+.SH OPTIONS
+.TP
+.BR \-l " " FILE
+Execute the BRIPLE code in FILE before starting the BRIPLE interpreter
+.TP
+.BR \-s " " FILE
+Execute the BRIPLE code in FILE after any code was loaded by the
+.BR \-l
+option and exit afterwards.
+.TP
+.BR \-c " " FILE
+The same as \-s except that the first line of the file is treated as a
+comment no matter what it contains (so the sha-bang shell script
+syntax will work).  Start files with #!/path/to/briple -c and make them
+executable to run as a script.
+.TP
+.BR \-p " " PORT
+Run BRIPLE in Socket mode.  Allows you to send commands to the BRIPLE environment through a port specified in the option.
+.TP
+.BR \-n
+Do not start the interpreter.  Only useful with an
+.BR \-l
+option
+.TP
+.BR \-m
+Do not print any information (the results of a command, etc) unless
+there is an explicit call to BRIPLE's
+.B print
+operation.
+.TP
+.BR \-d
+Do not save the code that you enter in the interpreter.
+.TP
+.BR \-v
+Print out BRIPLE version string and exit.
+.TP
+.BR \-u
+Builds and installs a BRIPLE package with a Make.briple file in current directory
+
+.SH FILES
+.SH "SEE ALSO"
+.SH BUGS
+Please report any bugs at http://github.com/flynnzac/briple
+
+.SH AUTHOR
+Zach Flynn <zlflynn@gmail.com>

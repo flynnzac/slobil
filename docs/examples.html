@@ -42,44 +42,6 @@
 <pre>
 <code>
 
-' Computes v^T w for a vector 
-set /dotproduct
-    < (
-      do mul v w .
-      collapse add ans  .
-    ) /v /w > .
-
-' matrix-multiply A B computes A^T B
-set /matrix-multiply
-    < (
-      set /i /t1 .
-      set /out [ list . ] .
-      while ( exist i B . )
-            (
-              do < ( dotproduct t1 B:i . ) /t1 > A .
-              in out ( set i ans . ) .
-              next i .
-              move /ans /i .
-            ) .
-      answer out .
-    ) /A /B > .
-
-' Computes A^T 
-set /transpose
-    < (
-      set /i /t1 .
-      set /out [ list . ] .
-      while ( exist i A:/t1 . )
-            (
-              do < ( answer t1:i . ) /t1 > A .
-              move /ans /res .
-              in out ( set i res . ) .
-              next i .
-              move /ans /i .
-            ) .
-      answer out .
-    ) /A > .
-
 </code>
 </pre>
 
@@ -87,22 +49,6 @@ set /transpose
 
 <pre>
 <code>
-' takes an operation as an argument and return left hand
-' riemmann sum over range
-
-set /integrate 
-    ( 
-      set /delta [ div [ sub ub lb . ] n . ] .
-      set /x lb .
-      set /int 0.0 .
-      repeat n
-             (
-               incr int [ f x . ] .
-               incr x delta .
-             ) .
-      mul int delta .
-    ) .
-
 
 </code>
 </pre>
