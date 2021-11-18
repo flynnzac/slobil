@@ -1,26 +1,26 @@
 /* 
-   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   ONBU is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
 
-   This file is part of BRIPLE.
+   This file is part of ONBU.
 
-   BRIPLE is free software: you can redistribute it and/or modify
+   ONBU is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   BRIPLE is distributed in the hope that it will be useful,
+   ONBU is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "briple.h"
+#include "onbu.h"
 
 void
 ret (registry* reg, data* d, const char* name)
@@ -63,7 +63,7 @@ _op_call (arg a, registry* reg, const int explicit)
       return;
     }
 
-  registry* r_new = new_registry(reg, BRIPLE_HASH_SIZE, reg->task);
+  registry* r_new = new_registry(reg, ONBU_HASH_SIZE, reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -94,10 +94,10 @@ _op_call (arg a, registry* reg, const int explicit)
 
   if (!is_error(-1, reg->task->task))
     {
-      ans = get(r_new, reg->task->task->briple_hash_ans, 0);
+      ans = get(r_new, reg->task->task->onbu_hash_ans, 0);
       if (ans != NULL)
         {
-          mark_do_not_free(r_new, reg->task->task->briple_hash_ans);
+          mark_do_not_free(r_new, reg->task->task->onbu_hash_ans);
           ret_ans(reg, ans);
         }
     }
@@ -114,7 +114,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
     }
   else
     {
-      registry* r_new = new_registry(reg, BRIPLE_HASH_SIZE, reg->task);
+      registry* r_new = new_registry(reg, ONBU_HASH_SIZE, reg->task);
       data* d;
       size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
       for (int i=1; i < len; i++)
@@ -131,10 +131,10 @@ do_operation (op_wrapper* op, registry* reg, arg a)
       data* ans;
       if (!is_error(-1, reg->task->task))
         {
-          ans = get(r_new, reg->task->task->briple_hash_ans, 0);
+          ans = get(r_new, reg->task->task->onbu_hash_ans, 0);
           if (ans != NULL)
             {
-              mark_do_not_free(r_new, reg->task->task->briple_hash_ans);
+              mark_do_not_free(r_new, reg->task->task->onbu_hash_ans);
               ret_ans(reg, ans);
             }
         }

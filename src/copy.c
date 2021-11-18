@@ -1,26 +1,26 @@
 /* 
-   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   ONBU is a Basic Registry and Interactive Programming Language and Environment
 
    Copyright 2021 Zach Flynn
 
-   This file is part of BRIPLE.
+   This file is part of ONBU.
 
-   BRIPLE is free software: you can redistribute it and/or modify
+   ONBU is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   BRIPLE is distributed in the hope that it will be useful,
+   ONBU is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "briple.h"
+#include "onbu.h"
 
 /* Assignment functions */
 
@@ -122,7 +122,7 @@ assign_registry (data** d, registry* r, bool copy, task* t)
   (*d)->type = Registry;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, BRIPLE_HASH_SIZE, t);
+      (*d)->data = new_registry(NULL, ONBU_HASH_SIZE, t);
     }
   else if (copy)
     {
@@ -311,13 +311,13 @@ copy_task_vars (task_vars* task0)
   task1->source_code = malloc(sizeof(char)*(strlen(task0->source_code)+1));
   strcpy(task1->source_code, task0->source_code);
 
-  task1->briple_ll = malloc(sizeof(void*)*task0->briple_ll_cnt);
-  for (int i=0; i < task0->briple_ll_cnt; i++)
+  task1->onbu_ll = malloc(sizeof(void*)*task0->onbu_ll_cnt);
+  for (int i=0; i < task0->onbu_ll_cnt; i++)
     {
-      task1->briple_ll[i] = task0->briple_ll[i];
+      task1->onbu_ll[i] = task0->onbu_ll[i];
     }
 
-  task1->briple_ll_cnt = task0->briple_ll_cnt;
+  task1->onbu_ll_cnt = task0->onbu_ll_cnt;
   return task1;
 }
 

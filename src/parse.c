@@ -1,27 +1,27 @@
 /* 
-   BRIPLE is a Basic Registry and Interactive Programming Language and Environment
+   ONBU is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of BRIPLE.
+   This file is part of ONBU.
 
-   BRIPLE is free software: you can redistribute it and/or modify
+   ONBU is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   BRIPLE is distributed in the hope that it will be useful,
+   ONBU is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with BRIPLE (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
 
-#include "briple.h"
+#include "onbu.h"
 
 struct parser_state
 fresh_state (int print) 
@@ -262,7 +262,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   else
                     {
                       str = escape_str(state->buffer);
-                      str32 = briple_u8_to_u32(str, strlen(str));
+                      str32 = onbu_u8_to_u32(str, strlen(str));
                       assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
@@ -549,10 +549,10 @@ interact (FILE* f, parser_state* state, registry* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, reg->task->task->briple_hash_ans, 0);
+              d = get(reg, reg->task->task->onbu_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  data* opt = get(reg->task->task->briple_options,
+                  data* opt = get(reg->task->task->onbu_options,
                                   hash_str("print-ans"),
                                   0);
                   bool print_out = true;

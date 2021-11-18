@@ -1,0 +1,23 @@
+#!./onbu -c
+source "src/library/assert.onbu" .
+error-messages False .
+
+print "Start <while> test." .
+
+' Tests with correct usage
+
+set /i 1 .
+
+assert /test ( while ( lt i 10 . ) ( incr i . ) . eq i 10 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( while add sub . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( while ( lt i 10 . ) . ) . ) .
+assert /test ( is-error ( while . ) . ) .
+
+print "Finished <while> test." .
+

@@ -1,0 +1,37 @@
+#!./onbu -c
+source "src/library/assert.onbu" .
+error-messages False .
+
+print "Start <string-compare> test." .
+
+' Tests with correct usage
+
+assert /test ( string-eq "hello" "hello" . ) .
+assert /test ( not [ string-eq "hello" "hello2" . ] . ) .
+assert /test ( not [ string-eq "hello" "hell" . ] . ) .
+
+assert /test ( string-lt "a" "z" . ) .
+assert /test ( string-lt "aa" "az" . ) .
+
+assert /test ( string-gt "za" "az" . ) .
+assert /test ( string-gt "z" "a" . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( string-eq "hello" 1 . ) . ) .
+assert /test ( is-error ( string-lt "a" 0 . ) . ) .
+assert /test ( is-error ( string-gt "z" 0 . ) . ) .
+
+assert /test ( is-error ( string-eq 1 "hello" . ) . ) .
+assert /test ( is-error ( string-lt 0 "a" . ) . ) .
+assert /test ( is-error ( string-gt 0 "z" . ) . ) .
+
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( string-eq "hello" . ) . ) .
+assert /test ( is-error ( string-lt "hello" . ) . ) .
+assert /test ( is-error ( string-gt "hello" . ) . ) .
+
+print "Finished <string-compare> test." .
+

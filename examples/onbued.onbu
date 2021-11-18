@@ -1,0 +1,24 @@
+' Line-oriented text editor
+set /onbued [ registry . ] .
+in onbued
+   (
+     set /buffer [ list . ] . 
+     set /cur-line /t1 . 
+     set /n ( up set /cur-line [ next cur-line . ] . ) .
+     set /p ( up set /cur-line [ previous cur-line . ] . ) .
+     set /i
+         < (
+           set /onbued-str s buffer .
+           in buffer
+              (
+                set cur-line onbued-str .
+              ) .
+         )
+         /s > . 
+     set /o
+         (
+           print [ get cur-line buffer . ] .
+         ) .
+   ) .
+
+     

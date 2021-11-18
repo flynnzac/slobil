@@ -1,0 +1,30 @@
+#!./onbu -c
+source "src/library/assert.onbu" .
+error-messages False .
+
+print "Start <exist> test." .
+
+' Tests with correct usage
+delete /z .
+delete /x .
+delete /hello .
+set /x [ registry /hello "hello" /x 10 /z 3 . ] .
+
+assert /test ( exist /hello x . ) .
+assert /test ( not [ exist /hello . ] . ) .
+assert /test ( exist /x . ) .
+assert /test ( exist /x x . ) .
+assert /test ( exist /z x . ) .
+assert /test ( not [ exist /z . ] . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( exist x 7 . ) . ) .
+assert /test ( is-error ( exist /x 10 . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( exist . ) . ) .
+
+print "Finished <exist> test." .
+
