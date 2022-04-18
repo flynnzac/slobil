@@ -1,27 +1,27 @@
 /* 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
 
-#include "onbu.h"
+#include "arbel.h"
 
 struct parser_state
 fresh_state (int print) 
@@ -262,7 +262,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   else
                     {
                       str = escape_str(state->buffer);
-                      str32 = onbu_u8_to_u32(str, strlen(str));
+                      str32 = arbel_u8_to_u32(str, strlen(str));
                       assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
@@ -549,10 +549,10 @@ interact (FILE* f, parser_state* state, registry* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, reg->task->task->onbu_hash_ans, 0);
+              d = get(reg, reg->task->task->arbel_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  data* opt = get(reg->task->task->onbu_options,
+                  data* opt = get(reg->task->task->arbel_options,
                                   hash_str("print-ans"),
                                   0);
                   bool print_out = true;

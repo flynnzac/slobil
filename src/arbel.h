@@ -1,30 +1,30 @@
 /* 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#ifndef ONBU_H
-#define ONBU_H
+#ifndef ARBEL_H
+#define ARBEL_H
 #define _GNU_SOURCE
-#define ONBU_HASH_SIZE 31
-#define ONBU_LOAD_FACTOR 0.75
+#define ARBEL_HASH_SIZE 31
+#define ARBEL_LOAD_FACTOR 0.75
 
 
 #include <stdio.h>
@@ -96,20 +96,20 @@ struct task_vars
 {
   struct registry* current_parse_registry;
   char* source_code;
-  void** onbu_ll;
-  int onbu_ll_cnt;
+  void** arbel_ll;
+  int arbel_ll_cnt;
 
-  size_t onbu_stop_error_threshold;
+  size_t arbel_stop_error_threshold;
 
   data* last_ans;
-  int onbu_error;
+  int arbel_error;
   int do_exit;
   
-  struct registry* onbu_options;
+  struct registry* arbel_options;
 
-  unsigned long onbu_hash_ans;
-  unsigned long onbu_hash_t;
-  unsigned long onbu_hash_underscore;
+  unsigned long arbel_hash_ans;
+  unsigned long arbel_hash_t;
+  unsigned long arbel_hash_underscore;
 
   bool reading;
 };
@@ -531,7 +531,7 @@ data*
 new_data();
 
 void
-onbu_location(mpz_t loc, int n);
+arbel_location(mpz_t loc, int n);
 
 int
 digits (int n);
@@ -579,10 +579,10 @@ free_task_vars (task_vars* t);
 /* string conversions */
 
 uint32_t*
-onbu_u8_to_u32 (const uint8_t* s, size_t n);
+arbel_u8_to_u32 (const uint8_t* s, size_t n);
 
 uint8_t*
-onbu_u32_to_u8 (const uint32_t* s, size_t n);
+arbel_u32_to_u8 (const uint32_t* s, size_t n);
 
 uint32_t*
 u32_str_to_le (const uint32_t* str);

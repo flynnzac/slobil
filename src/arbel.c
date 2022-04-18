@@ -1,27 +1,27 @@
 /* 
 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "onbu.h"
+#include "arbel.h"
 #include <unistd.h>
 #include <signal.h>
 
@@ -96,7 +96,7 @@ main (int argc, char** argv)
           complete = interact(f, &state,
                               task0->task->current_parse_registry);
           fclose(f);
-          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".donbu")+1));
+          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".darbel")+1));
           for (int idx = 0; idx < strlen(optarg); idx++)
             {
               if (optarg[idx]=='.')
@@ -113,7 +113,7 @@ main (int argc, char** argv)
                   newname[idx+1] = '\0';
                 }
             }
-          strcat(newname, ".donbu");
+          strcat(newname, ".darbel");
           save_outer(task0->task->current_parse_registry, newname);
           early_stop = true;
           break;
@@ -160,7 +160,7 @@ main (int argc, char** argv)
           break;
         case 'u':
           early_stop = true;
-          script = "Make.onbu";
+          script = "Make.arb";
           save_code = 0;
           break;
         default:

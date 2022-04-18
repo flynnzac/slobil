@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([ONBU], [0.1.0-rc1], [github.com/flynnzac/onbu])
-AC_CONFIG_SRCDIR([src/onbu.c])
+AC_INIT([ARBEL], [0.1.0-rc1], [github.com/flynnzac/arbel])
+AC_CONFIG_SRCDIR([src/arbel.c])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_SUBDIRS([pushmac])
 

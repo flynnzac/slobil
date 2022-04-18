@@ -1,26 +1,26 @@
 /* 
 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "onbu.h"
+#include "arbel.h"
 
 
 void
@@ -117,7 +117,7 @@ escape_str (char* str)
 }
 
 void
-onbu_location (mpz_t loc, const int n)
+arbel_location (mpz_t loc, const int n)
 {
   if (mpz_cmp_si(loc,0) <= 0)
     {
