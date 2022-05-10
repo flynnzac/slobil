@@ -1,0 +1,29 @@
+#!./onbu -c
+source "src/library/assert.arb" .
+error-messages False .
+
+print "Started <set> tests." .
+
+' Tests with correct usage
+
+set /x 10 .
+assert /test ( eq x 10 . ) .
+
+set /x [ registry /hello "hello" . ] .
+assert /test ( is-registry x . ) .
+assert /test ( string-eq x:/hello "hello" . ) .
+
+set /y 20 x .
+assert /test ( eq x:/y 20 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( set x 10 . ) . ) .
+set /z 100 .
+assert /test ( is-error ( set /x 10 z . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( set /x . ) . ) .
+
+print "Finished <set> test." .

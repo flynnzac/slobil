@@ -1,0 +1,25 @@
+#!./onbu -c
+source "src/library/assert.arb" .
+error-messages False .
+
+print "Start <incr> test." .
+
+' Tests with correct usage
+
+set /x 5 .
+
+assert /test ( incr x . eq x 6 . ) .
+assert /test ( incr x -1 . eq x 5 . ) .
+
+set /y 5.2 .
+assert /test ( incr y . eq y 6.2 . ) .
+
+' Test with wrong argument type
+assert /test ( is-error ( incr "hello" . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( incr . ) . ) .
+
+print "Finished <incr> test." .
+
