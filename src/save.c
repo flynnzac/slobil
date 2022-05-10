@@ -1,25 +1,25 @@
 /* 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "onbu.h"
+#include "arbel.h"
 #define BYT8 nbytes(8)
 #define BYT(s) nbytes(8*s)
 
@@ -260,7 +260,7 @@ read_registry (gzFile f, registry* reg)
           free(cache);
           break;
         case Registry:
-          r = new_registry(reg, ONBU_HASH_SIZE, reg->task);
+          r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
           read_registry(f, r);
           assign_registry(&d, r, false, reg->task);
           break;
@@ -349,7 +349,7 @@ read_registry (gzFile f, registry* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_registry(t->task->current_parse_registry, ONBU_HASH_SIZE, t);
+            t->state = new_registry(t->task->current_parse_registry, ARBEL_HASH_SIZE, t);
             read_registry(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
@@ -374,7 +374,7 @@ read_registry (gzFile f, registry* reg)
             free(cache);
 
             t->task->current_parse_registry = t->state;
-            t->queued_instruction = new_registry(NULL, ONBU_HASH_SIZE, t);
+            t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();

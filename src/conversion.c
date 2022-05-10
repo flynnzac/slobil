@@ -1,31 +1,31 @@
 /* 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
 #include <errno.h>
-#include "onbu.h"
+#include "arbel.h"
 
 
 uint32_t *
-onbu_u8_to_u32 (const uint8_t *s, size_t n)
+arbel_u8_to_u32 (const uint8_t *s, size_t n)
 {
   const uint8_t *s_end = s + n;
   /* Output string accumulator.  */
@@ -110,7 +110,7 @@ onbu_u8_to_u32 (const uint8_t *s, size_t n)
 }
 
 uint8_t *
-onbu_u32_to_u8 (const uint32_t *s, size_t n)
+arbel_u32_to_u8 (const uint32_t *s, size_t n)
 {
   const uint32_t *s_end = s + n;
   /* Output string accumulator.  */

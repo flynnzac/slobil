@@ -1,46 +1,46 @@
 /* 
-   ONBU is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Basic Registry and Interactive Programming Language and Environment
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ONBU.
+   This file is part of ARBEL.
 
-   ONBU is free software: you can redistribute it and/or modify
+   ARBEL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ONBU is distributed in the hope that it will be useful,
+   ARBEL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ONBU (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#include "onbu.h"
+#include "arbel.h"
 
 task_vars*
 new_task (task* t0)
 {
   task_vars* t = malloc(sizeof(task_vars));
-  registry* reg = new_registry(NULL, ONBU_HASH_SIZE, t0);
+  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE, t0);
 
   is_exit(0, t);
   t->current_parse_registry = reg;
 
-  t->onbu_stop_error_threshold = 1;
-  t->onbu_error = 0;
-  t->onbu_ll = NULL;
-  t->onbu_ll_cnt = 0;
+  t->arbel_stop_error_threshold = 1;
+  t->arbel_error = 0;
+  t->arbel_ll = NULL;
+  t->arbel_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
-  t->onbu_options = new_registry(NULL, ONBU_HASH_SIZE, t0);
-  t->onbu_hash_ans = hash_str("ans");
-  t->onbu_hash_t = hash_str("t");
-  t->onbu_hash_underscore = hash_str("_");
+  t->arbel_options = new_registry(NULL, ARBEL_HASH_SIZE, t0);
+  t->arbel_hash_ans = hash_str("ans");
+  t->arbel_hash_t = hash_str("t");
+  t->arbel_hash_underscore = hash_str("_");
   t->reading = false;
   t0->task = t;
 
@@ -233,19 +233,19 @@ end_task (task_vars* t)
   if (t->source_code != NULL)
     free(t->source_code);
 
-  if (t->onbu_ll != NULL)
+  if (t->arbel_ll != NULL)
     {
       int i;
-      for (i=0; i < t->onbu_ll_cnt; i++)
+      for (i=0; i < t->arbel_ll_cnt; i++)
         {
-          dlclose(t->onbu_ll[i]);
+          dlclose(t->arbel_ll[i]);
         }
 
-      free(t->onbu_ll);
+      free(t->arbel_ll);
     }
 
   free_registry(t->current_parse_registry);
-  free_registry(t->onbu_options);
+  free_registry(t->arbel_options);
 
   if (is_exit(-1, t)==0)
     return 0;

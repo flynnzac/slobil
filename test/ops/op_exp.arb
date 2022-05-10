@@ -1,0 +1,26 @@
+#!./arbel -c
+source "src/library/assert.arb" .
+error-messages False .
+
+print "Start <exp> test." .
+
+' Tests with correct usage
+
+f(y) - f(x) >= 0
+f'(y) - f'(x) <= 0
+'  log(y)-log(x) >= 1/y-1/x
+assert /test ( eq [ floor [ exp 2 . ] . ] 7 . ) .
+assert /test ( eq [ ceiling [ exp 2 . ] . ] 8 . ) .
+
+assert /test ( eq [ floor [ exp 2.0 . ] . ] 7 . ) .
+assert /test ( eq [ ceiling [ exp 2.0 . ] . ] 8 . ) .
+
+' Test with wrong argument type
+assert /test ( is-error ( exp "hello" . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( exp . ) . ) .
+
+print "Finished <exp> test." .
+

@@ -2,8 +2,8 @@
    A C Function to compute log(x+1) 
 */
 
-/* Change to wherever briple.h is located or just "briple.h" if it is on the path */
-#include "../src/briple.h"
+/* Change to wherever arbel.h is located or just "arbel.h" if it is on the path */
+#include "../src/arbel.h"
 #include <math.h>
 
 void
