@@ -36,13 +36,13 @@ char*
 append_nl (char* str)
 {
   size_t len = strlen(str);
-  #ifdef GARBAGE
-  #undef realloc
-  #endif
+#ifdef GARBAGE
+#undef realloc
+#endif
   str = realloc(str, sizeof(char)*(len+2));
-  #ifdef GARBAGE
-  #define realloc(x,y) GC_REALLOC(x,y)
-  #endif
+#ifdef GARBAGE
+#define realloc(x,y) GC_REALLOC(x,y)
+#endif
   str[len] = '\n';
   str[len+1] = '\0';
 

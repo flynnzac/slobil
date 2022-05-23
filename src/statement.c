@@ -191,7 +191,7 @@ execute_statement (statement* s, registry* reg)
             }
         }
       else
-	break;
+        break;
 
       arg_n++;
       e = e->right;

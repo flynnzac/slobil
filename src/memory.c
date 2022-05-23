@@ -194,9 +194,9 @@ free_registry (registry* reg)
         free(cur->left);
 
       while (cur != NULL)
-       {
-         if (!cur->do_not_free_data)
-           free_data(cur->value);
+        {
+          if (!cur->do_not_free_data)
+            free_data(cur->value);
 
           free(cur->name);
           tmp = cur->right;

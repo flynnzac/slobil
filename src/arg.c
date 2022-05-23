@@ -60,7 +60,7 @@ check_length (arg* a, int length, char* op, task_vars* t)
         (sizeof(char)*
          (strlen("Number of arguments to < > is less than .") +
           floor(log10(length-1)+1) + 
-	  strlen(op) + 1));
+          strlen(op) + 1));
 
       sprintf(error_msg, "Number of arguments to <%s> is less than %d.",
               op, length-1);

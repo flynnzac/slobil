@@ -64,7 +64,7 @@ add_to_state_buffer (struct parser_state* state, const char c, bool incr)
   if (state->i >= state->buffer_sz)
     {
       state->buffer = realloc(state->buffer,
-			      sizeof(char)*(state->buffer_sz +1024));
+                              sizeof(char)*(state->buffer_sz +1024));
       state->buffer_sz += 1024;
     }
   state->buffer[state->i] = c;

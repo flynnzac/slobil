@@ -107,7 +107,7 @@ save_content (gzFile f, content* reg)
               size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(reg->value->data, sizeof(char),
-                     strlen(((regstr*) reg->value->data)->name), f);
+                       strlen(((regstr*) reg->value->data)->name), f);
               break;
             case Registry:
               save_registry(f, (registry*) reg->value->data);
@@ -120,7 +120,7 @@ save_content (gzFile f, content* reg)
               size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(((instruction*) reg->value->data)->code, sizeof(char),
-                     strlen(((instruction*) reg->value->data)->code), f);
+                       strlen(((instruction*) reg->value->data)->code), f);
               break;
             case Operation:
               {
