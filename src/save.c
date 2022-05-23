@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Basic Registry and Interactive Programming Language and Environment
+   ARBEL is a Registry Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
