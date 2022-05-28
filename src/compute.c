@@ -162,6 +162,9 @@ compute (data* cmd, registry* reg, arg a)
     case Instruction:
       _op_call(a, reg, 0);
       break;
+    case Register:
+      auto_set(a, reg);
+      break;
     default:
       do_error("Tried to compute something that is not an operation or instruction.", reg->task->task);
       break;

@@ -509,6 +509,9 @@ resolve (data* arg, registry* reg);
 void
 _op_call (arg a, registry* reg, const int explicit);
 
+void
+auto_set (arg a, registry* reg);
+
 size_t
 new_hash_size (size_t elements);
 

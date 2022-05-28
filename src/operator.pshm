@@ -313,6 +313,42 @@ op_div (arg a, registry* reg)
 }
 
 void
+auto_set (arg a, registry* reg)
+{
+  #op=auto-set@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=0@
+  #type=Register@
+  ##GETARG~$;
+
+  #num=1@
+  #checktype=false@
+  ##GETARG~$;
+  #checktype=true@
+
+  registry* to_set;
+  if (a.length >= 3)
+    {
+      #num=2@
+      #type=Registry@
+      ##GETARG~$;
+
+      to_set = (registry*) arg2->data;
+    }
+  else
+    {
+      to_set = reg;
+    }
+
+  char* name = ((regstr*) arg0->data)->name;
+  data* d = copy_data(arg1);
+  set(to_set, d, name, 1);
+}
+  
+
+void
 op_set (arg a, registry* reg)
 {
   #op=set@
