@@ -1,7 +1,7 @@
 # -*- org-html-preamble-format: (("en" "%t<br>%a<br>%T")); -*-
 #+TITLE: ARBEL
 #+AUTHOR: Zach Flynn
-#+DESCRIPTION: ARBEL is a Basic Registry and Interactive Programming Language and Environment. This manual describes how to use the language.
+#+DESCRIPTION: ARBEL is a Registry-Based Environment and Language. This manual describes how to use it.
 #+SETUPFILE: theme-readtheorg-local.setup
 
 #+HTML_HEAD: <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -10,21 +10,19 @@
 
 * Introduction
 
-ARBEL is a useful environment and language for creating personal programs.  "Personal programs" are programs primarily designed for an audience of one.  For example, suppose your job requires you to keep track of the hours you work for various clients.  The Personal Program approach to solve this problem is to write a simple program that keeps track of your hours.  ARBEL is a programming language and environment that makes it easy to write these kinds of programs.
+  ARBEL is a useful environment and language for creating personal programs.  "Personal programs" are programs primarily designed for an audience of one.  For example, suppose your job requires you to keep track of the hours you work for various clients.  The Personal Program approach to solve this problem is to write a simple program that keeps track of your hours.  ARBEL is a programming language and environment that makes it easy to write these kinds of programs.
 
-ARBEL is an environment and programming language designed to make it easy to create personal programs to accomplish your computing. It is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  ARBEL code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of ARBEL instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  ARBEL allows you to make such modifications without the author of the code ever deciding to allow that option.  
+  ARBEL is an environment and programming language designed to make it easy to create personal programs to accomplish your computing. It is a language for manipulating values in a data structure called a "registry".  A registry stores values at named data locations called "registers".  ARBEL code always operates /inside/ a registry.  Code modifies the contents of the registry and the registry the code operates inside defines the environment in which the code operates, i.e. the code's "scope".  Code can be easily executed inside different environments making it possible to use code others have written in ways they might not expect, a powerful feature for the code user.  For example, another programmer might have created a set of ARBEL instructions that use the =add= operator to add numbers.  You might want to use the code but wherever there is an =add= you want to use =sub= (subtraction).  ARBEL allows you to make such modifications without the author of the code ever deciding to allow that option.  
 
-While ARBEL can be run in scripting mode, it is primarily intended to be used interactively.  ARBEL programs are written to provide new commands in the ARBEL shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the ARBEL environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
+  While ARBEL can be run in scripting mode, it is primarily intended to be used interactively.  ARBEL programs are written to provide new commands in the ARBEL shell.  For example, I use a program to keep track of the number of hours I work for each client at my day job.  I created commands for switching which client I am currently working for and a command to stop working on that client.  The commands automatically record how many hours I've worked for each client in a registry.  The code allows me to save this registry to disk and output the required information for submitting my hours.  Instead of the program having its own method of interacting with it, it simply uses the ARBEL environment as its method of interaction.  The program only needs code to do the useful things, not code to enable interaction.
 
-ARBEL's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid ARBEL code snippets:
-#+BEGIN_SRC arbel
+  ARBEL's environment is useful for writing such programs because the language has a simple syntax that is similar to what you would type in an ordinary shell enabling the language itself to function as a command language.  For example, the following would be valid ARBEL code snippets:
+  #+BEGIN_SRC arbel
 ... report /project "The Big One" /from "2020-01-01" /to "2020-12-31" /output "annual_report_2020.csv" .
 ... hours /day 14 /month 6 /year 2021 .
-#+END_SRC 
+  #+END_SRC 
 
-Where =hours= and =report= are ARBEL commands that have been written by the user.
-
-ARBEL is short by one letter for ARBELS, which is where I wrote the language: on the bus to work.
+  Where =hours= and =report= are ARBEL commands that have been written by the user.
 
 * The Language
 ** Statements and syntax
@@ -184,17 +182,17 @@ ARBEL is short by one letter for ARBELS, which is where I wrote the language: on
 
 *** Ending Last Statement in a Substatement
 
-In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
-#+BEGIN_SRC arbel
+    In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
+    #+BEGIN_SRC arbel
 ... add 1 [ mul 2 3 ] .
-#+END_SRC
+    #+END_SRC
 
-is a valid statement.  If there are multiple statements, it is usually good practice to end all with a period, but the period can be omitted from the last one.  For example,
-#+BEGIN_SRC arbel
+    is a valid statement.  If there are multiple statements, it is usually good practice to end all with a period, but the period can be omitted from the last one.  For example,
+    #+BEGIN_SRC arbel
 ... add 1 [ add 1 1 . mul ans 3 ] .
-#+END_SRC
+    #+END_SRC
 
-is valid.
+    is valid.
 
 ** Registries
 
@@ -325,10 +323,24 @@ is valid.
 hello
    #+END_SRC
 
+   You can also set the value of a Register by just writing the register location as the first element of a statement, i.e.:
+   #+BEGIN_SRC arbel
+... /x "hello" .
+... print x .
+hello
+   #+END_SRC
+
+   Stylistically, I like using =set= whenever the register is given at another register location and just the Register whenever it is a literal Register.  For example:
+   #+BEGIN_SRC arbel
+... /x /y .
+... set y 2 .
+... /z "hello" .
+   #+END_SRC
+
    You can move data between Registers with the =move= command:
 
    #+BEGIN_SRC arbel
-... set /x "hello" .
+... /x "hello" .
 ... move /x /y .
 ... print y .
 hello
@@ -462,11 +474,11 @@ accept-or /hello ( set /hello "Hello." ) .
 
 * A Complete Example Program
 
-The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the =start= and =stop= instructions. And then the =day-time= instruction to output the hours for each client by day.
+  The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the =start= and =stop= instructions. And then the =day-time= instruction to output the hours for each client by day.
 
 ** Source Code
 
-#+BEGIN_SRC arbel
+   #+BEGIN_SRC arbel
 ' Initial state
 
 set /current-client "Non-billable" .
@@ -736,34 +748,34 @@ set /rewind-last
           record:end .
     ) /x > .
 
-#+END_SRC
+   #+END_SRC
 
 ** Building the Code
 
-We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
+   We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
 
-#+BEGIN_SRC arbel
+   #+BEGIN_SRC arbel
 ... source "billable.arb" .
 ... save "~/.darbs/billable.darb" .
-#+END_SRC
+   #+END_SRC
 
 ** Using the code
 
-Then, whenever we would like to load the code, we can simply do:
-#+BEGIN_SRC arbel
+   Then, whenever we would like to load the code, we can simply do:
+   #+BEGIN_SRC arbel
 ... use "billable" .
-#+END_SRC
+   #+END_SRC
 
-Then all the instructions from the /billable/ program are available to us.
+   Then all the instructions from the /billable/ program are available to us.
 
 * Examples
 ** Quicksort
 
-#+INCLUDE: "../examples/quicksort.arb" src arbel
+   #+INCLUDE: "../examples/quicksort.arb" src arbel
 
-Example of use:
+   Example of use:
 
-#+BEGIN_SRC arbel
+   #+BEGIN_SRC arbel
 ... set /x [ list 3 2 4 1 ] .
 ... quicksort /input x /slice /t /compare lt .
 ... print x .
@@ -779,16 +791,16 @@ t1 of type Integer, value: 4
 t2 of type Integer, value: 3
 t3 of type Integer, value: 2
 t4 of type Integer, value: 1
-#+END_SRC
+   #+END_SRC
 
 ** A Line-Oriented Text Editor
 
-This example is a simple interactive program where the user enters commands to edit a buffer. 
+   This example is a simple interactive program where the user enters commands to edit a buffer. 
 
-#+INCLUDE: "../examples/arbed.arb" src arbel
+   #+INCLUDE: "../examples/arbed.arb" src arbel
 
-Example of use:
-#+BEGIN_SRC arbel
+   Example of use:
+   #+BEGIN_SRC arbel
 ... import arbeled .
 ... i "Hello" .
 ... o .
@@ -800,53 +812,53 @@ Goodbye
 ... p .
 ... o .
 Hello
-#+END_SRC
+   #+END_SRC
 
 ** Numerical Differentiation
 
-#+INCLUDE: "../examples/deriv.arb" src arbel
+   #+INCLUDE: "../examples/deriv.arb" src arbel
 
-Example of use:
-#+BEGIN_SRC arbel
+   Example of use:
+   #+BEGIN_SRC arbel
 ... set /f < ( power t 2 ) /t > .
 ... deriv /f f /x 1.0
 ans = 2.0
-#+END_SRC
+   #+END_SRC
 
 ** Compute Factorial
 
-#+INCLUDE: "../examples/factorial.arb" src arbel
+   #+INCLUDE: "../examples/factorial.arb" src arbel
 
-Example of use:
-#+BEGIN_SRC arbel
+   Example of use:
+   #+BEGIN_SRC arbel
 ... factorial 5 .
 ans = 120
 ... factorial-recurse /t 5 .
 ans = 120
-#+END_SRC
+   #+END_SRC
 
 *** Note on Recursion
 
- Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
+    Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
 
 ** Numerical Integration
 
-#+INCLUDE: "../examples/integrate.arb" src arbel
+   #+INCLUDE: "../examples/integrate.arb" src arbel
 
-Example of use:
-#+BEGIN_SRC arbel
+   Example of use:
+   #+BEGIN_SRC arbel
 ... integrate /f < ( power t 2 ) /t > /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
-#+END_SRC
+   #+END_SRC
 
 ** Basic Linear Algebra
 
-This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
+   This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 
-#+INCLUDE: "../examples/matrix.arb" src arbel
+   #+INCLUDE: "../examples/matrix.arb" src arbel
 
-Example of use:
-#+BEGIN_SRC arbel
+   Example of use:
+   #+BEGIN_SRC arbel
 ... set /A [ list [ list 1 2 ] [ list 3 4 ] ] .
 ... set /B [ list [ list 6 2 ] [ list 3 4 ] ] .
 ... transpose A .
@@ -865,54 +877,54 @@ t2 of type Integer, value: 26
 t2 of type Registry, value: a registry with:
 t1 of type Integer, value: 11
 t2 of type Integer, value: 25
-#+END_SRC
+   #+END_SRC
 
 ** Split a String
 
-#+INCLUDE: "../examples/tokenize.arb" src arbel
+   #+INCLUDE: "../examples/tokenize.arb" src arbel
 
-Examples of use:
-#+BEGIN_SRC arbel
+   Examples of use:
+   #+BEGIN_SRC arbel
 ... tokenize /line "1,2,3" /sep "," .
 ans = a registry with:
 t1 of type String, value: 1
 t2 of type String, value: 2
 t3 of type String, value: 3
-#+END_SRC
+   #+END_SRC
 
 ** Linking C code
 
-One of the big outstanding tasks with ARBEL is to write a more user-friendly (and documented) /libarbel/ for adding extensions, but it is currently possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
+   One of the big outstanding tasks with ARBEL is to write a more user-friendly (and documented) /libarbel/ for adding extensions, but it is currently possible to write ARBEL operations in C, using ARBEL's =link= operation to import the code.
 
-The following is an example of C code.
+   The following is an example of C code.
 
-#+INCLUDE: "../examples/link.c" src c
+   #+INCLUDE: "../examples/link.c" src c
 
-We then compile it into a shared object file, linking against =libarbel=.
+   We then compile it into a shared object file, linking against =libarbel=.
 
-#+INCLUDE: "../examples/link_compile.sh" src sh
+   #+INCLUDE: "../examples/link_compile.sh" src sh
 
-The code then can be loaded into ARBEL with the =link= operation like so:
+   The code then can be loaded into ARBEL with the =link= operation like so:
 
-#+INCLUDE: "../examples/link.arb" src arbel
+   #+INCLUDE: "../examples/link.arb" src arbel
 
-The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
+   The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the ARBEL operation will be.
 
-Now, the operation can be called in the following way:
-#+BEGIN_SRC arbel
+   Now, the operation can be called in the following way:
+   #+BEGIN_SRC arbel
 ... log1 1 .
 ans = 0.693147
-#+END_SRC
+   #+END_SRC
 
 ** Concurrent Programming
 
-ARBEL uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
+   ARBEL uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
 
-#+INCLUDE: "../examples/task.arb" src arbel
+   #+INCLUDE: "../examples/task.arb" src arbel
 
-The following task that can be used to run any code in the background.  
+   The following task that can be used to run any code in the background.  
 
-#+INCLUDE: "../examples/background.arb" src arbel
+   #+INCLUDE: "../examples/background.arb" src arbel
 
 * Reference
 
@@ -1215,41 +1227,41 @@ The following task that can be used to run any code in the background.
 
 *** Short description
 
-=Nothing= is a value that is not any other value and is a different type than any other value.
+    =Nothing= is a value that is not any other value and is a different type than any other value.
 
 *** Nothing operations
 
-- =is-nothing VALUE= --- sets the =/ans= register to =True= if the value is =Nothing= and to =False= otherwise.
+    - =is-nothing VALUE= --- sets the =/ans= register to =True= if the value is =Nothing= and to =False= otherwise.
 
 ** Task Operations
 
 *** Short description
 
-Tasks are objects that allow you to execute code in another thread and share data between threads.
+    Tasks are objects that allow you to execute code in another thread and share data between threads.
 
 *** Implementation details
 
-Tasks contain three elements:
+    Tasks contain three elements:
 
-1. A Body, an instruction that is executed when the Task is run.
-2. A State, a registry that contains the state of the Task.  The Body is run inside the State registry. It is persistent across Task runs.
-3. A Queue, a registry that cannot be reached directly but which facilitates data sharing across tasks without worrying about race conditions or other details.
+    1. A Body, an instruction that is executed when the Task is run.
+    2. A State, a registry that contains the state of the Task.  The Body is run inside the State registry. It is persistent across Task runs.
+    3. A Queue, a registry that cannot be reached directly but which facilitates data sharing across tasks without worrying about race conditions or other details.
 
-Tasks use mutexes to ensure data is transferred correctly between threads.
+    Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Task operations
 
-- =task REGISTER INSTRUCTION |REGISTRY|= --- Sets =REGISTER= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =REGISTRY=.  If no =REGISTRY= argument is given, the initial state is a registry containing only the basic operations (the registry always contains the basic operations even if they are not in the initial registry passed to =Task=).
+    - =task REGISTER INSTRUCTION |REGISTRY|= --- Sets =REGISTER= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =REGISTRY=.  If no =REGISTRY= argument is given, the initial state is a registry containing only the basic operations (the registry always contains the basic operations even if they are not in the initial registry passed to =Task=).
 
-- =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
+    - =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
 
-- =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main ARBEL Task.
+    - =queue REGISTER DATA |TASK|= --- Sets the =REGISTER= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main ARBEL Task.
 
-- =accept REGISTER |TASK|= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
+    - =accept REGISTER |TASK|= --- Waits until =REGISTER= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= register to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
 
-- =select REGISTER1 INSTRUCTION1 REGISTER2 INSTRUCTION2 ... REGISTERN INSTRUCTIONN= --- Waits for the Queue in the current task to contain data at any of the Registers (it will prefer earlier Registers if data is available at both).  Once it receives data, it sets the =/ans= register to the data and executes the Instruction in the current registry.
+    - =select REGISTER1 INSTRUCTION1 REGISTER2 INSTRUCTION2 ... REGISTERN INSTRUCTIONN= --- Waits for the Queue in the current task to contain data at any of the Registers (it will prefer earlier Registers if data is available at both).  Once it receives data, it sets the =/ans= register to the data and executes the Instruction in the current registry.
 
-- =accept-or REGISTER INSTRUCTION |TASK|= --- Checks if =REGISTER= is set in =TASK='s Queue.  If it is, the =/ans= register is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
+    - =accept-or REGISTER INSTRUCTION |TASK|= --- Checks if =REGISTER= is set in =TASK='s Queue.  If it is, the =/ans= register is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
 
 ** Control flow operations
 
@@ -1300,7 +1312,7 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Version
 
-- =version= --- sets the =/ans= Register to a String giving the version of ARBEL.
+    - =version= --- sets the =/ans= Register to a String giving the version of ARBEL.
 
 ** System operations
 *** Interacting with the shell
@@ -1321,36 +1333,36 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 
 *** Random numbers
 
-- =rand |INTEGER|= --- set the =/ans= Register to a uniformly distributed random Real between 0 and 1.  If =INTEGER= is provided, set the seed to the =INTEGER= before drawing random value.
+    - =rand |INTEGER|= --- set the =/ans= Register to a uniformly distributed random Real between 0 and 1.  If =INTEGER= is provided, set the seed to the =INTEGER= before drawing random value.
 
 ** Package operations
 
-    - =use STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
+   - =use STRING= --- load a saved registry in =~/.darbs/= with the extension =.darb= into the current registry. The file being loaded is: =~/.darbs/STRING.darb=.
 
-    - =build STRING REGISTRY= --- saves contents of registry to =~/.darbs/STRING.darb= so that it can be loaded as a package.
+   - =build STRING REGISTRY= --- saves contents of registry to =~/.darbs/STRING.darb= so that it can be loaded as a package.
 
-    - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into ARBEL operation named =STRING3=.  
+   - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into ARBEL operation named =STRING3=.  
 
 ** Interpreter options
 
 *** Operation
 
-- =interpreter REGISTER VALUE= --- sets interpreter option =REGISTER= to =VALUE=.
+    - =interpreter REGISTER VALUE= --- sets interpreter option =REGISTER= to =VALUE=.
 
 *** List of options
 
-- =/print-ans= --- if =True= (default) or any non-Boolean value, then print the value of the =/ans= Register at the end of commands, if =False= suppress printing.
+    - =/print-ans= --- if =True= (default) or any non-Boolean value, then print the value of the =/ans= Register at the end of commands, if =False= suppress printing.
 
-- =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash registries automatically as they grow in size.  If =False= do not rehash automatically.
+    - =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash registries automatically as they grow in size.  If =False= do not rehash automatically.
 
-- =/print-errors= --- if =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
+    - =/print-errors= --- if =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
 
 * Saved Registries
 
 
-*Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting ARBEL in any case; it has no permanent information.  All other data types are written to disk.
+  *Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting ARBEL in any case; it has no permanent information.  All other data types are written to disk.
 
-This section will describe the storage format for ARBEL saved files.  A user or programmer will never need to know the internal structure of the save file, but it will be provided here to have complete documentation and to perhaps be useful to people writing a C extension to ARBEL.
+  This section will describe the storage format for ARBEL saved files.  A user or programmer will never need to know the internal structure of the save file, but it will be provided here to have complete documentation and to perhaps be useful to people writing a C extension to ARBEL.
 
 * GNU Free Documentation License
 
