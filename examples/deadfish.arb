@@ -1,31 +1,31 @@
 
-set /run-deadfish-program
-    < (
-      set /acc 0 .
-      set /loc 1 .
-      while ( lt-eq loc [ length input ] )
-            (
-              set /cur [ substring input loc loc ] .
+/run-deadfish-program
+  < (
+    /acc 0 .
+    /loc 1 .
+    while ( lt-eq loc [ length input ] )
+          (
+            /cur [ substring input loc loc ] .
 
-              if [ string-eq cur "i" ]
-                 { incr acc } .
+            if [ string-eq cur "i" ]
+               { incr acc } .
 
-              if [ string-eq cur "d" ]
-                 { decr acc } .
+            if [ string-eq cur "d" ]
+               { incr acc -1 } .
 
-              if [ string-eq cur "s" ]
-                 { set /acc [ mul acc acc ] } .
+            if [ string-eq cur "s" ]
+               { /acc [ mul acc acc ] } .
 
-              if [ string-eq cur "o" ]
-                 { print acc False } .
+            if [ string-eq cur "o" ]
+               { print acc False } .
 
-              if [ or [ eq acc -1 ]
-                      [ eq acc 256 ] ]
-                 { set /acc 0 } .
+            if [ or [ eq acc -1 ]
+                    [ eq acc 256 ] ]
+               { /acc 0 } .
 
-              incr loc .
-              
-            ) .
+            incr loc .
+            
+          ) .
 
-    ) /input > .
+  ) /input > .
 
