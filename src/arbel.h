@@ -598,6 +598,7 @@ u32_str_to_h (const uint32_t* str);
 
 #ifdef GARBAGE
 #define GC_PTHREADS
+#define GC_THREADS
 #include <gc/gc.h>
 #define pthread_create GC_pthread_create
 #define pthread_exit GC_pthread_exit

@@ -3848,7 +3848,7 @@ op_build (arg a, registry* reg)
   
 
   char* loc = arbel_u32_to_u8((uint32_t*) arg1->data,
-                            u32_strlen(arg1->data));
+                              u32_strlen((uint32_t*) arg1->data));
 
 
   char* home = getenv("HOME");
@@ -3857,11 +3857,13 @@ op_build (arg a, registry* reg)
                                      strlen(".darbs/")+
                                      strlen("/.darb")+1));
   sprintf(fname, "%s/.darbs/%s.darb", home, loc);
-  
-  save_outer((registry*) arg2->data, fname);
+
+  data* d = copy_data(arg2);
+  save_outer((registry*) d->data, fname);
   
   free(loc);
   free(fname);
+  free_data(d);
   
 }
 

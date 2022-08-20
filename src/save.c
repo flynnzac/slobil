@@ -195,6 +195,7 @@ read_registry (gzFile f, registry* reg)
   parser_state state;
   FILE* f_sub;
   char* code;
+  int complete;
   while (gzfread(type_cache, sizeof(uint32_t), 1, f))
     {
       uint32_t _type = le32toh(*type_cache);
@@ -279,8 +280,21 @@ read_registry (gzFile f, registry* reg)
           f_sub = fmemopen(cache, BYT(size), "r");
           state = fresh_state(0);
           stmt = NULL;
-          parse(f_sub, &state, &stmt, reg->task->task);
+          complete = parse(f_sub, &state, &stmt, reg->task->task);
           fclose(f_sub);
+          if (!complete)
+            {
+              char* ending = malloc(sizeof(char)*(strlen(" . ")+1));
+              strcpy(ending, " . ");
+              f_sub = fmemopen(ending,
+                               sizeof(char)*strlen(ending),
+                               "r");
+              complete = parse(f_sub, &state, &stmt,
+                               reg->task->task);
+              fclose(f_sub);
+              free(ending);
+            }
+
 
           d = new_data();
           d->type = Instruction;
