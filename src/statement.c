@@ -203,22 +203,6 @@ execute_statement (statement* s, registry* reg)
   
   free_arg_array_data(&s->arg, arg_n);
 
-  if (is_error(-1, reg->task->task))
-    {
-      data* err;
-      mpz_t err_z;
-      mpz_init_set_si(err_z, is_error(-1, reg->task->task));
-      assign_int(&err, err_z);
-    }
-  else
-    {
-      data* err;
-      mpz_t err_z;
-      mpz_init_set_si(err_z, 0);
-      assign_int(&err, err_z);
-    }
-	
-
 }
 
 void
