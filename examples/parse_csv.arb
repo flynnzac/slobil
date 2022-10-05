@@ -1,23 +1,23 @@
 ' parses a comma-separated file into a registry
 
-source "examples/tokenize.onbu" .
+source "examples/tokenize.arb" .
 
-set /parse-csv
-    (
-      open-text-file name .
-      set /file ans .
-      set /parsed [ list ] .
-      set /cur-reg /#1 . 
+/parse-csv
+  (
+    open-text-file name .
+    /file ans .
+    /parsed [ list ] .
+    /cur-reg /#1 . 
 
-      while ( set /cur-line [ read-line file ] .
-	      is-string cur-line . )
-            (
-              tokenize /line cur-line /sep "," .
-              in parsed ( set cur-reg ans ) .
-              set /cur-reg [ next cur-reg ] .
-            ) .
+    while ( set /cur-line [ read-line file ] .
+	          is-string cur-line . )
+          (
+            tokenize /line cur-line /sep "," .
+            in parsed ( set cur-reg ans ) .
+            set /cur-reg [ next cur-reg ] .
+          ) .
 
-      
-      close /file .
-      answer parsed .
-    ) .
+    
+    close /file .
+    answer parsed .
+  ) .
