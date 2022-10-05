@@ -252,6 +252,9 @@ typedef enum print_settings print_settings;
 char*
 argument_name (int n);
 
+char*
+custom_argument_name (int n, char* s);
+
 bool
 is_integer (const char* str);
 

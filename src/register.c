@@ -43,6 +43,28 @@ argument_name (int n)
 }
 
 char*
+custom_argument_name (int n, char* s)
+{
+  int n_digits;
+  if (n==0)
+    {
+      n_digits = 1;
+    }
+  else if (n < 0)
+    {
+      n_digits = floor(log10(abs(n))) + 2;
+    }
+  else
+    {
+      n_digits = floor(log10(n)) + 1;
+    }
+  char* name = malloc(sizeof(char)*(n_digits+strlen(s)+1));
+  sprintf(name, "%s%d", s, n);
+  return name;
+}
+
+
+char*
 vector_name (const char* lead, int n)
 {
   int n_digits;

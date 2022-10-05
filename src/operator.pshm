@@ -85,7 +85,7 @@ op_range (arg a, registry* reg)
   mpz_t by;
   mpz_init(by);
   mpz_set_ui(by, 1);
-  
+
   if (a.length >= 4)
     {
       #num=3@
@@ -93,6 +93,25 @@ op_range (arg a, registry* reg)
       mpz_set(by, *((mpz_t*) arg3->data));
     }
 
+  char* prefix;
+  if (a.length >= 5)
+    {
+      #num=4@
+      #type=String@
+      ##GETARG~$;
+      prefix = arbel_u32_to_u8(
+                               (uint32_t*) arg4->data,
+                               u32_strlen((uint32_t*)
+                                          arg4->data)
+                               );
+    }
+  else
+    {
+      prefix = malloc(sizeof(char)*2);
+      prefix[0] = 't';
+      prefix[1] = '\0';
+    }
+      
   mpz_t* lb = (mpz_t*) arg1->data;
   mpz_t* ub = (mpz_t*) arg2->data;
 
@@ -112,7 +131,7 @@ op_range (arg a, registry* reg)
   data* d_tmp;
   while (mpz_cmp(cur,*ub) <= 0)
     {
-      r = argument_name(i);
+      r = custom_argument_name(i, prefix);
       assign_int(&d_tmp, cur);
       set(r_new, d_tmp, r, 0);
       free(r);
@@ -125,6 +144,8 @@ op_range (arg a, registry* reg)
   d_tmp->data = r_new;
 
   ret_ans(reg,d_tmp);
+
+  free(prefix);
   
 }
 
