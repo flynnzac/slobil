@@ -209,7 +209,6 @@ execute_statement (statement* s, registry* reg)
       mpz_t err_z;
       mpz_init_set_si(err_z, is_error(-1, reg->task->task));
       assign_int(&err, err_z);
-      set(reg, err, "error-code", 0);
     }
   else
     {
@@ -217,7 +216,6 @@ execute_statement (statement* s, registry* reg)
       mpz_t err_z;
       mpz_init_set_si(err_z, 0);
       assign_int(&err, err_z);
-      set(reg, err, "error-code", 0);
     }
 	
 
