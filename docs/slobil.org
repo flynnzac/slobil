@@ -43,7 +43,7 @@
    ... set /add-one ( add t 1 . ) .
    #+END_SRC
 
-   An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, "(" and ")").  Instructions can be executed later inside registries perhaps different than the registries in which they were initially defined.
+   An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, "(" and ")").  Instructions can be executed later inside objects perhaps different than the objects in which they were initially defined.
 
    To use the value located in a object, simply type the name of the slot without the preceeding forward slash.  For example,
    #+BEGIN_SRC slobil
@@ -194,9 +194,9 @@
 
     is valid.
 
-** Registries
+** Objects
 
-   In SLOBIL, code is executed inside /registries/.  Registries are both data structures and define what slots (variables) are in scope.   Because registries are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level object.  To create a new one, use the =object= operation,
+   In SLOBIL, code is executed inside /objects/.  Objects are both data structures and define what slots (variables) are in scope.   Because objects are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level object.  To create a new one, use the =object= operation,
 
    #+BEGIN_SRC slobil
    ... object /hello "Hello, world!" /x 10 .
@@ -253,7 +253,7 @@
    Hello, world! Goodbye!
    #+END_SRC
 
-   Aside from being a useful data structure, registries are also how SLOBIL does /namespaces/.  For example,
+   Aside from being a useful data structure, objects are also how SLOBIL does /namespaces/.  For example,
 
    #+BEGIN_SRC slobil
    ... set /math [ object ] .
@@ -272,7 +272,7 @@
    ans = 120
    #+END_SRC       
 
-   You can assign instructions inside registries and then they can be called from that object using the colon notation.  This code block also demonstrates that the =set= operation optionally takes a third argument: the object in which to set the slot.  When omitted, it sets the slot in the current object.
+   You can assign instructions inside objects and then they can be called from that object using the colon notation.  This code block also demonstrates that the =set= operation optionally takes a third argument: the object in which to set the slot.  When omitted, it sets the slot in the current object.
 
    If you don't need to worry about name collisions, you can =import= it.
 
@@ -282,7 +282,7 @@
    ans = 120
    #+END_SRC
 
-   Registries are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+   Objects are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
 
 *** Additional details about colon notation
 
@@ -310,7 +310,7 @@
 
 ** Slots   
 
-   Slots are the locations of data in Registries.  They are data themselves and can be manipulated like other data objects in SLOBIL.  For example, you can set other slots to slots and use those values wherever you would use slots.
+   Slots are the locations of data in Objects.  They are data themselves and can be manipulated like other data objects in SLOBIL.  For example, you can set other slots to slots and use those values wherever you would use slots.
 
    #+BEGIN_SRC slobil
 ... set /x /y .
@@ -752,10 +752,10 @@ set /rewind-last
 
 ** Building the Code
 
-   We can then use a script like the following, supposing we have saved the above code in a file /billable.arb/, to build a binary version of the program in a convenient location.
+   We can then use a script like the following, supposing we have saved the above code in a file /billable.slob/, to build a binary version of the program in a convenient location.
 
    #+BEGIN_SRC slobil
-... source "billable.arb" .
+... source "billable.slob" .
 ... save "~/.darbs/billable.darb" .
    #+END_SRC
 
@@ -771,7 +771,7 @@ set /rewind-last
 * Examples
 ** Quicksort
 
-   #+INCLUDE: "../examples/quicksort.arb" src slobil
+   #+INCLUDE: "../examples/quicksort.slob" src slobil
 
    Example of use:
 
@@ -797,7 +797,7 @@ t4 of type Integer, value: 1
 
    This example is a simple interactive program where the user enters commands to edit a buffer. 
 
-   #+INCLUDE: "../examples/arbed.arb" src slobil
+   #+INCLUDE: "../examples/arbed.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
@@ -816,7 +816,7 @@ Hello
 
 ** Numerical Differentiation
 
-   #+INCLUDE: "../examples/deriv.arb" src slobil
+   #+INCLUDE: "../examples/deriv.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
@@ -827,7 +827,7 @@ ans = 2.0
 
 ** Compute Factorial
 
-   #+INCLUDE: "../examples/factorial.arb" src slobil
+   #+INCLUDE: "../examples/factorial.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
@@ -843,7 +843,7 @@ ans = 120
 
 ** Numerical Integration
 
-   #+INCLUDE: "../examples/integrate.arb" src slobil
+   #+INCLUDE: "../examples/integrate.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
@@ -855,7 +855,7 @@ ans = 0.332834
 
    This example demonstrates both application methods like =do= and =collapse= as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 
-   #+INCLUDE: "../examples/matrix.arb" src slobil
+   #+INCLUDE: "../examples/matrix.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
@@ -881,7 +881,7 @@ t2 of type Integer, value: 25
 
 ** Split a String
 
-   #+INCLUDE: "../examples/tokenize.arb" src slobil
+   #+INCLUDE: "../examples/tokenize.slob" src slobil
 
    Examples of use:
    #+BEGIN_SRC slobil
@@ -906,7 +906,7 @@ t3 of type String, value: 3
 
    The code then can be loaded into SLOBIL with the =link= operation like so:
 
-   #+INCLUDE: "../examples/link.arb" src slobil
+   #+INCLUDE: "../examples/link.slob" src slobil
 
    The first argument of =link= gives the shared-object file name.  The second argument gives the name of the function.  The third argument gives what the name of the SLOBIL operation will be.
 
@@ -920,11 +920,11 @@ ans = 0.693147
 
    SLOBIL uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
 
-   #+INCLUDE: "../examples/task.arb" src slobil
+   #+INCLUDE: "../examples/task.slob" src slobil
 
    The following task that can be used to run any code in the background.  
 
-   #+INCLUDE: "../examples/background.arb" src slobil
+   #+INCLUDE: "../examples/background.slob" src slobil
 
 * Reference
 
@@ -932,15 +932,15 @@ ans = 0.693147
 
   Throughout, I enclose an operation's optional arguments between bars (||). 
 
-** Registries
+** Objects
 
 *** Short description
 
-    A object contains data located at slots.  Data can be retrieved  from and inserted into registries.  Registries also defined the /scope/ of SLOBIL code because code is executed inside registries.  So the values of variables depend on which object you are executing the code.  This allows the user to flexibly manipulate scope.
+    A object contains data located at slots.  Data can be retrieved  from and inserted into objects.  Objects also defined the /scope/ of SLOBIL code because code is executed inside objects.  So the values of variables depend on which object you are executing the code.  This allows the user to flexibly manipulate scope.
 
 *** Implementation details
 
-    Registries are hash tables.  The keys to the table are called slots.  The number of bins in the hash table grows as more elements are added.  This keeps lookup times low, but the object will rehash as it grows.  Rehashing can be turned off by using the =auto-rehash= operation.
+    Objects are hash tables.  The keys to the table are called slots.  The number of bins in the hash table grows as more elements are added.  This keeps lookup times low, but the object will rehash as it grows.  Rehashing can be turned off by using the =auto-rehash= operation.
 
 *** Object operations
 
@@ -975,7 +975,7 @@ ans = 0.693147
 
 **** Apply Operations to elements of a Object
 
-     - =do OPERATION OBJECT1 OBJECT2 ... OBJECTN= --- execute =OPERATION= which takes its arguments (1...N) from each element in =OBJECT1=, ..., =OBJECTN=.  Sets the =/ans= slot to a Object which contains whatever the =OPERATION= evaluates to at the corresponding Slots.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= slot to a Object with elements (5,7,9) at slots =(/t1,/t2,/t3)=.  =do= will only return results at Slots that exist in all Registries.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Slot to =list 5 7=.
+     - =do OPERATION OBJECT1 OBJECT2 ... OBJECTN= --- execute =OPERATION= which takes its arguments (1...N) from each element in =OBJECT1=, ..., =OBJECTN=.  Sets the =/ans= slot to a Object which contains whatever the =OPERATION= evaluates to at the corresponding Slots.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= slot to a Object with elements (5,7,9) at slots =(/t1,/t2,/t3)=.  =do= will only return results at Slots that exist in all Objects.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Slot to =list 5 7=.
 
      - =collapse OPERATION OBJECT |SLOT|= --- sets the =/ans= slot to the value of applying =OPERATION= to the value in the =OBJECT= at Slot =/SLOT1= and =/SLOT2= and then again to the result of that and to the value of  =/SLOT3= and so on. For example, =collapse add [ list 1 2 3 . ] /t= sets the =/ans= slot to =6=.  If the =SLOT= argument is omitted, it is assumed to be =/t=.
 
@@ -1087,7 +1087,7 @@ ans = 0.693147
 
      - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Slot to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in SLOBIL so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= slot to the last character in =STRING=.
 
-     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Slot to a Object with all submatches located at the =/tN= registries.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Slot to a Object with all submatches located at the =/tN= objects.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
 
      - =replace STRING1 STRING2 STRING3 |INTEGER|= --- set the =/ans= Slot to a String formed by replacing all occurences of regular expression =STRING1= with =STRING2= in =STRING3=.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
@@ -1125,7 +1125,7 @@ ans = 0.693147
 
 *** Short description
 
-    Slots are a type of data in SLOBIL usually used to refer to locations in slots.  More generally, they are symbols.  They can be compared with one another and modified.  Slots are not "associated" with registries.  They are data without any associated context.
+    Slots are a type of data in SLOBIL usually used to refer to locations in slots.  More generally, they are symbols.  They can be compared with one another and modified.  Slots are not "associated" with objects.  They are data without any associated context.
 
 *** Implementation details
 
@@ -1177,7 +1177,7 @@ ans = 0.693147
 
 *** Short description
 
-    Instructions are code objects which have not yet been executed.  They can be called or executed in different registries.
+    Instructions are code objects which have not yet been executed.  They can be called or executed in different objects.
 
 *** Implementation details
 
@@ -1353,11 +1353,11 @@ ans = 0.693147
 
     - =/print-ans= --- if =True= (default) or any non-Boolean value, then print the value of the =/ans= Slot at the end of commands, if =False= suppress printing.
 
-    - =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash registries automatically as they grow in size.  If =False= do not rehash automatically.
+    - =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash objects automatically as they grow in size.  If =False= do not rehash automatically.
 
     - =/print-errors= --- if =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
 
-* Saved Registries
+* Saved Objects
 
 
   *Note*: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting SLOBIL in any case; it has no permanent information.  All other data types are written to disk.

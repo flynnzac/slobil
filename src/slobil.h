@@ -54,7 +54,7 @@ enum data_type
    Integer = 1,
    Real = 2,
    String = 4,
-   Symbol = 8,
+   Slot = 8,
    Object = 16,
    Instruction = 32,
    Expression = 64,
@@ -133,13 +133,13 @@ typedef struct object object;
 typedef void (*operation)(struct arg, object*);
 
 
-struct symbol
+struct slot
 {
   char* name;
   unsigned long key;
 };
 
-typedef struct symbol symbol;
+typedef struct slot slot;
 
 struct op_wrapper
 {
@@ -191,7 +191,7 @@ struct element
   unsigned long* hash_name;
   struct element* right;
   int levels;
-  int* is_symbol;
+  int* is_slot;
 };
 
 typedef struct element element;
@@ -277,7 +277,7 @@ void
 assign_object (data** d, object* r, bool copy, task* task);
 
 void
-assign_symbol (data** d, const char* name, unsigned long key);
+assign_slot (data** d, const char* name, unsigned long key);
 
 void
 assign_boolean (data** d, bool val);
@@ -314,13 +314,13 @@ data*
 get (object* reg, unsigned long hash_name, int recursive);
 
 content*
-mov (object* reg, symbol* old, symbol* new);
+mov (object* reg, slot* old, slot* new);
 
 content*
 del (object* reg, unsigned long hash_name, int del_data, bool hard_free);
 
 data*
-get_data_in_object (object* reg, const symbol name);
+get_data_in_object (object* reg, const slot name);
 
 void
 do_error (const char* msg, task_vars* t);
@@ -332,7 +332,7 @@ void
 print_data (data* d, print_settings settings);
 
 bool
-is_symbol (const char* str);
+is_slot (const char* str);
 
 void
 str_shift_left (char* buffer);
@@ -427,7 +427,7 @@ append_statement (statement* current, element* head);
 element*
 append_argument_element (element* current, char** name,
                          unsigned long* hash_name, const int levels,
-                         int* is_symbol);
+                         int* is_slot);
 
 element*
 append_literal_element (element* current, data* d);
@@ -466,7 +466,7 @@ unsigned long
 hash_str(const char *str);
 
 char**
-split_by_colon (const char* name, int* cnt, int** is_symbol);
+split_by_colon (const char* name, int* cnt, int** is_slot);
 
 char**
 copy_names (char** name, int levels);
@@ -475,10 +475,10 @@ unsigned long*
 copy_hashes (unsigned long* hashes, int levels);
 
 int*
-copy_issymbol (int* is_symbol, int levels);
+copy_isslot (int* is_slot, int levels);
 
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol, char** name);
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, char** name);
 
 const char*
 str_type (data_type type);

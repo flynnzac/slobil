@@ -73,15 +73,15 @@ _op_call (arg a, object* reg, const int explicit)
     {
       d = a.arg_array[i];
 
-      if (d->type != Symbol)
+      if (d->type != Slot)
         {
-          do_error("Expected a symbol", reg->task->task);
+          do_error("Expected a slot", reg->task->task);
           free_object(r_new);
           return;
         }
       d_data = a.arg_array[i+1];
       d_new = d_data;
-      content* c = set(r_new, d_new, ((symbol*) d->data)->name, 1);
+      content* c = set(r_new, d_new, ((slot*) d->data)->name, 1);
       c->do_not_free_data = 1;
     }
 
@@ -122,7 +122,7 @@ do_operation (op_wrapper* op, object* reg, arg a)
         {
           d = resolve(a.arg_array[i], reg);
           content* c = set(r_new, d,
-                           ((symbol*) op->args[i-1]->data)->name,
+                           ((slot*) op->args[i-1]->data)->name,
                            1);
           c->do_not_free_data = 1;
         }
@@ -163,7 +163,7 @@ compute (data* cmd, object* reg, arg a)
     case Instruction:
       _op_call(a, reg, 0);
       break;
-    case Symbol:
+    case Slot:
       auto_set(a, reg);
       break;
     case Object:

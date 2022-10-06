@@ -136,14 +136,14 @@ assign_object (data** d, object* r, bool copy, task* t)
 }
 
 void
-assign_symbol (data** d, const char* name, unsigned long key)
+assign_slot (data** d, const char* name, unsigned long key)
 {
   *d = new_data();
-  (*d)->type = Symbol;
-  (*d)->data = malloc(sizeof(symbol));
-  ((symbol*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(((symbol*) (*d)->data)->name, name);
-  ((symbol*) (*d)->data)->key = key;
+  (*d)->type = Slot;
+  (*d)->data = malloc(sizeof(slot));
+  ((slot*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(((slot*) (*d)->data)->name, name);
+  ((slot*) (*d)->data)->key = key;
   
 }
 
@@ -220,7 +220,7 @@ copy_elements (element* e)
                                            copy_hashes(e->hash_name,
                                                        e->levels),
                                            e->levels,
-                                           copy_issymbol(e->is_symbol,
+                                           copy_isslot(e->is_slot,
                                                          e->levels));
             }
         }
@@ -339,9 +339,9 @@ copy_data (data* d_in)
     case String:
       assign_str(&d, (uint32_t*) d_in->data, 1);
       break;
-    case Symbol:
-      assign_symbol(&d, ((symbol*) d_in->data)->name,
-                    ((symbol*) d_in->data)->key);
+    case Slot:
+      assign_slot(&d, ((slot*) d_in->data)->name,
+                    ((slot*) d_in->data)->key);
       break;
     case Object:
       assign_object(&d, (object*) d_in->data, true,

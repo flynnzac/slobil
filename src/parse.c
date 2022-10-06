@@ -93,8 +93,8 @@ element*
 add_lookup_argument (element** head, element* e, char* d)
 {
   int count = 0;
-  int* is_symbol;
-  char** name = split_by_colon(d, &count, &is_symbol);
+  int* is_slot;
+  char** name = split_by_colon(d, &count, &is_slot);
   unsigned long* hash_name = malloc(sizeof(unsigned long)*(count));
   int i;
   for (i=0; i < count; i++)
@@ -105,12 +105,12 @@ add_lookup_argument (element** head, element* e, char* d)
   if (*head == NULL)
     {
       *head = append_argument_element(NULL, name, hash_name, count,
-                                      is_symbol);
+                                      is_slot);
       return *head;
     }
   else
     {
-      e = append_argument_element(e, name, hash_name, count, is_symbol);
+      e = append_argument_element(e, name, hash_name, count, is_slot);
       return e;
     }
 
@@ -283,10 +283,10 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   assign_real(&d, atof(state->buffer));
                   e = add_literal_argument(&head, e, d);
                 }
-              else if (is_symbol(state->buffer))
+              else if (is_slot(state->buffer))
                 {
-                  /* Create Symbol data if a literal symbol. */
-                  assign_symbol(&d, state->buffer+1,
+                  /* Create Slot data if a literal slot. */
+                  assign_slot(&d, state->buffer+1,
                                 hash_str(state->buffer+1));
                   e = add_literal_argument(&head, e, d);
                 }
@@ -319,7 +319,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                 }
               else 
                 {
-                  /* If not a literal, it must be a reference to a value located at some symbol. */
+                  /* If not a literal, it must be a reference to a value located at some slot. */
                   e = add_lookup_argument(&head, e, state->buffer);
                 }
               clear_state_buffer(state);

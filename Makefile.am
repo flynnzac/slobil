@@ -13,7 +13,7 @@ slobil_SOURCES = src/slobil.c
 slobil_DEPENDENCIES = libslobil.la
 slobil_CFLAGS = $(AM_CFLAGS) -lslobil
 
-man1_MANS = docs/arbel.1
+man1_MANS = docs/slobil.1
 
 noinst_PROGRAMS = test/unit/test_arg test/unit/test_copy
 

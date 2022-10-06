@@ -101,13 +101,13 @@ save_content (gzFile f, content* reg)
                 free(u32);
               }
               break;
-            case Symbol:
-              size = (uint64_t) strlen8(((symbol*) reg->value->data)->name,
+            case Slot:
+              size = (uint64_t) strlen8(((slot*) reg->value->data)->name,
                                         CHAR_BIT);
               size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(reg->value->data, sizeof(char),
-                       strlen(((symbol*) reg->value->data)->name), f);
+                       strlen(((slot*) reg->value->data)->name), f);
               break;
             case Object:
               save_object(f, (object*) reg->value->data);
@@ -139,11 +139,11 @@ save_content (gzFile f, content* reg)
 
                 for (int i=0; i < op->n_arg; i++)
                   {
-                    size = (uint64_t) strlen8(((symbol*) op->args[i]->data)->name, CHAR_BIT);
+                    size = (uint64_t) strlen8(((slot*) op->args[i]->data)->name, CHAR_BIT);
                     size_out = htole64(size);
                     gzfwrite(&size_out, sizeof(uint64_t), 1, f);
-                    gzfwrite(((symbol*) op->args[i]->data)->name,
-                             sizeof(char), strlen(((symbol*) op->args[i]->data)->name), f);
+                    gzfwrite(((slot*) op->args[i]->data)->name,
+                             sizeof(char), strlen(((slot*) op->args[i]->data)->name), f);
                   }
               }
               break;
@@ -249,7 +249,7 @@ read_object (gzFile f, object* reg)
             free(cache);
           }
           break;
-        case Symbol:
+        case Slot:
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
           size = le64toh(*((uint64_t*) cache));
@@ -257,7 +257,7 @@ read_object (gzFile f, object* reg)
           cache = malloc(BYT(size)+1);
           gzfread(cache, 1, BYT(size), f);
           *((char*) (cache+BYT(size))) = '\0';
-          assign_symbol(&d, (char*) cache, hash_str((char*) cache));
+          assign_slot(&d, (char*) cache, hash_str((char*) cache));
           free(cache);
           break;
         case Object:
@@ -351,7 +351,7 @@ read_object (gzFile f, object* reg)
 
               unsigned long hash = hash_str(name);
 
-              assign_symbol(&op->args[i], name, hash);
+              assign_slot(&op->args[i], name, hash);
               free(name);
             }
 

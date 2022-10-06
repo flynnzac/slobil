@@ -69,7 +69,7 @@ is_numeric (data* d)
 }
 
 bool
-is_symbol (const char* str)
+is_slot (const char* str)
 {
   return (str[0] == '/');
 }
@@ -112,8 +112,8 @@ str_type (data_type type)
     case String:
       s = "String";
       break;
-    case Symbol:
-      s = "Symbol";
+    case Slot:
+      s = "Slot";
       break;
     case Object:
       s = "Object";

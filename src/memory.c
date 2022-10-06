@@ -67,9 +67,9 @@ free_statement (statement* s)
               free(e->hash_name);
             }
 
-          if (e->is_symbol != NULL)
+          if (e->is_slot != NULL)
             {
-              free(e->is_symbol);
+              free(e->is_slot);
             }
 
           if (e->s != NULL)
@@ -112,9 +112,9 @@ free_data (data* d)
       free_object((object*) d->data);
       free(d);
     }
-  else if (d->type == Symbol)
+  else if (d->type == Slot)
     {
-      free(((symbol*) d->data)->name);
+      free(((slot*) d->data)->name);
       free(d->data);
       free(d);
     }

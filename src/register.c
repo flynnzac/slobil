@@ -123,7 +123,7 @@ split_by_colon (const char* name, int* cnt, int** is_symb)
         {
           buffer[j] = '\0';
           result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-          if (is_symbol(buffer))
+          if (is_slot(buffer))
             {
               (*is_symb)[k] = 1;
               buffer++;
@@ -150,7 +150,7 @@ split_by_colon (const char* name, int* cnt, int** is_symb)
   if (strlen(buffer) != 0)
     {
       result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-      if (is_symbol(buffer))
+      if (is_slot(buffer))
         {
           (*is_symb)[k] = 1;
           buffer++;
@@ -197,7 +197,7 @@ copy_hashes (unsigned long* hashes, int levels)
 }
 
 int*
-copy_issymbol (int* is_symb, int levels)
+copy_isslot (int* is_symb, int levels)
 {
   int* copy = malloc(sizeof(int)*levels);
   int i;

@@ -198,7 +198,7 @@ lookup (object* reg, unsigned long hash_name, int recursive)
 }
 
 content*
-mov (object* reg, symbol* old, symbol* new)
+mov (object* reg, slot* old, slot* new)
 {
   unsigned long old_element = old->key % reg->hash_size;
 
@@ -320,21 +320,21 @@ mark_do_not_free (object* reg, unsigned long hash_name)
 }
 
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol, char** name)
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, char** name)
 {
   data* d = get(reg, hash_name[0], 1);
   if (d == NULL)
     {
       char* msg = malloc(sizeof(char)*
-                         (strlen("Value at symbol / not found.")
+                         (strlen("Value at slot / not found.")
                           + strlen(name[0]) + 1));
-      sprintf(msg, "Value at symbol /%s not found.", name[0]);
+      sprintf(msg, "Value at slot /%s not found.", name[0]);
       do_error(msg, reg->task->task);
       free(msg);
     }
   else if (d->type != Object && levels > 1)
     {
-      do_error("Cannot get symbols in non-object.", reg->task->task);
+      do_error("Cannot get slots in non-object.", reg->task->task);
     }
   else
     {
@@ -342,35 +342,35 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol
         {
           if (d == NULL)
             {
-              do_error("Symbol not found in object.",
+              do_error("Slot not found in object.",
                        reg->task->task);
               return NULL;
             }
 
           if (d->type != Object)
             {
-              do_error("Cannot get symbols in non-object.",
+              do_error("Cannot get slots in non-object.",
                        reg->task->task);
               return NULL;
             }
 
-          if (is_symbol[i])
+          if (is_slot[i])
             {
               d = get((object*) d->data, hash_name[i], 0);
             }
           else
             {
               data* d1 = get(reg, hash_name[i], 1);
-              if (d1 == NULL || d1->type != Symbol)
+              if (d1 == NULL || d1->type != Slot)
                 {
-                  do_error("Cannot use `:` with non-symbol.",
+                  do_error("Cannot use `:` with non-slot.",
                            reg->task->task);
                   return NULL;
                 }
               else
                 {
                   d = get((object*) d->data,
-                          ((symbol*) d1->data)->key,
+                          ((slot*) d1->data)->key,
                           0);
                 }
             }
@@ -378,7 +378,7 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol
 
       if (d == NULL)
         {
-          do_error("Symbol not found in object.",
+          do_error("Slot not found in object.",
                    reg->task->task);
           return NULL;
         }
