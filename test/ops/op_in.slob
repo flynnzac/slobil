@@ -1,0 +1,23 @@
+#!./slobil -c
+source "src/library/assert.slob" .
+
+
+print "Start <in> test." .
+
+' Tests with correct usage
+
+set /x [ object /y True /z False . ] .
+assert /test ( in x ( answer y . ) . ) .
+assert /test ( in x ( not [ answer z . ] . ) . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( in 10 ( answer 10 . ) . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( in [ object /x 10 . ] . ) . ) .
+assert /test ( is-error ( in . ) . ) .
+
+print "Finished <in> test." .
+

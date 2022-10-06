@@ -1,0 +1,24 @@
+#!./slobil -c
+source "src/library/assert.slob" .
+
+
+print "Start <repeat> test." .
+
+' Tests with correct usage
+
+set /i 1 .
+
+assert /test ( repeat 9 ( incr i . ) . eq i 10 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( repeat 1.2 ( incr i . ) . ) . ) .
+assert /test ( is-error ( repeat 10 add . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( repeat 5 . ) . ) .
+assert /test ( is-error ( repeat . ) . ) .
+
+print "Finished <repeat> test." .
+

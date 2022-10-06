@@ -1,0 +1,23 @@
+#!./slobil -c
+source "src/library/assert.slob" .
+
+
+print "Start <list> test." .
+' Tests with correct usage
+
+set /x [ list 1 2 3 . ] .
+assert /test ( eq x:/t1 1 . ) .
+assert /test ( eq x:/t2 2 . ) .
+assert /test ( eq x:/t3 3 . ) .
+assert /test ( slot-eq [ last x /t . ] /t3 . ) .
+
+set /y [ list . ] .
+assert /test ( not [ exist /t0 y . ] . ) .
+
+' Test with wrong argument type
+' - Not Appliable
+
+' Test with incorrect number of arguments
+' - Not Applicable
+
+print "Finished <list> test." .

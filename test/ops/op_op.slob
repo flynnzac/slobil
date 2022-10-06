@@ -1,0 +1,20 @@
+#!./slobil -c
+source "src/library/assert.slob" .
+
+
+print "Start <op> test." .
+
+' Tests with correct usage
+
+assert /test ( eq [ [ op ( add s t . ) /t /s . ] 3 2 . ] 5 . ) .
+
+' Test with wrong argument type
+
+assert /test ( is-error ( op add /s /t . ) . ) .
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( op . ) . ) .
+
+print "Finished <op> test." .
+

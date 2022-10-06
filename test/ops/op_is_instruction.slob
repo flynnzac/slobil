@@ -1,0 +1,19 @@
+#!./slobil -c
+source "src/library/assert.slob" .
+
+
+print "Start <is-instruction> test." .
+
+' Tests with correct usage
+
+assert /test ( is-instruction ( print "hello" . ) . ) .
+assert /test ( not [ is-instruction add . ] . ) .
+
+' Test with wrong argument type
+
+' Test with incorrect number of arguments
+
+assert /test ( is-error ( is-instruction . ) . ) .
+
+print "Finished <is-instruction> test." .
+
