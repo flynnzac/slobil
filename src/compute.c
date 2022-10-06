@@ -97,12 +97,13 @@ _op_call (arg a, registry* reg, const int explicit)
       ans = get(r_new, reg->task->task->arbel_hash_ans, 0);
       if (ans != NULL)
         {
-          mark_do_not_free(r_new, reg->task->task->arbel_hash_ans);
+          mark_do_not_free(r_new,
+                           reg->task->task->arbel_hash_ans);
           ret_ans(reg, ans);
         }
     }
-  free_registry(r_new);
   
+  free_registry(r_new);
 }
 
 void
@@ -164,6 +165,9 @@ compute (data* cmd, registry* reg, arg a)
       break;
     case Register:
       auto_set(a, reg);
+      break;
+    case Registry:
+      method_call(a, reg);
       break;
     default:
       do_error("Tried to compute something that is not an operation or instruction.", reg->task->task);

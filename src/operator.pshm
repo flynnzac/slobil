@@ -1191,7 +1191,48 @@ op_last (arg a, registry* reg)
   
 }
 
+void
+method_call (arg a, registry* reg)
+{
+  #op=method-call@
+  #length=1@
+  ##CHECK_ARGS~$;
 
+  #num=0@
+  #type=Registry@
+  ##GETARG~$;
+
+  #num=1@
+  #type=Register@
+  ##GETARG~$;
+
+  data* instr = get((registry*) arg0->data,
+                    ((regstr*) arg1->data)->key,
+                    0);
+
+  if (instr == NULL)
+    {
+      do_error("Register not found in registry.",
+               reg->task->task);
+      return;
+    }
+
+  if (!(instr->type & Instruction))
+    {
+      do_error("Method must be an instruction.",
+               reg->task->task);
+      return;
+    }
+
+  arg b = shift_arg_right(a);
+  b.arg_array[0] = instr;
+
+  registry* tmp = reg->up;
+  reg->up = (registry*) arg0->data;
+  _op_call(b, reg, 0);
+  reg->up = tmp;
+  
+}
 
 void
 op_in (arg a, registry* reg)

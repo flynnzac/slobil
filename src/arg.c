@@ -35,6 +35,21 @@ gen_arg (int length, int def_free)
   return a;
 }
 
+arg
+shift_arg_right(arg a)
+{
+  arg b;
+
+  b.arg_array = malloc(sizeof(data*)*(a.length-1));
+  b.free_data = malloc(sizeof(int)*(a.length-1));
+  for (size_t i=1; i < a.length; i++)
+    b.arg_array[i-1] = a.arg_array[i];
+
+  b.length = a.length - 1;
+  b.free_data = a.free_data+1;
+  return b;
+}
+
 data*
 resolve (data* arg, registry* reg)
 {

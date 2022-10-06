@@ -516,6 +516,9 @@ _op_call (arg a, registry* reg, const int explicit);
 void
 auto_set (arg a, registry* reg);
 
+void
+method_call (arg a, registry* reg);
+
 size_t
 new_hash_size (size_t elements);
 
@@ -549,6 +552,8 @@ copy_instruction (instruction* inst0);
 task_vars*
 copy_task_vars (task_vars* task0);
 
+arg
+shift_arg_right(arg a);
 
 /* task is an interpreter states */
 
