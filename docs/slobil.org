@@ -186,22 +186,29 @@ The brackets call the Instruction =fraction= and set the Slot =/t1= to the value
 
 ** Objects
 
-In SLOBIL, code is executed inside /Objects/.  Objects are also the most flexible datatype in SLOBIL. Objects are both data structures and define what slots (variables) are in scope.   Because objects are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level object.  To create a new one, use the =object= operation,
+/Objects/ are a flexible datatype. Objects define the scope and environment in which code executes.  Objects have Slots for inserting data so they also function like a =dict= or =struct=.  They are also the basic unit for building object-oriented programs.  
+
+Objects define what slots (variables) are in scope.   When you start the interpreter, you are already inside the default, top-level object.  The top-level Object has Slots containing the default location of the basic Operations of the programming language. To create a new Object, use the =object= Operation,
 
    #+BEGIN_SRC slobil
-   ... object /hello "Hello, world!" /x 10 .
+     ... object /hello "Hello, world!" /x 10 .
+     ans = an Object with:
+     x of type Integer, value: 10
+     hello of type String, value: "Hello, world!"
    #+END_SRC
 
-   The =object= operation puts a new object in the =/ans= slot.  This object has a =/hello= slot bound to the value ="Hello, world!"= and the =/x= slot bound to the value =10=.  Usually, you will want to bind the value to another slot besides =/ans= which will be overwritten by subsequent statements. You can do either of:
+The =object= operation inserts a new Object into the =/ans= slot.  This object has a =/hello= slot bound to the value ="Hello, world!"= and the =/x= slot bound to the value =10=.  Usually, you will want to bind the value to another slot besides =/ans= because many Operations write to =/ans= so the Object would be overwritten.  
    
    #+BEGIN_SRC slobil
-   ... object /hello "Hello, world!" /x 10 .
-   ... move /ans /my-object .
-   ... ' Or:
-   ... set /my-object [ object /hello "Hello, world!" /x 10 ] .
+     ... object /hello "Hello, world!" /x 10 .
+     ... move /ans /my-object .
+     ... ' Or:
+     ... set /my-object [ object /hello "Hello, world!" /x 10 ] .
+     ... ' Or:
+     ... /my-object [ object /hello "Hello, world!" /x 10 ] .
    #+END_SRC
 
-   To access values in a object, you can either use the =get= operation or the "colon notation":
+To access an Object's slots, use either the =get= operation or a colon:
 
    #+BEGIN_SRC slobil
    ... get /hello my-object .
@@ -212,17 +219,14 @@ In SLOBIL, code is executed inside /Objects/.  Objects are also the most flexibl
    Error: Value at `/hello` not found.
    #+END_SRC
 
-   From the last line, we can see that the value =hello= exists only in the object located at =/my-object= which we are not currently in.  So we cannot access its =/hello= slot directly.  
-
-We can execute an instruction inside a certain object by using the =in= command.
+From the last line, we can see that the slot =/hello= does not contain any data in the current Object in which we are executing code.  If we wrote this code in the Object located at =my-object=, we could access the data located at =/hello=. The =in= Operation executes code inside another Object:
 
    #+BEGIN_SRC slobil
    ... in my-object ( print [ combine hello " Goodbye!" ] . ) .
    Hello, world! Goodbye!
    #+END_SRC
    
-
-   We can import values from one object into their corresponding slots in the current object by using the =import= operation.
+We can also import values from one object into their corresponding slots in the current object by using the =import= operation.
 
    #+BEGIN_SRC slobil
    ... import my-object .
@@ -231,7 +235,7 @@ We can execute an instruction inside a certain object by using the =in= command.
    #+END_SRC
    
 
-   Aside from being a useful data structure, objects can be used as /namespaces/.  For example,
+Objects can also be used as /namespaces/.  For example,
 
    #+BEGIN_SRC slobil
    ... set /math [ object ] .
@@ -250,27 +254,41 @@ We can execute an instruction inside a certain object by using the =in= command.
    ans = 120
    #+END_SRC       
 
-   You can assign instructions inside objects and then they can be called from that object using the colon notation.  This code block also demonstrates that the =set= operation optionally takes a third argument: the object in which to set the slot.  When omitted, it sets the slot in the current object.
+As we can see above, the =set= operation optionally takes a third argument: the Object in which to set the given Slot.  Without the third argument, =set= sets the slot in the current Object.
 
-   If you don't need to worry about name collisions, you can =import= it.
+Objects are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
 
-   #+BEGIN_SRC slobil
-   ... import math .
-   ... factorial /t 5 .
-   ans = 120
-   #+END_SRC
-
-   Objects are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
-
-
-   Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
+Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
 
    #+BEGIN_SRC slobil
    ... set /rectangle [ object /area ( mul W L ) ] .
    ... set /rect1 [ new rectangle /W 5 /L 4 ] .
    #+END_SRC
 
-   =/rect1= will now contain an object that inherits from the object at =/rectangle=.  If you make changes to the object currently located at =/rectangle=, it will be reflected in the object currently at =/rect1=.  Importantly, the objects are what matters not the slot at which they are stored.  Slots are locations, not values.  So if you move the =/rectangle= object to some other slot, that will not change anything.  Similarly, if you overwrite the =/rectangle= slot with a new value, this will not change the object located at =/rect1=.
+=/rect1= will now contain an object that inherits from the object at =/rectangle=.  If you make changes to the object currently located at =/rectangle=, it will be reflected in the object currently at =/rect1=.  Importantly, the objects are what matters not the slot at which they are stored.  Slots are locations, not values.  So if you move the =/rectangle= object to some other slot, that will not change anything.  Similarly, if you overwrite the =/rectangle= slot with a new value, this will not change the object located at =/rect1=.
+
+To call Instructions located in an Object from inside the Object, we could use the =in= Operation, but because this is a common thing to do (it is akin to message passing or method calls in other object-oriented languages), SLOBIL provides a convient syntax.  Simply type the name of the Object as the first element of the statement followed by a Slot and SLOBIL will assume this is what you want to do.  For example,
+
+#+BEGIN_SRC slobil
+... in rect1 ( area ) .
+ans = 20
+... rect1 /area .
+ans = 20
+#+END_SRC
+
+If we modify the base object, the modification will propogate to all the Objects that inherit from it.  Like so:
+
+#+BEGIN_SRC slobil
+... set /D 2 rectangle .
+... set /area ( mul W L D ) rectangle .
+... rect1 /area .
+ans = 40
+#+END_SRC
+
+
+
+
+
 
 *** Additional details about colon notation
 
