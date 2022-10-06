@@ -2,12 +2,12 @@
    A C Function to compute log(x+1) 
 */
 
-/* Change to wherever arbel.h is located or just "arbel.h" if it is on the path */
-#include "../src/arbel.h"
+/* Change to wherever slobil.h is located or just "slobil.h" if it is on the path */
+#include "../src/slobil.h"
 #include <math.h>
 
 void
-log_plus_one (arg a, registry* reg)
+log_plus_one (arg a, object* reg)
 {
   
   check_length(&a, 2, "log1", reg->task->task);

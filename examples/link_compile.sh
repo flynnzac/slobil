@@ -4,4 +4,4 @@
 ## library is installed in /usr/local/lib.  Modify path if installed elsewhere.
 
 gcc -c -fPIC -o link.o link.c
-gcc -shared -Wl,-rpath -Wl,/usr/local/lib -o link.so link.o -lbriple
+gcc -shared -Wl,-rpath -Wl,/usr/local/lib -o link.so link.o -lslobil
