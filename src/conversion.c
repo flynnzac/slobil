@@ -1,31 +1,31 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
 #include <errno.h>
-#include "arbel.h"
+#include "slobil.h"
 
 
 uint32_t *
-arbel_u8_to_u32 (const uint8_t *s, size_t n)
+slobil_u8_to_u32 (const uint8_t *s, size_t n)
 {
   const uint8_t *s_end = s + n;
   /* Output string accumulator.  */
@@ -110,7 +110,7 @@ arbel_u8_to_u32 (const uint8_t *s, size_t n)
 }
 
 uint8_t *
-arbel_u32_to_u8 (const uint32_t *s, size_t n)
+slobil_u32_to_u8 (const uint32_t *s, size_t n)
 {
   const uint32_t *s_end = s + n;
   /* Output string accumulator.  */

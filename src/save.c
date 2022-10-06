@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "slobil.h"
 #define BYT8 nbytes(8)
 #define BYT(s) nbytes(8*s)
 
@@ -261,7 +261,7 @@ read_object (gzFile f, object* reg)
           free(cache);
           break;
         case Object:
-          r = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+          r = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
           read_object(f, r);
           assign_object(&d, r, false, reg->task);
           break;
@@ -363,7 +363,7 @@ read_object (gzFile f, object* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_object(t->task->current_parse_object, ARBEL_HASH_SIZE, t);
+            t->state = new_object(t->task->current_parse_object, SLOBIL_HASH_SIZE, t);
             read_object(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
@@ -388,7 +388,7 @@ read_object (gzFile f, object* reg)
             free(cache);
 
             t->task->current_parse_object = t->state;
-            t->queued_instruction = new_object(NULL, ARBEL_HASH_SIZE, t);
+            t->queued_instruction = new_object(NULL, SLOBIL_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();

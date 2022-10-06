@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-`#include "arbel.h"'
+`#include "slobil.h"'
 
 `#include <errno.h>'
 
@@ -99,7 +99,7 @@ op_range (arg a, object* reg)
       #num=4@
       #type=String@
       ##GETARG~$;
-      prefix = arbel_u32_to_u8(
+      prefix = slobil_u32_to_u8(
                                (uint32_t*) arg4->data,
                                u32_strlen((uint32_t*)
                                           arg4->data)
@@ -227,7 +227,7 @@ op_new(arg a, object* reg)
   #type=Object@
   ##GETARG~$;
 
-  object* new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+  object* new = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
   new->inherit = (object*) arg1->data;
   data* out;
   assign_object(&out, new, false, reg->task);
@@ -912,7 +912,7 @@ op_source (arg a, object* reg)
   ##GETARG~$;
 
   
-  char* file = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* file = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
   FILE* f = fopen(file, "r");
@@ -993,7 +993,7 @@ op_do (arg a, object* reg)
     {
       arg_reg[i] = (object*) arg_registries[i]->data;
     }
-  object* ret_reg = new_object(reg, ARBEL_HASH_SIZE,
+  object* ret_reg = new_object(reg, SLOBIL_HASH_SIZE,
                                    reg->task);
   data* d;
   arg a1;
@@ -1042,7 +1042,7 @@ op_do (arg a, object* reg)
             continue;
 
           compute(arg1, reg, a1);
-          d = lookup(reg, reg->task->task->arbel_hash_ans, 0);
+          d = lookup(reg, reg->task->task->slobil_hash_ans, 0);
           if (d == NULL)
             {
               do_error("Instruction in <do> did not set /ans symbol.",
@@ -1253,7 +1253,7 @@ op_in (arg a, object* reg)
 
   execute_0(arg2, (object*) arg1->data);
   
-  data* ans = lookup((object*) arg1->data, reg->task->task->arbel_hash_ans, 0);
+  data* ans = lookup((object*) arg1->data, reg->task->task->slobil_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1283,7 +1283,7 @@ op_while (arg a, object* reg)
       if (is_error(-1, reg->task->task))
         break;
           
-      d = get(reg, reg->task->task->arbel_hash_ans, 0);
+      d = get(reg, reg->task->task->slobil_hash_ans, 0);
 
       if (d == NULL)
         {
@@ -1352,7 +1352,7 @@ op_to_symbol (arg a, object* reg)
 
   if (arg1->type == String)
     {
-      char* str = arbel_u32_to_u8((uint32_t*) arg1->data,
+      char* str = slobil_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
       assign_symbol(&d, str, hash_str(str));
       free(str);
@@ -1408,7 +1408,7 @@ op_collapse (arg a, object* reg)
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  object* r = new_object(to_walk, ARBEL_HASH_SIZE, reg->task);
+  object* r = new_object(to_walk, SLOBIL_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -1438,7 +1438,7 @@ op_collapse (arg a, object* reg)
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, reg->task->task->arbel_hash_ans, 0);
+      d1 = lookup(r, reg->task->task->slobil_hash_ans, 0);
 
       if (d1 == NULL)
         {
@@ -1450,7 +1450,7 @@ op_collapse (arg a, object* reg)
       if (is_first)
         {
           free(first_name);
-          first_hash = reg->task->task->arbel_hash_ans;
+          first_hash = reg->task->task->slobil_hash_ans;
           is_first = 0;
         }
       i++;
@@ -1458,7 +1458,7 @@ op_collapse (arg a, object* reg)
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, reg->task->task->arbel_hash_ans, 0);
+  d = lookup(r, reg->task->task->slobil_hash_ans, 0);
   if (d != NULL)
     {
       ret_ans(reg, copy_data(d));
@@ -1526,7 +1526,7 @@ op_char_eq (arg a, object* reg)
 
   size_t length = u32_strlen(str);
 
-  arbel_location(start, length);
+  slobil_location(start, length);
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
@@ -1643,7 +1643,7 @@ op_save (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* file = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* file = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
              
   save_outer(reg, file);
@@ -1663,7 +1663,7 @@ op_load (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* fname = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* fname = slobil_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
   
   gzFile f = gzopen(fname, "r");
@@ -1766,7 +1766,7 @@ op_to_string (arg a, object* reg)
       strcpy(result, symbol_name);
     }
 
-  uint32_t* res32 = arbel_u8_to_u32(result, strlen(result));
+  uint32_t* res32 = slobil_u8_to_u32(result, strlen(result));
   data* d;
   assign_str(&d, res32, 0);
   ret_ans(reg, d);
@@ -1789,7 +1789,7 @@ op_to_number (arg a, object* reg)
   if (arg1->type == String)
     {
       uint32_t* value = (uint32_t*) arg1->data;
-      char* u8_value = arbel_u32_to_u8(value, u32_strlen(value));
+      char* u8_value = slobil_u32_to_u8(value, u32_strlen(value));
       data* d;
       if (is_integer(u8_value))
         {
@@ -1859,7 +1859,7 @@ op_to_real (arg a, object* reg)
     d = copy_data(arg1);
   else
     {
-      char* u8value = arbel_u32_to_u8((uint32_t*) arg1->data,
+      char* u8value = slobil_u32_to_u8((uint32_t*) arg1->data,
                                     u32_strlen((uint32_t*) arg1->data));
 
       double result = atof(u8value);
@@ -1886,7 +1886,7 @@ op_output_code (arg a, object* reg)
 
   if (reg->task->task->source_code != NULL)
     {
-      char* fname = arbel_u32_to_u8((uint32_t*) arg1->data,
+      char* fname = slobil_u32_to_u8((uint32_t*) arg1->data,
                                   u32_strlen((uint32_t*) arg1->data));
       FILE* f = fopen(fname, "w");
       fwrite(reg->task->task->source_code, sizeof(char),
@@ -1922,7 +1922,7 @@ op_error (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* err_msg = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* err_msg = slobil_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
   
   do_error(err_msg, reg->task->task);
@@ -2039,7 +2039,7 @@ op_open_file (arg a, object* reg)
   ##GETARG~$;
 
   FILE* f;
-  char* fname = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* fname = slobil_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
   if (a.length >= 3)
     {
@@ -2047,7 +2047,7 @@ op_open_file (arg a, object* reg)
       #type=String@
       ##GETARG~$;
 
-      char* mode = arbel_u32_to_u8((uint32_t*) arg2->data,
+      char* mode = slobil_u32_to_u8((uint32_t*) arg2->data,
                                  u32_strlen((uint32_t*) arg2->data));
 
       f = fopen(fname, mode);
@@ -2135,7 +2135,7 @@ op_read_char (arg a, object* reg)
   else
     {
       c[nbytes] = '\0';
-      uint32_t* c32 = arbel_u8_to_u32(c, strlen(c));
+      uint32_t* c32 = slobil_u8_to_u32(c, strlen(c));
       assign_str(&d, c32, 0);
     }
   ret_ans(reg,d);
@@ -2275,7 +2275,7 @@ op_read_line (arg a, object* reg)
       if (!feof((FILE*) arg1->data))
         line[strlen(line)-1] = '\0';
 
-      uint32_t* u32_line = arbel_u8_to_u32(line, strlen(line));
+      uint32_t* u32_line = slobil_u8_to_u32(line, strlen(line));
       assign_str(&d, u32_line, 0);
 
 			#data=line@ 
@@ -2308,7 +2308,7 @@ op_write_string (arg a, object* reg)
   #type=File@
   ##GETARG~$;
 
-  char* text = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* text = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
   fwrite(text, sizeof(char), strlen(text), (FILE*) arg2->data);
@@ -2359,7 +2359,7 @@ op_input (arg a, object* reg)
   char* input = readline("");
   data* d;
 
-  uint32_t* str = arbel_u8_to_u32(input, strlen(input));
+  uint32_t* str = slobil_u8_to_u32(input, strlen(input));
                                 
   assign_str(&d, str, 0);
   
@@ -2379,7 +2379,7 @@ op_shell (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* cmd = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* cmd = slobil_u32_to_u8((uint32_t*) arg1->data,
                             u32_strlen((uint32_t*) arg1->data));
   FILE* f = popen(cmd, "r");
 
@@ -2398,12 +2398,12 @@ op_shell (arg a, object* reg)
     {
       if (d == NULL)
         {
-          raw = arbel_u8_to_u32(buffer, strlen(buffer));
+          raw = slobil_u8_to_u32(buffer, strlen(buffer));
           assign_str(&d, raw, 0);
         }
       else
         {
-          raw = arbel_u8_to_u32(buffer, strlen(buffer));
+          raw = slobil_u8_to_u32(buffer, strlen(buffer));
           d->data = realloc(d->data, sizeof(uint32_t)*(u32_strlen((uint32_t*) d->data)+u32_strlen(raw)+1));
           u32_strcat((uint32_t*) d->data, raw);
           free(raw);
@@ -2436,7 +2436,7 @@ op_link (arg a, object* reg)
   #num=3@
   ##GETARG~$;
 
-  char* file = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* file = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
   
   void* lib = dlopen(file, RTLD_LAZY);
@@ -2448,7 +2448,7 @@ op_link (arg a, object* reg)
       return;
     }
 
-  char* op_name = arbel_u32_to_u8((uint32_t*) arg2->data,
+  char* op_name = slobil_u32_to_u8((uint32_t*) arg2->data,
                                 u32_strlen((uint32_t*) arg2->data));
   
   operation new_op = dlsym(lib, op_name);
@@ -2459,25 +2459,25 @@ op_link (arg a, object* reg)
       return;
     }
 
-  char* arbel_op_name = arbel_u32_to_u8((uint32_t*) arg3->data,
+  char* slobil_op_name = slobil_u32_to_u8((uint32_t*) arg3->data,
                                     u32_strlen((uint32_t*) arg3->data));
   data* d;
   assign_op(&d, new_op, NULL, NULL, 0);
-  set(reg, d, arbel_op_name, 1);
+  set(reg, d, slobil_op_name, 1);
 
-  if (reg->task->task->arbel_ll == NULL)
+  if (reg->task->task->slobil_ll == NULL)
     {
-      reg->task->task->arbel_ll = malloc(sizeof(void*));
+      reg->task->task->slobil_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->task->arbel_ll = realloc(reg->task->task->arbel_ll,
-                                    sizeof(void*)*(reg->task->task->arbel_ll_cnt+1));
+      reg->task->task->slobil_ll = realloc(reg->task->task->slobil_ll,
+                                    sizeof(void*)*(reg->task->task->slobil_ll_cnt+1));
     }
-  reg->task->task->arbel_ll[reg->task->task->arbel_ll_cnt] = lib;
-  reg->task->task->arbel_ll_cnt++;
+  reg->task->task->slobil_ll[reg->task->task->slobil_ll_cnt] = lib;
+  reg->task->task->slobil_ll_cnt++;
 
-  free(arbel_op_name);
+  free(slobil_op_name);
   free(op_name);
   free(file);
 }
@@ -2496,10 +2496,10 @@ op_match (arg a, object* reg)
   #num=2@
   ##GETARG~$;
 
-  char* str1 = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
-  char* str2 = arbel_u32_to_u8((uint32_t*) arg2->data,
+  char* str2 = slobil_u32_to_u8((uint32_t*) arg2->data,
                              u32_strlen((uint32_t*) arg2->data));
   
 
@@ -2561,7 +2561,7 @@ op_match (arg a, object* reg)
                     }
                   to_add[j-matches[i].rm_so] = '\0';
 
-                  uint32_t* u32_add = arbel_u8_to_u32(to_add,
+                  uint32_t* u32_add = slobil_u8_to_u32(to_add,
                                                     strlen(to_add));
                   
                   assign_str(&d_str, u32_add, 0);
@@ -2610,13 +2610,13 @@ op_replace (arg a, object* reg)
   #num=3@
   ##GETARG~$;
 
-  char* str1 = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
-  char* str2 = arbel_u32_to_u8((uint32_t*) arg2->data,
+  char* str2 = slobil_u32_to_u8((uint32_t*) arg2->data,
                              u32_strlen((uint32_t*) arg2->data));
 
-  char* str3 = arbel_u32_to_u8((uint32_t*) arg3->data,
+  char* str3 = slobil_u32_to_u8((uint32_t*) arg3->data,
                              u32_strlen((uint32_t*) arg3->data));
 
 
@@ -2716,7 +2716,7 @@ op_replace (arg a, object* reg)
     }
   final[final_sz] = '\0';
 
-  uint32_t* u32_final = arbel_u8_to_u32(final,
+  uint32_t* u32_final = slobil_u8_to_u32(final,
                                       strlen(final));
   
   assign_str(&d, u32_final, 0);
@@ -2829,7 +2829,7 @@ op_change_dir (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* dir = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* dir = slobil_u32_to_u8((uint32_t*) arg1->data,
                             u32_strlen((uint32_t*) arg1->data));
 
   int error = chdir(dir);
@@ -2895,7 +2895,7 @@ op_current_dir (arg a, object* reg)
       return;
     }
   data* d;
-  uint32_t* u32dir = arbel_u8_to_u32(dir, strlen(dir));
+  uint32_t* u32dir = slobil_u8_to_u32(dir, strlen(dir));
   assign_str(&d, u32dir, 0);
 
   #data=dir@ 
@@ -2932,8 +2932,8 @@ op_substring (arg a, object* reg)
 
   size_t length = u32_strlen(str);
 
-  arbel_location(start, length);
-  arbel_location(end, length);
+  slobil_location(start, length);
+  slobil_location(end, length);
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
@@ -3001,7 +3001,7 @@ op_up (arg a, object* reg)
 
   compute(a1.arg_array[0], reg->up, a1);
 
-  data* d = lookup(reg->up, reg->task->task->arbel_hash_ans, 0);
+  data* d = lookup(reg->up, reg->task->task->slobil_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -3026,7 +3026,7 @@ op_code (arg a, object* reg)
 
   data* d;
   char* code = ((instruction*) arg1->data)->code;
-  uint32_t* u32code = arbel_u8_to_u32(code, strlen(code));
+  uint32_t* u32code = slobil_u8_to_u32(code, strlen(code));
   
   assign_str(&d, u32code, 0);
 
@@ -3045,12 +3045,12 @@ op_is_error (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->slobil_stop_error_threshold;
+  reg->task->task->slobil_stop_error_threshold = 0;
   execute_0(arg1, reg);
   data* d;
   assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->slobil_stop_error_threshold = stop_thresh;
 
   ret_ans(reg, d);
   is_error(0, reg->task->task);
@@ -3078,17 +3078,17 @@ op_ignore_errors (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->arbel_stop_error_threshold;
-  reg->task->task->arbel_stop_error_threshold = 0;
+  int stop_thresh = reg->task->task->slobil_stop_error_threshold;
+  reg->task->task->slobil_stop_error_threshold = 0;
   execute_0(arg1, reg);
-  reg->task->task->arbel_stop_error_threshold = stop_thresh;
+  reg->task->task->slobil_stop_error_threshold = stop_thresh;
 }
 
 void
 op_version (arg a, object* reg)
 {
   data* d;
-  uint32_t* u32version = arbel_u8_to_u32(PACKAGE_VERSION,
+  uint32_t* u32version = slobil_u8_to_u32(PACKAGE_VERSION,
                                        strlen(PACKAGE_VERSION));
   assign_str(&d, u32version, 0);
 
@@ -3143,7 +3143,7 @@ op_filter (arg a, object* reg)
               assign_symbol(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
-              data* d = lookup(reg, reg->task->task->arbel_hash_ans, 0);
+              data* d = lookup(reg, reg->task->task->slobil_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3254,7 +3254,7 @@ op_use (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  char* str1 = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* str1 = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
 
 
@@ -3400,7 +3400,7 @@ op_make_time (arg a, object* reg)
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  object* r = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+  object* r = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -3568,7 +3568,7 @@ op_task (arg a, object* reg)
   if (init_state == NULL)
     {
       t->state = new_object(t->task->current_parse_object,
-                              ARBEL_HASH_SIZE,
+                              SLOBIL_HASH_SIZE,
                               t);
     }
   else
@@ -3580,7 +3580,7 @@ op_task (arg a, object* reg)
   t->task->current_parse_object = t->state;
 
   t->code = copy_instruction((instruction*) arg2->data);
-  t->queued_instruction = new_object(NULL, ARBEL_HASH_SIZE, t);
+  t->queued_instruction = new_object(NULL, SLOBIL_HASH_SIZE, t);
   
   t->pid = -1;
   t->thread = NULL;
@@ -3939,7 +3939,7 @@ op_interpreter (arg a, object* reg)
 
       d2 = resolve(a.arg_array[i+1], reg);
       d2 = copy_data(d2);
-      set(reg->task->task->arbel_options,
+      set(reg->task->task->slobil_options,
           d2, ((symbol*) d1->data)->name, 1);
     }
 }
@@ -3960,7 +3960,7 @@ op_build (arg a, object* reg)
   ##GETARG~$;
   
 
-  char* loc = arbel_u32_to_u8((uint32_t*) arg1->data,
+  char* loc = slobil_u32_to_u8((uint32_t*) arg1->data,
                               u32_strlen((uint32_t*) arg1->data));
 
 
@@ -4224,7 +4224,7 @@ add_basic_ops (object* reg)
   assign_op(&d, op_sit, NULL, NULL, 0);
   set(reg,d,"sit",1);
 
-  /** Exit ARBEL **/
+  /** Exit SLOBIL **/
   
   assign_op(&d, op_exit, NULL, NULL, 0);
   set(reg,d,"exit",1);

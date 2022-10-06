@@ -1,26 +1,26 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#include "arbel.h"
+#include "slobil.h"
 
 element*
 append_literal_element (element* current, data* d)
@@ -137,7 +137,7 @@ execute_statement (statement* s, object* reg)
         {
           if (e->data == NULL)
             {
-              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/arbel .",
+              do_error("Literal not found.  This is a bug, please report to http://github.com/flynnzac/slobil .",
                        reg->task->task);
             }
           else
@@ -150,7 +150,7 @@ execute_statement (statement* s, object* reg)
           if (e->statement)
             {
               execute_code(e->s, reg);
-              d = get(reg, reg->task->task->arbel_hash_ans, 0);
+              d = get(reg, reg->task->task->slobil_hash_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans symbol.",
@@ -158,8 +158,8 @@ execute_statement (statement* s, object* reg)
                 }
               else 
                 {
-                  del(reg, reg->task->task->arbel_hash_ans, 0, false);
-                  /* mark_do_not_free(reg, arbel_hash_ans); */
+                  del(reg, reg->task->task->slobil_hash_ans, 0, false);
+                  /* mark_do_not_free(reg, slobil_hash_ans); */
                 }
             }
           else
@@ -216,8 +216,8 @@ execute_code (statement* s, object* reg)
     {
       execute_statement(stmt, reg);
       error = is_error(-1, reg->task->task) > error ? is_error(-1, reg->task->task) : error;
-      if (reg->task->task->arbel_stop_error_threshold > 0 &&
-          (error >= reg->task->task->arbel_stop_error_threshold))
+      if (reg->task->task->slobil_stop_error_threshold > 0 &&
+          (error >= reg->task->task->slobil_stop_error_threshold))
         {
           printf("-> ");
           print_statement(stmt);

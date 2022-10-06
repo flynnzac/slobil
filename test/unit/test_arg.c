@@ -1,4 +1,4 @@
-#include "arbel.h"
+#include "slobil.h"
 #include <check.h>
 #include <stdlib.h>
 
@@ -72,16 +72,16 @@ START_TEST(test_check_length)
   task0->pid = 0;
 
   check_length(&a, 12, "null", task0->task);
-  ck_assert_int_eq(task0->task->arbel_error, 0);
-  ck_assert_int_ne(task0->task->arbel_error, 1);
+  ck_assert_int_eq(task0->task->slobil_error, 0);
+  ck_assert_int_ne(task0->task->slobil_error, 1);
 
   check_length(&a, 5, "null", task0->task);
-  ck_assert_int_eq(task0->task->arbel_error, 0);
-  ck_assert_int_ne(task0->task->arbel_error, 1);
+  ck_assert_int_eq(task0->task->slobil_error, 0);
+  ck_assert_int_ne(task0->task->slobil_error, 1);
 
   check_length(&a, 20, "null", task0->task);
-  ck_assert_int_ne(task0->task->arbel_error, 0);
-  ck_assert_int_eq(task0->task->arbel_error, 1);
+  ck_assert_int_ne(task0->task->slobil_error, 0);
+  ck_assert_int_eq(task0->task->slobil_error, 1);
 
   
   

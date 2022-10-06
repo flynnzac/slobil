@@ -1,30 +1,30 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#ifndef ARBEL_H
-#define ARBEL_H
+#ifndef SLOBIL_H
+#define SLOBIL_H
 #define _GNU_SOURCE
-#define ARBEL_HASH_SIZE 31
-#define ARBEL_LOAD_FACTOR 0.75
+#define SLOBIL_HASH_SIZE 31
+#define SLOBIL_LOAD_FACTOR 0.75
 
 
 #include <stdio.h>
@@ -96,20 +96,20 @@ struct task_vars
 {
   struct object* current_parse_object;
   char* source_code;
-  void** arbel_ll;
-  int arbel_ll_cnt;
+  void** slobil_ll;
+  int slobil_ll_cnt;
 
-  size_t arbel_stop_error_threshold;
+  size_t slobil_stop_error_threshold;
 
   data* last_ans;
-  int arbel_error;
+  int slobil_error;
   int do_exit;
   
-  struct object* arbel_options;
+  struct object* slobil_options;
 
-  unsigned long arbel_hash_ans;
-  unsigned long arbel_hash_t;
-  unsigned long arbel_hash_underscore;
+  unsigned long slobil_hash_ans;
+  unsigned long slobil_hash_t;
+  unsigned long slobil_hash_underscore;
 
   bool reading;
 };
@@ -541,7 +541,7 @@ data*
 new_data();
 
 void
-arbel_location(mpz_t loc, int n);
+slobil_location(mpz_t loc, int n);
 
 int
 digits (int n);
@@ -591,10 +591,10 @@ free_task_vars (task_vars* t);
 /* string conversions */
 
 uint32_t*
-arbel_u8_to_u32 (const uint8_t* s, size_t n);
+slobil_u8_to_u32 (const uint8_t* s, size_t n);
 
 uint8_t*
-arbel_u32_to_u8 (const uint32_t* s, size_t n);
+slobil_u32_to_u8 (const uint32_t* s, size_t n);
 
 uint32_t*
 u32_str_to_le (const uint32_t* str);

@@ -1,26 +1,26 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
 
-#include "arbel.h"
+#include "slobil.h"
 
 struct parser_state
 fresh_state (int print) 
@@ -261,7 +261,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   else
                     {
                       str = escape_str(state->buffer);
-                      str32 = arbel_u8_to_u32(str, strlen(str));
+                      str32 = slobil_u8_to_u32(str, strlen(str));
                       assign_str(&d, str32, 0);
                     }
                   e = add_literal_argument(&head, e, d);
@@ -548,10 +548,10 @@ interact (FILE* f, parser_state* state, object* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, reg->task->task->arbel_hash_ans, 0);
+              d = get(reg, reg->task->task->slobil_hash_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
-                  data* opt = get(reg->task->task->arbel_options,
+                  data* opt = get(reg->task->task->slobil_options,
                                   hash_str("print-ans"),
                                   0);
                   bool print_out = true;

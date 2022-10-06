@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "slobil.h"
 
 arg
 gen_arg (int length, int def_free)
@@ -58,7 +58,7 @@ resolve (data* arg, object* reg)
       ((instruction*) arg->data)->being_called = true;
       execute_code(((instruction*) arg->data)->stmt, reg);
       ((instruction*) arg->data)->being_called = false;
-      return get(reg, reg->task->task->arbel_hash_ans, 0);
+      return get(reg, reg->task->task->slobil_hash_ans, 0);
     }
   else
     {

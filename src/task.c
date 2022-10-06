@@ -1,46 +1,46 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
 
-#include "arbel.h"
+#include "slobil.h"
 
 task_vars*
 new_task (task* t0)
 {
   task_vars* t = malloc(sizeof(task_vars));
-  object* reg = new_object(NULL, ARBEL_HASH_SIZE, t0);
+  object* reg = new_object(NULL, SLOBIL_HASH_SIZE, t0);
 
   is_exit(0, t);
   t->current_parse_object = reg;
 
-  t->arbel_stop_error_threshold = 1;
-  t->arbel_error = 0;
-  t->arbel_ll = NULL;
-  t->arbel_ll_cnt = 0;
+  t->slobil_stop_error_threshold = 1;
+  t->slobil_error = 0;
+  t->slobil_ll = NULL;
+  t->slobil_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
-  t->arbel_options = new_object(NULL, ARBEL_HASH_SIZE, t0);
-  t->arbel_hash_ans = hash_str("ans");
-  t->arbel_hash_t = hash_str("t");
-  t->arbel_hash_underscore = hash_str("_");
+  t->slobil_options = new_object(NULL, SLOBIL_HASH_SIZE, t0);
+  t->slobil_hash_ans = hash_str("ans");
+  t->slobil_hash_t = hash_str("t");
+  t->slobil_hash_underscore = hash_str("_");
   t->reading = false;
   t0->task = t;
 
@@ -233,19 +233,19 @@ end_task (task_vars* t)
   if (t->source_code != NULL)
     free(t->source_code);
 
-  if (t->arbel_ll != NULL)
+  if (t->slobil_ll != NULL)
     {
       int i;
-      for (i=0; i < t->arbel_ll_cnt; i++)
+      for (i=0; i < t->slobil_ll_cnt; i++)
         {
-          dlclose(t->arbel_ll[i]);
+          dlclose(t->slobil_ll[i]);
         }
 
-      free(t->arbel_ll);
+      free(t->slobil_ll);
     }
 
   free_object(t->current_parse_object);
-  free_object(t->arbel_options);
+  free_object(t->slobil_options);
 
   if (is_exit(-1, t)==0)
     return 0;

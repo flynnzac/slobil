@@ -1,26 +1,26 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "slobil.h"
 
 void
 ret (object* reg, data* d, const char* name)
@@ -63,7 +63,7 @@ _op_call (arg a, object* reg, const int explicit)
       return;
     }
 
-  object* r_new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+  object* r_new = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -94,11 +94,11 @@ _op_call (arg a, object* reg, const int explicit)
 
   if (!is_error(-1, reg->task->task))
     {
-      ans = get(r_new, reg->task->task->arbel_hash_ans, 0);
+      ans = get(r_new, reg->task->task->slobil_hash_ans, 0);
       if (ans != NULL)
         {
           mark_do_not_free(r_new,
-                           reg->task->task->arbel_hash_ans);
+                           reg->task->task->slobil_hash_ans);
           ret_ans(reg, ans);
         }
     }
@@ -115,7 +115,7 @@ do_operation (op_wrapper* op, object* reg, arg a)
     }
   else
     {
-      object* r_new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+      object* r_new = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
       data* d;
       size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
       for (int i=1; i < len; i++)
@@ -132,10 +132,10 @@ do_operation (op_wrapper* op, object* reg, arg a)
       data* ans;
       if (!is_error(-1, reg->task->task))
         {
-          ans = get(r_new, reg->task->task->arbel_hash_ans, 0);
+          ans = get(r_new, reg->task->task->slobil_hash_ans, 0);
           if (ans != NULL)
             {
-              mark_do_not_free(r_new, reg->task->task->arbel_hash_ans);
+              mark_do_not_free(r_new, reg->task->task->slobil_hash_ans);
               ret_ans(reg, ans);
             }
         }

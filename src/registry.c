@@ -1,25 +1,25 @@
 /* 
-   ARBEL is a Object Based Environment and Language
+   SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
-   This file is part of ARBEL.
+   This file is part of SLOBIL.
 
-   ARBEL is free software: you can redistribute it and/or modify
+   SLOBIL is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARBEL is distributed in the hope that it will be useful,
+   SLOBIL is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARBEL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
+   along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
 
-#include "arbel.h"
+#include "slobil.h"
 
 content*
 new_content ()
@@ -90,9 +90,9 @@ set (object* reg, data* d, const char* name, int rehash_flag)
       strcpy(new_c->name, name);
       new_c->key = hash_name;
       reg->elements++;
-      if (rehash_flag && (reg->elements > (ARBEL_LOAD_FACTOR*(reg->hash_size))))
+      if (rehash_flag && (reg->elements > (SLOBIL_LOAD_FACTOR*(reg->hash_size))))
         {
-          data* check_hash = get(reg->task->task->arbel_options,
+          data* check_hash = get(reg->task->task->slobil_options,
                                  hash_str("auto-rehash"), 0);
           bool check = true;
 
@@ -123,7 +123,7 @@ get (object* reg, unsigned long hash_name, int recursive)
   if (reg == NULL)
     return NULL;
 
-  if (hash_name == reg->task->task->arbel_hash_underscore)
+  if (hash_name == reg->task->task->slobil_hash_underscore)
     {
       data* d;
       assign_object(&d, reg, false, reg->task);
@@ -438,7 +438,7 @@ tail (content* c)
 int
 update_hash_size (size_t elements, size_t hash_size)
 {
-  return elements > (hash_size*ARBEL_LOAD_FACTOR);
+  return elements > (hash_size*SLOBIL_LOAD_FACTOR);
 }
     
   
@@ -446,9 +446,9 @@ update_hash_size (size_t elements, size_t hash_size)
 size_t
 new_hash_size (size_t elements)
 {
-  size_t hash_size = ceil((double) elements / ARBEL_LOAD_FACTOR);
-  size_t factor = (hash_size / ARBEL_HASH_SIZE) + 1;
-  return ARBEL_HASH_SIZE*factor;
+  size_t hash_size = ceil((double) elements / SLOBIL_LOAD_FACTOR);
+  size_t factor = (hash_size / SLOBIL_HASH_SIZE) + 1;
+  return SLOBIL_HASH_SIZE*factor;
 }
   
 void

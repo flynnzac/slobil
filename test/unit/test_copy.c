@@ -1,4 +1,4 @@
-#include "arbel.h"
+#include "slobil.h"
 #include <check.h>
 #include <stdlib.h>
 

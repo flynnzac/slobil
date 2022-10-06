@@ -8,10 +8,10 @@ SUFFIXES = .pshm .arb
 # 	./$< > $@
 
 
-bin_PROGRAMS = arbel
-arbel_SOURCES = src/arbel.c
-arbel_DEPENDENCIES = libarbel.la
-arbel_CFLAGS = $(AM_CFLAGS) -larbel
+bin_PROGRAMS = slobil
+slobil_SOURCES = src/slobil.c
+slobil_DEPENDENCIES = libslobil.la
+slobil_CFLAGS = $(AM_CFLAGS) -lslobil
 
 man1_MANS = docs/arbel.1
 
@@ -67,17 +67,17 @@ TESTS += test/unit/test_copy
 
 
 
-lib_LTLIBRARIES = libarbel.la
-libarbel_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
+lib_LTLIBRARIES = libslobil.la
+libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
 
-libarbel_la_SOURCES += src/operator.pshm
+libslobil_la_SOURCES += src/operator.pshm
 
 test_unit_test_arg_SOURCES = test/unit/test_arg.c
-test_unit_test_arg_DEPENDENCIES = libarbel.la
-test_unit_test_arg_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -larbel
+test_unit_test_arg_DEPENDENCIES = libslobil.la
+test_unit_test_arg_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lslobil
 
 test_unit_test_copy_SOURCES = test/unit/test_copy.c
-test_unit_test_copy_DEPENDENCIES = libarbel.la
-test_unit_test_copy_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -larbel
+test_unit_test_copy_DEPENDENCIES = libslobil.la
+test_unit_test_copy_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lslobil
 
 
