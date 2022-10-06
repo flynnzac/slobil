@@ -10,6 +10,8 @@
 
 * Introduction
 
+*This documentation is being revised.*
+
 * The Language
 ** Statements and syntax
 
@@ -208,21 +210,15 @@
    Error: Value at `/hello` not found.
    #+END_SRC
 
-   From the last line, we can see that the value =hello= exists only in the object located at =/my-object= which we are not currently in.  So we cannot access its =/hello= slot directly.  We can change which object we are in with the =go-in= operation.
+   From the last line, we can see that the value =hello= exists only in the object located at =/my-object= which we are not currently in.  So we cannot access its =/hello= slot directly.  
+
+We can execute an instruction inside a certain object by using the =in= command.
+
+   #+BEGIN_SRC slobil
+   ... in my-object ( print [ combine hello " Goodbye!" ] . ) .
+   Hello, world! Goodbye!
+   #+END_SRC
    
-   #+BEGIN_SRC slobil
-   ... go-in hello .
-   ... print hello .
-   Hello, world!
-   #+END_SRC
-
-   We can go back to the object we were in previously by using the =go-out= operation.
-
-   #+BEGIN_SRC slobil
-   ... go-out .
-   ... print hello .
-   Error: Value at `/hello` not found.
-   #+END_SRC
 
    We can import values from one object into their corresponding slots in the current object by using the =import= operation.
 
@@ -232,14 +228,8 @@
    Hello, world!
    #+END_SRC
    
-   We can also execute an instruction inside a certain object by using the =in= command.
 
-   #+BEGIN_SRC slobil
-   ... in my-object ( print [ combine hello " Goodbye!" ] . ) .
-   Hello, world! Goodbye!
-   #+END_SRC
-
-   Aside from being a useful data structure, objects are also how SLOBIL does /namespaces/.  For example,
+   Aside from being a useful data structure, objects can be used as /namespaces/.  For example,
 
    #+BEGIN_SRC slobil
    ... set /math [ object ] .
@@ -269,6 +259,16 @@
    #+END_SRC
 
    Objects are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+
+
+   Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
+
+   #+BEGIN_SRC slobil
+   ... set /rectangle [ object /area ( mul W L ) ] .
+   ... set /rect1 [ new rectangle /W 5 /L 4 ] .
+   #+END_SRC
+
+   =/rect1= will now contain an object that inherits from the object at =/rectangle=.  If you make changes to the object currently located at =/rectangle=, it will be reflected in the object currently at =/rect1=.  Importantly, the objects are what matters not the slot at which they are stored.  Slots are locations, not values.  So if you move the =/rectangle= object to some other slot, that will not change anything.  Similarly, if you overwrite the =/rectangle= slot with a new value, this will not change the object located at =/rect1=.
 
 *** Additional details about colon notation
 
