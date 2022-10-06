@@ -1,36 +1,36 @@
 .\" Copyright (C) Zach Flynn, 2022
 .\" You may distribute this file under the terms of the GNU Free
 .\" Documentation License.
-.TH ARBEL 1 2020-01-13 
+.TH SLOBIL 1 2020-01-13 
 .SH NAME
-ARBEL \- A Registry Based Language and Environment
+SLOBIL \- A Registry Based Language and Environment
 .SH SYNOPSIS
-.B arbel [-l FILE] [-s FILE] [-c FILE] [-n] [-m] [-d] [-v]
+.B slobil [-l FILE] [-s FILE] [-c FILE] [-n] [-m] [-d] [-v]
 
 .SH DESCRIPTION
 
-ARBEL is an programming language and environment for manipulating data
+SLOBIL is an programming language and environment for manipulating data
 in registries.  For full documentation on the language itself, see
-the manual at: http://zflynn.com/arbel/arbel.html . This manpage
+the manual at: http://zflynn.com/slobil/slobil.html . This manpage
 describes the options for the interpreter.
 .SH OPTIONS
 .TP
 .BR \-l " " FILE
-Execute the ARBEL code in FILE before starting the ARBEL interpreter
+Execute the SLOBIL code in FILE before starting the SLOBIL interpreter
 .TP
 .BR \-s " " FILE
-Execute the ARBEL code in FILE after any code was loaded by the
+Execute the SLOBIL code in FILE after any code was loaded by the
 .BR \-l
 option and exit afterwards.
 .TP
 .BR \-c " " FILE
 The same as \-s except that the first line of the file is treated as a
 comment no matter what it contains (so the sha-bang shell script
-syntax will work).  Start files with #!/path/to/arbel -c and make them
+syntax will work).  Start files with #!/path/to/slobil -c and make them
 executable to run as a script.
 .TP
 .BR \-p " " PORT
-Run ARBEL in Socket mode.  Allows you to send commands to the ARBEL environment through a port specified in the option.
+Run SLOBIL in Socket mode.  Allows you to send commands to the SLOBIL environment through a port specified in the option.
 .TP
 .BR \-n
 Do not start the interpreter.  Only useful with an
@@ -39,7 +39,7 @@ option
 .TP
 .BR \-m
 Do not print any information (the results of a command, etc) unless
-there is an explicit call to ARBEL's
+there is an explicit call to SLOBIL's
 .B print
 operation.
 .TP
@@ -47,15 +47,15 @@ operation.
 Do not save the code that you enter in the interpreter.
 .TP
 .BR \-v
-Print out ARBEL version string and exit.
+Print out SLOBIL version string and exit.
 .TP
 .BR \-u
-Builds and installs a ARBEL package with a Make.arbel file in current directory
+Builds and installs a SLOBIL package with a Make.slobil file in current directory
 
 .SH FILES
 .SH "SEE ALSO"
 .SH BUGS
-Please report any bugs at http://github.com/flynnzac/arbel
+Please report any bugs at http://github.com/flynnzac/slobil
 
 .SH AUTHOR
 Zach Flynn <zlflynn@gmail.com>

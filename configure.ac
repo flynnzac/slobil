@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([SLOBIL], [0.1.0-rc1], [github.com/flynnzac/arbel])
+AC_INIT([SLOBIL], [0.1.0-rc1], [github.com/flynnzac/slobil])
 AC_CONFIG_SRCDIR([src/slobil.c])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_SUBDIRS([pushmac])
