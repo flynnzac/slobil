@@ -96,7 +96,7 @@ main (int argc, char** argv)
           complete = interact(f, &state,
                               task0->task->current_parse_object);
           fclose(f);
-          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".dslobil")+1));
+          char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".dslob")+1));
           for (int idx = 0; idx < strlen(optarg); idx++)
             {
               if (optarg[idx]=='.')
@@ -113,7 +113,7 @@ main (int argc, char** argv)
                   newname[idx+1] = '\0';
                 }
             }
-          strcat(newname, ".dslobil");
+          strcat(newname, ".dslob");
           save_outer(task0->task->current_parse_object, newname);
           early_stop = true;
           break;

@@ -3261,9 +3261,9 @@ op_use (arg a, object* reg)
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen(str1)+
-                                     strlen(".darbs/")+
-                                     strlen("/.darb")+1));
-  sprintf(fname, "%s/.darbs/%s.darb", home, str1);
+                                     strlen(".dslobs/")+
+                                     strlen("/.dslob")+1));
+  sprintf(fname, "%s/.dslobs/%s.dslob", home, str1);
   gzFile f = gzopen(fname, "r");
   if (f == NULL)
     {
@@ -3967,9 +3967,9 @@ op_build (arg a, object* reg)
   char* home = getenv("HOME");
   char* fname = malloc(sizeof(char)*(strlen(home)+
                                      strlen(loc)+
-                                     strlen(".darbs/")+
-                                     strlen("/.darb")+1));
-  sprintf(fname, "%s/.darbs/%s.darb", home, loc);
+                                     strlen(".dslobs/")+
+                                     strlen("/.dslob")+1));
+  sprintf(fname, "%s/.dslobs/%s.dslob", home, loc);
 
   data* d = copy_data(arg2);
   save_outer((object*) d->data, fname);
