@@ -13,33 +13,36 @@
 *This documentation is being revised.*
 
 * The Language
+
+Everything in SLOBIL is Data.  SLOBIL takes the approach of defining a few, flexible data structures and pairs it with a prototype-based object-oriented programming system.  SLOBIL programmers do not create new types of data.  Instead they make use of the flexible Object data type to create the data structures needed for their programs.
+
 ** Statements and syntax
 
-   A single line of SLOBIL code is called a statement.  The first element of the statement is one of SLOBIL's /operators/ and the other elements are arguments to the operator.  Statements, like sentences, end with periods. For example,
+A statement is a single line of code.  All statements start with one of SLOBIL's /operators/ and the other elements are arguments to the operator. Statements end with periods. For example,
   
    #+BEGIN_SRC slobil
    ... set /hello "Hello, world!" .
    #+END_SRC
 
-   =set= is the SLOBIL operation to set a slot to a certain value.  The above code sets the slot =/hello= to the String value ="Hello, world!=. Names that have a forward slash preceeding them are /slots/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in SLOBIL:
+=/hello= is a Slot.  Slots are locations where data is stored.  They also act as symbols.  ="Hello, world!"= is a String.  Strings in SLOBIL are enclosed in double quotes. =set= is an Operation.  It inserts data at a given slot.  So, the code above sets the Slot =/hello= to refer to the String data ="Hello, world!=. Names that have a forward slash preceeding them are /slots/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in SLOBIL:
 
    #+BEGIN_SRC slobil
    ... set /days-in-week 7 .
    ... set /penny 0.01 .
    ... set /facts True .
    ... set /lies False .
-   ... set /add-one ( add t 1 . ) .
+   ... set /add-one ( add t 1 ) .
    #+END_SRC
 
-   An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, "(" and ")").  Instructions can be executed later inside objects perhaps different than the objects in which they were initially defined.
+An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, =(= and =)=).  Instructions can be executed in any Object.  They are not "bound" to the object in which they are initially defined.
 
-   To use the value located in a object, simply type the name of the slot without the preceeding forward slash.  For example,
+To use the value located in a Slot, simply type the name of the Slot without the preceeding forward slash.  For example,
    #+BEGIN_SRC slobil
   ... print days-in-week .
   7
    #+END_SRC
 
-   All code elements must be separated by whitespace in SLOBIL including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
+All code elements must be separated by whitespace including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
 
    #+BEGIN_SRC slobil
 	' All are WRONG:
@@ -47,20 +50,20 @@
 	set /add-one (add t 1 .) .
    #+END_SRC
 
-   There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
+There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
 
-   There are four parenthesis types in SLOBIL: open parentheis ("()"), closed parenthesis ("[]"), curly parenthesis ("{}"), and angle brackets ("<>").  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets are used for defining new operations from instructions.
+There are four parenthesis types in SLOBIL: open parentheis (=()=), closed parenthesis (=[]=), curly parenthesis (={}=), and angle brackets (=<>=).  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets create new Operations from Instructions.
 
 *** Instructions
 
-    Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
+Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
     #+BEGIN_SRC slobil
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
      ans = 11
     #+END_SRC
 
-    =call= takes an instruction and then assigns each of the slots that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of slots to set for any Instruction.  For example, 
+=call= takes an instruction and then assigns each of the slots that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of slots to set for an Instruction.  For example, 
     #+BEGIN_SRC slobil
      ... set /add-one ( add t 1 . ) .
      ... call add-one /t 10 .
@@ -69,31 +72,31 @@
      ans = 9
     #+END_SRC
 
-    Any object in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
+Any element in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
 
-    Because there is no ambiguity, you do not actually need to use the =call= operation directly.  SLOBIL will insert it for you if the first argument is an instruction.  So the following would work as well,
+Because there is no ambiguity, you do not actually need to use the =call= operation directly.  SLOBIL will insert it for you if the first argument is an instruction.  So the following would work as well,
     #+BEGIN_SRC slobil
      ... add-one /t 10 .
      ans = 11
     #+END_SRC
 
-    Instruction objects can also be used in the =while= looping operation and in several other operations.  
+Instructions are used in loops and in several other operations.  
 
 *** Greedy substatements and the =/ans= slot
 
-    Closed parenthesis ("[]") execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= slot to.  The purpose of these statements is to avoid needing to define temporary slots for intermediate calculations.  For example,
+Closed parenthesis (=[]=) execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= Slot to.  The purpose of these statements is to avoid needing to define temporary slots for intermediate calculations.  For example,
     #+BEGIN_SRC slobil
-     ... add [ sub 5 3 . ] [ mul 2 3 . ] .
+     ... add [ sub 5 3 ] [ mul 2 3 ] .
      ans = 8
     #+END_SRC
 
-    You may have noticed the =ans = ...= after entering some commands.  This tells you the current value of the =/ans= slot which is special in SLOBIL.  Operations often write to the =/ans= slot in the object from which they are called.  It is the way to "return" values after calling an operation or instruction.  You can set any value to the =/ans= slot in the current object by using the =answer= operation.
+You may have noticed the =ans = ...= after entering a statement.  This line tells you the current value of the =/ans= Slot which is special in SLOBIL.  Operations often write to the =/ans= Slot in the Object from which they are called.  It is the way to "return" values after calling an Operation or Instruction.  You can set any value to the =/ans= slot in the current Object by using the =answer= operation.
     #+BEGIN_SRC slobil
      ... answer 10 .
      ans = 10
     #+END_SRC
 
-    The =/ans= slot is special because, after an Instruction finishes running in its temporary object, whatever the value at the =/ans= slot is in that object is moved to the =/ans= slot in the object that called the instruction.  For example,
+In many ways, the =/ans= Slot is similar to any other Slot. The =/ans= slot is special because, after an Instruction finishes running in its temporary Object, whatever the value at the =/ans= Slot is in that Object is moved to the =/ans= slot in the object that called the instruction.  For example,
     #+BEGIN_SRC slobil
      ... add 10 12 .
      ans = 22
@@ -104,15 +107,15 @@
      11
     #+END_SRC
 
-    The other reason that the =/ans= slot is special is, as mentioned, closed parenthesis evaluate to the value the statements inside them set the =/ans= slot to.  Because =sub 5 3 .= sets the =/ans= slot to =2= and =mul 2 3 .= sets the =/ans= slot to =6=, =add [ sub 5 3 . ] [ mul 2 3 . ] .= sets the =/ans= slot to =8=.
+The other special feature of the =/ans= slot is that statements enclosed in closed parenthesis evaluate to the value the statements inside them set the =/ans= Slot to.  Because =sub 5 3 .= sets the =/ans= Slot to =2= and =mul 2 3 .= sets the =/ans= Slot to =6=, =add [ sub 5 3 . ] [ mul 2 3 . ] .= sets the =/ans= Slot to =8=.
 
 *** Lazy substatements (Expressions)
 
-    Curly parenthesis ("{}") also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression which is, like for the closed parenthesis, the value the statements set the =/ans= slot to.  This form of evaluation is often called "lazy evaluation".  SLOBIL calls this data type an "Expression". We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
+Curly parenthesis (={}=) also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression.  The value of the expression, if it is evaluated, is the value the statements enclosed in curly parenthesis set the =/ans= slot to.  SLOBIL calls this data type an "Expression" before it is evaluated. We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
     #+BEGIN_SRC slobil
-     ... set /gt-4
+     ... /gt-4
      (
-       set /str-t [ to-string t . ] . 
+       /str-t [ to-string t . ] . 
        if [ gt t 4 . ]
           { print [ combine str-t " is greater than 4.\n" . ] . }
           { print [ combine str-t " is less than or equal to 4.\n" . ] . } .
@@ -123,11 +126,11 @@
     3 is less than or equal to 4.
     #+END_SRC
 
-    It works this way because the =if= operation returns the second value if the first value is =True= and the third value if the first value is =False=.  So it tries to access the second value when =t= is =10=, executing the statements in the second argument, and similarly for the third argument when =t= is =3=.
+It works this way because the =if= operation returns the second value if the first value is =True= and the third value if the first value is =False=.  So it tries to access the second value when =t= is =10=, executing the statements in the second argument, and similarly for the third argument when =t= is =3=.
 
-    If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing (the instruction object could be called to actually do the print later).
+If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing.
 
-    Unlike instructions, expressions are evaluated in the object calling them instead of a temporary object inside the calling object. So, for example they can move slots in the calling object:
+Unlike instructions, expressions are evaluated in the object calling them instead of a temporary object inside the calling object. So, for example they can move slots in the calling object:
 
     #+BEGIN_SRC slobil
     ... set /test ( set /x 2 . sit y . print z . ) .
@@ -135,11 +138,11 @@
     2
     #+END_SRC
 
-    Note: =sit= is an operation that does nothing but evaluate any substatements in its arguments.
+Note: =sit= is an operation that does nothing but evaluate any Expressions in its arguments.
     
 *** Convert an instruction to an operation
 
-    Angle brackets (<>) transform an instruction object into an operation object.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever object the caller of the instruction defines.  Operations execute with a fixed set of positional arguments determining the object the code executes in.  All of the built-in features of the language are operations, but most programmer-defined code is an instruction.  Occasionally, it is useful to transform instructions into operations.  This transformation is a lot like a procedure definition in other languages. Angle brackets or the =op= operation provide two alternative ways of doing this.   For example:
+    Angle brackets (<>) transform an Instruction object into an Operation object.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever Object the caller of the Instruction chooses.  Operations execute with a fixed set of positional arguments determining the Object the code executes in.  All of the built-in features of the language are Operations, but most programmer-defined code is an Instruction.  Occasionally, it is useful to transform Instructions into Operations.  Angle brackets or the =op= Operation are two alternative ways to do the transformation.   For example:
     #+BEGIN_SRC slobil
      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
      ... fraction /t1 1 /t2 3.0 .
@@ -155,7 +158,9 @@
      ans = 0.75
     #+END_SRC
 
-    Note that there is no period used to end an operation definition in the angle brackets. The brackets call the instruction =fraction= and sets the slot =/t1= to the value of the first argument and the slot =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
+Note that there is no period used to end an operation definition in the angle brackets.
+
+The brackets call the Instruction =fraction= and set the Slot =/t1= to the value of the first argument and the slot =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
 
 *** Comments
 
@@ -164,9 +169,6 @@
    ... ' This is a correct comment
    ... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Slot /'This
     #+END_SRC
-
-    That is really it as far as syntax is concerned.  Periods terminate statements, parenthesis enclose statements controlling when they are executed, and slots start with a forward slash and their values are obtained by omitting the slash.  We now also know how to define our own instructions and how to call them and how to prepare statements for greedy or lazy evaluation.
-
 
 *** Ending Last Statement in a Substatement
 
@@ -184,7 +186,7 @@
 
 ** Objects
 
-   In SLOBIL, code is executed inside /objects/.  Objects are both data structures and define what slots (variables) are in scope.   Because objects are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level object.  To create a new one, use the =object= operation,
+In SLOBIL, code is executed inside /Objects/.  Objects are also the most flexible datatype in SLOBIL. Objects are both data structures and define what slots (variables) are in scope.   Because objects are full fledged data structures, you can switch scope easily or pass a scope as an argument. When you start the interpreter, you are already inside the default, top-level object.  To create a new one, use the =object= operation,
 
    #+BEGIN_SRC slobil
    ... object /hello "Hello, world!" /x 10 .
