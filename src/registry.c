@@ -44,6 +44,7 @@ new_registry (registry* up, size_t hash_size, task* t)
   r->elements = 0;
   r->task = t;
   r->being_modified = false;
+  r->inherit = NULL;
   
   for (int i = 0; i < hash_size; i++)
     {
@@ -128,9 +129,17 @@ get (registry* reg, unsigned long hash_name, int recursive)
       assign_registry(&d, reg, false, reg->task);
       return d;
     }
+  
   content* c = reg->objects[hash_name % reg->hash_size];
   if (c == NULL || is_init_reg(c))
     {
+      if (reg->inherit != NULL)
+        {
+          data* inherit =  get(reg->inherit, hash_name, 0);
+          if (inherit != NULL)
+            return inherit;
+        }
+      
       if (recursive)
         {
           return get(reg->up, hash_name, recursive);
@@ -155,6 +164,13 @@ get (registry* reg, unsigned long hash_name, int recursive)
           return c->value;
         }
       c = c->right;
+    }
+
+  if (reg->inherit != NULL)
+    {
+      data* inherit =  get(reg->inherit, hash_name, 0);
+      if (inherit != NULL)
+        return inherit;
     }
 
   if ((reg->up != NULL) && recursive)

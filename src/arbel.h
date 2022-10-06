@@ -124,6 +124,7 @@ struct registry
   size_t elements;
   struct task* task;
   struct registry* up;
+  struct registry* inherit;
   bool being_modified;
 };
 

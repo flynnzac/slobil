@@ -217,9 +217,9 @@ op_registry (arg a, registry* reg)
 }
 
 void
-op_inherit(arg a, registry* reg)
+op_new(arg a, registry* reg)
 {
-  #op=inherit@
+  #op=new@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -227,7 +227,11 @@ op_inherit(arg a, registry* reg)
   #type=Registry@
   ##GETARG~$;
 
-  data* out = copy_data(arg1);
+  registry* new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  new->inherit = (registry*) arg1->data;
+  data* out;
+  assign_registry(&out, new, false, reg->task);
+
   data* d = NULL;
   data* d_data = NULL;
   data* d_new = NULL;
@@ -253,68 +257,12 @@ op_inherit(arg a, registry* reg)
                   ((regstr*) d->data)->name,
                   0);
             }
-
         }
     }
 
   ret_ans(reg, out);
 }
 
-void
-op_new (arg a, registry* reg)
-{
-  #op=new@
-  #length=1@
-  ##CHECK_ARGS~$;
-
-  #num=1@
-  #type=Registry@
-  ##GETARG~$;
-
-  data* out = copy_data(arg1);
-  data* d = NULL;
-  data* d_data = NULL;
-  data* d_new = NULL;
-  data* d_cur = NULL;
-
-  if (a.length > 2)
-    {
-      for (int i=2; i < a.length; i = i + 2)
-        {
-          d = a.arg_array[i];
-          if (d->type != Register)
-            {
-              do_error("Expected a register.", reg->task->task);
-              free_data(out);
-              return;
-            }
-
-          if (a.length > (i+1))
-            {
-              d_cur = lookup((registry*) arg1->data,
-                             ((regstr*) d->data)->key, 0);
-
-              if (d_cur == NULL)
-                {
-                  do_error("Register not found.", reg->task->task);
-                  free_data(out);
-                  return;
-                }
-              
-              d_data = resolve(a.arg_array[i+1], reg);
-              d_new = copy_data(d_data);
-              set((registry*) out->data,
-                  d_new,
-                  ((regstr*) d->data)->name,
-                  0);
-            }
-
-        }
-    }
-
-  ret_ans(reg, out);
-
-}
 
 void
 op_arithmetic (arg a, registry* reg, const int code)
@@ -4009,9 +3957,6 @@ add_basic_ops (registry* reg)
 
   assign_op(&d, op_range, NULL, NULL, 0);
   set(reg,d,"range",1);
-
-  assign_op(&d, op_inherit, NULL, NULL, 0);
-  set(reg, d, "inherit", 1);
 
   assign_op(&d, op_new, NULL, NULL, 0);
   set(reg, d, "new", 1);

@@ -165,7 +165,9 @@ execute_statement (statement* s, registry* reg)
           else
             {
               d = get_by_levels(reg,
-                                e->hash_name, e->levels, e->is_regstr,
+                                e->hash_name,
+                                e->levels,
+                                e->is_regstr,
                                 e->name);
               
             }

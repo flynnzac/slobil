@@ -123,6 +123,7 @@ assign_registry (data** d, registry* r, bool copy, task* t)
   if (r == NULL)
     {
       (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, t);
+      ((registry*) (*d)->data)->inherit = r->inherit;
     }
   else if (copy)
     {
@@ -285,6 +286,7 @@ copy_registry(registry* r0)
         }
     }
 
+  r1->inherit = r0->inherit;
   return r1;
 }
 
