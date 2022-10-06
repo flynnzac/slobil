@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -55,7 +55,7 @@ enum data_type
    Real = 2,
    String = 4,
    Register = 8,
-   Registry = 16,
+   Object = 16,
    Instruction = 32,
    Expression = 64,
    Operation = 128,
@@ -69,7 +69,7 @@ enum data_type
 typedef enum data_type data_type;
 
 struct arg;
-struct registry;
+struct object;
 
 struct data
 {
@@ -91,10 +91,10 @@ struct content
 
 typedef struct content content;
 
-struct registry;
+struct object;
 struct task_vars
 {
-  struct registry* current_parse_registry;
+  struct object* current_parse_object;
   char* source_code;
   void** arbel_ll;
   int arbel_ll_cnt;
@@ -105,7 +105,7 @@ struct task_vars
   int arbel_error;
   int do_exit;
   
-  struct registry* arbel_options;
+  struct object* arbel_options;
 
   unsigned long arbel_hash_ans;
   unsigned long arbel_hash_t;
@@ -117,20 +117,20 @@ struct task_vars
 typedef struct task_vars task_vars;
 
 struct task;
-struct registry
+struct object
 {
   content** objects;
   size_t hash_size;
   size_t elements;
   struct task* task;
-  struct registry* up;
-  struct registry* inherit;
+  struct object* up;
+  struct object* inherit;
   bool being_modified;
 };
 
-typedef struct registry registry;
+typedef struct object object;
 
-typedef void (*operation)(struct arg, registry*);
+typedef void (*operation)(struct arg, object*);
 
 
 struct regstr
@@ -154,7 +154,7 @@ typedef struct op_wrapper op_wrapper;
 struct command
 {
   char* code;
-  registry* reg;
+  object* reg;
 };
 
 typedef struct command command;
@@ -210,7 +210,7 @@ struct statement
   element* head;
   arg arg;
   struct statement* right;
-  registry* arg_reg;
+  object* arg_reg;
   unsigned long* hash_bins;
   size_t* location;
 };
@@ -229,10 +229,10 @@ typedef struct instruction instruction;
 struct task
 {
   task_vars* task;
-  registry* state;
+  object* state;
   instruction* code;
 
-  registry* queued_instruction;
+  object* queued_instruction;
   pthread_mutex_t lock;
   int pid;
   pthread_t* thread;
@@ -274,7 +274,7 @@ assign_op (data** d, const operation op,
            int n_arg);
 
 void
-assign_registry (data** d, registry* r, bool copy, task* task);
+assign_object (data** d, object* r, bool copy, task* task);
 
 void
 assign_regstr (data** d, const char* name, unsigned long key);
@@ -299,7 +299,7 @@ void
 free_data (data* d);
 
 void
-free_registry (registry* reg);
+free_object (object* reg);
 
 content*
 head (content* reg);
@@ -308,25 +308,25 @@ content*
 tail (content* reg);
 
 content*
-set (registry* reg, data* d, const char* name, int rehash);
+set (object* reg, data* d, const char* name, int rehash);
 
 data*
-get (registry* reg, unsigned long hash_name, int recursive);
+get (object* reg, unsigned long hash_name, int recursive);
 
 content*
-mov (registry* reg, regstr* old, regstr* new);
+mov (object* reg, regstr* old, regstr* new);
 
 content*
-del (registry* reg, unsigned long hash_name, int del_data, bool hard_free);
+del (object* reg, unsigned long hash_name, int del_data, bool hard_free);
 
 data*
-get_data_in_registry (registry* reg, const regstr name);
+get_data_in_object (object* reg, const regstr name);
 
 void
 do_error (const char* msg, task_vars* t);
 
 void
-null_ans (registry* reg);
+null_ans (object* reg);
 
 void
 print_data (data* d, print_settings settings);
@@ -338,13 +338,13 @@ void
 str_shift_left (char* buffer);
 
 void
-add_basic_ops (registry* reg);
+add_basic_ops (object* reg);
 
 bool
 is_whitespace (const char c);
 
 void
-print_registry (registry* reg);
+print_object (object* reg);
 
 char*
 append_nl (char* str);
@@ -353,7 +353,7 @@ data*
 copy_data (data* d_in);
 
 void
-shift_arguments (registry* reg);
+shift_arguments (object* reg);
 
 int
 is_error (int e, task_vars* t);
@@ -364,17 +364,17 @@ is_exit (int e, task_vars* t);
 bool
 is_init_reg (content* r);
 
-registry*
-new_registry (registry* parent, size_t hash_size, task* t);
+object*
+new_object (object* parent, size_t hash_size, task* t);
 
 void
-ret (registry* reg, data* d, const char* name);
+ret (object* reg, data* d, const char* name);
 
 void
-ret_ans (registry* reg, data* d);
+ret_ans (object* reg, data* d);
 
 void
-relabel (registry* reg, const char* name, const char* new_name);
+relabel (object* reg, const char* name, const char* new_name);
 
 void
 assign_instr (data** d, statement* s, const char* code);
@@ -385,8 +385,8 @@ fresh_state ();
 void
 free_state (struct parser_state* state);
 
-registry*
-copy_registry(registry* r0);
+object*
+copy_object(object* r0);
 
 int
 is_retval (const int r);
@@ -401,25 +401,25 @@ void
 assign_expression (data** d, statement* s);
 
 data*
-lookup (registry* reg, unsigned long hash_name, int recursive);
+lookup (object* reg, unsigned long hash_name, int recursive);
 
 void
-compute (data* cmd, registry* reg, arg arg);
+compute (data* cmd, object* reg, arg arg);
 
 int
-save_registry (gzFile f, registry* reg);
+save_object (gzFile f, object* reg);
 
 void
-read_outer (gzFile f, registry* reg);
+read_outer (gzFile f, object* reg);
 
 int
-read_registry (gzFile f, registry* reg);
+read_object (gzFile f, object* reg);
 
 char*
 vector_name (const char* lead, int n);
 
 void
-execute_statement (statement* s, registry* reg);
+execute_statement (statement* s, object* reg);
 
 statement*
 append_statement (statement* current, element* head);
@@ -439,13 +439,13 @@ int
 parse (FILE* f, parser_state* state, statement** s, task_vars* task);
 
 void
-execute_code (statement* s, registry* reg);
+execute_code (statement* s, object* reg);
 
 element*
 parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task);
 
 int
-interact (FILE* f, parser_state* state, registry* reg);
+interact (FILE* f, parser_state* state, object* reg);
 
 element*
 copy_elements (element* e);
@@ -460,7 +460,7 @@ char*
 escape_str(char* str);
 
 void
-mark_do_not_free (registry* reg, unsigned long hash_name);
+mark_do_not_free (object* reg, unsigned long hash_name);
 
 unsigned long
 hash_str(const char *str);
@@ -478,19 +478,19 @@ int*
 copy_isregstr (int* is_regstr, int levels);
 
 data*
-get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
 
 const char*
 str_type (data_type type);
 
-registry*
-shift_list_down (registry* reg);
+object*
+shift_list_down (object* reg);
 
 int
 save_content (gzFile f, content* reg);
 
 void
-save_outer (registry* reg, char* fname);
+save_outer (object* reg, char* fname);
 
 content*
 new_content ();
@@ -508,16 +508,16 @@ arg
 gen_arg (int length, int def_free);
 
 data*
-resolve (data* arg, registry* reg);
+resolve (data* arg, object* reg);
 
 void
-_op_call (arg a, registry* reg, const int explicit);
+_op_call (arg a, object* reg, const int explicit);
 
 void
-auto_set (arg a, registry* reg);
+auto_set (arg a, object* reg);
 
 void
-method_call (arg a, registry* reg);
+method_call (arg a, object* reg);
 
 size_t
 new_hash_size (size_t elements);
@@ -529,10 +529,10 @@ int
 update_hash_size (size_t elements, size_t hash_size);
 
 void
-rehash (registry* r0);
+rehash (object* r0);
 
 void
-execute_0 (data* instr, registry* reg);
+execute_0 (data* instr, object* reg);
 
 void
 print_statement (statement* s);
@@ -602,7 +602,7 @@ u32_str_to_le (const uint32_t* str);
 uint32_t*
 u32_str_to_h (const uint32_t* str);
 
-/* interpreter internal registry */
+/* interpreter internal object */
 
 
 #ifdef GARBAGE
@@ -617,7 +617,7 @@ u32_str_to_h (const uint32_t* str);
 #define free_statement(x)
 #define free_instruction(x)
 #define free_data(x)
-#define free_registry(x)
+#define free_object(x)
 #define free_arg_array_data(x,n)
 #define free_arg(x)  
 #endif

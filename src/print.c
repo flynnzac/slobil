@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -42,9 +42,9 @@ print_data (data* d, print_settings settings)
     case Real:
       printf("%f", *((double*) d->data));
       break;
-    case Registry:
-      printf("a registry with:\n");
-      print_registry((registry*) d->data);
+    case Object:
+      printf("an Object with:\n");
+      print_object((object*) d->data);
       break;
     case Instruction:
       printf("( %s )", ((instruction*) d->data)->code);
@@ -97,12 +97,12 @@ print_data (data* d, print_settings settings)
       break;
     }
 
-  if ((settings & PRINT_NEWLINE) && (d->type != Registry))
+  if ((settings & PRINT_NEWLINE) && (d->type != Object))
     printf("\n");
 }
 
 void
-print_registry (registry* reg)
+print_object (object* reg)
 {
   if (reg == NULL)
     return;

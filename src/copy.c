@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
 
    Copyright 2021 Zach Flynn
 
@@ -116,18 +116,18 @@ assign_op (data** d, const operation op,
 }
 
 void
-assign_registry (data** d, registry* r, bool copy, task* t)
+assign_object (data** d, object* r, bool copy, task* t)
 {
   *d = new_data();
-  (*d)->type = Registry;
+  (*d)->type = Object;
   if (r == NULL)
     {
-      (*d)->data = new_registry(NULL, ARBEL_HASH_SIZE, t);
-      ((registry*) (*d)->data)->inherit = r->inherit;
+      (*d)->data = new_object(NULL, ARBEL_HASH_SIZE, t);
+      ((object*) (*d)->data)->inherit = r->inherit;
     }
   else if (copy)
     {
-      (*d)->data = copy_registry(r);
+      (*d)->data = copy_object(r);
     }
   else
     {
@@ -173,7 +173,7 @@ assign_task (data** d, task* t)
   (*d)->type = Task;
   (*d)->data = malloc(sizeof(task));
   ((task*) (*d)->data)->code = copy_instruction(t->code);
-  ((task*) (*d)->data)->state = copy_registry(t->state);
+  ((task*) (*d)->data)->state = copy_object(t->state);
   ((task*) (*d)->data)->task = copy_task_vars(t->task);
   ((task*) (*d)->data)->pid = t->pid;
 
@@ -260,14 +260,14 @@ copy_statement (statement* s)
   return new_first;
 }
 
-registry*
-copy_registry(registry* r0)
+object*
+copy_object(object* r0)
 {
-  registry* r1;
+  object* r1;
   if (update_hash_size(r0->elements, r0->hash_size))
-    r1 = new_registry(r0->up, 2*r0->hash_size, r0->task);
+    r1 = new_object(r0->up, 2*r0->hash_size, r0->task);
   else
-    r1 = new_registry(r0->up, r0->hash_size, r0->task);
+    r1 = new_object(r0->up, r0->hash_size, r0->task);
   
   data* d;
 
@@ -307,8 +307,8 @@ copy_task_vars (task_vars* task0)
 {
   task_vars* task1 = malloc(sizeof(task_vars));
 
-  task1->current_parse_registry =
-    copy_registry(task0->current_parse_registry);
+  task1->current_parse_object =
+    copy_object(task0->current_parse_object);
 
   task1->source_code = malloc(sizeof(char)*(strlen(task0->source_code)+1));
   strcpy(task1->source_code, task0->source_code);
@@ -343,9 +343,9 @@ copy_data (data* d_in)
       assign_regstr(&d, ((regstr*) d_in->data)->name,
                     ((regstr*) d_in->data)->key);
       break;
-    case Registry:
-      assign_registry(&d, (registry*) d_in->data, true,
-                      ((registry*) d_in->data)->task);
+    case Object:
+      assign_object(&d, (object*) d_in->data, true,
+                      ((object*) d_in->data)->task);
       break;
     case Operation:
       assign_op(&d, ((op_wrapper*) d_in->data)->op,

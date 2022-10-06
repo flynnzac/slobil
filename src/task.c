@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -26,10 +26,10 @@ task_vars*
 new_task (task* t0)
 {
   task_vars* t = malloc(sizeof(task_vars));
-  registry* reg = new_registry(NULL, ARBEL_HASH_SIZE, t0);
+  object* reg = new_object(NULL, ARBEL_HASH_SIZE, t0);
 
   is_exit(0, t);
-  t->current_parse_registry = reg;
+  t->current_parse_object = reg;
 
   t->arbel_stop_error_threshold = 1;
   t->arbel_error = 0;
@@ -37,7 +37,7 @@ new_task (task* t0)
   t->arbel_ll_cnt = 0;
   t->last_ans = NULL;
   t->source_code = NULL;
-  t->arbel_options = new_registry(NULL, ARBEL_HASH_SIZE, t0);
+  t->arbel_options = new_object(NULL, ARBEL_HASH_SIZE, t0);
   t->arbel_hash_ans = hash_str("ans");
   t->arbel_hash_t = hash_str("t");
   t->arbel_hash_underscore = hash_str("_");
@@ -84,7 +84,7 @@ input_code (task_vars* task, char* code, bool save_code,
 
   f = fmemopen(code, sizeof(char)*strlen(code), "r");
   task->reading = false;
-  int complete = interact(f, state, task->current_parse_registry);
+  int complete = interact(f, state, task->current_parse_object);
   task->reading = true;
   fclose(f);
 
@@ -244,8 +244,8 @@ end_task (task_vars* t)
       free(t->arbel_ll);
     }
 
-  free_registry(t->current_parse_registry);
-  free_registry(t->arbel_options);
+  free_object(t->current_parse_object);
+  free_object(t->arbel_options);
 
   if (is_exit(-1, t)==0)
     return 0;

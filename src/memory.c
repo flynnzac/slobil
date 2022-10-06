@@ -1,6 +1,6 @@
 /* 
 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -28,7 +28,7 @@
 #undef free_statement
 #undef free_instruction
 #undef free_data
-#undef free_registry
+#undef free_object
 #undef free_arg_array_data
 #undef free_arg
 #define free(x) GC_FREE(x)
@@ -79,7 +79,7 @@ free_statement (statement* s)
           e = e->right;
           free(e_tmp);
         }
-      free_registry(s->arg_reg);
+      free_object(s->arg_reg);
       free(s->hash_bins);
       free_arg(&s->arg);
       s_tmp = s;
@@ -107,9 +107,9 @@ free_data (data* d)
 {
   if (d==NULL)
     return;
-  if (d->type == Registry)
+  if (d->type == Object)
     {
-      free_registry((registry*) d->data);
+      free_object((object*) d->data);
       free(d);
     }
   else if (d->type == Register)
@@ -170,7 +170,7 @@ free_data (data* d)
 }
 
 void
-free_registry (registry* reg)
+free_object (object* reg)
 {
 
   if (reg==NULL)
@@ -242,13 +242,13 @@ free_task (task* t)
     free_task_vars(t->task);
 
   if (t->state != NULL)
-    free_registry(t->state);
+    free_object(t->state);
 
   if (t->code != NULL)
     free_instruction(t->code);
 
   if (t->queued_instruction != NULL)
-    free_registry(t->queued_instruction);
+    free_object(t->queued_instruction);
 
   if (t->thread != NULL)
     free(t->thread);

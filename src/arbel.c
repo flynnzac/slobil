@@ -1,6 +1,6 @@
 /* 
 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
 
@@ -94,7 +94,7 @@ main (int argc, char** argv)
         case 'b':
           f = fopen(optarg, "r");
           complete = interact(f, &state,
-                              task0->task->current_parse_registry);
+                              task0->task->current_parse_object);
           fclose(f);
           char* newname = malloc(sizeof(char)*(strlen(optarg)+strlen(".darbel")+1));
           for (int idx = 0; idx < strlen(optarg); idx++)
@@ -114,7 +114,7 @@ main (int argc, char** argv)
                 }
             }
           strcat(newname, ".darbel");
-          save_outer(task0->task->current_parse_registry, newname);
+          save_outer(task0->task->current_parse_object, newname);
           early_stop = true;
           break;
         case 'c':
@@ -130,7 +130,7 @@ main (int argc, char** argv)
         case 'l':
           f = fopen(optarg, "r");
           complete = interact(f, &state,
-                              task0->task->current_parse_registry);
+                              task0->task->current_parse_object);
           fclose(f);
           break;
         case 's':
@@ -173,7 +173,7 @@ main (int argc, char** argv)
   if (script != NULL)
     {
       f = fopen(script, "r");
-      complete = interact(f, &state, task0->task->current_parse_registry);
+      complete = interact(f, &state, task0->task->current_parse_object);
       fclose(f);
       free(script);
     }

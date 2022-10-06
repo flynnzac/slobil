@@ -46,11 +46,11 @@ START_TEST(test_resolve)
 
   assign_expression(&expr_d, s);
 
-  data* t1 = resolve(real_d, task0->task->current_parse_registry);
+  data* t1 = resolve(real_d, task0->task->current_parse_object);
   ck_assert_double_eq(*((double*) t1->data), 1.2);
   ck_assert_double_ne(*((double*) t1->data), 1.0);
 
-  data* t2 = resolve(expr_d, task0->task->current_parse_registry);
+  data* t2 = resolve(expr_d, task0->task->current_parse_object);
   int x = mpz_get_si(*((mpz_t*) t2->data));
   ck_assert_int_eq(x, 34);
   ck_assert_int_ne(x, 50);  

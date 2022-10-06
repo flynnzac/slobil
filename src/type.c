@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -115,8 +115,8 @@ str_type (data_type type)
     case Register:
       s = "Register";
       break;
-    case Registry:
-      s = "Registry";
+    case Object:
+      s = "Object";
       break;
     case Instruction:
       s = "Instruction";

@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -34,10 +34,10 @@ new_content ()
   return c;
 }
 
-registry*
-new_registry (registry* up, size_t hash_size, task* t)
+object*
+new_object (object* up, size_t hash_size, task* t)
 {
-  registry* r = malloc(sizeof(registry));
+  object* r = malloc(sizeof(object));
   r->up = up;
   r->hash_size = hash_size;
   r->objects = malloc(sizeof(content*)*hash_size);
@@ -62,14 +62,14 @@ is_init_reg (content* r)
 }
 
 content*
-set (registry* reg, data* d, const char* name, int rehash_flag)
+set (object* reg, data* d, const char* name, int rehash_flag)
 {
   unsigned long hash_name = hash_str(name);
   content* c = del(reg,hash_name,-1,false);
 
-  if (d != NULL && d->type == Registry)
+  if (d != NULL && d->type == Object)
     {
-      ((registry*) d->data)->up = reg;
+      ((object*) d->data)->up = reg;
     }
 
 
@@ -118,7 +118,7 @@ set (registry* reg, data* d, const char* name, int rehash_flag)
 }
 
 data*
-get (registry* reg, unsigned long hash_name, int recursive)
+get (object* reg, unsigned long hash_name, int recursive)
 {
   if (reg == NULL)
     return NULL;
@@ -126,7 +126,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
   if (hash_name == reg->task->task->arbel_hash_underscore)
     {
       data* d;
-      assign_registry(&d, reg, false, reg->task);
+      assign_object(&d, reg, false, reg->task);
       return d;
     }
   
@@ -156,9 +156,9 @@ get (registry* reg, unsigned long hash_name, int recursive)
     {
       if (c->key == hash_name && c->value != NULL)
         {
-          if (c->value->type == Registry)
+          if (c->value->type == Object)
             {
-              ((registry*) c->value->data)->up = reg->up;
+              ((object*) c->value->data)->up = reg->up;
             }
           
           return c->value;
@@ -184,7 +184,7 @@ get (registry* reg, unsigned long hash_name, int recursive)
 }
 
 data*
-lookup (registry* reg, unsigned long hash_name, int recursive)
+lookup (object* reg, unsigned long hash_name, int recursive)
 {
   data* d = get(reg, hash_name, recursive);
 
@@ -198,7 +198,7 @@ lookup (registry* reg, unsigned long hash_name, int recursive)
 }
 
 content*
-mov (registry* reg, regstr* old, regstr* new)
+mov (object* reg, regstr* old, regstr* new)
 {
   unsigned long old_element = old->key % reg->hash_size;
 
@@ -225,7 +225,7 @@ mov (registry* reg, regstr* old, regstr* new)
 }
 
 content*
-del (registry* reg, unsigned long hash_name, int del_data, bool hard_free)
+del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
 {
   content* cur = reg->objects[hash_name % reg->hash_size];
   
@@ -299,7 +299,7 @@ del (registry* reg, unsigned long hash_name, int del_data, bool hard_free)
 }
 
 void
-mark_do_not_free (registry* reg, unsigned long hash_name)
+mark_do_not_free (object* reg, unsigned long hash_name)
 {
 
   content* c = reg->objects[hash_name % reg->hash_size];
@@ -320,7 +320,7 @@ mark_do_not_free (registry* reg, unsigned long hash_name)
 }
 
 data*
-get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
 {
   data* d = get(reg, hash_name[0], 1);
   if (d == NULL)
@@ -332,9 +332,9 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
       do_error(msg, reg->task->task);
       free(msg);
     }
-  else if (d->type != Registry && levels > 1)
+  else if (d->type != Object && levels > 1)
     {
-      do_error("Cannot get registers in non-registry.", reg->task->task);
+      do_error("Cannot get registers in non-object.", reg->task->task);
     }
   else
     {
@@ -342,21 +342,21 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
         {
           if (d == NULL)
             {
-              do_error("Register not found in registry.",
+              do_error("Register not found in object.",
                        reg->task->task);
               return NULL;
             }
 
-          if (d->type != Registry)
+          if (d->type != Object)
             {
-              do_error("Cannot get registers in non-registry.",
+              do_error("Cannot get registers in non-object.",
                        reg->task->task);
               return NULL;
             }
 
           if (is_regstr[i])
             {
-              d = get((registry*) d->data, hash_name[i], 0);
+              d = get((object*) d->data, hash_name[i], 0);
             }
           else
             {
@@ -369,7 +369,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
                 }
               else
                 {
-                  d = get((registry*) d->data,
+                  d = get((object*) d->data,
                           ((regstr*) d1->data)->key,
                           0);
                 }
@@ -378,7 +378,7 @@ get_by_levels (registry* reg, unsigned long* hash_name, int levels, int* is_regs
 
       if (d == NULL)
         {
-          do_error("Register not found in registry.",
+          do_error("Register not found in object.",
                    reg->task->task);
           return NULL;
         }
@@ -452,7 +452,7 @@ new_hash_size (size_t elements)
 }
   
 void
-rehash (registry* r0)
+rehash (object* r0)
 {
 
   if (!update_hash_size(r0->elements, r0->hash_size))

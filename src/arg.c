@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -51,7 +51,7 @@ shift_arg_right(arg a)
 }
 
 data*
-resolve (data* arg, registry* reg)
+resolve (data* arg, object* reg)
 {
   if (arg->type == Expression)
     {

@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
 
    This file is part of ARBEL.
 
@@ -536,7 +536,7 @@ parse (FILE* f, parser_state* state, statement** s, task_vars* task)
 }
 
 int
-interact (FILE* f, parser_state* state, registry* reg)
+interact (FILE* f, parser_state* state, object* reg)
 {
   statement* s = NULL;
   int complete = parse(f, state, &s, reg->task->task);

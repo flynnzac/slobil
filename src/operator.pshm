@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -67,7 +67,7 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
 
 
 void
-op_range (arg a, registry* reg)
+op_range (arg a, object* reg)
 {
   #op=range@
 
@@ -120,7 +120,7 @@ op_range (arg a, registry* reg)
   mpz_sub(elements, *ub, *lb);
   mpz_cdiv_q(elements, elements, by);
   
-  registry* r_new = new_registry
+  object* r_new = new_object
     (reg,new_hash_size(mpz_get_ui(elements)), reg->task);
 
   mpz_t cur;
@@ -140,7 +140,7 @@ op_range (arg a, registry* reg)
     }
 
   d_tmp = new_data();
-  d_tmp->type = Registry;
+  d_tmp->type = Object;
   d_tmp->data = r_new;
 
   ret_ans(reg,d_tmp);
@@ -150,9 +150,9 @@ op_range (arg a, registry* reg)
 }
 
 void
-op_list (arg a, registry* reg)
+op_list (arg a, object* reg)
 {
-  registry* r_new = new_registry(reg, new_hash_size(a.length),
+  object* r_new = new_object(reg, new_hash_size(a.length),
                                  reg->task);
   data* d;
   data* d_new;
@@ -168,23 +168,23 @@ op_list (arg a, registry* reg)
     }
 
   d = new_data();
-  d->type = Registry;
+  d->type = Object;
   d->data = r_new;
   ret_ans(reg, d);
 
 }
 
 void
-op_registry (arg a, registry* reg)
+op_object (arg a, object* reg)
 {
   if (a.length != 1)
     {
-      #op=registry@
+      #op=object@
       #length=2@
       ##CHECK_ARGS~$;
     }
   
-  registry* r_new = new_registry(reg, new_hash_size(a.length / 2 + 1),
+  object* r_new = new_object(reg, new_hash_size(a.length / 2 + 1),
                                  reg->task);
   data* d = NULL;
   data* d_data = NULL;
@@ -197,7 +197,7 @@ op_registry (arg a, registry* reg)
       if (d->type != Register)
         {
           do_error("Expected a register.", reg->task->task);
-          free_registry(r_new);
+          free_object(r_new);
           return;
         }
 
@@ -211,26 +211,26 @@ op_registry (arg a, registry* reg)
 
 
   d = new_data();
-  d->type = Registry;
+  d->type = Object;
   d->data = r_new;
   ret_ans(reg, d);
 }
 
 void
-op_new(arg a, registry* reg)
+op_new(arg a, object* reg)
 {
   #op=new@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
-  registry* new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
-  new->inherit = (registry*) arg1->data;
+  object* new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+  new->inherit = (object*) arg1->data;
   data* out;
-  assign_registry(&out, new, false, reg->task);
+  assign_object(&out, new, false, reg->task);
 
   data* d = NULL;
   data* d_data = NULL;
@@ -244,7 +244,7 @@ op_new(arg a, registry* reg)
           if (d->type != Register)
             {
               do_error("Expected a register.", reg->task->task);
-              free_registry(r_new);
+              free_object(r_new);
               return;
             }
 
@@ -252,7 +252,7 @@ op_new(arg a, registry* reg)
             {
               d_data = resolve(a.arg_array[i+1], reg);
               d_new = copy_data(d_data);
-              set((registry*) out->data,
+              set((object*) out->data,
                   d_new,
                   ((regstr*) d->data)->name,
                   0);
@@ -265,7 +265,7 @@ op_new(arg a, registry* reg)
 
 
 void
-op_arithmetic (arg a, registry* reg, const int code)
+op_arithmetic (arg a, object* reg, const int code)
 {
   data* d;
   data_type result_type = Integer;
@@ -345,7 +345,7 @@ op_arithmetic (arg a, registry* reg, const int code)
 }  
 
 void
-op_add (arg a, registry* reg)
+op_add (arg a, object* reg)
 {
   #op=add@
   #length=2@
@@ -355,7 +355,7 @@ op_add (arg a, registry* reg)
 }
 
 void
-op_mul (arg a, registry* reg)
+op_mul (arg a, object* reg)
 {
   #op=mul@
   #length=2@
@@ -365,7 +365,7 @@ op_mul (arg a, registry* reg)
 }
 
 void
-op_sub (arg a, registry* reg)
+op_sub (arg a, object* reg)
 {
   #op=sub@
   #length=2@
@@ -375,7 +375,7 @@ op_sub (arg a, registry* reg)
 }
 
 void
-op_div (arg a, registry* reg)
+op_div (arg a, object* reg)
 {
   #op=div@
   #length=2@
@@ -385,7 +385,7 @@ op_div (arg a, registry* reg)
 }
 
 void
-auto_set (arg a, registry* reg)
+auto_set (arg a, object* reg)
 {
   #op=auto-set@
   #length=1@
@@ -400,14 +400,14 @@ auto_set (arg a, registry* reg)
   ##GETARG~$;
   #checktype=true@
 
-  registry* to_set;
+  object* to_set;
   if (a.length >= 3)
     {
       #num=2@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
 
-      to_set = (registry*) arg2->data;
+      to_set = (object*) arg2->data;
     }
   else
     {
@@ -421,7 +421,7 @@ auto_set (arg a, registry* reg)
   
 
 void
-op_set (arg a, registry* reg)
+op_set (arg a, object* reg)
 {
   #op=set@
 
@@ -437,14 +437,14 @@ op_set (arg a, registry* reg)
   ##GETARG~$;
   #checktype=true@
 
-  registry* to_set;
+  object* to_set;
   if (a.length >= 4)
     {
       #num=3@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
       
-      to_set = (registry*) arg3->data;
+      to_set = (object*) arg3->data;
     }
   else
     {
@@ -459,7 +459,7 @@ op_set (arg a, registry* reg)
 }
 
 void
-op_get (arg a, registry* reg)
+op_get (arg a, object* reg)
 {
   #op=get@
   #length=1@
@@ -469,7 +469,7 @@ op_get (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
   
-  registry* to_look;
+  object* to_look;
   if (a.length == 2)
     {
       to_look = reg;
@@ -477,10 +477,10 @@ op_get (arg a, registry* reg)
   else
     {
       #num=2@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
 
-      to_look = (registry*) arg2->data;
+      to_look = (object*) arg2->data;
     }
 
   data* ans = lookup(to_look, ((regstr*) arg1->data)->key,
@@ -493,7 +493,7 @@ op_get (arg a, registry* reg)
 }
 
 void
-op_if (arg a, registry* reg)
+op_if (arg a, object* reg)
 {
   #op=if@
   #length=1@
@@ -540,7 +540,7 @@ op_if (arg a, registry* reg)
 }
 
 void
-op_sit (arg a, registry* reg)
+op_sit (arg a, object* reg)
 {
   for (int i=1; i < a.length; i++)
     {
@@ -551,7 +551,7 @@ op_sit (arg a, registry* reg)
 
 
 void
-op_move (arg a, registry* reg)
+op_move (arg a, object* reg)
 {
   #op=move@
   #length=2@
@@ -570,7 +570,7 @@ op_move (arg a, registry* reg)
 }
 
 void
-op_delete (arg a, registry* reg)
+op_delete (arg a, object* reg)
 {
   #op=delete@
   #length=1@
@@ -584,7 +584,7 @@ op_delete (arg a, registry* reg)
 }
 
 void
-op_free (arg a, registry* reg)
+op_free (arg a, object* reg)
 {
   #op=free@
   #length=1@
@@ -598,7 +598,7 @@ op_free (arg a, registry* reg)
 }
 
 void
-op_exit (arg a, registry* reg)
+op_exit (arg a, object* reg)
 {
   int err = 0;
   if (a.length >= 2)
@@ -615,7 +615,7 @@ op_exit (arg a, registry* reg)
 }
 
 void
-op_exist (arg a, registry* reg)
+op_exist (arg a, object* reg)
 {
   #op=exist@
   #length=1@
@@ -625,14 +625,14 @@ op_exist (arg a, registry* reg)
   #type=Register@
   ##GETARG~$;
 
-  registry* to_use = reg;
+  object* to_use = reg;
   if (a.length >= 3)
     {
       #num=2@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
 
-      to_use = (registry*) arg2->data;
+      to_use = (object*) arg2->data;
     }
 
   data* obj = get(to_use, ((regstr*) arg1->data)->key, a.length < 3 ? 1 : 0);
@@ -650,7 +650,7 @@ op_exist (arg a, registry* reg)
 }
 
 void
-op_answer (arg a, registry* reg)
+op_answer (arg a, object* reg)
 {
   #op=answer@
   #length=1@
@@ -666,7 +666,7 @@ op_answer (arg a, registry* reg)
 }
 
 int
-op_comparison (arg a, registry* reg)
+op_comparison (arg a, object* reg)
 {
   #op=comparison@
   #length=2@
@@ -726,7 +726,7 @@ op_comparison (arg a, registry* reg)
 }
 
 void
-op_gt (arg a, registry* reg)
+op_gt (arg a, object* reg)
 {
   data* d = NULL;
   int is_gt = op_comparison(a, reg);
@@ -743,7 +743,7 @@ op_gt (arg a, registry* reg)
 }
 
 void
-op_lt (arg a, registry* reg)
+op_lt (arg a, object* reg)
 {
   data* d = NULL;
   int is_lt = op_comparison(a, reg);
@@ -760,7 +760,7 @@ op_lt (arg a, registry* reg)
 }
 
 void
-op_eq (arg a, registry* reg)
+op_eq (arg a, object* reg)
 {
   data* d = NULL;
   int is_eq = op_comparison(a, reg);
@@ -777,7 +777,7 @@ op_eq (arg a, registry* reg)
 }
 
 void
-op_gt_eq (arg a, registry* reg)
+op_gt_eq (arg a, object* reg)
 {
   data* d = NULL;
   int is_gteq = op_comparison(a, reg);
@@ -795,7 +795,7 @@ op_gt_eq (arg a, registry* reg)
 
 
 void
-op_lt_eq (arg a, registry* reg)
+op_lt_eq (arg a, object* reg)
 {
   data* d = NULL;
   int is_lteq = op_comparison(a, reg);
@@ -812,7 +812,7 @@ op_lt_eq (arg a, registry* reg)
 }
 
 void
-op_print (arg a, registry* reg)
+op_print (arg a, object* reg)
 {
   #op=print@
   #length=1@
@@ -846,7 +846,7 @@ op_print (arg a, registry* reg)
 }
 
 void
-op_length (arg a, registry* reg)
+op_length (arg a, object* reg)
 {
   #op=length@
   #length=1@
@@ -868,7 +868,7 @@ op_length (arg a, registry* reg)
 }
 
 void
-op_combine (arg a, registry* reg)
+op_combine (arg a, object* reg)
 {
   #op=combine@
   #length=2@
@@ -901,7 +901,7 @@ op_combine (arg a, registry* reg)
 }
 
 void
-op_source (arg a, registry* reg)
+op_source (arg a, object* reg)
 {
   #op=source@
   #length=1@
@@ -937,7 +937,7 @@ op_source (arg a, registry* reg)
 }
 
 void
-op_do (arg a, registry* reg)
+op_do (arg a, object* reg)
 {
   #op=do@
   #length=2@
@@ -979,7 +979,7 @@ op_do (arg a, registry* reg)
 
   for (int i = 0; i < (a.length - 2); i++)
     {
-      if (arg_registries[i]->type != Registry)
+      if (arg_registries[i]->type != Object)
         {
           do_error("Arguments to <do> must be registries.",
                    reg->task->task);
@@ -988,12 +988,12 @@ op_do (arg a, registry* reg)
         }
     }
 
-  registry** arg_reg = malloc(sizeof(registry*)*(a.length-2));
+  object** arg_reg = malloc(sizeof(object*)*(a.length-2));
   for (int i = 0; i < (a.length - 2); i++)
     {
-      arg_reg[i] = (registry*) arg_registries[i]->data;
+      arg_reg[i] = (object*) arg_registries[i]->data;
     }
-  registry* ret_reg = new_registry(reg, ARBEL_HASH_SIZE,
+  object* ret_reg = new_object(reg, ARBEL_HASH_SIZE,
                                    reg->task);
   data* d;
   arg a1;
@@ -1062,7 +1062,7 @@ op_do (arg a, registry* reg)
   if (!is_error(-1, reg->task->task))
     {
       d = new_data();
-      d->type = Registry;
+      d->type = Object;
       d->data = ret_reg;
       ret_ans(reg, d);
     }
@@ -1113,7 +1113,7 @@ register_arithmetic (regstr* rg, int diff, task_vars* task)
   
 
 void
-op_next (arg a, registry* reg)
+op_next (arg a, object* reg)
 {
   #op=next@
   #length=1@
@@ -1130,7 +1130,7 @@ op_next (arg a, registry* reg)
 }
 
 void
-op_previous (arg a, registry* reg)
+op_previous (arg a, object* reg)
 {
   #op=previous@
   #length=1@
@@ -1148,21 +1148,21 @@ op_previous (arg a, registry* reg)
 
 
 void
-op_last (arg a, registry* reg)
+op_last (arg a, object* reg)
 {
   #op=last@
   #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   #num=2@
   #type=Register@
   ##GETARG~$;
 
-  registry* arg_reg = (registry*) arg1->data;
+  object* arg_reg = (object*) arg1->data;
   char* name = NULL;
   int i = 1;
   data* d;
@@ -1192,27 +1192,27 @@ op_last (arg a, registry* reg)
 }
 
 void
-method_call (arg a, registry* reg)
+method_call (arg a, object* reg)
 {
   #op=method-call@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=0@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   #num=1@
   #type=Register@
   ##GETARG~$;
 
-  data* instr = get((registry*) arg0->data,
+  data* instr = get((object*) arg0->data,
                     ((regstr*) arg1->data)->key,
                     0);
 
   if (instr == NULL)
     {
-      do_error("Register not found in registry.",
+      do_error("Register not found in object.",
                reg->task->task);
       return;
     }
@@ -1227,33 +1227,33 @@ method_call (arg a, registry* reg)
   arg b = shift_arg_right(a);
   b.arg_array[0] = instr;
 
-  registry* tmp = reg->up;
-  reg->up = (registry*) arg0->data;
+  object* tmp = reg->up;
+  reg->up = (object*) arg0->data;
   _op_call(b, reg, 0);
   reg->up = tmp;
   
 }
 
 void
-op_in (arg a, registry* reg)
+op_in (arg a, object* reg)
 {
   #op=in@
   #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   #num=2@
   #type=Instruction@
   ##GETARG~$;
 
-  ((registry*) arg1->data)->up = reg;
+  ((object*) arg1->data)->up = reg;
 
-  execute_0(arg2, (registry*) arg1->data);
+  execute_0(arg2, (object*) arg1->data);
   
-  data* ans = lookup((registry*) arg1->data, reg->task->task->arbel_hash_ans, 0);
+  data* ans = lookup((object*) arg1->data, reg->task->task->arbel_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1262,7 +1262,7 @@ op_in (arg a, registry* reg)
 }
 
 void
-op_while (arg a, registry* reg)
+op_while (arg a, object* reg)
 {
   #op=while@
   #length=2@
@@ -1313,7 +1313,7 @@ op_while (arg a, registry* reg)
 }
 
 void
-op_repeat (arg a, registry* reg)
+op_repeat (arg a, object* reg)
 {
   #op=repeat@
   #length=2@
@@ -1338,7 +1338,7 @@ op_repeat (arg a, registry* reg)
 }
 
 void
-op_to_register (arg a, registry* reg)
+op_to_register (arg a, object* reg)
 {
   #op=to-register@
   #length=1@
@@ -1372,7 +1372,7 @@ op_to_register (arg a, registry* reg)
 
 
 void
-op_collapse (arg a, registry* reg)
+op_collapse (arg a, object* reg)
 {
   #op=collapse@
   #length=2@
@@ -1383,7 +1383,7 @@ op_collapse (arg a, registry* reg)
   ##GETARG~$;
 
   #num=2@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   const char* prefix = "t";
@@ -1400,7 +1400,7 @@ op_collapse (arg a, registry* reg)
   char* second_name;
   char* first_name;
   int i = 2;
-  registry* to_walk = (registry*) arg2->data;
+  object* to_walk = (object*) arg2->data;
   to_walk->up = reg;
 
   first_name = vector_name(prefix, 1);
@@ -1408,7 +1408,7 @@ op_collapse (arg a, registry* reg)
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  registry* r = new_registry(to_walk, ARBEL_HASH_SIZE, reg->task);
+  object* r = new_object(to_walk, ARBEL_HASH_SIZE, reg->task);
 
   arg a1;
   a1.length = 3;
@@ -1464,13 +1464,13 @@ op_collapse (arg a, registry* reg)
       ret_ans(reg, copy_data(d));
     }
 
-  free_registry(r);
+  free_object(r);
   free(second_name);
   free_arg(&a1);
 }
 
 void
-op_string_eq (arg a, registry* reg)
+op_string_eq (arg a, object* reg)
 {
   #op=string-eq@
   #length=2@
@@ -1500,7 +1500,7 @@ op_string_eq (arg a, registry* reg)
 }
 
 void
-op_char_eq (arg a, registry* reg)
+op_char_eq (arg a, object* reg)
 {
   #op=char-eq@
   #length=3@
@@ -1546,7 +1546,7 @@ op_char_eq (arg a, registry* reg)
 }
 
 void
-op_string_lt (arg a, registry* reg)
+op_string_lt (arg a, object* reg)
 {
   #op=string-lt@
   #length=2@
@@ -1576,7 +1576,7 @@ op_string_lt (arg a, registry* reg)
 }
 
 void
-op_string_gt (arg a, registry* reg)
+op_string_gt (arg a, object* reg)
 {
   #op=string-gt@
   #length=2@
@@ -1607,7 +1607,7 @@ op_string_gt (arg a, registry* reg)
 
 
 void
-op_register_eq (arg a, registry* reg)
+op_register_eq (arg a, object* reg)
 {
   #op=register-eq@
   #length=2@
@@ -1633,7 +1633,7 @@ op_register_eq (arg a, registry* reg)
 
 
 void
-op_save (arg a, registry* reg)
+op_save (arg a, object* reg)
 {
   #op=save@  
   #length=1@
@@ -1653,7 +1653,7 @@ op_save (arg a, registry* reg)
 }
 
 void
-op_load (arg a, registry* reg)
+op_load (arg a, object* reg)
 {
   #op=load@
   #length=1@
@@ -1676,10 +1676,10 @@ op_load (arg a, registry* reg)
   if (a.length >= 3)
     {
       #num=2@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
 
-      read_outer(f, (registry*) arg2->data);
+      read_outer(f, (object*) arg2->data);
     }
   else
     {
@@ -1691,7 +1691,7 @@ op_load (arg a, registry* reg)
 }
 
 void
-op_to_string (arg a, registry* reg)
+op_to_string (arg a, object* reg)
 {
   #op=to-string@
   #length=1@
@@ -1776,7 +1776,7 @@ op_to_string (arg a, registry* reg)
 }
 
 void
-op_to_number (arg a, registry* reg)
+op_to_number (arg a, object* reg)
 {
   #op=to-number@
   #length=1@
@@ -1842,7 +1842,7 @@ op_to_number (arg a, registry* reg)
 }
 
 void
-op_to_real (arg a, registry* reg)
+op_to_real (arg a, object* reg)
 {
   #op=to-real@
   #length=1@
@@ -1874,7 +1874,7 @@ op_to_real (arg a, registry* reg)
 }
 
 void
-op_output_code (arg a, registry* reg)
+op_output_code (arg a, object* reg)
 {
   #op=output-code@
   #length=1@
@@ -1903,7 +1903,7 @@ op_output_code (arg a, registry* reg)
 }
 
 void
-op_clear_code (arg a, registry* reg)
+op_clear_code (arg a, object* reg)
 {
   if (reg->task->task->source_code != NULL)
     free(reg->task->task->source_code);
@@ -1912,7 +1912,7 @@ op_clear_code (arg a, registry* reg)
 }
 
 void
-op_error (arg a, registry* reg)
+op_error (arg a, object* reg)
 {
   #op=error@
   #length=1@
@@ -1943,7 +1943,7 @@ op_error (arg a, registry* reg)
 }
 
 void
-op_is_type (arg a, registry* reg, const data_type type)
+op_is_type (arg a, object* reg, const data_type type)
 {
   #op=is-Type@
   #length=1@
@@ -1967,68 +1967,68 @@ op_is_type (arg a, registry* reg, const data_type type)
 }
 
 void
-op_is_integer (arg a, registry* reg)
+op_is_integer (arg a, object* reg)
 {
   op_is_type(a, reg, Integer);
 }
 
 void
-op_is_real (arg a, registry* reg)
+op_is_real (arg a, object* reg)
 {
   op_is_type(a, reg, Real);
 }
 
 void
-op_is_string (arg a, registry* reg)
+op_is_string (arg a, object* reg)
 {
   op_is_type(a, reg, String);
 }
 
 void
-op_is_register (arg a, registry* reg)
+op_is_register (arg a, object* reg)
 {
   op_is_type(a, reg, Register);
 }
 
 void
-op_is_registry (arg a, registry* reg)
+op_is_object (arg a, object* reg)
 {
-  op_is_type(a, reg, Registry);
+  op_is_type(a, reg, Object);
 }
 
 void
-op_is_instruction (arg a, registry* reg)
+op_is_instruction (arg a, object* reg)
 {
   op_is_type(a, reg, Instruction);
 }
 
 void
-op_is_file (arg a, registry* reg)
+op_is_file (arg a, object* reg)
 {
   op_is_type(a, reg, File);
 }
 
 void
-op_is_nothing (arg a, registry* reg)
+op_is_nothing (arg a, object* reg)
 {
   op_is_type(a, reg, Nothing);
 }
 
 void
-op_is_boolean (arg a, registry* reg)
+op_is_boolean (arg a, object* reg)
 {
   op_is_type(a, reg, Boolean);
 }
 
 void
-op_is_operation (arg a, registry* reg)
+op_is_operation (arg a, object* reg)
 {
   op_is_type(a, reg, Operation);
 }
 
 
 void
-op_open_file (arg a, registry* reg)
+op_open_file (arg a, object* reg)
 {
   #op=open-file@
   #length=1@
@@ -2075,7 +2075,7 @@ op_open_file (arg a, registry* reg)
 }
 
 void
-op_read (arg a, registry* reg)
+op_read (arg a, object* reg)
 {
   #op=read@
   #length=1@
@@ -2102,7 +2102,7 @@ op_read (arg a, registry* reg)
 }
 
 void
-op_read_char (arg a, registry* reg)
+op_read_char (arg a, object* reg)
 {
   #op=read-char@  
   #length=1@
@@ -2142,7 +2142,7 @@ op_read_char (arg a, registry* reg)
 }
 
 void
-op_close (arg a, registry* reg)
+op_close (arg a, object* reg)
 {
   #op=close@
   #length=1@
@@ -2178,7 +2178,7 @@ op_close (arg a, registry* reg)
 }
 
 void
-op_or (arg a, registry* reg)
+op_or (arg a, object* reg)
 {
   #op=or@
   #length=2@
@@ -2205,7 +2205,7 @@ op_or (arg a, registry* reg)
 }
 
 void
-op_and (arg a, registry* reg)
+op_and (arg a, object* reg)
 {
   #op=and@
   #length=2@
@@ -2231,7 +2231,7 @@ op_and (arg a, registry* reg)
 }
 
 void
-op_not (arg a, registry* reg)
+op_not (arg a, object* reg)
 {
   #op=not@
   #length=1@
@@ -2255,7 +2255,7 @@ op_not (arg a, registry* reg)
 }
 
 void
-op_read_line (arg a, registry* reg)
+op_read_line (arg a, object* reg)
 {
   #op=read-line@
   #length=1@
@@ -2294,7 +2294,7 @@ op_read_line (arg a, registry* reg)
 }
 
 void
-op_write_string (arg a, registry* reg)
+op_write_string (arg a, object* reg)
 {
   #op=write-string@
   #length=2@
@@ -2318,7 +2318,7 @@ op_write_string (arg a, registry* reg)
 }
 
 void
-op_write (arg a, registry* reg)
+op_write (arg a, object* reg)
 {
   #op=write@
   #length=2@
@@ -2346,7 +2346,7 @@ op_write (arg a, registry* reg)
 }
 
 void
-op_input (arg a, registry* reg)
+op_input (arg a, object* reg)
 {
   #length=1@
   ##CHECK_ARGS~$;
@@ -2368,7 +2368,7 @@ op_input (arg a, registry* reg)
 }
 
 void
-op_shell (arg a, registry* reg)
+op_shell (arg a, object* reg)
 {
 
   #op=shell@
@@ -2420,7 +2420,7 @@ op_shell (arg a, registry* reg)
 }
 
 void
-op_link (arg a, registry* reg)
+op_link (arg a, object* reg)
 {
   #op=link@
   #length=3@
@@ -2483,7 +2483,7 @@ op_link (arg a, registry* reg)
 }
 
 void
-op_match (arg a, registry* reg)
+op_match (arg a, object* reg)
 {
   #op=match@
   #length=2@
@@ -2525,7 +2525,7 @@ op_match (arg a, registry* reg)
 
 
   data* d;
-  assign_registry(&d, NULL, true, reg->task);
+  assign_object(&d, NULL, true, reg->task);
   int i;
   int j;
   char* to_add;
@@ -2541,7 +2541,7 @@ op_match (arg a, registry* reg)
       error = regexec(&regex, cursor, n_groups, matches, 0);
       if (!error)
         {
-          assign_registry(&d_reg, NULL, true, reg->task);
+          assign_object(&d_reg, NULL, true, reg->task);
           offset = 0;
           for (i=0; i < n_groups; i++)
             {
@@ -2567,13 +2567,13 @@ op_match (arg a, registry* reg)
                   assign_str(&d_str, u32_add, 0);
 
                   name = argument_name(i);
-                  set((registry*) d_reg->data, d_str, name, 1);
+                  set((object*) d_reg->data, d_str, name, 1);
                   free(name);
                 }
             }
           n_matches++;
           name = argument_name(n_matches);
-          set((registry*) d->data, d_reg, name, 1);
+          set((object*) d->data, d_reg, name, 1);
           free(name);
 
           free(matches);
@@ -2594,7 +2594,7 @@ op_match (arg a, registry* reg)
 }
 
 void
-op_replace (arg a, registry* reg)
+op_replace (arg a, object* reg)
 {
   #op=replace@
   #length=3@
@@ -2641,7 +2641,7 @@ op_replace (arg a, registry* reg)
   regmatch_t* matches = malloc(sizeof(regmatch_t));
 
   data* d;
-  assign_registry(&d, NULL, true, reg->task);
+  assign_object(&d, NULL, true, reg->task);
 
 
   char* cursor = str3;
@@ -2730,7 +2730,7 @@ op_replace (arg a, registry* reg)
 }
 
 void
-op_log (arg a, registry* reg)
+op_log (arg a, object* reg)
 {
   #op=log@
   #length=1@
@@ -2755,7 +2755,7 @@ op_log (arg a, registry* reg)
 
 
 void
-op_exp (arg a, registry* reg)
+op_exp (arg a, object* reg)
 {
   #op=exp@
   #length=1@
@@ -2779,7 +2779,7 @@ op_exp (arg a, registry* reg)
 }
 
 void
-op_power (arg a, registry* reg)
+op_power (arg a, object* reg)
 {
   #op=power@
   #length=2@
@@ -2819,7 +2819,7 @@ op_power (arg a, registry* reg)
 }
 
 void
-op_change_dir (arg a, registry* reg)
+op_change_dir (arg a, object* reg)
 {
   #op=change-dir@
   #length=1@
@@ -2846,17 +2846,17 @@ op_change_dir (arg a, registry* reg)
 
 
 void
-op_import (arg a, registry* reg)
+op_import (arg a, object* reg)
 {
   #op=import@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
-  registry* r1 = (registry*) arg1->data;
+  object* r1 = (object*) arg1->data;
 
   for (int i = 0; i < r1->hash_size; i++)
     {
@@ -2886,7 +2886,7 @@ op_import (arg a, registry* reg)
 
 
 void
-op_current_dir (arg a, registry* reg)
+op_current_dir (arg a, object* reg)
 {
   char* dir = get_current_dir_name();
   if (dir == NULL)
@@ -2905,7 +2905,7 @@ op_current_dir (arg a, registry* reg)
 }
 
 void
-op_substring (arg a, registry* reg)
+op_substring (arg a, object* reg)
 {
   #op=substring@
   #length=3@
@@ -2980,7 +2980,7 @@ op_substring (arg a, registry* reg)
 }
 
 void
-op_up (arg a, registry* reg)
+op_up (arg a, object* reg)
 {
   #op=up@
   #length=1@
@@ -2988,7 +2988,7 @@ op_up (arg a, registry* reg)
 
   if (reg->up == NULL)
     {
-      do_error("Cannot use *up* instruction at top-level registry.",
+      do_error("Cannot use *up* instruction at top-level object.",
                reg->task->task);
       return;
     }
@@ -3014,7 +3014,7 @@ op_up (arg a, registry* reg)
 }
 
 void
-op_code (arg a, registry* reg)
+op_code (arg a, object* reg)
 {
   #op=code@
   #length=1@
@@ -3035,7 +3035,7 @@ op_code (arg a, registry* reg)
 }
 
 void
-op_is_error (arg a, registry* reg)
+op_is_error (arg a, object* reg)
 {
   #op=is-error@
   #length=1@
@@ -3059,7 +3059,7 @@ op_is_error (arg a, registry* reg)
 
 
 void
-op_call (arg a, registry* reg)
+op_call (arg a, object* reg)
 {
   #op=call@
   #length=1@
@@ -3068,7 +3068,7 @@ op_call (arg a, registry* reg)
 }
 
 void
-op_ignore_errors (arg a, registry* reg)
+op_ignore_errors (arg a, object* reg)
 {
   #op=ignore-errors@
   #length=1@
@@ -3085,7 +3085,7 @@ op_ignore_errors (arg a, registry* reg)
 }
 
 void
-op_version (arg a, registry* reg)
+op_version (arg a, object* reg)
 {
   data* d;
   uint32_t* u32version = arbel_u8_to_u32(PACKAGE_VERSION,
@@ -3097,22 +3097,22 @@ op_version (arg a, registry* reg)
 }
 
 void
-op_filter (arg a, registry* reg)
+op_filter (arg a, object* reg)
 {
   #op=filter@
   #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   #num=2@
   #type=Operation@
   ##GETARG~$;
 
-  registry* r = (registry*) arg1->data;
-  registry* result = new_registry(reg, r->hash_size, reg->task);
+  object* r = (object*) arg1->data;
+  object* result = new_object(reg, r->hash_size, reg->task);
   arg a1;
   a1.length = 3;
   a1.free_data = malloc(sizeof(int)*a1.length);
@@ -3156,12 +3156,12 @@ op_filter (arg a, registry* reg)
     }
 
   data* d;
-  assign_registry(&d, result, false, reg->task);
+  assign_object(&d, result, false, reg->task);
   ret_ans(reg, d);
 }
 
 void
-op_please (arg a, registry* reg)
+op_please (arg a, object* reg)
 {
   #op=please@
 
@@ -3186,7 +3186,7 @@ op_please (arg a, registry* reg)
 }
 
 void
-op_mod (arg a, registry* reg)
+op_mod (arg a, object* reg)
 {
 
   #op=mod@
@@ -3213,7 +3213,7 @@ op_mod (arg a, registry* reg)
 }
 
 void
-op_op (arg a, registry* reg)
+op_op (arg a, object* reg)
 {
   #op=op@
 
@@ -3244,7 +3244,7 @@ op_op (arg a, registry* reg)
 }
 
 void
-op_use (arg a, registry* reg)
+op_use (arg a, object* reg)
 {
   #op=use@
   #length=1@
@@ -3288,7 +3288,7 @@ incr (data* d, mpz_t* shift)
 }
 
 void
-op_incr (arg a, registry* reg)
+op_incr (arg a, object* reg)
 {
   #op=incr@
   #length=1@
@@ -3343,22 +3343,22 @@ op_incr (arg a, registry* reg)
 }
 
 void
-op_rehash (arg a, registry* reg)
+op_rehash (arg a, object* reg)
 {
   #op=rehash@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
-  rehash((registry*) arg1->data);
+  rehash((object*) arg1->data);
   
 }
 
 void
-op_clock (arg a, registry* reg)
+op_clock (arg a, object* reg)
 {
   #op=clock@
   #length=0@
@@ -3383,7 +3383,7 @@ op_clock (arg a, registry* reg)
 }
 
 void
-op_make_time (arg a, registry* reg)
+op_make_time (arg a, object* reg)
 {
   #op=make-time@
   #length=1@
@@ -3400,7 +3400,7 @@ op_make_time (arg a, registry* reg)
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  registry* r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  object* r = new_object(reg, ARBEL_HASH_SIZE, reg->task);
   data* d;
 
 
@@ -3439,25 +3439,25 @@ op_make_time (arg a, registry* reg)
   mpz_clear(z);
   set(r, d, "day-of-week", 0);
 
-  assign_registry(&d, r, false, reg->task);
+  assign_object(&d, r, false, reg->task);
   ret_ans(reg, d);
   
 }
 
 void
-op_make_clock (arg a, registry* reg)
+op_make_clock (arg a, object* reg)
 {
   #op=make-clock@
   #length=1@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
 
   struct tm time;
 
-  registry* r = (registry*) arg1->data;
+  object* r = (object*) arg1->data;
   data* d;
 
   d = get(r, hash_str("milliseconds"), 0);
@@ -3540,7 +3540,7 @@ op_make_clock (arg a, registry* reg)
        
 
 void
-op_task (arg a, registry* reg)
+op_task (arg a, object* reg)
 {
   #op=task@
   #length=2@
@@ -3554,33 +3554,33 @@ op_task (arg a, registry* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  registry* init_state = NULL;
+  object* init_state = NULL;
   if (a.length >= 4)
     {
       #num=3@
-      #type=Registry@
+      #type=Object@
       ##GETARG~$;
-      init_state = (registry*) arg3->data;
+      init_state = (object*) arg3->data;
     }
 
   task* t = malloc(sizeof(task));
   t->task = new_task(t);
   if (init_state == NULL)
     {
-      t->state = new_registry(t->task->current_parse_registry,
+      t->state = new_object(t->task->current_parse_object,
                               ARBEL_HASH_SIZE,
                               t);
     }
   else
     {
-      t->state = copy_registry(init_state);
+      t->state = copy_object(init_state);
     }
-  t->state->up = t->task->current_parse_registry;
+  t->state->up = t->task->current_parse_object;
   t->state->task = t;
-  t->task->current_parse_registry = t->state;
+  t->task->current_parse_object = t->state;
 
   t->code = copy_instruction((instruction*) arg2->data);
-  t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+  t->queued_instruction = new_object(NULL, ARBEL_HASH_SIZE, t);
   
   t->pid = -1;
   t->thread = NULL;
@@ -3594,7 +3594,7 @@ op_task (arg a, registry* reg)
 }
 
 void
-op_run_task (arg a, registry* reg)
+op_run_task (arg a, object* reg)
 {
   #op=run-task@
   #length=1@
@@ -3623,7 +3623,7 @@ op_run_task (arg a, registry* reg)
 }
 
 void
-op_queue (arg a, registry* reg)
+op_queue (arg a, object* reg)
 {
   #op=queue@
   #length=2@
@@ -3670,7 +3670,7 @@ op_queue (arg a, registry* reg)
 }
 
 void
-op_accept (arg a, registry* reg)
+op_accept (arg a, object* reg)
 {
   #op=accept@
   #length=1@
@@ -3731,7 +3731,7 @@ op_accept (arg a, registry* reg)
 }
 
 void
-op_select (arg a, registry* reg)
+op_select (arg a, object* reg)
 {
   #op=select@
   #length=1@
@@ -3814,7 +3814,7 @@ op_select (arg a, registry* reg)
 }
 
 void
-op_accept_or (arg a, registry* reg)
+op_accept_or (arg a, object* reg)
 {
   #op=accept-or@
   #length=2@
@@ -3862,7 +3862,7 @@ op_accept_or (arg a, registry* reg)
 }
 
 void
-op_rand (arg a, registry* reg)
+op_rand (arg a, object* reg)
 {
   #op=rand@
 
@@ -3880,7 +3880,7 @@ op_rand (arg a, registry* reg)
   ret_ans(reg,d);
 }
 
-void op_floor (arg a, registry* reg)
+void op_floor (arg a, object* reg)
 {
   #op=floor@
   #length=1@
@@ -3899,7 +3899,7 @@ void op_floor (arg a, registry* reg)
   ret_ans(reg,d);
 }
 
-void op_ceiling (arg a, registry* reg)
+void op_ceiling (arg a, object* reg)
 {
   #op=ceiling@
   #length=1@
@@ -3919,7 +3919,7 @@ void op_ceiling (arg a, registry* reg)
 }
 
 void
-op_interpreter (arg a, registry* reg)
+op_interpreter (arg a, object* reg)
 {
   #op=interpreter@
   #length=0@
@@ -3945,7 +3945,7 @@ op_interpreter (arg a, registry* reg)
 }
 
 void
-op_build (arg a, registry* reg)
+op_build (arg a, object* reg)
 {
   #op=build@
   #length=2@
@@ -3956,7 +3956,7 @@ op_build (arg a, registry* reg)
   ##GETARG~$;
 
   #num=2@
-  #type=Registry@
+  #type=Object@
   ##GETARG~$;
   
 
@@ -3972,7 +3972,7 @@ op_build (arg a, registry* reg)
   sprintf(fname, "%s/.darbs/%s.darb", home, loc);
 
   data* d = copy_data(arg2);
-  save_outer((registry*) d->data, fname);
+  save_outer((object*) d->data, fname);
   
   free(loc);
   free(fname);
@@ -3982,16 +3982,16 @@ op_build (arg a, registry* reg)
 
   
 void
-add_basic_ops (registry* reg)
+add_basic_ops (object* reg)
 {
   data* d;
 
-  /* Registry operations */
+  /* Object operations */
 
   /** Creation **/
 
-  assign_op(&d, op_registry, NULL, NULL, 0);
-  set(reg,d,"registry",1);
+  assign_op(&d, op_object, NULL, NULL, 0);
+  set(reg,d,"object",1);
 
   assign_op(&d, op_list, NULL, NULL, 0);
   set(reg,d,"list",1);
@@ -4038,7 +4038,7 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_collapse, NULL, NULL, 0);
   set(reg,d,"collapse",1);
 
-  /** Execute Code in Registry **/
+  /** Execute Code in Object **/
 
   assign_op(&d, op_in, NULL, NULL, 0);
   set(reg,d,"in",1);
@@ -4046,10 +4046,10 @@ add_basic_ops (registry* reg)
   assign_op(&d, op_up, NULL, NULL, 0);
   set(reg,d,"up",1);
 
-  /** Test if registry **/
+  /** Test if object **/
   
-  assign_op(&d, op_is_registry, NULL, NULL, 0);
-  set(reg,d,"is-registry",1);
+  assign_op(&d, op_is_object, NULL, NULL, 0);
+  set(reg,d,"is-object",1);
 
 
   /** Technical **/

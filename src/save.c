@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -24,7 +24,7 @@
 #define BYT(s) nbytes(8*s)
 
 int
-save_registry (gzFile f, registry* reg)
+save_object (gzFile f, object* reg)
 {
   for (int i = 0; i < reg->hash_size; i++)
     {
@@ -109,8 +109,8 @@ save_content (gzFile f, content* reg)
               gzfwrite(reg->value->data, sizeof(char),
                        strlen(((regstr*) reg->value->data)->name), f);
               break;
-            case Registry:
-              save_registry(f, (registry*) reg->value->data);
+            case Object:
+              save_object(f, (object*) reg->value->data);
               size = htole32((uint32_t) NotAType);
               gzfwrite(&size, sizeof(uint32_t), 1, f);
               break;
@@ -150,7 +150,7 @@ save_content (gzFile f, content* reg)
             case Task:
               {
                 task* t = (task*) reg->value->data;
-                save_registry(f, t->state);
+                save_object(f, t->state);
                 size = htole32((uint32_t) NotAType);
                 gzfwrite(&size, sizeof(uint32_t),1,f);
                 size = (uint64_t) strlen8(t->code->code, CHAR_BIT);
@@ -184,12 +184,12 @@ save_content (gzFile f, content* reg)
 }
 
 int
-read_registry (gzFile f, registry* reg)
+read_object (gzFile f, object* reg)
 {
   uint32_t* type_cache = malloc(sizeof(uint32_t));
   void* cache;
   data* d;
-  registry* r;
+  object* r;
   uint64_t size;
   statement* stmt = NULL;
   parser_state state;
@@ -260,10 +260,10 @@ read_registry (gzFile f, registry* reg)
           assign_regstr(&d, (char*) cache, hash_str((char*) cache));
           free(cache);
           break;
-        case Registry:
-          r = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
-          read_registry(f, r);
-          assign_registry(&d, r, false, reg->task);
+        case Object:
+          r = new_object(reg, ARBEL_HASH_SIZE, reg->task);
+          read_object(f, r);
+          assign_object(&d, r, false, reg->task);
           break;
         case Instruction:
           cache = malloc(sizeof(uint64_t));
@@ -363,8 +363,8 @@ read_registry (gzFile f, registry* reg)
           {
             task* t = malloc(sizeof(task));
             t->task = new_task(t);
-            t->state = new_registry(t->task->current_parse_registry, ARBEL_HASH_SIZE, t);
-            read_registry(f, t->state);
+            t->state = new_object(t->task->current_parse_object, ARBEL_HASH_SIZE, t);
+            read_object(f, t->state);
             cache = malloc(sizeof(uint64_t));
             gzfread(cache, sizeof(uint64_t), 1, f);
             size = le64toh(*((uint64_t*) cache));
@@ -387,8 +387,8 @@ read_registry (gzFile f, registry* reg)
             stmt = NULL;
             free(cache);
 
-            t->task->current_parse_registry = t->state;
-            t->queued_instruction = new_registry(NULL, ARBEL_HASH_SIZE, t);
+            t->task->current_parse_object = t->state;
+            t->queued_instruction = new_object(NULL, ARBEL_HASH_SIZE, t);
             t->pid = -1;
             t->thread = NULL;
             d = new_data();
@@ -431,7 +431,7 @@ read_registry (gzFile f, registry* reg)
 }
 
 void
-save_outer (registry* reg, char* fname)
+save_outer (object* reg, char* fname)
 {
   gzFile f = gzopen(fname, "w6");
   double save_version = 1.1;
@@ -439,7 +439,7 @@ save_outer (registry* reg, char* fname)
   uint64_t u = htole64(*inp);
   gzfwrite(&u, sizeof(uint64_t), 1, f);
   
-  save_registry(f, reg);
+  save_object(f, reg);
   data_type end = NotAType;
   uint32_t end_u = htole32((uint32_t) end);
   gzfwrite(&end_u, sizeof(uint32_t), 1, f);
@@ -447,7 +447,7 @@ save_outer (registry* reg, char* fname)
 }
 
 void
-read_outer (gzFile f, registry* reg)
+read_outer (gzFile f, object* reg)
 {
   double version;
   uint64_t tmp;
@@ -455,5 +455,5 @@ read_outer (gzFile f, registry* reg)
   tmp = le64toh(tmp);
   version = *((double*) &tmp);
   
-  read_registry(f, reg);
+  read_object(f, reg);
 }

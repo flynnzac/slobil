@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
 
@@ -23,7 +23,7 @@
 #include "arbel.h"
 
 void
-ret (registry* reg, data* d, const char* name)
+ret (object* reg, data* d, const char* name)
 {
   if (reg != NULL)
     {
@@ -36,7 +36,7 @@ ret (registry* reg, data* d, const char* name)
 }
 
 void
-ret_ans (registry* reg, data* d)
+ret_ans (object* reg, data* d)
 {
   if (d == NULL)
     return;
@@ -45,7 +45,7 @@ ret_ans (registry* reg, data* d)
 }
 
 void
-execute_0 (data* instr, registry* reg)
+execute_0 (data* instr, object* reg)
 {
   ((instruction*) instr->data)->being_called = true;
   execute_code(((instruction*) instr->data)->stmt, reg);
@@ -53,7 +53,7 @@ execute_0 (data* instr, registry* reg)
 }
 
 void
-_op_call (arg a, registry* reg, const int explicit)
+_op_call (arg a, object* reg, const int explicit)
 {
   data* arg1 = resolve(a.arg_array[explicit], reg);
 
@@ -63,7 +63,7 @@ _op_call (arg a, registry* reg, const int explicit)
       return;
     }
 
-  registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+  object* r_new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
   data* d = NULL;
   data* d_data = NULL;
   data* d_new;
@@ -76,7 +76,7 @@ _op_call (arg a, registry* reg, const int explicit)
       if (d->type != Register)
         {
           do_error("Expected a register", reg->task->task);
-          free_registry(r_new);
+          free_object(r_new);
           return;
         }
       d_data = a.arg_array[i+1];
@@ -103,11 +103,11 @@ _op_call (arg a, registry* reg, const int explicit)
         }
     }
   
-  free_registry(r_new);
+  free_object(r_new);
 }
 
 void
-do_operation (op_wrapper* op, registry* reg, arg a)
+do_operation (op_wrapper* op, object* reg, arg a)
 {
   if (op->instr == NULL)
     {
@@ -115,7 +115,7 @@ do_operation (op_wrapper* op, registry* reg, arg a)
     }
   else
     {
-      registry* r_new = new_registry(reg, ARBEL_HASH_SIZE, reg->task);
+      object* r_new = new_object(reg, ARBEL_HASH_SIZE, reg->task);
       data* d;
       size_t len = (op->n_arg+1) < a.length ? (op->n_arg + 1) : a.length;
       for (int i=1; i < len; i++)
@@ -140,12 +140,12 @@ do_operation (op_wrapper* op, registry* reg, arg a)
             }
         }
 
-      free_registry(r_new);
+      free_object(r_new);
     }
 }
 
 void
-compute (data* cmd, registry* reg, arg a)
+compute (data* cmd, object* reg, arg a)
 {
   if (cmd == NULL)
     {
@@ -166,7 +166,7 @@ compute (data* cmd, registry* reg, arg a)
     case Register:
       auto_set(a, reg);
       break;
-    case Registry:
+    case Object:
       method_call(a, reg);
       break;
     default:

@@ -1,5 +1,5 @@
 /* 
-   ARBEL is a Registry Based Environment and Language
+   ARBEL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 
    This file is part of ARBEL.
@@ -124,7 +124,7 @@ append_statement (statement* current, element* head)
 }
 
 void
-execute_statement (statement* s, registry* reg)
+execute_statement (statement* s, object* reg)
 {
 
   element* e = s->head;
@@ -208,7 +208,7 @@ execute_statement (statement* s, registry* reg)
 }
 
 void
-execute_code (statement* s, registry* reg)
+execute_code (statement* s, object* reg)
 {
   statement* stmt = s;
   int error = 0;
