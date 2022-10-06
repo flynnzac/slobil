@@ -29,7 +29,7 @@ then to build and install, do:
 
 ```
 $ ./init_build.sh
-$ ./configure ...
+$ ./configure 
 $ make
 ```
 
