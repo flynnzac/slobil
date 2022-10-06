@@ -54,7 +54,7 @@ enum data_type
    Integer = 1,
    Real = 2,
    String = 4,
-   Register = 8,
+   Symbol = 8,
    Object = 16,
    Instruction = 32,
    Expression = 64,
@@ -133,13 +133,13 @@ typedef struct object object;
 typedef void (*operation)(struct arg, object*);
 
 
-struct regstr
+struct symbol
 {
   char* name;
   unsigned long key;
 };
 
-typedef struct regstr regstr;
+typedef struct symbol symbol;
 
 struct op_wrapper
 {
@@ -191,7 +191,7 @@ struct element
   unsigned long* hash_name;
   struct element* right;
   int levels;
-  int* is_regstr;
+  int* is_symbol;
 };
 
 typedef struct element element;
@@ -277,7 +277,7 @@ void
 assign_object (data** d, object* r, bool copy, task* task);
 
 void
-assign_regstr (data** d, const char* name, unsigned long key);
+assign_symbol (data** d, const char* name, unsigned long key);
 
 void
 assign_boolean (data** d, bool val);
@@ -314,13 +314,13 @@ data*
 get (object* reg, unsigned long hash_name, int recursive);
 
 content*
-mov (object* reg, regstr* old, regstr* new);
+mov (object* reg, symbol* old, symbol* new);
 
 content*
 del (object* reg, unsigned long hash_name, int del_data, bool hard_free);
 
 data*
-get_data_in_object (object* reg, const regstr name);
+get_data_in_object (object* reg, const symbol name);
 
 void
 do_error (const char* msg, task_vars* t);
@@ -332,7 +332,7 @@ void
 print_data (data* d, print_settings settings);
 
 bool
-is_register (const char* str);
+is_symbol (const char* str);
 
 void
 str_shift_left (char* buffer);
@@ -427,7 +427,7 @@ append_statement (statement* current, element* head);
 element*
 append_argument_element (element* current, char** name,
                          unsigned long* hash_name, const int levels,
-                         int* is_regstr);
+                         int* is_symbol);
 
 element*
 append_literal_element (element* current, data* d);
@@ -466,7 +466,7 @@ unsigned long
 hash_str(const char *str);
 
 char**
-split_by_colon (const char* name, int* cnt, int** is_regstr);
+split_by_colon (const char* name, int* cnt, int** is_symbol);
 
 char**
 copy_names (char** name, int levels);
@@ -475,10 +475,10 @@ unsigned long*
 copy_hashes (unsigned long* hashes, int levels);
 
 int*
-copy_isregstr (int* is_regstr, int levels);
+copy_issymbol (int* is_symbol, int levels);
 
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name);
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol, char** name);
 
 const char*
 str_type (data_type type);

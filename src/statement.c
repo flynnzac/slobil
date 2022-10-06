@@ -35,7 +35,7 @@ append_literal_element (element* current, data* d)
   e->s = NULL;
   e->hash_name = NULL;
   e->levels = 0;
-  e->is_regstr = NULL;
+  e->is_symbol = NULL;
   
   if (current != NULL)
     {
@@ -49,7 +49,7 @@ element*
 append_argument_element (element* current, char** name,
                          unsigned long* hash_name,
                          const int levels,
-                         int* is_regstr)
+                         int* is_symbol)
 {
   element* e = malloc(sizeof(element));
   e->data = NULL;
@@ -60,7 +60,7 @@ append_argument_element (element* current, char** name,
   e->s = NULL;
   e->hash_name = hash_name;
   e->levels = levels;
-  e->is_regstr = is_regstr;
+  e->is_symbol = is_symbol;
   if (current != NULL)
     {
       current->right = e;
@@ -80,7 +80,7 @@ append_statement_element (element* current, statement* s)
   e->right = NULL;
   e->hash_name = NULL;
   e->levels = 0;
-  e->is_regstr = NULL;
+  e->is_symbol = NULL;
 
   if (current != NULL)
     {
@@ -153,7 +153,7 @@ execute_statement (statement* s, object* reg)
               d = get(reg, reg->task->task->arbel_hash_ans, 0);
               if (d == NULL)
                 {
-                  do_error("Instruction in [] did not set /ans register.",
+                  do_error("Instruction in [] did not set /ans symbol.",
                            reg->task->task);
                 }
               else 
@@ -167,7 +167,7 @@ execute_statement (statement* s, object* reg)
               d = get_by_levels(reg,
                                 e->hash_name,
                                 e->levels,
-                                e->is_regstr,
+                                e->is_symbol,
                                 e->name);
               
             }

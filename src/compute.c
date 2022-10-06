@@ -73,15 +73,15 @@ _op_call (arg a, object* reg, const int explicit)
     {
       d = a.arg_array[i];
 
-      if (d->type != Register)
+      if (d->type != Symbol)
         {
-          do_error("Expected a register", reg->task->task);
+          do_error("Expected a symbol", reg->task->task);
           free_object(r_new);
           return;
         }
       d_data = a.arg_array[i+1];
       d_new = d_data;
-      content* c = set(r_new, d_new, ((regstr*) d->data)->name, 1);
+      content* c = set(r_new, d_new, ((symbol*) d->data)->name, 1);
       c->do_not_free_data = 1;
     }
 
@@ -122,7 +122,7 @@ do_operation (op_wrapper* op, object* reg, arg a)
         {
           d = resolve(a.arg_array[i], reg);
           content* c = set(r_new, d,
-                           ((regstr*) op->args[i-1]->data)->name,
+                           ((symbol*) op->args[i-1]->data)->name,
                            1);
           c->do_not_free_data = 1;
         }
@@ -163,7 +163,7 @@ compute (data* cmd, object* reg, arg a)
     case Instruction:
       _op_call(a, reg, 0);
       break;
-    case Register:
+    case Symbol:
       auto_set(a, reg);
       break;
     case Object:

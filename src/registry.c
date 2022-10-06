@@ -198,7 +198,7 @@ lookup (object* reg, unsigned long hash_name, int recursive)
 }
 
 content*
-mov (object* reg, regstr* old, regstr* new)
+mov (object* reg, symbol* old, symbol* new)
 {
   unsigned long old_element = old->key % reg->hash_size;
 
@@ -320,21 +320,21 @@ mark_do_not_free (object* reg, unsigned long hash_name)
 }
 
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr, char** name)
+get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_symbol, char** name)
 {
   data* d = get(reg, hash_name[0], 1);
   if (d == NULL)
     {
       char* msg = malloc(sizeof(char)*
-                         (strlen("Value at register / not found.")
+                         (strlen("Value at symbol / not found.")
                           + strlen(name[0]) + 1));
-      sprintf(msg, "Value at register /%s not found.", name[0]);
+      sprintf(msg, "Value at symbol /%s not found.", name[0]);
       do_error(msg, reg->task->task);
       free(msg);
     }
   else if (d->type != Object && levels > 1)
     {
-      do_error("Cannot get registers in non-object.", reg->task->task);
+      do_error("Cannot get symbols in non-object.", reg->task->task);
     }
   else
     {
@@ -342,35 +342,35 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr
         {
           if (d == NULL)
             {
-              do_error("Register not found in object.",
+              do_error("Symbol not found in object.",
                        reg->task->task);
               return NULL;
             }
 
           if (d->type != Object)
             {
-              do_error("Cannot get registers in non-object.",
+              do_error("Cannot get symbols in non-object.",
                        reg->task->task);
               return NULL;
             }
 
-          if (is_regstr[i])
+          if (is_symbol[i])
             {
               d = get((object*) d->data, hash_name[i], 0);
             }
           else
             {
               data* d1 = get(reg, hash_name[i], 1);
-              if (d1 == NULL || d1->type != Register)
+              if (d1 == NULL || d1->type != Symbol)
                 {
-                  do_error("Cannot use `:` with non-register.",
+                  do_error("Cannot use `:` with non-symbol.",
                            reg->task->task);
                   return NULL;
                 }
               else
                 {
                   d = get((object*) d->data,
-                          ((regstr*) d1->data)->key,
+                          ((symbol*) d1->data)->key,
                           0);
                 }
             }
@@ -378,7 +378,7 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_regstr
 
       if (d == NULL)
         {
-          do_error("Register not found in object.",
+          do_error("Symbol not found in object.",
                    reg->task->task);
           return NULL;
         }

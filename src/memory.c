@@ -67,9 +67,9 @@ free_statement (statement* s)
               free(e->hash_name);
             }
 
-          if (e->is_regstr != NULL)
+          if (e->is_symbol != NULL)
             {
-              free(e->is_regstr);
+              free(e->is_symbol);
             }
 
           if (e->s != NULL)
@@ -112,9 +112,9 @@ free_data (data* d)
       free_object((object*) d->data);
       free(d);
     }
-  else if (d->type == Register)
+  else if (d->type == Symbol)
     {
-      free(((regstr*) d->data)->name);
+      free(((symbol*) d->data)->name);
       free(d->data);
       free(d);
     }

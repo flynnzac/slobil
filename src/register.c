@@ -99,7 +99,7 @@ hash_str(const char *str)
 }
 
 char**
-split_by_colon (const char* name, int* cnt, int** is_regstr)
+split_by_colon (const char* name, int* cnt, int** is_symb)
 {
   int i;
   *cnt = 1;
@@ -115,7 +115,7 @@ split_by_colon (const char* name, int* cnt, int** is_regstr)
   
   char** result = malloc((*cnt)*sizeof(char*));
   char* buffer = malloc(sizeof(char)*(strlen(name)+1));
-  *is_regstr = malloc(sizeof(int)*(*cnt));
+  *is_symb = malloc(sizeof(int)*(*cnt));
   int k = 0;
   for (i=0; i < strlen(name); i++)
     {
@@ -123,16 +123,16 @@ split_by_colon (const char* name, int* cnt, int** is_regstr)
         {
           buffer[j] = '\0';
           result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-          if (is_register(buffer))
+          if (is_symbol(buffer))
             {
-              (*is_regstr)[k] = 1;
+              (*is_symb)[k] = 1;
               buffer++;
               strcpy(result[k], buffer);
               buffer--;
             }
           else
             {
-              (*is_regstr)[k] = 0;
+              (*is_symb)[k] = 0;
               strcpy(result[k], buffer);
             }
           k++;
@@ -150,16 +150,16 @@ split_by_colon (const char* name, int* cnt, int** is_regstr)
   if (strlen(buffer) != 0)
     {
       result[k] = malloc(sizeof(char)*(strlen(buffer)+1));
-      if (is_register(buffer))
+      if (is_symbol(buffer))
         {
-          (*is_regstr)[k] = 1;
+          (*is_symb)[k] = 1;
           buffer++;
           strcpy(result[k], buffer);
           buffer--;
         }
       else
         {
-          (*is_regstr)[k] = 0;
+          (*is_symb)[k] = 0;
           strcpy(result[k], buffer);
         }
 
@@ -197,13 +197,13 @@ copy_hashes (unsigned long* hashes, int levels)
 }
 
 int*
-copy_isregstr (int* is_regstr, int levels)
+copy_issymbol (int* is_symb, int levels)
 {
   int* copy = malloc(sizeof(int)*levels);
   int i;
   for (i=0; i < levels; i++)
     {
-      copy[i] = is_regstr[i];
+      copy[i] = is_symb[i];
     }
   return copy;
 }

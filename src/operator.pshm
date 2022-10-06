@@ -194,9 +194,9 @@ op_object (arg a, object* reg)
     {
       d = a.arg_array[i];
       
-      if (d->type != Register)
+      if (d->type != Symbol)
         {
-          do_error("Expected a register.", reg->task->task);
+          do_error("Expected a symbol.", reg->task->task);
           free_object(r_new);
           return;
         }
@@ -205,7 +205,7 @@ op_object (arg a, object* reg)
         {
           d_data = resolve(a.arg_array[i+1], reg);
           d_new = copy_data(d_data);
-          set(r_new, d_new, ((regstr*) d->data)->name, 0);
+          set(r_new, d_new, ((symbol*) d->data)->name, 0);
         }
     }
 
@@ -241,9 +241,9 @@ op_new(arg a, object* reg)
       for (int i=2; i < a.length; i = i + 2)
         {
           d = a.arg_array[i];
-          if (d->type != Register)
+          if (d->type != Symbol)
             {
-              do_error("Expected a register.", reg->task->task);
+              do_error("Expected a symbol.", reg->task->task);
               free_object(r_new);
               return;
             }
@@ -254,7 +254,7 @@ op_new(arg a, object* reg)
               d_new = copy_data(d_data);
               set((object*) out->data,
                   d_new,
-                  ((regstr*) d->data)->name,
+                  ((symbol*) d->data)->name,
                   0);
             }
         }
@@ -392,7 +392,7 @@ auto_set (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=0@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=1@
@@ -414,7 +414,7 @@ auto_set (arg a, object* reg)
       to_set = reg;
     }
 
-  char* name = ((regstr*) arg0->data)->name;
+  char* name = ((symbol*) arg0->data)->name;
   data* d = copy_data(arg1);
   set(to_set, d, name, 1);
 }
@@ -429,7 +429,7 @@ op_set (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
@@ -451,7 +451,7 @@ op_set (arg a, object* reg)
       to_set = reg;
     }
   
-  char* name = ((regstr*) arg1->data)->name;
+  char* name = ((symbol*) arg1->data)->name;
   data* d = copy_data(arg2);
   set(to_set, d, name, 1);
 
@@ -466,7 +466,7 @@ op_get (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
   
   object* to_look;
@@ -483,7 +483,7 @@ op_get (arg a, object* reg)
       to_look = (object*) arg2->data;
     }
 
-  data* ans = lookup(to_look, ((regstr*) arg1->data)->key,
+  data* ans = lookup(to_look, ((symbol*) arg1->data)->key,
 		     a.length==2);
   if (ans != NULL)
     {
@@ -558,14 +558,14 @@ op_move (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
   ##GETARG~$;
 
-  mov(reg, (regstr*) arg1->data,
-      (regstr*) arg2->data);
+  mov(reg, (symbol*) arg1->data,
+      (symbol*) arg2->data);
   
 }
 
@@ -577,10 +577,10 @@ op_delete (arg a, object* reg)
   ##CHECK_ARGS~$;
   
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
   
-  del(reg, ((regstr*) arg1->data)->key, 1, false);
+  del(reg, ((symbol*) arg1->data)->key, 1, false);
 }
 
 void
@@ -591,10 +591,10 @@ op_free (arg a, object* reg)
   ##CHECK_ARGS~$;
   
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
   
-  del(reg, ((regstr*) arg1->data)->key, 1, true);
+  del(reg, ((symbol*) arg1->data)->key, 1, true);
 }
 
 void
@@ -622,7 +622,7 @@ op_exist (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   object* to_use = reg;
@@ -635,7 +635,7 @@ op_exist (arg a, object* reg)
       to_use = (object*) arg2->data;
     }
 
-  data* obj = get(to_use, ((regstr*) arg1->data)->key, a.length < 3 ? 1 : 0);
+  data* obj = get(to_use, ((symbol*) arg1->data)->key, a.length < 3 ? 1 : 0);
   data* d;
   if (obj == NULL)
     {
@@ -1045,7 +1045,7 @@ op_do (arg a, object* reg)
           d = lookup(reg, reg->task->task->arbel_hash_ans, 0);
           if (d == NULL)
             {
-              do_error("Instruction in <do> did not set /ans register.",
+              do_error("Instruction in <do> did not set /ans symbol.",
                        reg->task->task);
               break;
             }
@@ -1070,7 +1070,7 @@ op_do (arg a, object* reg)
 }
 
 data*
-register_arithmetic (regstr* rg, int diff, task_vars* task)
+symbol_arithmetic (symbol* rg, int diff, task_vars* task)
 {
   char* cur_name = malloc(sizeof(char)*(strlen(rg->name)+1));
   strcpy(cur_name, rg->name);
@@ -1102,10 +1102,10 @@ register_arithmetic (regstr* rg, int diff, task_vars* task)
   char* new_name = malloc(sizeof(char)*(strlen(cur_name)+2));
   sprintf(new_name, "%s%d", cur_name, num);
   data* d = new_data();
-  d->type = Register;
-  d->data = malloc(sizeof(regstr));
-  ((regstr*) d->data)->name = new_name;
-  ((regstr*) d->data)->key = hash_str(new_name);
+  d->type = Symbol;
+  d->data = malloc(sizeof(symbol));
+  ((symbol*) d->data)->name = new_name;
+  ((symbol*) d->data)->key = hash_str(new_name);
   free(cur_name);
   
   return d;
@@ -1120,10 +1120,10 @@ op_next (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
-  data* d = register_arithmetic((regstr*) arg1->data, 1,
+  data* d = symbol_arithmetic((symbol*) arg1->data, 1,
                                 reg->task->task);
   if (d != NULL)
     ret_ans(reg,d);
@@ -1137,10 +1137,10 @@ op_previous (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
-  data* d = register_arithmetic((regstr*) arg1->data, -1,
+  data* d = symbol_arithmetic((symbol*) arg1->data, -1,
                                 reg->task->task);
   if (d != NULL)
     ret_ans(reg,d);
@@ -1159,14 +1159,14 @@ op_last (arg a, object* reg)
   ##GETARG~$;
 
   #num=2@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   object* arg_reg = (object*) arg1->data;
   char* name = NULL;
   int i = 1;
   data* d;
-  char* root = ((regstr*) arg2->data)->name;
+  char* root = ((symbol*) arg2->data)->name;
   name = vector_name(root, i);
   unsigned long hash_name = hash_str(name);
 
@@ -1182,10 +1182,10 @@ op_last (arg a, object* reg)
   name = vector_name(root, i-1);
 
   d = new_data();
-  d->type = Register;
-  d->data = malloc(sizeof(regstr));
-  ((regstr*) d->data)->name = name;
-  ((regstr*) d->data)->key = hash_str(name);
+  d->type = Symbol;
+  d->data = malloc(sizeof(symbol));
+  ((symbol*) d->data)->name = name;
+  ((symbol*) d->data)->key = hash_str(name);
 
   ret_ans(reg, d);
   
@@ -1203,16 +1203,16 @@ method_call (arg a, object* reg)
   ##GETARG~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   data* instr = get((object*) arg0->data,
-                    ((regstr*) arg1->data)->key,
+                    ((symbol*) arg1->data)->key,
                     0);
 
   if (instr == NULL)
     {
-      do_error("Register not found in object.",
+      do_error("Symbol not found in object.",
                reg->task->task);
       return;
     }
@@ -1338,9 +1338,9 @@ op_repeat (arg a, object* reg)
 }
 
 void
-op_to_register (arg a, object* reg)
+op_to_symbol (arg a, object* reg)
 {
-  #op=to-register@
+  #op=to-symbol@
   #length=1@
   ##CHECK_ARGS~$;
 
@@ -1354,7 +1354,7 @@ op_to_register (arg a, object* reg)
     {
       char* str = arbel_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
-      assign_regstr(&d, str, hash_str(str));
+      assign_symbol(&d, str, hash_str(str));
       free(str);
     }
   else
@@ -1362,7 +1362,7 @@ op_to_register (arg a, object* reg)
       int val = mpz_get_si(*((mpz_t*) arg1->data));
       char* name = argument_name(val);
       unsigned long hash_name = hash_str(name);
-      assign_regstr(&d, name, hash_name);
+      assign_symbol(&d, name, hash_name);
       free(name);
     }
 
@@ -1390,10 +1390,10 @@ op_collapse (arg a, object* reg)
   if (a.length >= 4)
     {
       #num=3@
-      #type=Register@
+      #type=Symbol@
       ##GETARG~$;
 
-      prefix = ((regstr*) arg3->data)->name;
+      prefix = ((symbol*) arg3->data)->name;
     }
 
   data* d;
@@ -1442,7 +1442,7 @@ op_collapse (arg a, object* reg)
 
       if (d1 == NULL)
         {
-          do_error("Operation did not set /ans register.",
+          do_error("Operation did not set /ans symbol.",
                    reg->task->task);
           break;
         }
@@ -1607,23 +1607,23 @@ op_string_gt (arg a, object* reg)
 
 
 void
-op_register_eq (arg a, object* reg)
+op_symbol_eq (arg a, object* reg)
 {
-  #op=register-eq@
+  #op=symbol-eq@
   #length=2@
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
       
   data* d;
 
-  if (((regstr*) arg1->data)->key == ((regstr*) arg2->data)->key)
+  if (((symbol*) arg1->data)->key == ((symbol*) arg2->data)->key)
     assign_boolean(&d,true);
   else
     assign_boolean(&d,false);
@@ -1698,7 +1698,7 @@ op_to_string (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(Integer | Real | Register)'@
+  #type=`(Integer | Real | Symbol)'@
   ##GETARG~$;
 
   char* result;
@@ -1761,9 +1761,9 @@ op_to_string (arg a, object* reg)
     }
   else
     {
-      char* regstr_name = ((regstr*) arg1->data)->name;
-      result = malloc(sizeof(char)*(strlen(regstr_name)+1));
-      strcpy(result, regstr_name);
+      char* symbol_name = ((symbol*) arg1->data)->name;
+      result = malloc(sizeof(char)*(strlen(symbol_name)+1));
+      strcpy(result, symbol_name);
     }
 
   uint32_t* res32 = arbel_u8_to_u32(result, strlen(result));
@@ -1783,7 +1783,7 @@ op_to_number (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=`(String|Register)'@
+  #type=`(String|Symbol)'@
   ##GETARG~$;
 
   if (arg1->type == String)
@@ -1814,7 +1814,7 @@ op_to_number (arg a, object* reg)
     }
   else
     {
-      char* name = ((regstr*) arg1->data)->name;
+      char* name = ((symbol*) arg1->data)->name;
       int i = strlen(name);
       for (i = (strlen(name)-1); i >= 0; i--)
         {
@@ -1824,7 +1824,7 @@ op_to_number (arg a, object* reg)
 
       if (i >= (strlen(name)-1))
         {
-          do_error("Register does not end in a number.",
+          do_error("Symbol does not end in a number.",
                    reg->task->task);
           return;
         }
@@ -1985,9 +1985,9 @@ op_is_string (arg a, object* reg)
 }
 
 void
-op_is_register (arg a, object* reg)
+op_is_symbol (arg a, object* reg)
 {
-  op_is_type(a, reg, Register);
+  op_is_type(a, reg, Symbol);
 }
 
 void
@@ -2149,21 +2149,21 @@ op_close (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
-  data* f = lookup(reg, ((regstr*) arg1->data)->key, 0);
+  data* f = lookup(reg, ((symbol*) arg1->data)->key, 0);
 
   if (f == NULL)
     {
-      do_error("Register does not exist.",
+      do_error("Symbol does not exist.",
                reg->task->task);
       return;
     }
 
   if (f->type != File)
     {
-      do_error("Register does not contain a file.",
+      do_error("Symbol does not contain a file.",
                reg->task->task);
       return;
     }
@@ -2173,7 +2173,7 @@ op_close (arg a, object* reg)
       fclose((FILE*) f->data);
     }
 
-  del(reg, ((regstr*) arg1->data)->key, 1, false);
+  del(reg, ((symbol*) arg1->data)->key, 1, false);
   
 }
 
@@ -2353,7 +2353,7 @@ op_input (arg a, object* reg)
 
   #op=input@
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   char* input = readline("");
@@ -2363,7 +2363,7 @@ op_input (arg a, object* reg)
                                 
   assign_str(&d, str, 0);
   
-  set(reg, d, ((regstr*) arg1->data)->name, 1);
+  set(reg, d, ((symbol*) arg1->data)->name, 1);
 
 }
 
@@ -3140,7 +3140,7 @@ op_filter (arg a, object* reg)
             {
               a1.arg_array[1] = c->value;
               data* key;
-              assign_regstr(&key, c->name, c->key);
+              assign_symbol(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, reg, a1);
               data* d = lookup(reg, reg->task->task->arbel_hash_ans, 0);
@@ -3231,7 +3231,7 @@ op_op (arg a, object* reg)
   for (int i=2; i < a.length; i++)
     {
       #num=i@
-      #type=Register@
+      #type=Symbol@
       ##GETARG~$;
 
       new_op->args[i-2] = copy_data(argi);
@@ -3547,7 +3547,7 @@ op_task (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
@@ -3589,7 +3589,7 @@ op_task (arg a, object* reg)
   d->type = Task;
   d->data = t;
 
-  set(reg, d, ((regstr*) arg1->data)->name, 1);
+  set(reg, d, ((symbol*) arg1->data)->name, 1);
   
 }
 
@@ -3630,7 +3630,7 @@ op_queue (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
@@ -3663,7 +3663,7 @@ op_queue (arg a, object* reg)
   else
     {
       set(t->queued_instruction, d,
-          ((regstr*) arg1->data)->name, 0);
+          ((symbol*) arg1->data)->name, 0);
     }
   pthread_mutex_unlock(&t->lock);
 
@@ -3677,7 +3677,7 @@ op_accept (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   if (reg->task->queued_instruction==NULL)
@@ -3716,7 +3716,7 @@ op_accept (arg a, object* reg)
     {
       pthread_mutex_lock(&t->lock);
       d = get(t->queued_instruction,
-              ((regstr*) arg1->data)->key,
+              ((symbol*) arg1->data)->key,
               0);
       if (d==NULL)
         {
@@ -3724,7 +3724,7 @@ op_accept (arg a, object* reg)
         }
     }
 
-  del(t->queued_instruction, ((regstr*) arg1->data)->key,
+  del(t->queued_instruction, ((symbol*) arg1->data)->key,
       0, false);  
   ret_ans(reg, d);
   pthread_mutex_unlock(&t->lock);
@@ -3747,7 +3747,7 @@ op_select (arg a, object* reg)
   for (int i=1; i < a.length; i=i+2)
     {
       #num=i@
-      #type=Register@
+      #type=Symbol@
       ##GETARG~$;
 
       hashes[hash_idx] = argi;
@@ -3788,7 +3788,7 @@ op_select (arg a, object* reg)
       for (int i=0; i < hash_idx; i++)
         {
           d = get(t->queued_instruction,
-                  ((regstr*) hashes[i]->data)->key,
+                  ((symbol*) hashes[i]->data)->key,
                   0);
           if (d != NULL)
             {
@@ -3796,7 +3796,7 @@ op_select (arg a, object* reg)
               d = copy_data(d);
               ret_ans(reg,d);
               del(t->queued_instruction,
-                  ((regstr*) hashes[idx]->data)->key,
+                  ((symbol*) hashes[idx]->data)->key,
                   1, false);
 
               break;
@@ -3821,7 +3821,7 @@ op_accept_or (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Register@
+  #type=Symbol@
   ##GETARG~$;
 
   #num=2@
@@ -3843,7 +3843,7 @@ op_accept_or (arg a, object* reg)
 
   pthread_mutex_lock(&t->lock);
   data* d = get(t->queued_instruction,
-                ((regstr*) arg1->data)->key,
+                ((symbol*) arg1->data)->key,
                 0);
   pthread_mutex_unlock(&t->lock);
 
@@ -3854,7 +3854,7 @@ op_accept_or (arg a, object* reg)
   else
     {
       pthread_mutex_lock(&t->lock);
-      del(t->queued_instruction, ((regstr*) arg1->data)->key,
+      del(t->queued_instruction, ((symbol*) arg1->data)->key,
           0, false);
       ret_ans(reg,d);
       pthread_mutex_unlock(&t->lock);
@@ -3931,16 +3931,16 @@ op_interpreter (arg a, object* reg)
   for (int i=1; i < a.length; i = i + 2)
     {
       d1 = a.arg_array[i];
-      if (d1->type != Register)
+      if (d1->type != Symbol)
         {
-          do_error("Expected a register.", reg->task->task);
+          do_error("Expected a symbol.", reg->task->task);
           return;
         }
 
       d2 = resolve(a.arg_array[i+1], reg);
       d2 = copy_data(d2);
       set(reg->task->task->arbel_options,
-          d2, ((regstr*) d1->data)->name, 1);
+          d2, ((symbol*) d1->data)->name, 1);
     }
 }
 
@@ -4216,7 +4216,7 @@ add_basic_ops (object* reg)
 
   /* Environment operations */
 
-  /** Modify the /ans register **/
+  /** Modify the /ans symbol **/
 
   assign_op(&d, op_answer, NULL, NULL, 0);
   set(reg,d,"answer",1);
@@ -4268,9 +4268,9 @@ add_basic_ops (object* reg)
   assign_op(&d, op_version, NULL, NULL, 0);
   set(reg,d,"version",1);
 
-  /* Register operations */
+  /* Symbol operations */
 
-  /** Operations on "list" registers **/
+  /** Operations on "list" symbols **/
   assign_op(&d, op_next, NULL, NULL, 0);
   set(reg,d,"next",1);
 
@@ -4280,20 +4280,20 @@ add_basic_ops (object* reg)
   assign_op(&d, op_last, NULL, NULL, 0);
   set(reg,d,"last",1);
 
-  /** Convert to register **/
+  /** Convert to symbol **/
 
-  assign_op(&d, op_to_register, NULL, NULL, 0);
-  set(reg,d,"to-register",1);
+  assign_op(&d, op_to_symbol, NULL, NULL, 0);
+  set(reg,d,"to-symbol",1);
 
-  /** Register Comparison **/
+  /** Symbol Comparison **/
 
-  assign_op(&d, op_register_eq, NULL, NULL, 0);
-  set(reg,d,"register-eq",1);
+  assign_op(&d, op_symbol_eq, NULL, NULL, 0);
+  set(reg,d,"symbol-eq",1);
 
-  /** Test if register **/
+  /** Test if symbol **/
 
-  assign_op(&d, op_is_register, NULL, NULL, 0);
-  set(reg,d,"is-register",1);
+  assign_op(&d, op_is_symbol, NULL, NULL, 0);
+  set(reg,d,"is-symbol",1);
 
   /* File operations */
 

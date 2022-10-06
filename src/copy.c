@@ -136,14 +136,14 @@ assign_object (data** d, object* r, bool copy, task* t)
 }
 
 void
-assign_regstr (data** d, const char* name, unsigned long key)
+assign_symbol (data** d, const char* name, unsigned long key)
 {
   *d = new_data();
-  (*d)->type = Register;
-  (*d)->data = malloc(sizeof(regstr));
-  ((regstr*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
-  strcpy(((regstr*) (*d)->data)->name, name);
-  ((regstr*) (*d)->data)->key = key;
+  (*d)->type = Symbol;
+  (*d)->data = malloc(sizeof(symbol));
+  ((symbol*) (*d)->data)->name = malloc(sizeof(char)*(strlen(name)+1));
+  strcpy(((symbol*) (*d)->data)->name, name);
+  ((symbol*) (*d)->data)->key = key;
   
 }
 
@@ -220,7 +220,7 @@ copy_elements (element* e)
                                            copy_hashes(e->hash_name,
                                                        e->levels),
                                            e->levels,
-                                           copy_isregstr(e->is_regstr,
+                                           copy_issymbol(e->is_symbol,
                                                          e->levels));
             }
         }
@@ -339,9 +339,9 @@ copy_data (data* d_in)
     case String:
       assign_str(&d, (uint32_t*) d_in->data, 1);
       break;
-    case Register:
-      assign_regstr(&d, ((regstr*) d_in->data)->name,
-                    ((regstr*) d_in->data)->key);
+    case Symbol:
+      assign_symbol(&d, ((symbol*) d_in->data)->name,
+                    ((symbol*) d_in->data)->key);
       break;
     case Object:
       assign_object(&d, (object*) d_in->data, true,

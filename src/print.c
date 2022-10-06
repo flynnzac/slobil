@@ -49,8 +49,8 @@ print_data (data* d, print_settings settings)
     case Instruction:
       printf("( %s )", ((instruction*) d->data)->code);
       break;
-    case Register:
-      printf("/%s", ((regstr*) d->data)->name);
+    case Symbol:
+      printf("/%s", ((symbol*) d->data)->name);
       break;
     case Operation:
       if (((op_wrapper*) d->data)->instr == NULL)
@@ -61,7 +61,7 @@ print_data (data* d, print_settings settings)
           for (int i = 0; i < ((op_wrapper*) d->data)->n_arg; i++)
             {
               printf("/%s ",
-                     ((regstr*) ((op_wrapper*) d->data)->args[i]->data)->name);
+                     ((symbol*) ((op_wrapper*) d->data)->args[i]->data)->name);
             }
           printf("\n( %s )", ((instruction*) ((op_wrapper*) d->data)->instr->data)->code);
         }

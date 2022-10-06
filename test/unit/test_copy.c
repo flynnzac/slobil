@@ -79,15 +79,15 @@ START_TEST(test_assign_nothing)
 }
 END_TEST
 
-START_TEST(test_assign_regstr)
+START_TEST(test_assign_symbol)
 {
   data* d = NULL;
 
-  assign_regstr(&d, "test", hash_str("test"));
+  assign_symbol(&d, "test", hash_str("test"));
 
-  ck_assert_str_eq(((regstr*) d->data)->name, "test");
-  ck_assert_str_ne(((regstr*) d->data)->name, "test1");
-  ck_assert_uint_eq(((regstr*) d->data)->key, hash_str("test"));
+  ck_assert_str_eq(((symbol*) d->data)->name, "test");
+  ck_assert_str_ne(((symbol*) d->data)->name, "test1");
+  ck_assert_uint_eq(((symbol*) d->data)->key, hash_str("test"));
   
   free_data(d);  
 }
@@ -124,7 +124,7 @@ wob_copy_suite ()
   tcase_add_test(tc_core, test_assign_str);
   tcase_add_test(tc_core, test_assign_bool);
   tcase_add_test(tc_core, test_assign_nothing);
-  tcase_add_test(tc_core, test_assign_regstr);
+  tcase_add_test(tc_core, test_assign_symbol);
   tcase_add_test(tc_core, test_assign_file);
 
   suite_add_tcase(s, tc_core);

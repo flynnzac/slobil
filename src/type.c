@@ -69,7 +69,7 @@ is_numeric (data* d)
 }
 
 bool
-is_register (const char* str)
+is_symbol (const char* str)
 {
   return (str[0] == '/');
 }
@@ -112,8 +112,8 @@ str_type (data_type type)
     case String:
       s = "String";
       break;
-    case Register:
-      s = "Register";
+    case Symbol:
+      s = "Symbol";
       break;
     case Object:
       s = "Object";
