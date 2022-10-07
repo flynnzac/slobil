@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-06 Thu 20:17 -->
+<!-- 2022-10-06 Thu 22:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SLOBIL</title>
@@ -227,7 +227,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-SLOBIL<br>Zach Flynn<br>2022-10-06 Thu 20:17
+SLOBIL<br>Zach Flynn<br>2022-10-06 Thu 22:43
 </div>
 <div id="content" class="content">
 <h1 class="title">SLOBIL</h1>
@@ -235,159 +235,159 @@ SLOBIL<br>Zach Flynn<br>2022-10-06 Thu 20:17
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org44e6109">1. Introduction</a></li>
-<li><a href="#orgbcdcf8b">2. The Language</a>
+<li><a href="#orge5e0417">1. Introduction</a></li>
+<li><a href="#org161a548">2. The Language</a>
 <ul>
-<li><a href="#org76bb7ba">2.1. Statements and syntax</a></li>
-<li><a href="#org3d195f8">2.2. Substatements</a>
+<li><a href="#org7acd223">2.1. Statements and syntax</a></li>
+<li><a href="#org74adc45">2.2. Substatements</a>
 <ul>
-<li><a href="#orga05c13e">2.2.1. Instructions</a></li>
-<li><a href="#org367332c">2.2.2. Substatements</a></li>
-<li><a href="#orgdad87e0">2.2.3. Expressions</a></li>
-<li><a href="#org38dc32b">2.2.4. Convert an instruction to an operation</a></li>
-<li><a href="#orgf4cd401">2.2.5. Comments</a></li>
-<li><a href="#org7af71b5">2.2.6. Ending Last Statement in a Substatement</a></li>
+<li><a href="#org06e3bfd">2.2.1. Instructions</a></li>
+<li><a href="#orgf749dad">2.2.2. Substatements</a></li>
+<li><a href="#orgc422aae">2.2.3. Expressions</a></li>
+<li><a href="#org7ab5fa5">2.2.4. Convert an instruction to an operation</a></li>
+<li><a href="#orgf773757">2.2.5. Comments</a></li>
+<li><a href="#orgb71896c">2.2.6. Ending Last Statement in a Substatement</a></li>
 </ul>
 </li>
-<li><a href="#org46c5124">2.3. Objects</a>
+<li><a href="#org38e25b0">2.3. Objects</a>
 <ul>
-<li><a href="#org8aa3079">2.3.1. Object-Oriented Programming</a></li>
-<li><a href="#org69130e1">2.3.2. Additional details about colon notation</a></li>
+<li><a href="#org36884e0">2.3.1. Object-Oriented Programming</a></li>
+<li><a href="#org84a3265">2.3.2. Additional details about colon notation</a></li>
 </ul>
 </li>
-<li><a href="#orga879419">2.4. Slots</a></li>
-<li><a href="#orgaefbe19">2.5. Environment</a>
+<li><a href="#org772689d">2.4. Slots</a></li>
+<li><a href="#org7dcf292">2.5. Environment</a>
 <ul>
-<li><a href="#orgf9bd58f">2.5.1. Saving state</a></li>
-<li><a href="#org9768645">2.5.2. Interacting with the user</a></li>
+<li><a href="#org601b367">2.5.1. Saving state</a></li>
+<li><a href="#orga0ed365">2.5.2. Interacting with the user</a></li>
 </ul>
 </li>
-<li><a href="#orgc399fb5">2.6. Tasks (concurrent programs)</a></li>
+<li><a href="#org494eb23">2.6. Tasks (concurrent programs)</a></li>
 </ul>
 </li>
-<li><a href="#orga0d7d3f">3. A Complete Example Program</a>
+<li><a href="#org26f3eb2">3. A Complete Example Program</a>
 <ul>
-<li><a href="#orgcfa00eb">3.1. Source Code</a></li>
-<li><a href="#orgac48739">3.2. Building the Code</a></li>
-<li><a href="#orgff26c3f">3.3. Using the code</a></li>
+<li><a href="#org96d0ef4">3.1. Source Code</a></li>
+<li><a href="#orgd88191b">3.2. Building the Code</a></li>
+<li><a href="#orgd66edc2">3.3. Using the code</a></li>
 </ul>
 </li>
-<li><a href="#orgb789dd9">4. Examples</a>
+<li><a href="#org9c90aaa">4. Examples</a>
 <ul>
-<li><a href="#orga174cc7">4.1. Quicksort</a></li>
-<li><a href="#org352c16e">4.2. A Line-Oriented Text Editor</a></li>
-<li><a href="#orga5b6e7e">4.3. Numerical Differentiation</a></li>
-<li><a href="#orgd26efa9">4.4. Compute Factorial</a>
+<li><a href="#org627c6ba">4.1. Quicksort</a></li>
+<li><a href="#org151c623">4.2. A Line-Oriented Text Editor</a></li>
+<li><a href="#org7b4f30a">4.3. Numerical Differentiation</a></li>
+<li><a href="#orga7d06fd">4.4. Compute Factorial</a>
 <ul>
-<li><a href="#orgf77afd1">4.4.1. Note on Recursion</a></li>
+<li><a href="#org3dc6078">4.4.1. Note on Recursion</a></li>
 </ul>
 </li>
-<li><a href="#org124eacd">4.5. Numerical Integration</a></li>
-<li><a href="#orgd66392c">4.6. Basic Linear Algebra</a></li>
-<li><a href="#orgdca5620">4.7. Split a String</a></li>
-<li><a href="#org0dc50dd">4.8. Linking C code</a></li>
-<li><a href="#orgf648515">4.9. Concurrent Programming</a></li>
+<li><a href="#orgc3ae197">4.5. Numerical Integration</a></li>
+<li><a href="#orga0e5a29">4.6. Basic Linear Algebra</a></li>
+<li><a href="#org21fbb9b">4.7. Split a String</a></li>
+<li><a href="#org9688f6e">4.8. Linking C code</a></li>
+<li><a href="#org579e9e1">4.9. Concurrent Programming</a></li>
 </ul>
 </li>
-<li><a href="#org51e6951">5. Reference</a>
+<li><a href="#orged12b58">5. Reference</a>
 <ul>
-<li><a href="#org3bac8d7">5.1. Objects</a>
+<li><a href="#org5667cc6">5.1. Objects</a>
 <ul>
-<li><a href="#org1e48f93">5.1.1. Short description</a></li>
-<li><a href="#org087db63">5.1.2. Implementation details</a></li>
-<li><a href="#orge8faf2d">5.1.3. Object operations</a></li>
+<li><a href="#org4e21e9b">5.1.1. Short description</a></li>
+<li><a href="#orgf7f5f81">5.1.2. Implementation details</a></li>
+<li><a href="#org2cca057">5.1.3. Object operations</a></li>
 </ul>
 </li>
-<li><a href="#org5f65373">5.2. Reals and Integers</a>
+<li><a href="#org17a386e">5.2. Reals and Integers</a>
 <ul>
-<li><a href="#orgf69abaa">5.2.1. Short description</a></li>
-<li><a href="#org988d04a">5.2.2. Implementation details</a></li>
-<li><a href="#org5261d24">5.2.3. Real and Integer operations</a></li>
+<li><a href="#org6434184">5.2.1. Short description</a></li>
+<li><a href="#orge61b4b2">5.2.2. Implementation details</a></li>
+<li><a href="#orga23b06c">5.2.3. Real and Integer operations</a></li>
 </ul>
 </li>
-<li><a href="#org51c0920">5.3. Strings</a>
+<li><a href="#org8a718d2">5.3. Strings</a>
 <ul>
-<li><a href="#org09edc20">5.3.1. Short description</a></li>
-<li><a href="#org383f9b7">5.3.2. Implementation details</a></li>
-<li><a href="#org57b5b07">5.3.3. String operations</a></li>
+<li><a href="#orgc96e9f9">5.3.1. Short description</a></li>
+<li><a href="#org80558b8">5.3.2. Implementation details</a></li>
+<li><a href="#orgda52f2d">5.3.3. String operations</a></li>
 </ul>
 </li>
-<li><a href="#orga85626b">5.4. Slots</a>
+<li><a href="#org2f90f7f">5.4. Slots</a>
 <ul>
-<li><a href="#orgb2abc3b">5.4.1. Short description</a></li>
-<li><a href="#orgcbcc7e8">5.4.2. Implementation details</a></li>
-<li><a href="#orgfcf4c44">5.4.3. Slot operations</a></li>
+<li><a href="#orgb6390e1">5.4.1. Short description</a></li>
+<li><a href="#org4b4af77">5.4.2. Implementation details</a></li>
+<li><a href="#org6c41171">5.4.3. Slot operations</a></li>
 </ul>
 </li>
-<li><a href="#orgaacde34">5.5. Booleans</a>
+<li><a href="#org4cc8332">5.5. Booleans</a>
 <ul>
-<li><a href="#org03fb257">5.5.1. Short description</a></li>
-<li><a href="#org79b9cea">5.5.2. Implementation details</a></li>
-<li><a href="#orge498b30">5.5.3. Boolean operations</a></li>
+<li><a href="#org078e17c">5.5.1. Short description</a></li>
+<li><a href="#org1d9da22">5.5.2. Implementation details</a></li>
+<li><a href="#org8eea06c">5.5.3. Boolean operations</a></li>
 </ul>
 </li>
-<li><a href="#orgb40714a">5.6. Instructions</a>
+<li><a href="#org5f91d0f">5.6. Instructions</a>
 <ul>
-<li><a href="#orgc58e7db">5.6.1. Short description</a></li>
-<li><a href="#org455bf2e">5.6.2. Implementation details</a></li>
-<li><a href="#org046ff2f">5.6.3. Instruction operations</a></li>
+<li><a href="#orgedb29b1">5.6.1. Short description</a></li>
+<li><a href="#orge3b6002">5.6.2. Implementation details</a></li>
+<li><a href="#orgb3627e2">5.6.3. Instruction operations</a></li>
 </ul>
 </li>
-<li><a href="#org9be4b71">5.7. Files</a>
+<li><a href="#orgfecaefb">5.7. Files</a>
 <ul>
-<li><a href="#orge56b9e0">5.7.1. Short description</a></li>
-<li><a href="#org2bb045e">5.7.2. Implementation details</a></li>
-<li><a href="#org0f0d3b5">5.7.3. File operations</a></li>
+<li><a href="#org9bcda5f">5.7.1. Short description</a></li>
+<li><a href="#org5241e4a">5.7.2. Implementation details</a></li>
+<li><a href="#orga6c7e31">5.7.3. File operations</a></li>
 </ul>
 </li>
-<li><a href="#orge3d08eb">5.8. Nothing</a>
+<li><a href="#orgfe3e1a6">5.8. Nothing</a>
 <ul>
-<li><a href="#org20863b9">5.8.1. Short description</a></li>
-<li><a href="#orgc72ec72">5.8.2. Nothing operations</a></li>
+<li><a href="#org6465f1e">5.8.1. Short description</a></li>
+<li><a href="#org90f871d">5.8.2. Nothing operations</a></li>
 </ul>
 </li>
-<li><a href="#org03865d0">5.9. Task Operations</a>
+<li><a href="#orgfb12474">5.9. Task Operations</a>
 <ul>
-<li><a href="#orgc3496a9">5.9.1. Short description</a></li>
-<li><a href="#org72c4fb9">5.9.2. Implementation details</a></li>
-<li><a href="#org4cbcf6a">5.9.3. Task operations</a></li>
+<li><a href="#org7daa7fa">5.9.1. Short description</a></li>
+<li><a href="#orgd3ed94c">5.9.2. Implementation details</a></li>
+<li><a href="#orge897463">5.9.3. Task operations</a></li>
 </ul>
 </li>
-<li><a href="#org7cc498c">5.10. Control flow operations</a></li>
-<li><a href="#org0f4cbed">5.11. Environment operations</a>
+<li><a href="#orgdf56206">5.10. Control flow operations</a></li>
+<li><a href="#orgb8a07e5">5.11. Environment operations</a>
 <ul>
-<li><a href="#org8059a94">5.11.1. Modify the /ans slot</a></li>
-<li><a href="#orgdfe0cdb">5.11.2. Exit SLOBIL</a></li>
-<li><a href="#org1a1bef0">5.11.3. Print output</a></li>
-<li><a href="#org2e244ef">5.11.4. Input and output files and state</a></li>
-<li><a href="#org56f6730">5.11.5. Error handling</a></li>
-<li><a href="#orgeb0afb1">5.11.6. Version</a></li>
+<li><a href="#org38fcf05">5.11.1. Modify the /ans slot</a></li>
+<li><a href="#org084bfcb">5.11.2. Exit SLOBIL</a></li>
+<li><a href="#orga84ead1">5.11.3. Print output</a></li>
+<li><a href="#org7da2c26">5.11.4. Input and output files and state</a></li>
+<li><a href="#orgf26d5a0">5.11.5. Error handling</a></li>
+<li><a href="#org87edb01">5.11.6. Version</a></li>
 </ul>
 </li>
-<li><a href="#orgb9df2d6">5.12. System operations</a>
+<li><a href="#orgbfc0933">5.12. System operations</a>
 <ul>
-<li><a href="#orgfadbd71">5.12.1. Interacting with the shell</a></li>
-<li><a href="#org731fbfa">5.12.2. Time</a></li>
-<li><a href="#org38b4e25">5.12.3. Random numbers</a></li>
+<li><a href="#orgb1a0eef">5.12.1. Interacting with the shell</a></li>
+<li><a href="#orgeba77cf">5.12.2. Time</a></li>
+<li><a href="#org15ed5a8">5.12.3. Random numbers</a></li>
 </ul>
 </li>
-<li><a href="#org5c3db34">5.13. Package operations</a></li>
-<li><a href="#org32ce14c">5.14. Interpreter options</a>
+<li><a href="#org12cb2dc">5.13. Package operations</a></li>
+<li><a href="#orgbe67922">5.14. Interpreter options</a>
 <ul>
-<li><a href="#org936457f">5.14.1. Operation</a></li>
-<li><a href="#orgbbacf5b">5.14.2. List of options</a></li>
+<li><a href="#orgf7c4a66">5.14.1. Operation</a></li>
+<li><a href="#org8132a3a">5.14.2. List of options</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf4d4b13">6. Saved Objects</a></li>
-<li><a href="#org524674b">7. GNU Free Documentation License</a></li>
+<li><a href="#org8644e02">6. Saved Objects</a></li>
+<li><a href="#orgfc27c39">7. GNU Free Documentation License</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org44e6109" class="outline-2">
-<h2 id="org44e6109"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-orge5e0417" class="outline-2">
+<h2 id="orge5e0417"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>This documentation is being revised.</b>
@@ -395,12 +395,12 @@ SLOBIL<br>Zach Flynn<br>2022-10-06 Thu 20:17
 </div>
 </div>
 
-<div id="outline-container-orgbcdcf8b" class="outline-2">
-<h2 id="orgbcdcf8b"><span class="section-number-2">2.</span> The Language</h2>
+<div id="outline-container-org161a548" class="outline-2">
+<h2 id="org161a548"><span class="section-number-2">2.</span> The Language</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org76bb7ba" class="outline-3">
-<h3 id="org76bb7ba"><span class="section-number-3">2.1.</span> Statements and syntax</h3>
+<div id="outline-container-org7acd223" class="outline-3">
+<h3 id="org7acd223"><span class="section-number-3">2.1.</span> Statements and syntax</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A statement is a single line of code.  All statements start with an <i>operator</i>. The other elements of the statement are arguments to the operator. Statements end with periods. For example,
@@ -462,12 +462,12 @@ There must be whitespace before the period.  There also must be whitespace befor
 </div>
 </div>
 
-<div id="outline-container-org3d195f8" class="outline-3">
-<h3 id="org3d195f8"><span class="section-number-3">2.2.</span> Substatements</h3>
+<div id="outline-container-org74adc45" class="outline-3">
+<h3 id="org74adc45"><span class="section-number-3">2.2.</span> Substatements</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orga05c13e" class="outline-4">
-<h4 id="orga05c13e"><span class="section-number-4">2.2.1.</span> Instructions</h4>
+<div id="outline-container-org06e3bfd" class="outline-4">
+<h4 id="org06e3bfd"><span class="section-number-4">2.2.1.</span> Instructions</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 Open parenthesis store the code itself as an Instruction object to be executed later using the operation <code>call</code>.  For example,
@@ -510,8 +510,8 @@ Instructions are used in loops and in several other operations.
 </div>
 </div>
 
-<div id="outline-container-org367332c" class="outline-4">
-<h4 id="org367332c"><span class="section-number-4">2.2.2.</span> Substatements</h4>
+<div id="outline-container-orgf749dad" class="outline-4">
+<h4 id="orgf749dad"><span class="section-number-4">2.2.2.</span> Substatements</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Closed parenthesis (<code>[]</code>) execute the statements inside of them immediately and evaluate to whatever the code sets the <code>/ans</code> Slot to.  The purpose of these statements is to avoid needing to define temporary slots for intermediate calculations.  For example,
@@ -551,8 +551,8 @@ The other special feature of the <code>/ans</code> slot is that statements enclo
 </div>
 </div>
 
-<div id="outline-container-orgdad87e0" class="outline-4">
-<h4 id="orgdad87e0"><span class="section-number-4">2.2.3.</span> Expressions</h4>
+<div id="outline-container-orgc422aae" class="outline-4">
+<h4 id="orgc422aae"><span class="section-number-4">2.2.3.</span> Expressions</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 Curly parenthesis (<code>{}</code>) also enclose statements, but those statements are only evaluated <i>if</i> we try to use the value of that expression.  The value of the expression, if it is evaluated, is the value the statements enclosed in curly parenthesis set the <code>/ans</code> slot to.  SLOBIL calls this data type an "Expression" before it is evaluated. We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the <code>if</code> operation and other, similar instructions.  For example,
@@ -597,8 +597,8 @@ Note: <code>sit</code> is an operation that does nothing but evaluate any Expres
 </div>
 </div>
 
-<div id="outline-container-org38dc32b" class="outline-4">
-<h4 id="org38dc32b"><span class="section-number-4">2.2.4.</span> Convert an instruction to an operation</h4>
+<div id="outline-container-org7ab5fa5" class="outline-4">
+<h4 id="org7ab5fa5"><span class="section-number-4">2.2.4.</span> Convert an instruction to an operation</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 Instruction objects are the usual way to write functions, procedures, and methods.  Instructions are code blocks formed using open parenthesis <code>()</code> that operate within whatever Object the caller of the instruction chooses.  Operations execute with a fixed set of positional arguments.  All of the built-in features of the language are operations.  Occasionally, it is useful to transform instructions into operations.  The <code>op</code> operation transforms instructions into operations.   For example:
@@ -616,8 +616,8 @@ ans = 0.75
 </div>
 </div>
 
-<div id="outline-container-orgf4cd401" class="outline-4">
-<h4 id="orgf4cd401"><span class="section-number-4">2.2.5.</span> Comments</h4>
+<div id="outline-container-orgf773757" class="outline-4">
+<h4 id="orgf773757"><span class="section-number-4">2.2.5.</span> Comments</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <p>
 The last syntax element is the comment.  To write a comment in SLOBIL, use a single quote (<code>'</code>) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
@@ -630,8 +630,8 @@ The last syntax element is the comment.  To write a comment in SLOBIL, use a sin
 </div>
 </div>
 
-<div id="outline-container-org7af71b5" class="outline-4">
-<h4 id="org7af71b5"><span class="section-number-4">2.2.6.</span> Ending Last Statement in a Substatement</h4>
+<div id="outline-container-orgb71896c" class="outline-4">
+<h4 id="orgb71896c"><span class="section-number-4">2.2.6.</span> Ending Last Statement in a Substatement</h4>
 <div class="outline-text-4" id="text-2-2-6">
 <p>
 In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
@@ -656,8 +656,8 @@ is valid.
 </div>
 </div>
 
-<div id="outline-container-org46c5124" class="outline-3">
-<h3 id="org46c5124"><span class="section-number-3">2.3.</span> Objects</h3>
+<div id="outline-container-org38e25b0" class="outline-3">
+<h3 id="org38e25b0"><span class="section-number-3">2.3.</span> Objects</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 <i>Objects</i> are a flexible datatype. Objects define the scope and environment in which code executes.  Objects have Slots for inserting data so they also function like a <code>dict</code> or <code>struct</code>.  They are also the basic unit for building object-oriented programs.  
@@ -752,8 +752,8 @@ As we can see above, the <code>set</code> operation optionally takes a third arg
 </p>
 </div>
 
-<div id="outline-container-org8aa3079" class="outline-4">
-<h4 id="org8aa3079"><span class="section-number-4">2.3.1.</span> Object-Oriented Programming</h4>
+<div id="outline-container-org36884e0" class="outline-4">
+<h4 id="org36884e0"><span class="section-number-4">2.3.1.</span> Object-Oriented Programming</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
@@ -801,8 +801,8 @@ ans = 40
 
 
 
-<div id="outline-container-org69130e1" class="outline-4">
-<h4 id="org69130e1"><span class="section-number-4">2.3.2.</span> Additional details about colon notation</h4>
+<div id="outline-container-org84a3265" class="outline-4">
+<h4 id="org84a3265"><span class="section-number-4">2.3.2.</span> Additional details about colon notation</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 The colon notation can be nested.
@@ -838,8 +838,8 @@ It can also choose the slot by referencing the value of another slot.
 </div>
 </div>
 
-<div id="outline-container-orga879419" class="outline-3">
-<h3 id="orga879419"><span class="section-number-3">2.4.</span> Slots</h3>
+<div id="outline-container-org772689d" class="outline-3">
+<h3 id="org772689d"><span class="section-number-3">2.4.</span> Slots</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Slots are the locations of data in Objects.  They are data themselves and can be manipulated like other data objects in SLOBIL.  For example, you can set other slots to slots and use those values wherever you would use slots.
@@ -897,12 +897,12 @@ Slots are data denoting locations so they are often useful ways to manipulate th
 </div>
 </div>
 
-<div id="outline-container-orgaefbe19" class="outline-3">
-<h3 id="orgaefbe19"><span class="section-number-3">2.5.</span> Environment</h3>
+<div id="outline-container-org7dcf292" class="outline-3">
+<h3 id="org7dcf292"><span class="section-number-3">2.5.</span> Environment</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-orgf9bd58f" class="outline-4">
-<h4 id="orgf9bd58f"><span class="section-number-4">2.5.1.</span> Saving state</h4>
+<div id="outline-container-org601b367" class="outline-4">
+<h4 id="org601b367"><span class="section-number-4">2.5.1.</span> Saving state</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 SLOBIL is not only a programming language. It is also an <i>environment</i>.  The current state of SLOBIL &#x2014; the values and where they are located in the object &#x2014; can be saved to disk and re-loaded later on, using the <code>save</code> and <code>load</code> operations.
@@ -939,8 +939,8 @@ Where <code>old-stuff</code> is a object.
 </div>
 </div>
 
-<div id="outline-container-org9768645" class="outline-4">
-<h4 id="org9768645"><span class="section-number-4">2.5.2.</span> Interacting with the user</h4>
+<div id="outline-container-orga0ed365" class="outline-4">
+<h4 id="orga0ed365"><span class="section-number-4">2.5.2.</span> Interacting with the user</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 One of SLOBIL's strengths is in rapidly-developing interactive programs.  SLOBIL's syntax is command-like so interaction in such a program can often be done using SLOBIL's prompt.  These types of programs often require input from the user and the ability to interact with other non-SLOBIL programs on the computer.  
@@ -989,8 +989,8 @@ ans = <span style="color: #50a14f;">"/home/zlf"</span>
 </div>
 </div>
 
-<div id="outline-container-orgc399fb5" class="outline-3">
-<h3 id="orgc399fb5"><span class="section-number-3">2.6.</span> Tasks (concurrent programs)</h3>
+<div id="outline-container-org494eb23" class="outline-3">
+<h3 id="org494eb23"><span class="section-number-3">2.6.</span> Tasks (concurrent programs)</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 SLOBIL can be used to write concurrent (multi-threaded) programs using Task objects.  SLOBIL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
@@ -1111,16 +1111,16 @@ Alternatively, the <code>select</code> operation executes one of several instruc
 </div>
 </div>
 
-<div id="outline-container-orga0d7d3f" class="outline-2">
-<h2 id="orga0d7d3f"><span class="section-number-2">3.</span> A Complete Example Program</h2>
+<div id="outline-container-org26f3eb2" class="outline-2">
+<h2 id="org26f3eb2"><span class="section-number-2">3.</span> A Complete Example Program</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the <code>start</code> and <code>stop</code> instructions. And then the <code>day-time</code> instruction to output the hours for each client by day.
 </p>
 </div>
 
-<div id="outline-container-orgcfa00eb" class="outline-3">
-<h3 id="orgcfa00eb"><span class="section-number-3">3.1.</span> Source Code</h3>
+<div id="outline-container-org96d0ef4" class="outline-3">
+<h3 id="org96d0ef4"><span class="section-number-3">3.1.</span> Source Code</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Initial state</span>
@@ -1396,8 +1396,8 @@ set <span style="color: #8b4513;">/rewind-last</span>
 </div>
 </div>
 
-<div id="outline-container-orgac48739" class="outline-3">
-<h3 id="orgac48739"><span class="section-number-3">3.2.</span> Building the Code</h3>
+<div id="outline-container-orgd88191b" class="outline-3">
+<h3 id="orgd88191b"><span class="section-number-3">3.2.</span> Building the Code</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We can then use a script like the following, supposing we have saved the above code in a file <i>billable.slob</i>, to build a binary version of the program in a convenient location.
@@ -1411,8 +1411,8 @@ We can then use a script like the following, supposing we have saved the above c
 </div>
 </div>
 
-<div id="outline-container-orgff26c3f" class="outline-3">
-<h3 id="orgff26c3f"><span class="section-number-3">3.3.</span> Using the code</h3>
+<div id="outline-container-orgd66edc2" class="outline-3">
+<h3 id="orgd66edc2"><span class="section-number-3">3.3.</span> Using the code</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Then, whenever we would like to load the code, we can simply do:
@@ -1429,12 +1429,12 @@ Then all the instructions from the <i>billable</i> program are available to us.
 </div>
 </div>
 
-<div id="outline-container-orgb789dd9" class="outline-2">
-<h2 id="orgb789dd9"><span class="section-number-2">4.</span> Examples</h2>
+<div id="outline-container-org9c90aaa" class="outline-2">
+<h2 id="org9c90aaa"><span class="section-number-2">4.</span> Examples</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga174cc7" class="outline-3">
-<h3 id="orga174cc7"><span class="section-number-3">4.1.</span> Quicksort</h3>
+<div id="outline-container-org627c6ba" class="outline-3">
+<h3 id="org627c6ba"><span class="section-number-3">4.1.</span> Quicksort</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-slobil">set <span style="color: #8b4513;">/swap</span>
@@ -1539,8 +1539,8 @@ t4 of type Integer, value: 1
 </div>
 </div>
 
-<div id="outline-container-org352c16e" class="outline-3">
-<h3 id="org352c16e"><span class="section-number-3">4.2.</span> A Line-Oriented Text Editor</h3>
+<div id="outline-container-org151c623" class="outline-3">
+<h3 id="org151c623"><span class="section-number-3">4.2.</span> A Line-Oriented Text Editor</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This example is a simple interactive program where the user enters commands to edit a buffer. 
@@ -1592,8 +1592,8 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-orga5b6e7e" class="outline-3">
-<h3 id="orga5b6e7e"><span class="section-number-3">4.3.</span> Numerical Differentiation</h3>
+<div id="outline-container-org7b4f30a" class="outline-3">
+<h3 id="org7b4f30a"><span class="section-number-3">4.3.</span> Numerical Differentiation</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Compute the numerical derivative of an operation that takes an arg</span>
@@ -1622,8 +1622,8 @@ ans = 2.0
 </div>
 </div>
 
-<div id="outline-container-orgd26efa9" class="outline-3">
-<h3 id="orgd26efa9"><span class="section-number-3">4.4.</span> Compute Factorial</h3>
+<div id="outline-container-orga7d06fd" class="outline-3">
+<h3 id="orga7d06fd"><span class="section-number-3">4.4.</span> Compute Factorial</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">compute a factorial using while</span>
@@ -1667,8 +1667,8 @@ ans = 120
 </div>
 </div>
 
-<div id="outline-container-orgf77afd1" class="outline-4">
-<h4 id="orgf77afd1"><span class="section-number-4">4.4.1.</span> Note on Recursion</h4>
+<div id="outline-container-org3dc6078" class="outline-4">
+<h4 id="org3dc6078"><span class="section-number-4">4.4.1.</span> Note on Recursion</h4>
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines <code>-factorial-recurse</code> as an instruction and then creates the operation.
@@ -1677,8 +1677,8 @@ Operations cannot be directly defined recursively, but Instructions can be.  Tha
 </div>
 </div>
 
-<div id="outline-container-org124eacd" class="outline-3">
-<h3 id="org124eacd"><span class="section-number-3">4.5.</span> Numerical Integration</h3>
+<div id="outline-container-orgc3ae197" class="outline-3">
+<h3 id="orgc3ae197"><span class="section-number-3">4.5.</span> Numerical Integration</h3>
 <div class="outline-text-3" id="text-4-5">
 <div class="org-src-container">
 <pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">takes an operation as an argument and return left hand</span>
@@ -1710,8 +1710,8 @@ ans = 0.332834
 </div>
 </div>
 
-<div id="outline-container-orgd66392c" class="outline-3">
-<h3 id="orgd66392c"><span class="section-number-3">4.6.</span> Basic Linear Algebra</h3>
+<div id="outline-container-orga0e5a29" class="outline-3">
+<h3 id="orga0e5a29"><span class="section-number-3">4.6.</span> Basic Linear Algebra</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 This example demonstrates both application methods like <code>do</code> and <code>collapse</code> as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
@@ -1785,8 +1785,8 @@ t2 of type Integer, value: 25
 </div>
 </div>
 
-<div id="outline-container-orgdca5620" class="outline-3">
-<h3 id="orgdca5620"><span class="section-number-3">4.7.</span> Split a String</h3>
+<div id="outline-container-org21fbb9b" class="outline-3">
+<h3 id="org21fbb9b"><span class="section-number-3">4.7.</span> Split a String</h3>
 <div class="outline-text-3" id="text-4-7">
 <div class="org-src-container">
 <pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Tokenize a string /line by splitting on string /sep</span>
@@ -1833,8 +1833,8 @@ t3 of type String, value: 3
 </div>
 </div>
 
-<div id="outline-container-org0dc50dd" class="outline-3">
-<h3 id="org0dc50dd"><span class="section-number-3">4.8.</span> Linking C code</h3>
+<div id="outline-container-org9688f6e" class="outline-3">
+<h3 id="org9688f6e"><span class="section-number-3">4.8.</span> Linking C code</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 One of the big outstanding tasks with SLOBIL is to write a more user-friendly (and documented) <i>libslobil</i> for adding extensions, but it is currently possible to write SLOBIL operations in C, using SLOBIL's <code>link</code> operation to import the code.
@@ -1932,8 +1932,8 @@ ans = 0.693147
 </div>
 </div>
 
-<div id="outline-container-orgf648515" class="outline-3">
-<h3 id="orgf648515"><span class="section-number-3">4.9.</span> Concurrent Programming</h3>
+<div id="outline-container-org579e9e1" class="outline-3">
+<h3 id="org579e9e1"><span class="section-number-3">4.9.</span> Concurrent Programming</h3>
 <div class="outline-text-3" id="text-4-9">
 <p>
 SLOBIL uses Tasks to run Instructions in separate processes.  The following example demonstrates how <code>queue</code>, <code>accept</code>, and <code>select</code> work to move data between the main Task and other Tasks.
@@ -2013,8 +2013,8 @@ accept-or <span style="color: #8b4513;">/result</span> ( print <span style="colo
 </div>
 </div>
 
-<div id="outline-container-org51e6951" class="outline-2">
-<h2 id="org51e6951"><span class="section-number-2">5.</span> Reference</h2>
+<div id="outline-container-orged12b58" class="outline-2">
+<h2 id="orged12b58"><span class="section-number-2">5.</span> Reference</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This section gives the full vocabulary of the language.  The grammar of the language is described in the previous sections.  I describe each type of data, and the operations associated with it. 
@@ -2025,12 +2025,12 @@ Throughout, I enclose an operation's optional arguments between bars (||).
 </p>
 </div>
 
-<div id="outline-container-org3bac8d7" class="outline-3">
-<h3 id="org3bac8d7"><span class="section-number-3">5.1.</span> Objects</h3>
+<div id="outline-container-org5667cc6" class="outline-3">
+<h3 id="org5667cc6"><span class="section-number-3">5.1.</span> Objects</h3>
 <div class="outline-text-3" id="text-5-1">
 </div>
-<div id="outline-container-org1e48f93" class="outline-4">
-<h4 id="org1e48f93"><span class="section-number-4">5.1.1.</span> Short description</h4>
+<div id="outline-container-org4e21e9b" class="outline-4">
+<h4 id="org4e21e9b"><span class="section-number-4">5.1.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 A object contains data located at slots.  Data can be retrieved  from and inserted into objects.  Objects also defined the <i>scope</i> of SLOBIL code because code is executed inside objects.  So the values of variables depend on which object you are executing the code.  This allows the user to flexibly manipulate scope.
@@ -2038,8 +2038,8 @@ A object contains data located at slots.  Data can be retrieved  from and insert
 </div>
 </div>
 
-<div id="outline-container-org087db63" class="outline-4">
-<h4 id="org087db63"><span class="section-number-4">5.1.2.</span> Implementation details</h4>
+<div id="outline-container-orgf7f5f81" class="outline-4">
+<h4 id="orgf7f5f81"><span class="section-number-4">5.1.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 Objects are hash tables.  The keys to the table are called slots.  The number of bins in the hash table grows as more elements are added.  This keeps lookup times low, but the object will rehash as it grows.  Rehashing can be turned off by using the <code>auto-rehash</code> operation.
@@ -2047,12 +2047,12 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 </div>
 
-<div id="outline-container-orge8faf2d" class="outline-4">
-<h4 id="orge8faf2d"><span class="section-number-4">5.1.3.</span> Object operations</h4>
+<div id="outline-container-org2cca057" class="outline-4">
+<h4 id="org2cca057"><span class="section-number-4">5.1.3.</span> Object operations</h4>
 <div class="outline-text-4" id="text-5-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org0b0fa77"></a>Creation<br />
+<li><a id="org9bc3eca"></a>Creation<br />
 <div class="outline-text-5" id="text-5-1-3-1">
 <ul class="org-ul">
 <li><code>object SLOT1 VALUE1 SLOT2 VALUE2 ...</code> &#x2014; sets the <code>/ans</code> slot to a object with <code>VALUE1</code> located at <code>SLOT1</code> and so on.</li>
@@ -2065,7 +2065,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </li>
 
 
-<li><a id="org857feb0"></a>Insert, move, and remove data to and from slots<br />
+<li><a id="org2122563"></a>Insert, move, and remove data to and from slots<br />
 <div class="outline-text-5" id="text-5-1-3-2">
 <ul class="org-ul">
 <li><code>set SLOT VALUE |OBJECT|</code> &#x2014; sets the value at <code>SLOT</code> to <code>VALUE</code> in the object <code>OBJECT</code>.  If the <code>OBJECT</code> argument is omitted, then it will set the slot in the current object.</li>
@@ -2080,7 +2080,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </li>
 
 
-<li><a id="orga05b391"></a>Access data in Object<br />
+<li><a id="orga24b1d5"></a>Access data in Object<br />
 <div class="outline-text-5" id="text-5-1-3-3">
 <ul class="org-ul">
 <li><code>get SLOT |OBJECT|</code> &#x2014; sets the <code>/ans</code> slot to the value located at <code>SLOT</code> in <code>OBJECT</code>.  If the <code>OBJECT</code> argument is not specified, get from the current object.</li>
@@ -2094,7 +2094,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 </li>
 
-<li><a id="org0fa8f6f"></a>Apply Operations to elements of a Object<br />
+<li><a id="orgd4cefce"></a>Apply Operations to elements of a Object<br />
 <div class="outline-text-5" id="text-5-1-3-4">
 <ul class="org-ul">
 <li><code>do OPERATION OBJECT1 OBJECT2 ... OBJECTN</code> &#x2014; execute <code>OPERATION</code> which takes its arguments (1&#x2026;N) from each element in <code>OBJECT1</code>, &#x2026;, <code>OBJECTN</code>.  Sets the <code>/ans</code> slot to a Object which contains whatever the <code>OPERATION</code> evaluates to at the corresponding Slots.  For example, <code>do add [ list 1 2 3 . ] [ list 4 5 6 . ]</code> sets the <code>/ans</code> slot to a Object with elements (5,7,9) at slots <code>(/t1,/t2,/t3)</code>.  <code>do</code> will only return results at Slots that exist in all Objects.  So, for example, <code>do add [ list 1 2 3 . ] [ list 4 5 . ]</code> sets the <code>/ans</code> Slot to <code>list 5 7</code>.</li>
@@ -2104,7 +2104,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 </li>
 
-<li><a id="org8d371e0"></a>Execute code in a object<br />
+<li><a id="orgc286b14"></a>Execute code in a object<br />
 <div class="outline-text-5" id="text-5-1-3-5">
 <ul class="org-ul">
 <li><code>in OBJECT INSTRUCTION</code> &#x2014; call <code>INSTRUCTION</code> in <code>OBJECT</code>.</li>
@@ -2124,7 +2124,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 </li>
 
-<li><a id="org5758a3b"></a>Test if a object<br />
+<li><a id="orgad4d7e2"></a>Test if a object<br />
 <div class="outline-text-5" id="text-5-1-3-6">
 <ul class="org-ul">
 <li><code>is-object VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if <code>VALUE</code> is a Object and to <code>False</code> otherwise.</li>
@@ -2132,7 +2132,7 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 </li>
 
-<li><a id="org52fccbe"></a>Technical<br />
+<li><a id="org802dad1"></a>Technical<br />
 <div class="outline-text-5" id="text-5-1-3-7">
 <ul class="org-ul">
 <li><code>rehash OBJECT</code> &#x2014; manually rehash the object's underlying hash table.</li>
@@ -2144,12 +2144,12 @@ Objects are hash tables.  The keys to the table are called slots.  The number of
 </div>
 
 
-<div id="outline-container-org5f65373" class="outline-3">
-<h3 id="org5f65373"><span class="section-number-3">5.2.</span> Reals and Integers</h3>
+<div id="outline-container-org17a386e" class="outline-3">
+<h3 id="org17a386e"><span class="section-number-3">5.2.</span> Reals and Integers</h3>
 <div class="outline-text-3" id="text-5-2">
 </div>
-<div id="outline-container-orgf69abaa" class="outline-4">
-<h4 id="orgf69abaa"><span class="section-number-4">5.2.1.</span> Short description</h4>
+<div id="outline-container-org6434184" class="outline-4">
+<h4 id="org6434184"><span class="section-number-4">5.2.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-2-1">
 <p>
 Real and Integer are distinct types in SLOBIL.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is <i>not</i> a SLOBIL type.
@@ -2157,8 +2157,8 @@ Real and Integer are distinct types in SLOBIL.  A Real is a number with a decima
 </div>
 </div>
 
-<div id="outline-container-org988d04a" class="outline-4">
-<h4 id="org988d04a"><span class="section-number-4">5.2.2.</span> Implementation details</h4>
+<div id="outline-container-orge61b4b2" class="outline-4">
+<h4 id="orge61b4b2"><span class="section-number-4">5.2.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-2-2">
 <p>
 A Real is a double-precision floating point value (equivalent to C's double).
@@ -2170,12 +2170,12 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </div>
 
-<div id="outline-container-org5261d24" class="outline-4">
-<h4 id="org5261d24"><span class="section-number-4">5.2.3.</span> Real and Integer operations</h4>
+<div id="outline-container-orga23b06c" class="outline-4">
+<h4 id="orga23b06c"><span class="section-number-4">5.2.3.</span> Real and Integer operations</h4>
 <div class="outline-text-4" id="text-5-2-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgeb824b2"></a>Arithmetic operations<br />
+<li><a id="org800149e"></a>Arithmetic operations<br />
 <div class="outline-text-5" id="text-5-2-3-1">
 <ul class="org-ul">
 <li><code>add NUMBER1 NUMBER2 ...</code> &#x2014; adds all the numbers together and sets the <code>/ans</code> slot to the result.</li>
@@ -2194,7 +2194,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </li>
 
 
-<li><a id="orgc823001"></a>Comparison operations<br />
+<li><a id="org1254d4c"></a>Comparison operations<br />
 <div class="outline-text-5" id="text-5-2-3-2">
 <ul class="org-ul">
 <li><code>gt NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is greater than <code>NUMBER2</code> and to <code>False</code> otherwise.</li>
@@ -2210,7 +2210,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org8c70b12"></a>Conversion operations<br />
+<li><a id="org18ea867"></a>Conversion operations<br />
 <div class="outline-text-5" id="text-5-2-3-3">
 <ul class="org-ul">
 <li><code>to-number STRING|SLOT</code> &#x2014; if the argument is a String, try to convert to a number and set the <code>/ans</code> Slot to the result.  If the argument is a Slot and ends in a number, set the <code>/ans</code> Slot to the result.</li>
@@ -2220,7 +2220,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org9e11b9b"></a>Test if type operations<br />
+<li><a id="org0cc4be0"></a>Test if type operations<br />
 <div class="outline-text-5" id="text-5-2-3-4">
 <ul class="org-ul">
 <li><code>is-integer VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the <code>Value</code> is an Integer and to <code>False</code> otherwise.</li>
@@ -2230,7 +2230,7 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </li>
 
-<li><a id="org4b68356"></a>Common mathematical operations<br />
+<li><a id="org18b1a7e"></a>Common mathematical operations<br />
 <div class="outline-text-5" id="text-5-2-3-5">
 <ul class="org-ul">
 <li><code>log NUMBER</code> &#x2014; set the <code>/ans</code> Slot to the natural logarithm of <code>NUMBER</code>.</li>
@@ -2250,12 +2250,12 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 
 
-<div id="outline-container-org51c0920" class="outline-3">
-<h3 id="org51c0920"><span class="section-number-3">5.3.</span> Strings</h3>
+<div id="outline-container-org8a718d2" class="outline-3">
+<h3 id="org8a718d2"><span class="section-number-3">5.3.</span> Strings</h3>
 <div class="outline-text-3" id="text-5-3">
 </div>
-<div id="outline-container-org09edc20" class="outline-4">
-<h4 id="org09edc20"><span class="section-number-4">5.3.1.</span> Short description</h4>
+<div id="outline-container-orgc96e9f9" class="outline-4">
+<h4 id="orgc96e9f9"><span class="section-number-4">5.3.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-3-1">
 <p>
 Strings in SLOBIL are text.  A string literal is enclosed in quotation marks.  SLOBIL supports UTF-8 encodings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
@@ -2314,8 +2314,8 @@ The escape sequences are:
 </div>
 </div>
 
-<div id="outline-container-org383f9b7" class="outline-4">
-<h4 id="org383f9b7"><span class="section-number-4">5.3.2.</span> Implementation details</h4>
+<div id="outline-container-org80558b8" class="outline-4">
+<h4 id="org80558b8"><span class="section-number-4">5.3.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-3-2">
 <p>
 Strings are internally UTF-32 encoded to enable faster access by index number and because it makes creating substrings faster.  SLOBIL accepts UTF-8 as input because that is more common in terminals and in file-encodings.
@@ -2323,12 +2323,12 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </div>
 
-<div id="outline-container-org57b5b07" class="outline-4">
-<h4 id="org57b5b07"><span class="section-number-4">5.3.3.</span> String operations</h4>
+<div id="outline-container-orgda52f2d" class="outline-4">
+<h4 id="orgda52f2d"><span class="section-number-4">5.3.3.</span> String operations</h4>
 <div class="outline-text-4" id="text-5-3-3">
 </div>
 <ol class="org-ol">
-<li><a id="org9e0ffc1"></a>Access, search, and modify string elements<br />
+<li><a id="orgb2564dc"></a>Access, search, and modify string elements<br />
 <div class="outline-text-5" id="text-5-3-3-1">
 <ul class="org-ul">
 <li><code>substring STRING INTEGER1 INTEGER2</code> &#x2014; sets the <code>/ans</code> Slot to the subset of <code>STRING</code> where the characters included are determined by <code>INTEGER1</code> and <code>INTEGER2</code>.  Strings are 1-indexed in SLOBIL so the first character is at location 1.  If the <code>INTEGER</code> is less than or equal to 0, determine the location from the end of the String.  So if <code>INTEGER1</code> and <code>INTEGER2</code> are <code>0</code>, then it will set the <code>/ans</code> slot to the last character in <code>STRING</code>.</li>
@@ -2340,7 +2340,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="orgade60f8"></a>String properties<br />
+<li><a id="orgf25f37e"></a>String properties<br />
 <div class="outline-text-5" id="text-5-3-3-2">
 <ul class="org-ul">
 <li><code>length STRING</code> &#x2014; sets the <code>/ans</code> slot to the number of characters in <code>STRING</code>.</li>
@@ -2348,7 +2348,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="orga5ffa73"></a>String comparison<br />
+<li><a id="org1d2e711"></a>String comparison<br />
 <div class="outline-text-5" id="text-5-3-3-3">
 <ul class="org-ul">
 <li><code>string-eq STRING1 STRING2</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the two strings are equal and to <code>False</code> otherwise.</li>
@@ -2362,7 +2362,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="orga8f77c9"></a>Combine strings<br />
+<li><a id="orgd6fb3e5"></a>Combine strings<br />
 <div class="outline-text-5" id="text-5-3-3-4">
 <ul class="org-ul">
 <li><code>combine STRING1 STRING2 ... STRINGN</code> &#x2014; sets the <code>/ans</code> slot to the concatenation of the two Strings so that the resulting String is <code>"STRING1STRING2"</code>.</li>
@@ -2370,7 +2370,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="org325c11d"></a>Convert to string<br />
+<li><a id="orgc5e5783"></a>Convert to string<br />
 <div class="outline-text-5" id="text-5-3-3-5">
 <ul class="org-ul">
 <li><code>to-string INTEGER|REAL|SLOT |INTEGER2|</code> &#x2014; sets the <code>/ans</code> Slot to a String representing the <code>INTEGER</code> or <code>REAL</code> or <code>SLOT</code> provided as the first argument.  The second argument is used if a <code>REAL</code> argument is provided.  <code>INTEGER2</code> gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.</li>
@@ -2378,7 +2378,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="org84d846a"></a>Test if string<br />
+<li><a id="orgccc2a13"></a>Test if string<br />
 <div class="outline-text-5" id="text-5-3-3-6">
 <ul class="org-ul">
 <li><code>is-string VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> is a String and to <code>False</code> otherwise.</li>
@@ -2386,7 +2386,7 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </li>
 
-<li><a id="org7f20e67"></a>Strings from User Input<br />
+<li><a id="org2972b82"></a>Strings from User Input<br />
 <div class="outline-text-5" id="text-5-3-3-7">
 <ul class="org-ul">
 <li><code>input SLOT</code> &#x2014; reads a line of text the user enters and sets <code>SLOT</code> to that value (always a String).</li>
@@ -2397,12 +2397,12 @@ Strings are internally UTF-32 encoded to enable faster access by index number an
 </div>
 </div>
 
-<div id="outline-container-orga85626b" class="outline-3">
-<h3 id="orga85626b"><span class="section-number-3">5.4.</span> Slots</h3>
+<div id="outline-container-org2f90f7f" class="outline-3">
+<h3 id="org2f90f7f"><span class="section-number-3">5.4.</span> Slots</h3>
 <div class="outline-text-3" id="text-5-4">
 </div>
-<div id="outline-container-orgb2abc3b" class="outline-4">
-<h4 id="orgb2abc3b"><span class="section-number-4">5.4.1.</span> Short description</h4>
+<div id="outline-container-orgb6390e1" class="outline-4">
+<h4 id="orgb6390e1"><span class="section-number-4">5.4.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-4-1">
 <p>
 Slots are a type of data in SLOBIL usually used to refer to locations in slots.  More generally, they are symbols.  They can be compared with one another and modified.  Slots are not "associated" with objects.  They are data without any associated context.
@@ -2410,8 +2410,8 @@ Slots are a type of data in SLOBIL usually used to refer to locations in slots. 
 </div>
 </div>
 
-<div id="outline-container-orgcbcc7e8" class="outline-4">
-<h4 id="orgcbcc7e8"><span class="section-number-4">5.4.2.</span> Implementation details</h4>
+<div id="outline-container-org4b4af77" class="outline-4">
+<h4 id="org4b4af77"><span class="section-number-4">5.4.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-4-2">
 <p>
 Slots are a structure containing the name of the object and the hashed value of the name so they can be easily inserted into the object hash table.  
@@ -2419,12 +2419,12 @@ Slots are a structure containing the name of the object and the hashed value of 
 </div>
 </div>
 
-<div id="outline-container-orgfcf4c44" class="outline-4">
-<h4 id="orgfcf4c44"><span class="section-number-4">5.4.3.</span> Slot operations</h4>
+<div id="outline-container-org6c41171" class="outline-4">
+<h4 id="org6c41171"><span class="section-number-4">5.4.3.</span> Slot operations</h4>
 <div class="outline-text-4" id="text-5-4-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgacff0c2"></a>Operations on "list" slots<br />
+<li><a id="org019c6c1"></a>Operations on "list" slots<br />
 <div class="outline-text-5" id="text-5-4-3-1">
 <ul class="org-ul">
 <li><code>next SLOT</code> &#x2014; if the <code>SLOT</code> ends in a number, return the Slot with that number incremented by 1.</li>
@@ -2436,7 +2436,7 @@ Slots are a structure containing the name of the object and the hashed value of 
 </div>
 </li>
 
-<li><a id="org28d0522"></a>Convert to slot<br />
+<li><a id="org19809f4"></a>Convert to slot<br />
 <div class="outline-text-5" id="text-5-4-3-2">
 <ul class="org-ul">
 <li><code>to-slot STRING|INTEGER</code> &#x2014; sets the <code>/ans</code> slot to a Slot named <code>STRING</code> or to <code>/tINTEGER</code>.</li>
@@ -2444,7 +2444,7 @@ Slots are a structure containing the name of the object and the hashed value of 
 </div>
 </li>
 
-<li><a id="org353dd38"></a>Slot comparison<br />
+<li><a id="orgdb37de1"></a>Slot comparison<br />
 <div class="outline-text-5" id="text-5-4-3-3">
 <ul class="org-ul">
 <li><code>slot-eq SLOT1 SLOT2</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the two Slots are the same and to <code>False</code> otherwise.</li>
@@ -2452,7 +2452,7 @@ Slots are a structure containing the name of the object and the hashed value of 
 </div>
 </li>
 
-<li><a id="org585c8a4"></a>Test if a slot<br />
+<li><a id="org590f716"></a>Test if a slot<br />
 <div class="outline-text-5" id="text-5-4-3-4">
 <ul class="org-ul">
 <li><code>is-slot VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> is a Slot and to <code>False</code> otherwise.</li>
@@ -2465,12 +2465,12 @@ Slots are a structure containing the name of the object and the hashed value of 
 
 
 
-<div id="outline-container-orgaacde34" class="outline-3">
-<h3 id="orgaacde34"><span class="section-number-3">5.5.</span> Booleans</h3>
+<div id="outline-container-org4cc8332" class="outline-3">
+<h3 id="org4cc8332"><span class="section-number-3">5.5.</span> Booleans</h3>
 <div class="outline-text-3" id="text-5-5">
 </div>
-<div id="outline-container-org03fb257" class="outline-4">
-<h4 id="org03fb257"><span class="section-number-4">5.5.1.</span> Short description</h4>
+<div id="outline-container-org078e17c" class="outline-4">
+<h4 id="org078e17c"><span class="section-number-4">5.5.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-5-1">
 <p>
 Booleans can take on two values: <code>True</code> or <code>False</code>.  Comparison and testing operations usually set the <code>/ans</code> slot to a Boolean value.
@@ -2478,8 +2478,8 @@ Booleans can take on two values: <code>True</code> or <code>False</code>.  Compa
 </div>
 </div>
 
-<div id="outline-container-org79b9cea" class="outline-4">
-<h4 id="org79b9cea"><span class="section-number-4">5.5.2.</span> Implementation details</h4>
+<div id="outline-container-org1d9da22" class="outline-4">
+<h4 id="org1d9da22"><span class="section-number-4">5.5.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-5-2">
 <p>
 Booleans are simply a binary value.  They use the C99 bool type internally.
@@ -2487,8 +2487,8 @@ Booleans are simply a binary value.  They use the C99 bool type internally.
 </div>
 </div>
 
-<div id="outline-container-orge498b30" class="outline-4">
-<h4 id="orge498b30"><span class="section-number-4">5.5.3.</span> Boolean operations</h4>
+<div id="outline-container-org8eea06c" class="outline-4">
+<h4 id="org8eea06c"><span class="section-number-4">5.5.3.</span> Boolean operations</h4>
 <div class="outline-text-4" id="text-5-5-3">
 <ul class="org-ul">
 <li><code>is-boolean VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> is a Boolean and to <code>False</code> otherwise.</li>
@@ -2503,12 +2503,12 @@ Booleans are simply a binary value.  They use the C99 bool type internally.
 </div>
 </div>
 
-<div id="outline-container-orgb40714a" class="outline-3">
-<h3 id="orgb40714a"><span class="section-number-3">5.6.</span> Instructions</h3>
+<div id="outline-container-org5f91d0f" class="outline-3">
+<h3 id="org5f91d0f"><span class="section-number-3">5.6.</span> Instructions</h3>
 <div class="outline-text-3" id="text-5-6">
 </div>
-<div id="outline-container-orgc58e7db" class="outline-4">
-<h4 id="orgc58e7db"><span class="section-number-4">5.6.1.</span> Short description</h4>
+<div id="outline-container-orgedb29b1" class="outline-4">
+<h4 id="orgedb29b1"><span class="section-number-4">5.6.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-6-1">
 <p>
 Instructions are code objects which have not yet been executed.  They can be called or executed in different objects.
@@ -2516,8 +2516,8 @@ Instructions are code objects which have not yet been executed.  They can be cal
 </div>
 </div>
 
-<div id="outline-container-org455bf2e" class="outline-4">
-<h4 id="org455bf2e"><span class="section-number-4">5.6.2.</span> Implementation details</h4>
+<div id="outline-container-orge3b6002" class="outline-4">
+<h4 id="orge3b6002"><span class="section-number-4">5.6.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-6-2">
 <p>
 Instructions are internally "compiled" code.  They are then supplied with an environment (a object) before they are executed.  The compiled code object is a linked list of statements each of which is a linked list of elements.  Elements are either literal data values or the names of slots to lookup in the environment.
@@ -2525,8 +2525,8 @@ Instructions are internally "compiled" code.  They are then supplied with an env
 </div>
 </div>
 
-<div id="outline-container-org046ff2f" class="outline-4">
-<h4 id="org046ff2f"><span class="section-number-4">5.6.3.</span> Instruction operations</h4>
+<div id="outline-container-orgb3627e2" class="outline-4">
+<h4 id="orgb3627e2"><span class="section-number-4">5.6.3.</span> Instruction operations</h4>
 <div class="outline-text-4" id="text-5-6-3">
 <ul class="org-ul">
 <li><code>call INSTRUCTION SLOT1 VALUE1 SLOT2 VALUE2 ...</code> &#x2014; executes <code>INSTRUCTION</code> in a Object with <code>SLOT1</code> assigned to <code>VALUE1</code> and so on.</li>
@@ -2543,12 +2543,12 @@ Instructions are internally "compiled" code.  They are then supplied with an env
 </div>
 </div>
 
-<div id="outline-container-org9be4b71" class="outline-3">
-<h3 id="org9be4b71"><span class="section-number-3">5.7.</span> Files</h3>
+<div id="outline-container-orgfecaefb" class="outline-3">
+<h3 id="orgfecaefb"><span class="section-number-3">5.7.</span> Files</h3>
 <div class="outline-text-3" id="text-5-7">
 </div>
-<div id="outline-container-orge56b9e0" class="outline-4">
-<h4 id="orge56b9e0"><span class="section-number-4">5.7.1.</span> Short description</h4>
+<div id="outline-container-org9bcda5f" class="outline-4">
+<h4 id="org9bcda5f"><span class="section-number-4">5.7.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-7-1">
 <p>
 Files are stream objects that you can write to and read from.
@@ -2556,8 +2556,8 @@ Files are stream objects that you can write to and read from.
 </div>
 </div>
 
-<div id="outline-container-org2bb045e" class="outline-4">
-<h4 id="org2bb045e"><span class="section-number-4">5.7.2.</span> Implementation details</h4>
+<div id="outline-container-org5241e4a" class="outline-4">
+<h4 id="org5241e4a"><span class="section-number-4">5.7.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-7-2">
 <p>
 Files are like the C FILE type.  
@@ -2565,8 +2565,8 @@ Files are like the C FILE type.
 </div>
 </div>
 
-<div id="outline-container-org0f0d3b5" class="outline-4">
-<h4 id="org0f0d3b5"><span class="section-number-4">5.7.3.</span> File operations</h4>
+<div id="outline-container-orga6c7e31" class="outline-4">
+<h4 id="orga6c7e31"><span class="section-number-4">5.7.3.</span> File operations</h4>
 <div class="outline-text-4" id="text-5-7-3">
 <ul class="org-ul">
 <li><code>is-file VALUE</code> &#x2014; sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> is a File and to <code>False</code> otherwise.</li>
@@ -2589,12 +2589,12 @@ Files are like the C FILE type.
 </div>
 </div>
 
-<div id="outline-container-orge3d08eb" class="outline-3">
-<h3 id="orge3d08eb"><span class="section-number-3">5.8.</span> Nothing</h3>
+<div id="outline-container-orgfe3e1a6" class="outline-3">
+<h3 id="orgfe3e1a6"><span class="section-number-3">5.8.</span> Nothing</h3>
 <div class="outline-text-3" id="text-5-8">
 </div>
-<div id="outline-container-org20863b9" class="outline-4">
-<h4 id="org20863b9"><span class="section-number-4">5.8.1.</span> Short description</h4>
+<div id="outline-container-org6465f1e" class="outline-4">
+<h4 id="org6465f1e"><span class="section-number-4">5.8.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-8-1">
 <p>
 <code>Nothing</code> is a value that is not any other value and is a different type than any other value.
@@ -2602,8 +2602,8 @@ Files are like the C FILE type.
 </div>
 </div>
 
-<div id="outline-container-orgc72ec72" class="outline-4">
-<h4 id="orgc72ec72"><span class="section-number-4">5.8.2.</span> Nothing operations</h4>
+<div id="outline-container-org90f871d" class="outline-4">
+<h4 id="org90f871d"><span class="section-number-4">5.8.2.</span> Nothing operations</h4>
 <div class="outline-text-4" id="text-5-8-2">
 <ul class="org-ul">
 <li><code>is-nothing VALUE</code> &#x2014; sets the <code>/ans</code> slot to <code>True</code> if the value is <code>Nothing</code> and to <code>False</code> otherwise.</li>
@@ -2612,12 +2612,12 @@ Files are like the C FILE type.
 </div>
 </div>
 
-<div id="outline-container-org03865d0" class="outline-3">
-<h3 id="org03865d0"><span class="section-number-3">5.9.</span> Task Operations</h3>
+<div id="outline-container-orgfb12474" class="outline-3">
+<h3 id="orgfb12474"><span class="section-number-3">5.9.</span> Task Operations</h3>
 <div class="outline-text-3" id="text-5-9">
 </div>
-<div id="outline-container-orgc3496a9" class="outline-4">
-<h4 id="orgc3496a9"><span class="section-number-4">5.9.1.</span> Short description</h4>
+<div id="outline-container-org7daa7fa" class="outline-4">
+<h4 id="org7daa7fa"><span class="section-number-4">5.9.1.</span> Short description</h4>
 <div class="outline-text-4" id="text-5-9-1">
 <p>
 Tasks are objects that allow you to execute code in another thread and share data between threads.
@@ -2625,8 +2625,8 @@ Tasks are objects that allow you to execute code in another thread and share dat
 </div>
 </div>
 
-<div id="outline-container-org72c4fb9" class="outline-4">
-<h4 id="org72c4fb9"><span class="section-number-4">5.9.2.</span> Implementation details</h4>
+<div id="outline-container-orgd3ed94c" class="outline-4">
+<h4 id="orgd3ed94c"><span class="section-number-4">5.9.2.</span> Implementation details</h4>
 <div class="outline-text-4" id="text-5-9-2">
 <p>
 Tasks contain three elements:
@@ -2644,8 +2644,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org4cbcf6a" class="outline-4">
-<h4 id="org4cbcf6a"><span class="section-number-4">5.9.3.</span> Task operations</h4>
+<div id="outline-container-orge897463" class="outline-4">
+<h4 id="orge897463"><span class="section-number-4">5.9.3.</span> Task operations</h4>
 <div class="outline-text-4" id="text-5-9-3">
 <ul class="org-ul">
 <li><code>task SLOT INSTRUCTION |OBJECT|</code> &#x2014; Sets <code>SLOT</code> to contain a new Task with its Body given by the <code>INSTRUCTION</code> and the initial state being set to <code>OBJECT</code>.  If no <code>OBJECT</code> argument is given, the initial state is a object containing only the basic operations (the object always contains the basic operations even if they are not in the initial object passed to <code>Task</code>).</li>
@@ -2664,8 +2664,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org7cc498c" class="outline-3">
-<h3 id="org7cc498c"><span class="section-number-3">5.10.</span> Control flow operations</h3>
+<div id="outline-container-orgdf56206" class="outline-3">
+<h3 id="orgdf56206"><span class="section-number-3">5.10.</span> Control flow operations</h3>
 <div class="outline-text-3" id="text-5-10">
 <ul class="org-ul">
 <li><code>if BOOLEAN VALUE1 |VALUE2|</code> &#x2014; if the first argument is <code>True</code>, sets the <code>/ans</code> slot to <code>VALUE1</code>, if it is <code>False</code>, sets the <code>/ans</code> slot to <code>VALUE2</code>.  If <code>VALUE2</code> is omitted, do nothing if the first argument is <code>False</code>.</li>
@@ -2679,12 +2679,12 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org0f4cbed" class="outline-3">
-<h3 id="org0f4cbed"><span class="section-number-3">5.11.</span> Environment operations</h3>
+<div id="outline-container-orgb8a07e5" class="outline-3">
+<h3 id="orgb8a07e5"><span class="section-number-3">5.11.</span> Environment operations</h3>
 <div class="outline-text-3" id="text-5-11">
 </div>
-<div id="outline-container-org8059a94" class="outline-4">
-<h4 id="org8059a94"><span class="section-number-4">5.11.1.</span> Modify the /ans slot</h4>
+<div id="outline-container-org38fcf05" class="outline-4">
+<h4 id="org38fcf05"><span class="section-number-4">5.11.1.</span> Modify the /ans slot</h4>
 <div class="outline-text-4" id="text-5-11-1">
 <ul class="org-ul">
 <li><code>answer VALUE</code> &#x2014; set the <code>/ans</code> slot to <code>VALUE</code>.</li>
@@ -2694,8 +2694,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgdfe0cdb" class="outline-4">
-<h4 id="orgdfe0cdb"><span class="section-number-4">5.11.2.</span> Exit SLOBIL</h4>
+<div id="outline-container-org084bfcb" class="outline-4">
+<h4 id="org084bfcb"><span class="section-number-4">5.11.2.</span> Exit SLOBIL</h4>
 <div class="outline-text-4" id="text-5-11-2">
 <ul class="org-ul">
 <li><code>exit</code> &#x2014; exit SLOBIL.</li>
@@ -2703,8 +2703,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org1a1bef0" class="outline-4">
-<h4 id="org1a1bef0"><span class="section-number-4">5.11.3.</span> Print output</h4>
+<div id="outline-container-orga84ead1" class="outline-4">
+<h4 id="orga84ead1"><span class="section-number-4">5.11.3.</span> Print output</h4>
 <div class="outline-text-4" id="text-5-11-3">
 <ul class="org-ul">
 <li><code>print VALUE |BOOLEAN|</code> &#x2014; prints <code>VALUE</code> to screen.  If <code>BOOLEAN</code> is <code>False</code>, then omit the newline (default: add newline after printing value).</li>
@@ -2712,8 +2712,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org2e244ef" class="outline-4">
-<h4 id="org2e244ef"><span class="section-number-4">5.11.4.</span> Input and output files and state</h4>
+<div id="outline-container-org7da2c26" class="outline-4">
+<h4 id="org7da2c26"><span class="section-number-4">5.11.4.</span> Input and output files and state</h4>
 <div class="outline-text-4" id="text-5-11-4">
 <ul class="org-ul">
 <li><code>source STRING</code> &#x2014; executes SLOBIL code in the file named by STRING.</li>
@@ -2730,8 +2730,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 
 
-<div id="outline-container-org56f6730" class="outline-4">
-<h4 id="org56f6730"><span class="section-number-4">5.11.5.</span> Error handling</h4>
+<div id="outline-container-orgf26d5a0" class="outline-4">
+<h4 id="orgf26d5a0"><span class="section-number-4">5.11.5.</span> Error handling</h4>
 <div class="outline-text-4" id="text-5-11-5">
 <ul class="org-ul">
 <li><code>error STRING |INTEGER|</code> &#x2014; outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is <code>1</code>).</li>
@@ -2743,8 +2743,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgeb0afb1" class="outline-4">
-<h4 id="orgeb0afb1"><span class="section-number-4">5.11.6.</span> Version</h4>
+<div id="outline-container-org87edb01" class="outline-4">
+<h4 id="org87edb01"><span class="section-number-4">5.11.6.</span> Version</h4>
 <div class="outline-text-4" id="text-5-11-6">
 <ul class="org-ul">
 <li><code>version</code> &#x2014; sets the <code>/ans</code> Slot to a String giving the version of SLOBIL.</li>
@@ -2753,12 +2753,12 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgb9df2d6" class="outline-3">
-<h3 id="orgb9df2d6"><span class="section-number-3">5.12.</span> System operations</h3>
+<div id="outline-container-orgbfc0933" class="outline-3">
+<h3 id="orgbfc0933"><span class="section-number-3">5.12.</span> System operations</h3>
 <div class="outline-text-3" id="text-5-12">
 </div>
-<div id="outline-container-orgfadbd71" class="outline-4">
-<h4 id="orgfadbd71"><span class="section-number-4">5.12.1.</span> Interacting with the shell</h4>
+<div id="outline-container-orgb1a0eef" class="outline-4">
+<h4 id="orgb1a0eef"><span class="section-number-4">5.12.1.</span> Interacting with the shell</h4>
 <div class="outline-text-4" id="text-5-12-1">
 <ul class="org-ul">
 <li><code>shell STRING</code> &#x2014; execute the shell command <code>STRING</code>.</li>
@@ -2770,8 +2770,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org731fbfa" class="outline-4">
-<h4 id="org731fbfa"><span class="section-number-4">5.12.2.</span> Time</h4>
+<div id="outline-container-orgeba77cf" class="outline-4">
+<h4 id="orgeba77cf"><span class="section-number-4">5.12.2.</span> Time</h4>
 <div class="outline-text-4" id="text-5-12-2">
 <ul class="org-ul">
 <li><code>clock</code> &#x2014; set the <code>/ans</code> slot to the current time in milliseconds from January 1, 1970.</li>
@@ -2783,8 +2783,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org38b4e25" class="outline-4">
-<h4 id="org38b4e25"><span class="section-number-4">5.12.3.</span> Random numbers</h4>
+<div id="outline-container-org15ed5a8" class="outline-4">
+<h4 id="org15ed5a8"><span class="section-number-4">5.12.3.</span> Random numbers</h4>
 <div class="outline-text-4" id="text-5-12-3">
 <ul class="org-ul">
 <li><code>rand |INTEGER|</code> &#x2014; set the <code>/ans</code> Slot to a uniformly distributed random Real between 0 and 1.  If <code>INTEGER</code> is provided, set the seed to the <code>INTEGER</code> before drawing random value.</li>
@@ -2793,8 +2793,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org5c3db34" class="outline-3">
-<h3 id="org5c3db34"><span class="section-number-3">5.13.</span> Package operations</h3>
+<div id="outline-container-org12cb2dc" class="outline-3">
+<h3 id="org12cb2dc"><span class="section-number-3">5.13.</span> Package operations</h3>
 <div class="outline-text-3" id="text-5-13">
 <ul class="org-ul">
 <li><code>use STRING</code> &#x2014; load a saved object in <code>~/.darbs/</code> with the extension <code>.darb</code> into the current object. The file being loaded is: <code>~/.darbs/STRING.darb</code>.</li>
@@ -2806,12 +2806,12 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-org32ce14c" class="outline-3">
-<h3 id="org32ce14c"><span class="section-number-3">5.14.</span> Interpreter options</h3>
+<div id="outline-container-orgbe67922" class="outline-3">
+<h3 id="orgbe67922"><span class="section-number-3">5.14.</span> Interpreter options</h3>
 <div class="outline-text-3" id="text-5-14">
 </div>
-<div id="outline-container-org936457f" class="outline-4">
-<h4 id="org936457f"><span class="section-number-4">5.14.1.</span> Operation</h4>
+<div id="outline-container-orgf7c4a66" class="outline-4">
+<h4 id="orgf7c4a66"><span class="section-number-4">5.14.1.</span> Operation</h4>
 <div class="outline-text-4" id="text-5-14-1">
 <ul class="org-ul">
 <li><code>interpreter SLOT VALUE</code> &#x2014; sets interpreter option <code>SLOT</code> to <code>VALUE</code>.</li>
@@ -2819,8 +2819,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgbbacf5b" class="outline-4">
-<h4 id="orgbbacf5b"><span class="section-number-4">5.14.2.</span> List of options</h4>
+<div id="outline-container-org8132a3a" class="outline-4">
+<h4 id="org8132a3a"><span class="section-number-4">5.14.2.</span> List of options</h4>
 <div class="outline-text-4" id="text-5-14-2">
 <ul class="org-ul">
 <li><code>/print-ans</code> &#x2014; if <code>True</code> (default) or any non-Boolean value, then print the value of the <code>/ans</code> Slot at the end of commands, if <code>False</code> suppress printing.</li>
@@ -2834,8 +2834,8 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgf4d4b13" class="outline-2">
-<h2 id="orgf4d4b13"><span class="section-number-2">6.</span> Saved Objects</h2>
+<div id="outline-container-org8644e02" class="outline-2">
+<h2 id="org8644e02"><span class="section-number-2">6.</span> Saved Objects</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 <b>Note</b>: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting SLOBIL in any case; it has no permanent information.  All other data types are written to disk.
@@ -2847,8 +2847,8 @@ This section will describe the storage format for SLOBIL saved files.  A user or
 </div>
 </div>
 
-<div id="outline-container-org524674b" class="outline-2">
-<h2 id="org524674b"><span class="section-number-2">7.</span> GNU Free Documentation License</h2>
+<div id="outline-container-orgfc27c39" class="outline-2">
+<h2 id="orgfc27c39"><span class="section-number-2">7.</span> GNU Free Documentation License</h2>
 <div class="outline-text-2" id="text-7">
 
 <h3 style="text-align: center;">GNU Free Documentation License</h3>
@@ -3332,7 +3332,7 @@ to permit their use in free software.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2022-10-06 Thu 20:17</p>
+<p class="date">Created: 2022-10-06 Thu 22:43</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
