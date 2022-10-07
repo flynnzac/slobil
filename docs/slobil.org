@@ -260,7 +260,9 @@ Objects are also, as the name suggests, the data type used for object-oriented p
 
 =/rect1= will now contain an object that inherits from the object at =/rectangle=.  If you make changes to the object currently located at =/rectangle=, it will be reflected in the object currently at =/rect1=.  Importantly, the objects are what matters not the slot at which they are stored.  Slots are locations, not values.  So if you move the =/rectangle= object to some other slot, that will not change anything.  Similarly, if you overwrite the =/rectangle= slot with a new value, this will not change the object located at =/rect1=.
 
-To call Instructions located in an Object from inside the Object, we could use the =in= Operation, but because this is a common thing to do (it is akin to message passing or method calls in other object-oriented languages), SLOBIL provides a convient syntax.  Simply type the name of the Object as the first element of the statement followed by a Slot and SLOBIL will assume this is what you want to do.  For example,
+We can call instructions located inside an object by using the colon notation described above, but the code is executed in the current Object.  This is what we want when we are using Objects effectively as namespaces, but sometimes we want to use instructions as methods, making use of the data contained in the Object.
+
+To call instructions located in an Object from inside the Object, we could use the =in= operation, but because this is a common thing to do (it is akin to message passing or method calls in other object-oriented languages), SLOBIL provides a convient syntax.  Simply type the name of the Object as the first element of the statement followed by a slot and SLOBIL will assume this is what you want to do.  For example,
 
 #+BEGIN_SRC slobil
 ... in rect1 ( area ) .
@@ -298,10 +300,10 @@ ans = 40
     10
     #+END_SRC
 
-    /But/ we cannot use subexpressions in the colon notation:
+    /But/ we cannot use sub-statements in the colon notation:
     #+BEGIN_SRC slobil
-    ... set /x [ object /y 10 ] .
-    ... ' BAD! print x:[ answer /y ] .
+      ... set /x [ object /y 10 ] .
+      ... ' BAD! print x:[ answer /y ] .
     #+END_SRC
 
 ** Slots   
