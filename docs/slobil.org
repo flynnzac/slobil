@@ -486,7 +486,7 @@ set /current-file Nothing .
 ' Start a new record of work or load an old one
 
 set /init
-    < (
+    [ op (
       up set /current-file file .
       please ( load file record )
              (
@@ -494,7 +494,7 @@ set /init
                up set /client-list [ object ] record .
                print "Starting new file." .
              ) .
-    ) /file > .
+    ) /file ] .
 
 ' Save record of work in SLOBIL format
 
@@ -506,7 +506,7 @@ set /save-hours
 ' Set current client
 
 set /client
-    <
+    [ op
     (
       if [ not running ]
          {
@@ -524,8 +524,7 @@ set /client
            print "Currently running, stop first." .
          } .
     )
-    /name
-    > .
+    /name ] .
 
 ' Start clock for current client
 set /start
@@ -583,9 +582,9 @@ set /day-of-week-map
 
 ' Convert milliseconds to hours
 set /make-hours-day-time
-    < (
-      do < ( div t 1000.0 60 60 ) /t > structure .
-    ) /structure > .
+    [ op (
+      do [ op ( div t 1000.0 60 60 ) /t ] structure .
+    ) /structure ] .
 
       
 ' Return a structure describing a single day of activity
@@ -648,11 +647,11 @@ set /day-time
 
 ' Add client to client list
 set /add-client-to-list
-    < (
+    [ op (
       last record:/client-list /c .
       next ans .
       set ans client record:/client-list .
-    ) /client > .
+    ) /client ] .
 
 
 ' Select client from menu
@@ -724,7 +723,7 @@ set /rename-client
 ' Rewind X minutes from start
 
 set /start-back
-    < (
+    [ op (
       if [ not running ]
          {
            print "Currently not running." .
@@ -732,17 +731,17 @@ set /start-back
          {
            up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
          } .
-    ) /x > .
+    ) /x ] .
 
 ' Rewind X minutes from last entry
 
 set /rewind-last
-    < (
+    [ op (
 
       set /end [ last record /r ] .
       set /stop-time [ sub record:end:/stop-time [ mul x 60 1000 ] ]
           record:end .
-    ) /x > .
+    ) /x ] .
 
    #+END_SRC
 
@@ -816,7 +815,7 @@ Hello
 
    Example of use:
    #+BEGIN_SRC slobil
-... set /f < ( power t 2 ) /t > .
+... set /f [ op ( power t 2 ) /t ] .
 ... deriv /f f /x 1.0
 ans = 2.0
    #+END_SRC
@@ -843,7 +842,7 @@ ans = 120
 
    Example of use:
    #+BEGIN_SRC slobil
-... integrate /f < ( power t 2 ) /t > /lb 0.0 /ub 1.0 /n 1000 .
+... integrate /f [ op ( power t 2 ) /t ] /lb 0.0 /ub 1.0 /n 1000 .
 ans = 0.332834
    #+END_SRC
 
