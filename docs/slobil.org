@@ -14,17 +14,17 @@
 
 * The Language
 
-Everything in SLOBIL is Data.  SLOBIL takes the approach of defining a few, flexible data structures and pairs it with a prototype-based object-oriented programming system.  SLOBIL programmers do not create new types of data.  Instead they make use of the flexible Object data type to create the data structures needed for their programs.
-
 ** Statements and syntax
 
-A statement is a single line of code.  All statements start with one of SLOBIL's /operators/ and the other elements are arguments to the operator. Statements end with periods. For example,
+A statement is a single line of code.  All statements start with an /operator/. The other elements of the statement are arguments to the operator. Statements end with periods. For example,
   
    #+BEGIN_SRC slobil
    ... set /hello "Hello, world!" .
    #+END_SRC
 
-=/hello= is a Slot.  Slots are locations where data is stored.  They also act as symbols.  ="Hello, world!"= is a String.  Strings in SLOBIL are enclosed in double quotes. =set= is an Operation.  It inserts data at a given slot.  So, the code above sets the Slot =/hello= to refer to the String data ="Hello, world!=. Names that have a forward slash preceeding them are /slots/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in SLOBIL:
+=/hello= is a slot.  Slots are locations where data is stored.  ="Hello, world!"= is a string.  Strings in SLOBIL are enclosed in double quotes. =set= is an operation that inserts data at a given slot.
+
+So, the code above sets the slot =/hello= to refer to the string data ="Hello, world!=. Names that have a forward slash preceeding them are /slots/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in SLOBIL:
 
    #+BEGIN_SRC slobil
    ... set /days-in-week 7 .
@@ -34,9 +34,11 @@ A statement is a single line of code.  All statements start with one of SLOBIL's
    ... set /add-one ( add t 1 ) .
    #+END_SRC
 
-An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, =(= and =)=).  Instructions can be executed in any Object.  They are not "bound" to the object in which they are initially defined.
+An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, =(= and =)=).
 
-To use the value located in a Slot, simply type the name of the Slot without the preceeding forward slash.  For example,
+Instructions can be executed in any Object.  They are not "bound" to the object in which they are initially defined.
+
+To reference the value of the data located in a slot, simply type the name of the slot without the preceeding forward slash.  For example,
    #+BEGIN_SRC slobil
   ... print days-in-week .
   7
@@ -50,9 +52,9 @@ All code elements must be separated by whitespace including the period that ends
 	set /add-one (add t 1 .) .
    #+END_SRC
 
-There must be whitespace before the period.  There also must be whitespace after and before parenthesis. 
+There must be whitespace before the period.  There also must be whitespace before and after parenthesis. 
 
-There are four parenthesis types in SLOBIL: open parentheis (=()=), closed parenthesis (=[]=), curly parenthesis (={}=), and angle brackets (=<>=).  The first three all contain groups of statements, but they differ in /when/ the statements they contain are executed.  The angle brackets create new Operations from Instructions.
+** Substatements
 
 *** Instructions
 
@@ -82,7 +84,7 @@ Because there is no ambiguity, you do not actually need to use the =call= operat
 
 Instructions are used in loops and in several other operations.  
 
-*** Greedy substatements and the =/ans= slot
+*** Substatements
 
 Closed parenthesis (=[]=) execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= Slot to.  The purpose of these statements is to avoid needing to define temporary slots for intermediate calculations.  For example,
     #+BEGIN_SRC slobil
@@ -109,7 +111,7 @@ In many ways, the =/ans= Slot is similar to any other Slot. The =/ans= slot is s
 
 The other special feature of the =/ans= slot is that statements enclosed in closed parenthesis evaluate to the value the statements inside them set the =/ans= Slot to.  Because =sub 5 3 .= sets the =/ans= Slot to =2= and =mul 2 3 .= sets the =/ans= Slot to =6=, =add [ sub 5 3 . ] [ mul 2 3 . ] .= sets the =/ans= Slot to =8=.
 
-*** Lazy substatements (Expressions)
+*** Expressions
 
 Curly parenthesis (={}=) also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression.  The value of the expression, if it is evaluated, is the value the statements enclosed in curly parenthesis set the =/ans= slot to.  SLOBIL calls this data type an "Expression" before it is evaluated. We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
     #+BEGIN_SRC slobil
@@ -142,25 +144,16 @@ Note: =sit= is an operation that does nothing but evaluate any Expressions in it
     
 *** Convert an instruction to an operation
 
-    Angle brackets (<>) transform an Instruction object into an Operation object.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever Object the caller of the Instruction chooses.  Operations execute with a fixed set of positional arguments determining the Object the code executes in.  All of the built-in features of the language are Operations, but most programmer-defined code is an Instruction.  Occasionally, it is useful to transform Instructions into Operations.  Angle brackets or the =op= Operation are two alternative ways to do the transformation.   For example:
+Instruction objects are the usual way to write functions, procedures, and methods.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever Object the caller of the instruction chooses.  Operations execute with a fixed set of positional arguments.  All of the built-in features of the language are operations.  Occasionally, it is useful to transform instructions into operations.  The =op= operation transforms instructions into operations.   For example:
     #+BEGIN_SRC slobil
-     ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
-     ... fraction /t1 1 /t2 3.0 .
-     ans = 0.25
-     ... [ op fraction /t1 /t2 . ] 1 3.0 .
-     ans = 0.25
-     ... < fraction /t1 /t2 > 1 3.0 .
-     ans = 0.25
-     ... set /op-fraction < fraction /t1 /t2 > .
-     ... op-fraction 1 3.0 .
-     ans = 0.25
-     ... < fraction /t2 /t1 > 1 3.0 .
-     ans = 0.75
+      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
+      ... fraction /t1 1 /t2 3.0 .
+      ans = 0.25
+      ... [ op fraction /t1 /t2 ] 1 3.0 .
+      ans = 0.25
+      ... [ op fraction /t2 /t1 ] 1 3.0 .
+      ans = 0.75
     #+END_SRC
-
-Note that there is no period used to end an operation definition in the angle brackets.
-
-The brackets call the Instruction =fraction= and set the Slot =/t1= to the value of the first argument and the slot =/t2= to the second argument.  The order would be switched if we had instead used: =< fraction /t2 /t1 >=.
 
 *** Comments
 
@@ -256,7 +249,7 @@ Objects can also be used as /namespaces/.  For example,
 
 As we can see above, the =set= operation optionally takes a third argument: the Object in which to set the given Slot.  Without the third argument, =set= sets the slot in the current Object.
 
-Objects are flexible data structures.  They can be used to represent structures with multiple kinds of values (like =struct= in C).  Or they can be used as namespaces for libraries or different parts of a code base.
+*** Object-Oriented Programming
 
 Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
 
@@ -284,9 +277,6 @@ If we modify the base object, the modification will propogate to all the Objects
 ... rect1 /area .
 ans = 40
 #+END_SRC
-
-
-
 
 
 
