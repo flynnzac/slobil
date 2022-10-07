@@ -44,41 +44,41 @@
 
 ' Computes v^T w for a vector 
 set /dotproduct
-    < (
+    [ op (
       do mul v w .
       collapse add ans  .
-    ) /v /w > .
+    ) /v /w ] .
 
 ' matrix-multiply A B computes A^T B
 set /matrix-multiply
-    < (
+    [ op (
       set /i /t1 .
       set /out [ list ] .
       while ( exist i B )
             (
-              do < ( dotproduct t1 B:i ) /t1 > A .
+              do [ op ( dotproduct t1 B:i ) /t1 ] A .
               in out ( set i ans ) .
               next i .
               move /ans /i .
             ) .
       answer out .
-    ) /A /B > .
+    ) /A /B ] .
 
 ' Computes A^T 
 set /transpose
-    < (
+    [ op (
       set /i /t1 .
       set /out [ list ] .
       while ( exist i A:/t1 )
             (
-              do < ( answer t1:i ) /t1 > A .
+              do [ op ( answer t1:i ) /t1 ] A .
               move /ans /res .
               in out ( set i res ) .
               next i .
               move /ans /i .
             ) .
       answer out .
-    ) /A > .
+    ) /A ] .
 
 </code>
 </pre>
