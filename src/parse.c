@@ -176,21 +176,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   str = malloc(sizeof(char)*(strlen(state->buffer)+2));
                   strcpy(str, state->buffer);
 
-                  if (state->open_paren == '<')
-                    {
-                      /* Angle brackets are just sugar for the <op> operation */
-                      int new_size = strlen(str) + strlen("op ") + strlen(" . ");
-                      char* old_str = malloc(sizeof(char)*(strlen(str)+1));
-                      strcpy(old_str, str);
-                      
-                      str = realloc(str, sizeof(char)*(new_size+1));
-                      strcpy(str, "op ");
-                      strcat(str, old_str);
-                      strcat(str, " . ");
-                      free(old_str);
-                      state->open_paren = '[';
-                    }
-
                   /* Stream the sub expression into parse so we can make it a sequence of
                      statements itself. */
                   f_sub = fmemopen(str,
@@ -413,35 +398,6 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
             {
               state->after_instr = 1;
               if (state->open_paren != '[')
-                {
-                  do_error("Parenthesis do not match.", task);
-                  break;
-                }
-            }
-          else
-            {
-              add_to_state_buffer(state, c, true);
-            }
-        }
-      else if (c == '<' && !state->in_quote)
-        {
-          if (state->in_instr == 0)
-            {
-              state->open_paren = '<';
-            }
-          else
-            {
-              add_to_state_buffer(state,c,true);
-            }
-          state->in_instr++;
-        }
-      else if (c == '>' && !state->in_quote)
-        {
-          state->in_instr--;
-          if (state->in_instr == 0)
-            {
-              state->after_instr = 1;
-              if (state->open_paren != '<')
                 {
                   do_error("Parenthesis do not match.", task);
                   break;
