@@ -1,6 +1,6 @@
 ' compute a factorial using while
 set /factorial
-    < (
+    [ op (
       set /i 2 .
       set /prod 1 .
       while ( lt-eq i t )
@@ -9,7 +9,7 @@ set /factorial
               incr i .
             ) .
       answer prod .
-    ) /t > .    
+    ) /t ] .    
 
 
 ' compute factorial using recursion
@@ -23,6 +23,6 @@ set /-factorial-recurse
          } .
     ) .
 
-set /factorial-recurse < -factorial-recurse /t > .
+set /factorial-recurse [ op -factorial-recurse /t ] .
 
 

@@ -7,14 +7,14 @@ in arbed
      /n ( up set /cur-line [ next cur-line . ] . ) .
      /p ( up set /cur-line [ previous cur-line . ] . ) .
      /i
-       < (
+       [ op (
          /arbed-str s buffer .
          in buffer
             (
               set cur-line arbed-str .
             ) .
        )
-       /s > . 
+       /s ] . 
      /o
        (
          print [ get cur-line buffer . ] .
