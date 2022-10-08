@@ -1,0 +1,67 @@
+/accounting
+  [ object
+      /account-list [ object ]
+  ] .
+
+/+account+
+  [ object
+      /entries [ object ] 
+      /add-entry
+      (
+        last entries /entry .
+        next ans .
+        set ans entry entries .
+
+        incr balance entry:/amount .
+      )
+      /summary
+      (
+        print [ combine name ": " balance ] .
+      )
+      /print-entry
+      (
+        print [ combine
+                  entry:/desc ": "
+                  [
+                    to-string entry:/amount
+                  ]
+              ] .
+      )
+      /print-entries
+      (
+        do [ op print-entry /entry ]
+           entries .
+      )
+  ]
+  accounting .
+
+/new-account
+  (
+    set name [ new +account+ /name [ to-string name ] /balance balance ] account-list .
+  )
+  accounting .
+
+/transfer
+  (
+    /to-entry [ object /desc desc /amount amount ] .
+    /from-entry [ object /desc desc /amount [ mul -1 amount ] ] .
+
+    if [ exist from-account account-list ]
+       {
+         account-list:from-account /add-entry /entry from-entry .
+       }
+       {
+         if [ exist to-account account-list ]
+            {
+              account-list:to-account /add-entry /entry to-entry .
+            } .
+       } .
+  )
+  accounting .
+
+/summary
+  (
+    do [ op ( account /summary . answer Nothing . ) /account  ]
+       account-list .
+  )
+  accounting .

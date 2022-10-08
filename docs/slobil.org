@@ -14,6 +14,542 @@
 
 * The Language
 
+** Lexical Elements
+
+/Slots/ are represented by a forward-slash (=/=) followed by any non-whitespace characters.  Slot names are case-sensitive.  =/a= and =/A= refer to different slots. I use lower case names for slots with multiple words separated by hyphens.  Like this: =/a-name-for-a-slot=.
+
+A /literal number/ is a sequence of digits ([0-9]) that includes at most one decimal point represented by a period.  It may also be preceded by a hyphen to indicate a negative number. A /literal number/ contains no spaces.
+
+A /literal string/ is a sequence of characters where the first and last characters are double quotation marks.  A literal string can contain the following escape sequences preceded by a backwards slash =\=.
+
+- =\= outputs =\=.
+- =t= outputs tab
+- =n= outputs newline
+- =r= outputs carriage return
+- ='= outputs a single quote character
+  
+A literal string outputs a double quotation mark when a single quotation mark is used ='=.  A literal string can contain whitespace, including newlines.
+
+A /literal boolean/ value is a string of characters that is either =True= or =False=.
+
+A /literal nothing/ value is a string of characters that is =Nothing=.
+
+A single apostrophe (='=) is a token that starts a comment which is ended by a new line.
+
+The following characters are /special tokens/: =[, (, {, ., }, ), ]=.
+
+If a sequence of characters without any whitespace is (1) not a /literal string/, (2) not a /literal number/, (3) not a /special token/, (4) not a /comment/, (5) not a /literal boolean/, (6) not a /literal nothing/, and (7) does not begin with a forward slash, then it is considered a /data reference/.  Some names that are valid for slots are not valid for data references. Data references refer to the data currently inserted in the slot with the same name.
+
+SLOBIL programs are whitespaced-separated lists of the above tokens.  
+
+** Data and Types
+
+Programmers do not define types.  The following are the data types: /Integer/, /Real/, /String/, /Slot/, /Object/, /Instruction/, /Expression/, /Operation/, /File/, /Boolean/, /Nothing/, and /Task/.
+
+/Integer/'s are numbers without decimal points.  They are "big" and can be arbitrarily large in magnitude.
+
+/Real/'s are numbers with decimal points.  They are double precision floating-points.
+
+/String/'s are UTF-8 encoded character strings.  Internally, they are represented as UTF-32 strings for speed, but they output to UTF-8.
+
+/Slot/'s indicate the location of data and also can act as symbols.  They are written by giving a name that begins with a forward-slash. They are represented as a hash of their name internally.
+
+/Object/'s can contain any number of slots and store data in these locations.  Code is executed inside of objects and can refer to data located in the object's slots.  Objects are represented internally as a hash table.
+
+/Instruction/'s are SLOBIL code objects that are executed only when the programmer explicitly requests their execution.  They are the primary way programmers write functions, procedures, and methods.  Instructions are created by enclosing code between the tokens =(= and =)=.
+
+/Expression/'s are SLOBIL code objects that are executed whenever the programmer requests their value.  Expressions are created by enclosing code between the tokens ={= and =}=.
+
+/Operation/'s are code objects that take a series of positional arguments.  The built-in operations are written in C, but users can also define operations.
+
+/File/'s are stream objects used for writing to external files.
+
+/Boolean/'s are either /True/ or /False/.
+
+/Nothing/ is the type for the literal nothing value /Nothing/.  Nothing else has this type.
+
+/Task/'s are processes running on the computer.  When the program starts, it is in the main tasks.  Additional tasks can be created for multi-threaded programs.
+
+/File/, /Task/, and /Object/ data are passed by reference.  All others are by value.
+
+
+** Statements and Objects
+
+A statement is a list of whitespace-separated tokens ended by a =.=.  Naturally, the tokens included in the list cannot include =.=.
+#+BEGIN_SRC slobil
+... TOKEN TOKEN ... TOKEN .
+#+END_SRC
+
+Statements happen inside /objects/.  The object a statement is executed in determines what data is returned by a /data reference/.  Data references look for a value in the relevant slot in the current object, if none is found, then they look for an object in the slot in the object containing the current object and so on.
+
+Statements are executed effectively inside temporary objects.  Arguments in a statement generally determine the values located at slots in the temporary object.
+
+Statements begin with an /operation/.  There are a few exceptions to this rule where the operation is automatically-selected based on the data type used for the first argument.  This is for convenience.  The entire language can be accessed with statements that begin with an /operation/.
+
+The obligatory first statement in SLOBIL:
+#+BEGIN_SRC slobil
+... print "Hello, world!" .
+#+END_SRC
+
+*** Creating Objects
+
+Objects are created by using the =object= operation, followed by an alternating sequence of slots and data elements.
+#+BEGIN_SRC slobil
+... object /number 10 /string "Hello!" /real 3.2 .
+ans = an Object with:
+number of type Integer, value: 10
+string of type String, value: "Hello!"
+real of type Real, value: 3.200000
+#+END_SRC
+
+The =object= operation sets the =/ans= slot to the relevant object. 
+
+*** The =/ans= Slot
+
+Each Object has a special slot called the =/ans= slot.  Many built-in operations put data in the =/ans= slot.  It is the standard place to return values from an instruction, operation, or expression.  For example,
+#+BEGIN_SRC slobil
+... add 4 5 .
+ans = 9
+... print ans .
+9
+#+END_SRC
+
+*** Substatements
+
+Substatements are statements included as an element of another statement.  They are surrounded by square brackets (=[]=) and executed in the order they appear in the statement /prior/ to the statement itself being evaluated.  When the outer statement is evaluated the substatements are replaced by the value each substatement set the =/ans= slot to after it was executed.
+
+For example,
+#+BEGIN_SRC slobil
+    ... object /number 10 /string "Hello!" /real 3.2
+    /object [ object /x 3 /y 2 ] .
+    ans = an Object with:
+    number of type Integer, value: 10
+    string of type String, value: "Hello!"
+    real of type Real, value: 3.200000
+    object of type Object, value: an Object with:
+    x of type Integer, value: 3
+    y of type Integer, value: 2
+    ... add 5 [ add 4 3 ] .
+    ans = 12
+#+END_SRC
+
+Substatements do not need to include a =.= to end the last statement in the substatement.  They can, but they do not have to.  Substatements can include multiple statements.
+
+*** Inserting Data Into Slots
+
+Slots determine the location of data.  The =set= operation inserts data into a slot, like so:
+#+BEGIN_SRC slobil
+... set /number 10 .
+... print number .
+10
+#+END_SRC
+
+The =set= operation takes the slot to insert to and the data to insert as arguments.
+
+The second line in the above example, =print number .=, demonstrates how to access the data located at a slot.  Simply omit the forward slash to get the data.
+
+Because this is a common procedure in SLOBIL, if the first element of a statement is a slot, then SLOBIL assumes you want to call =set=.  For example, the above could have been written as:
+#+BEGIN_SRC slobil
+... /number 10 .
+#+END_SRC
+
+=set= has an optional third argument: the object whose slot we should insert the data into.  If the third argument is omitted, then the value is inserted into the current object's slot.
+#+BEGIN_SRC slobil
+... /rectangle [ object /length 10 /width 5 ] .
+... print rectangle .
+an Object with:
+length of type Integer, value: 10
+width of type Integer, value: 5
+... /width 4 rectangle .
+... print rectangle .
+an Object with:
+length of type Integer, value: 10
+width of type Integer, value: 4
+#+END_SRC
+
+The =move= operation moves data between different slots without copying the data.
+#+BEGIN_SRC slobil
+... /x "Hello." .
+... print x .
+Hello.
+... move /x /y .
+... print y .
+Hello.
+... print x .
+Error: Value at slot /x not found.
+#+END_SRC
+
+The =delete= operation removes data from the slot.
+#+BEGIN_SRC slobil
+... /x "Hello." .
+... print x .
+Hello
+... delete /x .
+... print x .
+Error: Value at slot /x not found.
+#+END_SRC
+
+*** Instructions
+
+Instructions are a data type that contains code to execute.  They are created by enclosing a series of statements in parenthesis.  The last statement in the parenthesis does not have to end with a period.
+
+For example:
+#+BEGIN_SRC slobil
+... /add-one ( add t 1 ) .
+... print add-one .
+(  add t 1  )
+#+END_SRC
+
+The =call= operation calls an instruction in a temporary object determined by alternating slots and data values similar to the call to an object.  In effect, instructions are called with named arguments.
+
+#+BEGIN_SRC slobil
+... call add-one /t 4 .
+ans = 5
+#+END_SRC
+
+When instructions execute, whatever data they set the =/ans= slot to in the temporary object in which they execute is sent back to the object from which they are called.  No other slots they assign are modified in the current object.
+
+#+BEGIN_SRC slobil
+... /circle-area
+(
+	/pi 3.1459 .
+  /r2 [ power r 2 ] .
+  mul r2 pi .
+) .
+... call circle-area /r 2
+ans = 12.583600
+... print ans.
+12.583600
+... print pi .
+Error: Value at slot /pi not found.
+-> print pi .
+#+END_SRC
+
+Calling instructions is a common thing to do.  So, if the first element of a statement is an instruction, SLOBIL assumes the programmer wants to =call= it.
+#+BEGIN_SRC slobil
+... circle-area /r 2 .
+ans = 12.583600
+#+END_SRC
+
+*** Getting data
+
+The =get= operation sets the =/ans= slot to the data located at a certain slot.
+#+BEGIN_SRC slobil
+... /x "Hello." .
+... /y [ object /test "Goodbye." ] .
+... get /x .
+ans = "Hello."
+... get /test .
+... get /test y .
+ans = "Goodbye."
+#+END_SRC
+
+The second argument to =get= is the object to get the data from.  If it is omitted, the data is grabbed from the current object.  There is also a shorthand notation for getting data from an object.  The notation "object:slot" returns the data located at the slot within the object.  The notation can also be nested like "object:slot1:slot2" where another object is located at "object:slot1".
+
+#+BEGIN_SRC slobil
+... print y:/test .
+Goodbye
+#+END_SRC
+
+The =exists= operation tests whether data exists at a given slot in an object.  Like =get=, it has an optional second argument to give the object.  If the argument is omitted, it searches the current object.  It sets the =/ans= slot to =True= if data exists at the slot and =False= if the data does not.
+
+#+BEGIN_SRC slobil
+... exist /new-slot .
+ans = False.
+... /new-slot 0 .
+... exist /new-slot .
+ans = True.
+#+END_SRC
+
+*** Control flow operations
+
+The =if= operation sets the =/ans= slot to its second argument if its first argument is =True= and to its third argument if its first argument is =False=.
+
+#+BEGIN_SRC slobil
+... if True "Hello." "Goodbye." .
+ans = "Hello."
+... if False "Hello." "Goodbye." .
+ans = "Goodbye."
+#+END_SRC
+
+The =if= operation can be used for control flow by using Expressions.  Expressions are created by enclosing statements in ={}=.  The code in an expression is executed when its value is accessed.
+
+#+BEGIN_SRC slobil
+... /x 10 .
+... if [ gt x 3 ] { print "x is greater than 3." } { print "x is less than three." } .
+x is greater than 3.
+... /x 1 .
+... if [ gt x 3 ] { print "x is greater than 3." } { print "x is less than three." } .
+x is less than three.
+#+END_SRC
+
+Expressions are like substatements in that they evaluate to what they set the =/ans= slot to.  Where they differ is that substatements are executed /before/ the main statement is evaluated.  Expressions are executed only when they are needed.  Expressions are necessary for the =if= operation to function as a control flow operation. If we wrote the above statements using substatements, all the statements would be evaluated regardless of the truth of the first argument.
+
+#+BEGIN_SRC slobil
+... if [ gt x 3 ] [ print "x is greater than 3." . answer 0 . ] [ print "x is less than three." . answer 0 . ] .
+x is greater than 3.
+x is less than three.
+ans = 0
+#+END_SRC
+
+The =answer= operation sets the =/ans= slot to a value.  To demonstrate the above, I had to add it because otherwise the second and third argument to =if= would appear to be missing to the code because substatements evaluate to what they set the =/ans= slot to before the statement processes.
+
+The =while= operation is a looping operation.  It takes two instructions for its argument.  It calls the first instruction without any arguments.  If the instruction sets the =/ans= slot to =True=, it then calls the second instruction without any arguments, and so on.  =while= calls both instructions in the current object so code in the instructions can modify the slots in the current object.
+
+#+BEGIN_SRC slobil
+... /i 1 .
+... while ( lt-eq i 10 )
+(
+	print i .
+  incr i .
+) .
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+ans = False.
+... print i .
+10
+#+END_SRC
+
+The =repeat= operation executes an instruction a fixed number of times in the current object.  For example, the same loop could have been written as:
+
+#+BEGIN_SRC slobil
+... /i 1
+... repeat 10 ( print i . incr i . ) .
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+#+END_SRC
+
+The =repeat= loop is faster than the =while= loop when it is applicable because it does not need to check a condition.
+
+*** Prototyping
+
+SLOBIL is a prototyped-based object language.  New objects can inherit from other objects using the =new= operation.  When changes are made to the parent object, it propogates to all the children.  The =new= operation also adds to (or replaces) the slots included from their parent object in an analogous way to the =object= operation.
+
+#+BEGIN_SRC slobil
+... /+rectangle+ [ object /area ( mul l w ) ] .
+... /rect1 [ new +rectangle+ /l 5 /w 4 ] .
+... print rect1:/area .
+(  mul l w  )
+... set /d 2 +rectangle+ .
+... set /area ( mul l w d ) +rectangle+ .
+... print rect1:/area
+(  mul l w d )
+#+END_SRC
+
+The =in= operation executes code inside a given object.  It can be used to do what other languages call "method calls".
+#+BEGIN_SRC slobil
+... in rect1 rect1:/area .
+ans = 40
+#+END_SRC
+
+Without using =in=, calling =rect1:/area= will not reference the values at the =/l= and =/w= slot in the object at =/rect1=.
+#+BEGIN_SRC slobil
+... rect1:/area .
+Error: Value at slot /l not found.
+#+END_SRC
+
+Calling instructions within an object is a common thing to do. So SLOBIL provides a convenience syntax. If the first element of a statement is an object, it calls the instruction at the slot provided in the first argument from within the object.
+#+BEGIN_SRC slobil
+... rect1 /area .
+ans = 40
+#+END_SRC 
+
+The link between objects created by =new= is a link between the objects themselves, not the slots at which the objects are inserted.  If the parent object is moved, deleted, or the slot is overwritten with a new object, it will not change the children because the object is simply removed from the slot it was located in originally, the object itself has not changed. 
+#+BEGIN_SRC slobil
+... /+rectangle+ [ object /area ( mul w l ) ] .
+... /rect1 [ new +rectangle+ /l 5 /w 4 ] .
+... rect1 /area .
+ans = 20
+... move /+rectangle+ /x .
+... rect1 /area .
+ans = 20
+... /+rectangle+ [ object /area ( add l w ) ] .
+... rect1 /area .
+ans = 20
+... delete /x .
+... rect1 /area .
+ans = 20
+#+END_SRC
+
+*** Applying Instructions To Data In An Object
+
+The =do= operation applies an operation to each slot in a set of objects.  For example:
+
+#+BEGIN_SRC slobil
+... do add [ object /x 2 /y 3 /z 4 ] [ object /x 5 /y 2 ] .
+ans = an Object with:
+x of type Integer, value: 7
+y of type Integer, value: 5
+#+END_SRC 
+
+For each slot that has data in all the objects passed to =do= as arguments, =do= calls the operation in its first argument using the data from the given slot in each object as positional arguments, in the order the objects are given to =do=.
+
+=do= takes operations as arguments, but programmers write instructions, not operations.  Instructions can be converted to operations by equipping their code with a fixed set of positional arguments using the =op= operation.
+
+#+BEGIN_SRC slobil
+... do [ op ( div [ sub y x ] x ) /x /y ]
+[ object /x 2.0 /y 3.0 /z 4.0 ]
+[ object /x 5.0 /y 2.0 ] .
+ans = an Object with:
+x of type Real, value: 1.500000
+y of type Real, value: -0.333333
+#+END_SRC
+
+The =op= operation converts the instruction given into an operation by setting the slots in the temporary environment in which an instruction is called to the given positional arguments, e.g. in the above, the first argument will be inserted into the slot =/x= and the second argument to the slot =/y=.
+
+*** Objects As Arrays
+
+There is no /array/ type in SLOBIL.  Objects are used as array as well.  Several operations make use of a slot-naming convention to treat objects like arrays.  Slots that match the pattern =/name1=, =/name2=, ..., =/nameN= can be treated like an array by operations.
+
+The =next= operation sets the =/ans= slot to the next slot given the current slot.
+#+BEGIN_SRC slobil
+... next /c1 .
+ans = /c2
+#+END_SRC
+
+The =previous= operation sets the =/ans= slot to the previous slot given the current slot.
+#+BEGIN_SRC slobil
+... previous /c10 .
+ans = /c9
+#+END_SRC
+
+The =last= operation sets the =/ans= slot to the last slot in an object that begins with the given prefix.
+
+#+BEGIN_SRC slobil
+... /array [ list 1 2 3 ] .
+... print array .
+an Object with:
+t1 of type Integer, value: 1
+t2 of type Integer, value: 2
+t3 of type Integer, value: 3
+... last array /t .
+ans = /t3
+#+END_SRC
+
+This example demonstrates the =list= operation as well which creates a list-like object with data located at slots =/t1=, =/t2=, ..., =/tN=.
+
+The =collapse= operation can be used to summarize a list.
+
+#+BEGIN_SRC slobil
+... /array [ list 3 -1 4 ] .
+... collapse add array /t .
+ans = 6
+#+END_SRC
+
+=collapse= applies an operation that takes two arguments to each element of the list consecutively.  So, in the above example, first =add 3 -1= is computed.  Then, =add ans 4= is computed, and so on.
+
+=collapse= and =last= both operate on the =/t= prefix by default so the last argument can be omitted if that is the prefix desired,
+
+** Example Program
+
+SLOBIL programs can use SLOBIL itself as their means of interacting with the user.  This section describes a simple double-entry accounting program written in SLOBIL.
+
+Interactive programs are usually created as objects so they can be easily loaded into SLOBIL with both state variables and instructions.  So we start by defining the program object which will contain a list of accounts.  
+#+BEGIN_SRC slobil
+  /accounting
+    [ object
+        /account-list [ object ]
+    ] .
+#+END_SRC
+
+Next, we define a generic account object and add it to =accounting=.  I use =+name+= as a naming convention for base objects that will be used as prototypes for subsequent objects.
+
+#+BEGIN_SRC slobil
+  /+account+
+  [ object
+      /entries [ object ] 
+      /add-entry
+      (
+        last entries /entry .
+        next ans .
+        set ans entry entries .
+
+        incr balance entry:/amount .
+      )
+      /summary
+      (
+        print [ combine name ": " balance ] .
+      )
+      /print-entry
+      (
+        print [ combine
+                  entry:/desc ": "
+                  [
+                    to-string entry:/amount
+                  ]
+              ] .
+      )
+      /print-entries
+      (
+        do [ op print-entry /entry ]
+           entries .
+      )
+  ]
+  accounting .
+#+END_SRC
+
+Now, we need an instruction for creating a new account.  We will have the user specify the account as a slot.
+#+BEGIN_SRC slobil
+  /new-account
+  (
+    set name [ new +account+ /name [ to-string name ] /balance balance ] account-list .
+  )
+  accounting .
+#+END_SRC
+
+This instruction might not seem to do much beyond what the =new= operation does.  One advantage of defining this instruction is that it will give an intelligible error if the user does not specify a name for the account and an opening balance.  The =new= operation doesn't expect any particular slots to be set, but the =new-account= instruction does.
+
+We next need an instruction to transfer money between two accounts.  Let's define one.
+#+BEGIN_SRC slobil
+  /transfer
+    (
+      /to-entry [ object /desc desc /amount amount ] .
+      /from-entry [ object /desc desc /amount [ mul -1 amount ] ] .
+
+      if [ exist from-account account-list ]
+         {
+           account-list:/from-account /add-entry /entry from-entry .
+         }
+         {
+           if [ exist to-account account-list ]
+              {
+                account-list:/to-account /add-entry /entry to-entry .
+              } .
+         } .
+    )
+    accounting .
+#+END_SRC
+
+Let's see the program in action.  
+#+BEGIN_SRC slobil
+... accounting /new-account /name /Checking /balance 1000.50 .
+... accounting /new-account /name /Savings /balance 20000.00 .
+... accounting /transfer
+/desc "Saving Money"
+/amount 100
+/to-account /Savings
+/from-account /Checking .
+#+END_SRC
+	
+
+
+
 ** Statements and syntax
 
 A statement is a single line of code.  All statements start with an /operator/. The other elements of the statement are arguments to the operator. Statements end with periods. For example,
@@ -282,7 +818,7 @@ ans = 40
 
 
 
-*** Additional details about colon notation
+*** Details about the colon notation
 
     The colon notation can be nested.
     

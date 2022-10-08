@@ -156,10 +156,10 @@ get (object* reg, unsigned long hash_name, int recursive)
     {
       if (c->key == hash_name && c->value != NULL)
         {
-          if (c->value->type == Object)
-            {
-              ((object*) c->value->data)->up = reg->up;
-            }
+          /* if (c->value->type == Object) */
+          /*   { */
+          /*     ((object*) c->value->data)->up = reg->up; */
+          /*   } */
           
           return c->value;
         }

@@ -584,20 +584,6 @@ op_delete (arg a, object* reg)
 }
 
 void
-op_free (arg a, object* reg)
-{
-  #op=free@
-  #length=1@
-  ##CHECK_ARGS~$;
-  
-  #num=1@
-  #type=Slot@
-  ##GETARG~$;
-  
-  del(reg, ((slot*) arg1->data)->key, 1, true);
-}
-
-void
 op_exit (arg a, object* reg)
 {
   int err = 0;
@@ -944,27 +930,27 @@ op_do (arg a, object* reg)
   ##CHECK_ARGS~$;
 
   data* arg1 = resolve(a.arg_array[1], reg);
-  data** arg_registries = malloc(sizeof(data*)*
+  data** arg_objects = malloc(sizeof(data*)*
                                  (a.length-2));
   for (int i = 0; i < (a.length - 2); i++)
     {
-      arg_registries[i] = resolve(a.arg_array[i+2], reg);
+      arg_objects[i] = resolve(a.arg_array[i+2], reg);
     }
 
   if (arg1 == NULL)
     {
       do_error("<do> requires an argument.", reg->task->task);
-      free(arg_registries);
+      free(arg_objects);
       return;
     }
 
   for (int i = 0; i < (a.length-2); i++)
     {
-      if (arg_registries[i] == NULL)
+      if (arg_objects[i] == NULL)
         {
           do_error("<do> requires more than one argument.",
                    reg->task->task);
-          free(arg_registries);
+          free(arg_objects);
           return;
         }
     }
@@ -979,11 +965,11 @@ op_do (arg a, object* reg)
 
   for (int i = 0; i < (a.length - 2); i++)
     {
-      if (arg_registries[i]->type != Object)
+      if (arg_objects[i]->type != Object)
         {
-          do_error("Arguments to <do> must be registries.",
+          do_error("Arguments to <do> must be objects.",
                    reg->task->task);
-          free(arg_registries);
+          free(arg_objects);
           return;
         }
     }
@@ -991,7 +977,7 @@ op_do (arg a, object* reg)
   object** arg_reg = malloc(sizeof(object*)*(a.length-2));
   for (int i = 0; i < (a.length - 2); i++)
     {
-      arg_reg[i] = (object*) arg_registries[i]->data;
+      arg_reg[i] = (object*) arg_objects[i]->data;
     }
   object* ret_reg = new_object(reg, SLOBIL_HASH_SIZE,
                                    reg->task);
@@ -4012,9 +3998,6 @@ add_basic_ops (object* reg)
 
   assign_op(&d, op_delete, NULL, NULL, 0);
   set(reg,d,"delete",1);
-
-  assign_op(&d, op_free, NULL, NULL, 0);
-  set(reg,d,"free",1);
 
   /** Access Data **/
 
