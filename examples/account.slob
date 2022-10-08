@@ -5,7 +5,6 @@
 
 /+account+
   [ object
-      /entries [ object ] 
       /add-entry
       (
         last entries /entry .
@@ -16,7 +15,7 @@
       )
       /summary
       (
-        print [ combine name ": " balance ] .
+        print [ combine name ": " [ to-string balance ] ] .
       )
       /print-entry
       (
@@ -26,6 +25,7 @@
                     to-string entry:/amount
                   ]
               ] .
+        answer Nothing .
       )
       /print-entries
       (
@@ -37,7 +37,8 @@
 
 /new-account
   (
-    set name [ new +account+ /name [ to-string name ] /balance balance ] account-list .
+    set name [ new +account+ /name [ to-string name ] /balance balance
+                   /entries [ object ] ] account-list .
   )
   accounting .
 
@@ -45,17 +46,8 @@
   (
     /to-entry [ object /desc desc /amount amount ] .
     /from-entry [ object /desc desc /amount [ mul -1 amount ] ] .
-
-    if [ exist from-account account-list ]
-       {
-         account-list:from-account /add-entry /entry from-entry .
-       }
-       {
-         if [ exist to-account account-list ]
-            {
-              account-list:to-account /add-entry /entry to-entry .
-            } .
-       } .
+    account-list:from-account /add-entry /entry from-entry .
+    account-list:to-account /add-entry /entry to-entry .
   )
   accounting .
 
@@ -63,5 +55,11 @@
   (
     do [ op ( account /summary . answer Nothing . ) /account  ]
        account-list .
+  )
+  accounting .
+
+/entries
+  (
+    account-list:account /print-entries .
   )
   accounting .

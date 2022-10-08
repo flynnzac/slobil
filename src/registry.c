@@ -67,12 +67,6 @@ set (object* reg, data* d, const char* name, int rehash_flag)
   unsigned long hash_name = hash_str(name);
   content* c = del(reg,hash_name,-1,false);
 
-  if (d != NULL && d->type == Object)
-    {
-      ((object*) d->data)->up = reg;
-    }
-
-
   if (c == NULL)
     {
       if (reg->objects[hash_name % reg->hash_size] == NULL)

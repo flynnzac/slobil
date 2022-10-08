@@ -121,7 +121,7 @@ op_range (arg a, object* reg)
   mpz_cdiv_q(elements, elements, by);
   
   object* r_new = new_object
-    (reg,new_hash_size(mpz_get_ui(elements)), reg->task);
+    (NULL,new_hash_size(mpz_get_ui(elements)), reg->task);
 
   mpz_t cur;
   mpz_init_set(cur, *lb);
@@ -152,7 +152,7 @@ op_range (arg a, object* reg)
 void
 op_list (arg a, object* reg)
 {
-  object* r_new = new_object(reg, new_hash_size(a.length),
+  object* r_new = new_object(NULL, new_hash_size(a.length),
                                  reg->task);
   data* d;
   data* d_new;
@@ -184,7 +184,7 @@ op_object (arg a, object* reg)
       ##CHECK_ARGS~$;
     }
   
-  object* r_new = new_object(reg, new_hash_size(a.length / 2 + 1),
+  object* r_new = new_object(NULL, new_hash_size(a.length / 2 + 1),
                                  reg->task);
   data* d = NULL;
   data* d_data = NULL;
@@ -227,7 +227,7 @@ op_new(arg a, object* reg)
   #type=Object@
   ##GETARG~$;
 
-  object* new = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
+  object* new = new_object(NULL, SLOBIL_HASH_SIZE, reg->task);
   new->inherit = (object*) arg1->data;
   data* out;
   assign_object(&out, new, false, reg->task);
@@ -979,8 +979,8 @@ op_do (arg a, object* reg)
     {
       arg_reg[i] = (object*) arg_objects[i]->data;
     }
-  object* ret_reg = new_object(reg, SLOBIL_HASH_SIZE,
-                                   reg->task);
+  object* ret_reg = new_object(NULL, SLOBIL_HASH_SIZE,
+                               reg->task);
   data* d;
   arg a1;
 
@@ -1213,10 +1213,10 @@ method_call (arg a, object* reg)
   arg b = shift_arg_right(a);
   b.arg_array[0] = instr;
 
-  object* tmp = reg->up;
-  reg->up = (object*) arg0->data;
-  _op_call(b, reg, 0);
-  reg->up = tmp;
+  object* tmp = ((object*) arg0->data)->up;
+  ((object*) arg0->data)->up = reg;
+  _op_call(b, (object*) arg0->data, 0);
+  ((object*) arg0->data)->up = tmp;
   
 }
 
@@ -1236,8 +1236,8 @@ op_in (arg a, object* reg)
   ##GETARG~$;
 
   ((object*) arg1->data)->up = reg;
-
   execute_0(arg2, (object*) arg1->data);
+  ((object*) arg1->data)->up = NULL;
   
   data* ans = lookup((object*) arg1->data, reg->task->task->slobil_hash_ans, 0);
   if (ans != NULL)
