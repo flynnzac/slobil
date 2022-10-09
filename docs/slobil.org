@@ -231,6 +231,17 @@ Calling instructions is a common thing to do.  So, if the first element of a sta
 ans = 12.583600
 #+END_SRC
 
+Instructions are just code, they do not carry an environment around with them.  When the programmer =call='s an instruction, the programmer determines the environment the code is executed in.  Instructions do not have a fixed set of arguments but allow the caller of the code to manipulate the environment in which they are called arbitrarily.  For example:
+#+BEGIN_SRC slobil
+... /add-one ( add t 1 ) .
+... add-one /t 5 .
+ans = 6
+... add-one /t 5 /add sub .
+ans = 4
+#+END_SRC
+
+Any non-literal in an instruction can be changed by adjusting the environment in which the code is executed.
+
 *** Getting data
 
 The =get= operation sets the =/ans= slot to the data located at a certain slot.
@@ -244,21 +255,27 @@ ans = "Hello."
 ans = "Goodbye."
 #+END_SRC
 
-The second argument to =get= is the object to get the data from.  If it is omitted, the data is grabbed from the current object.  There is also a shorthand notation for getting data from an object.  The notation "object:slot" returns the data located at the slot within the object.  The notation can also be nested like "object:slot1:slot2" where another object is located at "object:slot1".
+The second argument to =get= is the object to get the data from.  If it is omitted, the data is grabbed from the current object.  There is also a shorthand notation for getting data from an object.  The notation =object:slot= returns the data located at the slot within the object.  The notation can also be nested like =object:slot1:slot2= where another object is located at =object:slot1=.
 
 #+BEGIN_SRC slobil
 ... print y:/test .
 Goodbye
 #+END_SRC
 
-The =exists= operation tests whether data exists at a given slot in an object.  Like =get=, it has an optional second argument to give the object.  If the argument is omitted, it searches the current object.  It sets the =/ans= slot to =True= if data exists at the slot and =False= if the data does not.
+One limitation to the colon notation is that it cannot be used with substatements.
+#+BEGIN_SRC slobil
+  ... ' Will give an error
+  ... print y:[ answer /test ] .
+#+END_SRC
+
+The =exist= operation tests whether data exists at a given slot in an object.  Like =get=, it has an optional second argument to give the object.  If the argument is omitted, it searches the current object.  It sets the =/ans= slot to =True= if data exists at the slot and =False= if the data does not.
 
 #+BEGIN_SRC slobil
-... exist /new-slot .
-ans = False.
-... /new-slot 0 .
-... exist /new-slot .
-ans = True.
+  ... exist /new-slot .
+  ans = False.
+  ... /new-slot 0 .
+  ... exist /new-slot .
+  ans = True.
 #+END_SRC
 
 *** Control flow operations
@@ -456,9 +473,113 @@ ans = 6
 
 =collapse= and =last= both operate on the =/t= prefix by default so the last argument can be omitted if that is the prefix desired,
 
-** Example Program
+*** Saving and Loading Objects
 
-SLOBIL programs can use SLOBIL itself as their means of interacting with the user.  This section describes a simple double-entry accounting program written in SLOBIL.
+Objects can be saved with the =save= operation.  =save= saves the current object to the given filepath.
+#+BEGIN_SRC slobil
+... /test [ object /x 1 /y "hello" /z True ] .
+... in test ( save "test.dslob" ) .
+#+END_SRC
+
+The =build= operation saves objects in a standard location, =~/.dslobs=.
+#+BEGIN_SRC slobil
+... build "test" test .
+#+END_SRC
+
+The above statement saves the object =test= to =~/.dslobs/test.dslob=.
+
+Similarly, the =load= operation loads a given filepath into the current object, while the =use= operation imports an object from the standard location for save files, =~/.dslobs=.
+#+BEGIN_SRC slobil
+... load "test.dslob" .
+... use "test" .
+#+END_SRC
+
+*** REPL Settings
+
+The REPL itself has a few settings that can be configured using the =interpreter= operation.  The below example demonstrates how to change the various values from their defaults.
+#+BEGIN_SRC slobil
+  ... interpreter /print-ans True .
+  ... interpreter /auto-rehash False .
+  ... interpreter /print-errors False .
+#+END_SRC
+
+The =print-ans= setting indicates whether to print what the =/ans= slot is after running each command.  The default is not to do so.
+
+The =auto-rehash= setting indicates whether objects --- which, internally, are hash tables --- should be automatically rehashed as they grow in size or whether the =rehash= operation should be used explicitly.  The default is to rehash automatically.
+
+The =print-errors= setting indicates whether to print the trace of the error out when an error is encountered.  The default is to do so.
+
+** Multi-threaded Programs
+
+
+Tasks model processes.  They enable multi-threaded programming.  
+
+The =task= operation creates a task.  The =task= operation takes three arguments.  The first gives the slot to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a object defining the environment in which the task will run.
+
+#+BEGIN_SRC slobil
+... task /my-task ( commands to run... ) [ object . ] .
+#+END_SRC
+
+The =run-task= operation starts a task.  It takes a single argument, the task to start running.  Running a task means that the instruction that forms the body of the task is executed.  Only one instance of the task can be running at a given time but the same task can be executed multiple times. The state of the task will not revert to its original state when it is run again.
+
+The structure of a task is described in the below table:
+
+   | Element | Description                                                                                              |
+   |---------+----------------------------------------------------------------------------------------------------------|
+   | Body    | The instruction run in a separate thread from the main SLOBIL thread.                                       |
+   | State   | A Object that contains the current state of the task.  The object being modified by the Task's body. |
+   | Queue   | A Object that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
+   |---------+----------------------------------------------------------------------------------------------------------|
+
+A Task's state object is entirely /separate/ from the current object.  There is no way to directly access data in a task except in the body of the task.  No data in the Task's queue can be accessed directly in any thread. Data can be sent between the main thread and the task thread using operations.
+
+Tasks /accept/ data when they take data from their queue and move it into their state object.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
+
+The =accept= operation takes a slot as an argument and waits for data to be available at that slot in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= slot in the Task's state object to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.  SLOBIL does not allow running =accept= in the main task because there is no way to exit the blocking.  =accept-or= can be used instead.
+
+The =queue= operation moves data from one object into the queue of another Task.  Its arguments are a slot to set in the queue object, the data to send, and the task's queue to access.
+
+#+BEGIN_SRC slobil
+... task /t1 ( print [ accept /hello ] . ) .
+... run-task t1 .
+... queue /hello "Hi!" t1 .
+Hi!
+#+END_SRC
+
+Because the =accept= operation blocks the thread until the data is entered into the queue, it cannot be used when the data =accept= is looking for is optional.  
+
+The =accept-or= operation checks whether data exists at a certain slot in the queue, if it does, it sets the =/ans= slot to the result.  If not, it executes its second argument, an instruction, in its state object.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
+
+#+BEGIN_SRC slobil
+accept-or /hello ( set /hello "Hello." ) .
+#+END_SRC
+
+The main use of =accept-or= is to provide default values for missing data or to do something else if data is not available.
+
+Alternatively, the =select= operation executes one of several instructions if data comes in at any number of slots.  =select= takes paired slots and instructions as its arguments.  It waits for data to appear in its queue at any of the slots listed.  The first slot to receive data is "selected".  The instruction associated with the slot is executed in the slot's state object after setting the =/ans= slot to the value of the data located at the slot in the queue.
+
+#+BEGIN_SRC slobil
+  ... task /t1 ( 
+        set /continue True .
+        while ( answer continue )
+              (
+                select /add-one ( print [ add ans 1 ] ) 
+                       /sub-one ( print [ sub ans 1 ] )
+                       /continue ( set /continue ans ) .
+              ) .
+      ) .
+  ... run-task t1 .
+  ... queue /add-one 3 t1 .
+  4
+    ... queue /sub-one 3 t1 .
+  2
+#+END_SRC
+
+* Example Programs
+
+** Accounting System
+
+SLOBIL programs can use SLOBIL itself as their means of interacting with the user because the language is "command-like".  This section describes a simple double-entry accounting program written in SLOBIL.
 
 Interactive programs are usually created as objects so they can be easily loaded into SLOBIL with both state variables and instructions.  So we start by defining the program object which will contain a list of accounts.  
 #+BEGIN_SRC slobil
@@ -473,7 +594,6 @@ Next, we define a generic account object and add it to =accounting=.  I use =+na
 #+BEGIN_SRC slobil
   /+account+
   [ object
-      /entries [ object ] 
       /add-entry
       (
         last entries /entry .
@@ -494,6 +614,7 @@ Next, we define a generic account object and add it to =accounting=.  I use =+na
                     to-string entry:/amount
                   ]
               ] .
+        answer Nothing .
       )
       /print-entries
       (
@@ -504,11 +625,17 @@ Next, we define a generic account object and add it to =accounting=.  I use =+na
   accounting .
 #+END_SRC
 
+We add =answer Nothing= to =print-entry= because the =do= operation expects the =/ans= slot to be set.  Nothing will happen if =Nothing= is the value in the =/ans= slot.
+
 Now, we need an instruction for creating a new account.  We will have the user specify the account as a slot.
 #+BEGIN_SRC slobil
   /new-account
   (
-    set name [ new +account+ /name [ to-string name ] /balance balance ] account-list .
+    set name
+        [
+          new +account+ /name [ to-string name ] /balance balance
+              /entries [ object ] 
+        ] account-list .
   )
   accounting .
 #+END_SRC
@@ -524,784 +651,73 @@ We next need an instruction to transfer money between two accounts.  Let's defin
 
       if [ exist from-account account-list ]
          {
-           account-list:/from-account /add-entry /entry from-entry .
+           account-list:from-account /add-entry /entry from-entry .
          }
          {
            if [ exist to-account account-list ]
               {
-                account-list:/to-account /add-entry /entry to-entry .
+                account-list:to-account /add-entry /entry to-entry .
               } .
          } .
     )
     accounting .
 #+END_SRC
 
+Lastly, let's add some instructions to summarize our accounts and print out entries in a given account.
+
+#+BEGIN_SRC slobil
+  /summary
+    (
+      do [ op ( account /summary . answer Nothing . ) /account  ]
+         account-list .
+    )
+    accounting .
+
+  /entries
+    (
+      account-list:account /print-entries .
+    ) 
+    accounting .
+#+END_SRC
+
 Let's see the program in action.  
 #+BEGIN_SRC slobil
-... accounting /new-account /name /Checking /balance 1000.50 .
-... accounting /new-account /name /Savings /balance 20000.00 .
-... accounting /transfer
-/desc "Saving Money"
-/amount 100
-/to-account /Savings
-/from-account /Checking .
+    ... accounting /new-account /name /Checking /balance 1000.50 .
+    ... accounting /new-account /name /Savings /balance 20000.00 .
+    ... accounting /transfer
+    /desc "Saving Money"
+    /amount 100
+    /to-account /Savings
+    /from-account /Checking .
+  ...  accounting /summary .
+  Savings: 20100.000000
+  Checking: 900.500000
+  ... accounting /entries /account /Checking .
+  Saving Money: -100
+#+END_SRC
+
+The user shouldn't have to type =accounting= every time.  Temporarily, in the session, we can =import= it, but to package it for users, it is better to use the =build= operation to save the object to disk.
+
+#+BEGIN_SRC slobil
+... build "accounting" accounting .
+#+END_SRC
+
+Now, whenever we start a SLOBIL session, we can simply type:
+#+BEGIN_SRC slobil
+  ... use "accounting" .
+  ... new-account /name /Checking /balance 1000.50 .
+  ... summary .
+  
 #+END_SRC
 	
+** A Time-Keeping Program
 
+When I worked for a company that billed clients by the hour, I had to keep track of my time.  I used this program to do it until I left the job.  With two and a half years of use, it is certainly the most used SLOBIL program.
 
+#+INCLUDE: "../examples/things.slob" src slobil
 
-** Statements and syntax
 
-A statement is a single line of code.  All statements start with an /operator/. The other elements of the statement are arguments to the operator. Statements end with periods. For example,
-  
-   #+BEGIN_SRC slobil
-   ... set /hello "Hello, world!" .
-   #+END_SRC
-
-=/hello= is a slot.  Slots are locations where data is stored.  ="Hello, world!"= is a string.  Strings in SLOBIL are enclosed in double quotes. =set= is an operation that inserts data at a given slot.
-
-So, the code above sets the slot =/hello= to refer to the string data ="Hello, world!=. Names that have a forward slash preceeding them are /slots/, like =/hello= above. Strings are characters enclosed in double quotation marks.  The following code demonstrates some of the other data types in SLOBIL:
-
-   #+BEGIN_SRC slobil
-   ... set /days-in-week 7 .
-   ... set /penny 0.01 .
-   ... set /facts True .
-   ... set /lies False .
-   ... set /add-one ( add t 1 ) .
-   #+END_SRC
-
-An Integer is a number without a decimal part, a Real is a number with a decimal part, a Boolean value is either True or False, an Instruction is a collection of one or more statements quoted as code (created by enclosing code with open parenthesis, =(= and =)=).
-
-Instructions can be executed in any Object.  They are not "bound" to the object in which they are initially defined.
-
-To reference the value of the data located in a slot, simply type the name of the slot without the preceeding forward slash.  For example,
-   #+BEGIN_SRC slobil
-  ... print days-in-week .
-  7
-   #+END_SRC
-
-All code elements must be separated by whitespace including the period that ends the statement and parenthesis.  So it would /not/ be valid to write,
-
-   #+BEGIN_SRC slobil
-	' All are WRONG:
-	print days-in-week.
-	set /add-one (add t 1 .) .
-   #+END_SRC
-
-There must be whitespace before the period.  There also must be whitespace before and after parenthesis. 
-
-** Substatements
-
-*** Instructions
-
-Open parenthesis store the code itself as an Instruction object to be executed later using the operation =call=.  For example,
-    #+BEGIN_SRC slobil
-     ... set /add-one ( add t 1 . ) .
-     ... call add-one /t 10 .
-     ans = 11
-    #+END_SRC
-
-=call= takes an instruction and then assigns each of the slots that you specify to different values. You do not need to declare what arguments a function takes and you can specify any number of slots to set for an Instruction.  For example, 
-    #+BEGIN_SRC slobil
-     ... set /add-one ( add t 1 . ) .
-     ... call add-one /t 10 .
-     ans = 11
-     ... call add-one /t 10 /add sub .
-     ans = 9
-    #+END_SRC
-
-Any element in an instruction can be replaced by any other (except for a literal value like =11= or ="hello"= ) when the Instruction is called.  The person who wrote the code does not need to do anything to allow this.  You can redefine any non-literal in the code by adding =/name value= in the call to the Instruction.
-
-Because there is no ambiguity, you do not actually need to use the =call= operation directly.  SLOBIL will insert it for you if the first argument is an instruction.  So the following would work as well,
-    #+BEGIN_SRC slobil
-     ... add-one /t 10 .
-     ans = 11
-    #+END_SRC
-
-Instructions are used in loops and in several other operations.  
-
-*** Substatements
-
-Closed parenthesis (=[]=) execute the statements inside of them immediately and evaluate to whatever the code sets the =/ans= Slot to.  The purpose of these statements is to avoid needing to define temporary slots for intermediate calculations.  For example,
-    #+BEGIN_SRC slobil
-     ... add [ sub 5 3 ] [ mul 2 3 ] .
-     ans = 8
-    #+END_SRC
-
-You may have noticed the =ans = ...= after entering a statement.  This line tells you the current value of the =/ans= Slot which is special in SLOBIL.  Operations often write to the =/ans= Slot in the Object from which they are called.  It is the way to "return" values after calling an Operation or Instruction.  You can set any value to the =/ans= slot in the current Object by using the =answer= operation.
-    #+BEGIN_SRC slobil
-     ... answer 10 .
-     ans = 10
-    #+END_SRC
-
-In many ways, the =/ans= Slot is similar to any other Slot. The =/ans= slot is special because, after an Instruction finishes running in its temporary Object, whatever the value at the =/ans= Slot is in that Object is moved to the =/ans= slot in the object that called the instruction.  For example,
-    #+BEGIN_SRC slobil
-     ... add 10 12 .
-     ans = 22
-     ... set /add-one ( add t 1 . ) .
-     ... add-one /t 10 .
-     ans = 11
-     ... print ans .
-     11
-    #+END_SRC
-
-The other special feature of the =/ans= slot is that statements enclosed in closed parenthesis evaluate to the value the statements inside them set the =/ans= Slot to.  Because =sub 5 3 .= sets the =/ans= Slot to =2= and =mul 2 3 .= sets the =/ans= Slot to =6=, =add [ sub 5 3 . ] [ mul 2 3 . ] .= sets the =/ans= Slot to =8=.
-
-*** Expressions
-
-Curly parenthesis (={}=) also enclose statements, but those statements are only evaluated /if/ we try to use the value of that expression.  The value of the expression, if it is evaluated, is the value the statements enclosed in curly parenthesis set the =/ans= slot to.  SLOBIL calls this data type an "Expression" before it is evaluated. We can think of closed parenthesis as marking statements we want to "greedily evaluate" and curly parenthesis as marking statements to "lazily evaluate".  Lazy evaluation is useful for the =if= operation and other, similar instructions.  For example,
-    #+BEGIN_SRC slobil
-     ... /gt-4
-     (
-       /str-t [ to-string t . ] . 
-       if [ gt t 4 . ]
-          { print [ combine str-t " is greater than 4.\n" . ] . }
-          { print [ combine str-t " is less than or equal to 4.\n" . ] . } .
-     ) .
-    ... gt-4 /t 10 .
-    10 is greater than 4.
-    ... gt-4 /t 3 .
-    3 is less than or equal to 4.
-    #+END_SRC
-
-It works this way because the =if= operation returns the second value if the first value is =True= and the third value if the first value is =False=.  So it tries to access the second value when =t= is =10=, executing the statements in the second argument, and similarly for the third argument when =t= is =3=.
-
-If we had instead used closed parenthesis, both statements would execute everytime regardless of the the truth of the first argument to =if=.  If we used open parenthesis, an Instruction object would be returned instead of actually doing the printing.
-
-Unlike instructions, expressions are evaluated in the object calling them instead of a temporary object inside the calling object. So, for example they can move slots in the calling object:
-
-    #+BEGIN_SRC slobil
-    ... set /test ( set /x 2 . sit y . print z . ) .
-    ... test /y { move /x /z . } .
-    2
-    #+END_SRC
-
-Note: =sit= is an operation that does nothing but evaluate any Expressions in its arguments.
-    
-*** Convert an instruction to an operation
-
-Instruction objects are the usual way to write functions, procedures, and methods.  Instructions are code blocks formed using open parenthesis =()= that operate within whatever Object the caller of the instruction chooses.  Operations execute with a fixed set of positional arguments.  All of the built-in features of the language are operations.  Occasionally, it is useful to transform instructions into operations.  The =op= operation transforms instructions into operations.   For example:
-    #+BEGIN_SRC slobil
-      ... set /fraction ( div t1 [ add t1 t2 . ] . ) .
-      ... fraction /t1 1 /t2 3.0 .
-      ans = 0.25
-      ... [ op fraction /t1 /t2 ] 1 3.0 .
-      ans = 0.25
-      ... [ op fraction /t2 /t1 ] 1 3.0 .
-      ans = 0.75
-    #+END_SRC
-
-*** Comments
-
-    The last syntax element is the comment.  To write a comment in SLOBIL, use a single quote (='=) as the first character in a statement.  You can think about this quote as a special operator.  Comments end with a new line. The comment operator, like other syntax elements, needs whitespace after it, for example:
-    #+BEGIN_SRC slobil
-   ... ' This is a correct comment
-   ... 'This is an incorrect comment, 'This is interpreted as a reference to data in the Slot /'This
-    #+END_SRC
-
-*** Ending Last Statement in a Substatement
-
-    In a substatement, the last statement does not need to end with a period because there is no ambiguity.  For example,
-    #+BEGIN_SRC slobil
-... add 1 [ mul 2 3 ] .
-    #+END_SRC
-
-    is a valid statement.  If there are multiple statements, it is usually good practice to end all with a period, but the period can be omitted from the last one.  For example,
-    #+BEGIN_SRC slobil
-... add 1 [ add 1 1 . mul ans 3 ] .
-    #+END_SRC
-
-    is valid.
-
-** Objects
-
-/Objects/ are a flexible datatype. Objects define the scope and environment in which code executes.  Objects have Slots for inserting data so they also function like a =dict= or =struct=.  They are also the basic unit for building object-oriented programs.  
-
-Objects define what slots (variables) are in scope.   When you start the interpreter, you are already inside the default, top-level object.  The top-level Object has Slots containing the default location of the basic Operations of the programming language. To create a new Object, use the =object= Operation,
-
-   #+BEGIN_SRC slobil
-     ... object /hello "Hello, world!" /x 10 .
-     ans = an Object with:
-     x of type Integer, value: 10
-     hello of type String, value: "Hello, world!"
-   #+END_SRC
-
-The =object= operation inserts a new Object into the =/ans= slot.  This object has a =/hello= slot bound to the value ="Hello, world!"= and the =/x= slot bound to the value =10=.  Usually, you will want to bind the value to another slot besides =/ans= because many Operations write to =/ans= so the Object would be overwritten.  
-   
-   #+BEGIN_SRC slobil
-     ... object /hello "Hello, world!" /x 10 .
-     ... move /ans /my-object .
-     ... ' Or:
-     ... set /my-object [ object /hello "Hello, world!" /x 10 ] .
-     ... ' Or:
-     ... /my-object [ object /hello "Hello, world!" /x 10 ] .
-   #+END_SRC
-
-To access an Object's slots, use either the =get= operation or a colon:
-
-   #+BEGIN_SRC slobil
-   ... get /hello my-object .
-   ans = Hello, world!
-   ... print my-object:/hello
-   Hello, world!
-   ... print hello .
-   Error: Value at `/hello` not found.
-   #+END_SRC
-
-From the last line, we can see that the slot =/hello= does not contain any data in the current Object in which we are executing code.  If we wrote this code in the Object located at =my-object=, we could access the data located at =/hello=. The =in= Operation executes code inside another Object:
-
-   #+BEGIN_SRC slobil
-   ... in my-object ( print [ combine hello " Goodbye!" ] . ) .
-   Hello, world! Goodbye!
-   #+END_SRC
-   
-We can also import values from one object into their corresponding slots in the current object by using the =import= operation.
-
-   #+BEGIN_SRC slobil
-   ... import my-object .
-   ... print hello .
-   Hello, world!
-   #+END_SRC
-   
-
-Objects can also be used as /namespaces/.  For example,
-
-   #+BEGIN_SRC slobil
-   ... set /math [ object ] .
-   ... set /factorial
-          (
-            set /i 2 .
-            set /prod 1 .
-            while ( lt-eq i t )
-                  (
-                    set /prod [ mul i prod ] .
-                    incr i .
-                  ) .
-            answer prod .
-          ) math .
-   ... math:/factorial /t 5 .
-   ans = 120
-   #+END_SRC       
-
-As we can see above, the =set= operation optionally takes a third argument: the Object in which to set the given Slot.  Without the third argument, =set= sets the slot in the current Object.
-
-*** Object-Oriented Programming
-
-Objects are also, as the name suggests, the data type used for object-oriented programming.  SLOBIL is a prototype-based programming language.  It does not have a concept of "class" and "instance".  Instead Objects inherit from other Objects.  For example,
-
-   #+BEGIN_SRC slobil
-   ... set /rectangle [ object /area ( mul W L ) ] .
-   ... set /rect1 [ new rectangle /W 5 /L 4 ] .
-   #+END_SRC
-
-=/rect1= will now contain an object that inherits from the object at =/rectangle=.  If you make changes to the object currently located at =/rectangle=, it will be reflected in the object currently at =/rect1=.  Importantly, the objects are what matters not the slot at which they are stored.  Slots are locations, not values.  So if you move the =/rectangle= object to some other slot, that will not change anything.  Similarly, if you overwrite the =/rectangle= slot with a new value, this will not change the object located at =/rect1=.
-
-We can call instructions located inside an object by using the colon notation described above, but the code is executed in the current Object.  This is what we want when we are using Objects effectively as namespaces, but sometimes we want to use instructions as methods, making use of the data contained in the Object.
-
-To call instructions located in an Object from inside the Object, we could use the =in= operation, but because this is a common thing to do (it is akin to message passing or method calls in other object-oriented languages), SLOBIL provides a convient syntax.  Simply type the name of the Object as the first element of the statement followed by a slot and SLOBIL will assume this is what you want to do.  For example,
-
-#+BEGIN_SRC slobil
-... in rect1 ( area ) .
-ans = 20
-... rect1 /area .
-ans = 20
-#+END_SRC
-
-If we modify the base object, the modification will propogate to all the Objects that inherit from it.  Like so:
-
-#+BEGIN_SRC slobil
-... set /D 2 rectangle .
-... set /area ( mul W L D ) rectangle .
-... rect1 /area .
-ans = 40
-#+END_SRC
-
-
-
-*** Details about the colon notation
-
-    The colon notation can be nested.
-    
-    #+BEGIN_SRC slobil
-    ... set /x [ object /y [ object /z 10 ] ] .
-    ... print x:/y:/z .
-    10
-    #+END_SRC
-
-    It can also choose the slot by referencing the value of another slot.
-    #+BEGIN_SRC slobil
-    ... set /x [ object /y 10 ] .
-    ... set /z /y .
-    ... print x:z .
-    10
-    #+END_SRC
-
-    /But/ we cannot use sub-statements in the colon notation:
-    #+BEGIN_SRC slobil
-      ... set /x [ object /y 10 ] .
-      ... ' BAD! print x:[ answer /y ] .
-    #+END_SRC
-
-** Slots   
-
-   Slots are the locations of data in Objects.  They are data themselves and can be manipulated like other data objects in SLOBIL.  For example, you can set other slots to slots and use those values wherever you would use slots.
-
-   #+BEGIN_SRC slobil
-... set /x /y .
-... print x .
-/y
-... set x "hello" .
-... print x .
-/y
-... print y .
-hello
-   #+END_SRC
-
-   You can also set the value of a Slot by just writing the slot location as the first element of a statement, i.e.:
-   #+BEGIN_SRC slobil
-... /x "hello" .
-... print x .
-hello
-   #+END_SRC
-
-   Stylistically, I like using =set= whenever the slot is given at another slot location and just the Slot whenever it is a literal Slot.  For example:
-   #+BEGIN_SRC slobil
-... /x /y .
-... set y 2 .
-... /z "hello" .
-   #+END_SRC
-
-   You can move data between Slots with the =move= command:
-
-   #+BEGIN_SRC slobil
-... /x "hello" .
-... move /x /y .
-... print y .
-hello
-... print x .
-Error: Value at slot /x not found.
-   #+END_SRC
-
-   Slots are data denoting locations so they are often useful ways to manipulate the locations of values instead of the values themselves, as with the =move= and =set= operations.
-
-** Environment
-
-*** Saving state
-    SLOBIL is not only a programming language. It is also an /environment/.  The current state of SLOBIL --- the values and where they are located in the object --- can be saved to disk and re-loaded later on, using the =save= and =load= operations.
-
-    To save the current object to a file called /state.darb/,
-    #+BEGIN_SRC slobil
- ... save "state.darb" .
-    #+END_SRC
-
-    To load the object back in:
-    #+BEGIN_SRC slobil
- ... load "state.darb" .
-    #+END_SRC
-
-    Optionally, a second argument can be provided to =load= to load the data into a specific object, not just the current one.
-
-    #+BEGIN_SRC slobil
- ... load "state.darb" old-stuff .
-    #+END_SRC
-
-    Where =old-stuff= is a object.
-
-*** Interacting with the user
-
-    One of SLOBIL's strengths is in rapidly-developing interactive programs.  SLOBIL's syntax is command-like so interaction in such a program can often be done using SLOBIL's prompt.  These types of programs often require input from the user and the ability to interact with other non-SLOBIL programs on the computer.  
-
-    The =input= operation accepts input from the user in the same way as SLOBIL's usual prompt.  It takes a slot as an argument and assigns the String value the user enters to that slot in the current object.
-
-    #+BEGIN_SRC slobil
-... set /get-name 
-        (
-          print "What is your name?" .
-          input /ans .
-        ) .
-... get-name .
-What is your name?
-Zach
-ans = "Zach"
-    #+END_SRC
-
-    To call commands from the shell, use the =shell= operation.  The =shell= operation sets the =/ans= slot to a string containing the output of the command.
-
-    #+BEGIN_SRC slobil
-... shell "ls" .
-ans = "file1.txt
-file2.txt
-"
-    #+END_SRC
-
-    The =change-dir= operation changes the working directory of SLOBIL and the =current-dir= operations sets the =/ans= slot to a String giving the current working directory.
-
-    #+BEGIN_SRC slobil
-... change-dir "/home/zlf" .
-... current-dir .
-ans = "/home/zlf" 
-    #+END_SRC
-
-** Tasks (concurrent programs)
-   SLOBIL can be used to write concurrent (multi-threaded) programs using Task objects.  SLOBIL's tasks are a type of data.  You can do everything to them that you can do to other data (move it, delete it, etc).
-
-   Tasks are created with the =task= operation.  The =task= operation takes three arguments.  The first gives the slot to assign the Task to.  The second gives the /body/ of the Task, an instruction that the Task will execute when it is run (Tasks do not immediately start running on creation).  The third argument is the initial state of the task, a object defining the environment in which the task will run.
-
-   #+BEGIN_SRC slobil
-... task /my-task ( commands to run... ) [ object . ] .
-   #+END_SRC
-
-   Tasks are started with the =run-task= operation.  =run-task= takes a single argument, the task to start running.  Running a task means that the instruction that forms the body of the task is executed.  Only one instance of the task can be running at a given time but the same task executed can be executed multiple times (the state of the task will not revert when it is run again).
-
-   The structure of a task is described in the below table:
-
-   | Element | Description                                                                                              |
-   |---------+----------------------------------------------------------------------------------------------------------|
-   | Body    | The instruction run in a separate thread from the main SLOBIL thread.                                       |
-   | State   | A Object that contains the current state of the task.  The object being modified by the Task's body. |
-   | Queue   | A Object that contains data queued to pass from the main thread to the Task's thread or vice-versa.    |
-   |---------+----------------------------------------------------------------------------------------------------------|
-
-   A Task's state object is entirely /separate/ from the current object.  There is no way to directly access data in a task except in the body of the task.  No data in the Task's queue can be accessed directly in any thread. Data can be sent between the main thread and the task thread using operations.
-
-   Tasks /accept/ data when they take data from their queue and move it into their state object.  They can do this with one of three operations: =accept=, =accept-or=, and =select=.
-
-   The =accept= operation takes a slot as an argument and waits for data to be available at that slot in the Task's queue.  A Task can be provided as an optional second argument to =accept= to look for the data in another task's queue. Once that data is available, it sets the =/ans= slot in the Task's state object to the value of the data.  =accept= is /blocking/ so no other code will be executed in the thread running the =accept= operation until the data is available in the queue.  SLOBIL does not allow running =accept= in the main task because there is no way to exit the blocking.  =accept-or= can be used instead.
-
-   The =queue= operation moves data from one object into the queue of another Task.  Its arguments are a slot to set in the queue object, the data to send, and the task's queue to access.
-
-   #+BEGIN_SRC slobil
-... task /t1 ( print [ accept /hello ] . ) .
-... run-task t1 .
-... queue /hello "Hi!" t1 .
-Hi!
-   #+END_SRC
-
-   Because the =accept= operation blocks the thread until the data is entered into the queue, it cannot be used when the data =accept= is looking for is optional.  
-
-   The =accept-or= operation checks whether data exists at a certain slot in the queue, if it does, it sets the =/ans= slot to the result.  If not, it executes its second argument, an instruction, in its state object.  This operation does not block.  It checks once if the data is available and otherwise executes the instruction.  For example, in a Task body, we might have:
-
-   #+BEGIN_SRC slobil
-accept-or /hello ( set /hello "Hello." ) .
-   #+END_SRC
-
-   The main use of =accept-or= is to provide default values for missing data or to do something else if data is not available.
-
-   Alternatively, the =select= operation executes one of several instructions if data comes in at any number of slots.  =select= takes paired slots and instructions as its arguments.  It waits for data to appear in its queue at any of the slots listed.  The first slot to receive data is "selected".  The instruction associated with the slot is executed in the slot's state object after setting the =/ans= slot to the value of the data located at the slot in the queue.
-
-   #+BEGIN_SRC slobil
-... task /t1 ( 
-                set /continue True .
-                while ( answer continue )
-                      (
-                        select /add-one ( print [ add ans 1 ] ) 
-                               /sub-one ( print [ sub ans 1 ] )
-                               /continue ( set /continue ans ) .
-                      ) .
-             ) .
-... run-task t1 .
-... queue /add-one 3 t1 .
-4
-... queue /sub-one 3 t1 .
-2
-   #+END_SRC
-
-* A Complete Example Program
-
-  The following program is one I use daily to keep track of time spent on client work.  I use the program to keep track of my time by choosing a client and then using the =start= and =stop= instructions. And then the =day-time= instruction to output the hours for each client by day.
-
-** Source Code
-
-   #+BEGIN_SRC slobil
-' Initial state
-
-set /current-client "Non-billable" .
-set /last-clock -1 .
-set /record [ object ] .
-set /running False .
-set /current-file Nothing .
-
-' Start a new record of work or load an old one
-
-set /init
-    [ op (
-      up set /current-file file .
-      please ( load file record )
-             (
-               up set /record [ object ] .
-               up set /client-list [ object ] record .
-               print "Starting new file." .
-             ) .
-    ) /file ] .
-
-' Save record of work in SLOBIL format
-
-set /save-hours
-    (
-      in record ( save current-file ) .
-    ) .
-
-' Set current client
-
-set /client
-    [ op
-    (
-      if [ not running ]
-         {
-           if [ exist /name ]
-              {
-                up set /current-client name .
-                add-client-to-list name .
-              }
-              {
-                up set /current-client [ choose-client ] .
-              } .
-           up set /last-clock -1 .
-         }
-         {
-           print "Currently running, stop first." .
-         } .
-    )
-    /name ] .
-
-' Start clock for current client
-set /start
-    (
-      if [ not running ]
-         {
-           up set /last-clock [ clock ] .
-           up set /running True .
-           print [ combine "Starting on " current-client " ..." ] .
-         }
-         {
-           print "Currently running, stop first." .
-         } .
-    ) .
-
-' Stop clock for current client with a description of task.
-
-set /stop
-    (
-      if running
-         {
-           last record /r .
-           next ans .
-           set ans
-               [
-                 object
-                   /client current-client
-                   /start-time last-clock
-                   /stop-time [ clock . ]
-                   /description desc
-               ] record .
-           up set /running False .
-           save-hours .
-         }
-         {
-           print "Not currently running." .
-         } .
-    ) .
-
-
-' A map to day of week
-set /day-of-week-map
-    [
-      list
-        "Sunday"
-        "Monday"
-        "Tuesday"
-        "Wednesday"
-        "Thursday"
-        "Friday"
-        "Saturday"
-        "Sunday" 
-    ] .
-
-
-' Convert milliseconds to hours
-set /make-hours-day-time
-    [ op (
-      do [ op ( div t 1000.0 60 60 ) /t ] structure .
-    ) /structure ] .
-
-      
-' Return a structure describing a single day of activity
-set /day-time
-    (
-      set /final [ object ] .
-      set /clock1
-          [
-            make-clock
-              [
-                object
-                  /day day
-                  /month month
-                  /year year
-                  /hour 0
-                  /minute 0
-                  /seconds 0
-                  /milliseconds 0
-                . ] .
-          ] .
-
-      set /clock2
-          [
-            make-clock
-              [
-                object
-                  /day day
-                  /month month
-                  /year year
-                  /hour 23
-                  /minute 59
-                  /seconds 59
-                  /milliseconds 999
-                . ] .
-          ] .
-
-      set /i /r1 .
-      while ( exist i record )
-            (
-              if [ and
-                     [ gt-eq record:i:/start-time clock1 ]
-                     [ lt-eq record:i:/start-time clock2 ] ]
-                 {
-                   set /client [ to-slot record:i:/client ] .
-                   set /elapsed [ sub record:i:/stop-time record:i:/start-time ] .
-
-                   if [ exist client final ]
-                      {
-                        set client [ add final:client elapsed ] final .
-                      }
-                      {
-                        set client elapsed final .
-                      } .
-                 } .
-              set /i [ next i ] .
-            ) .
-      make-hours-day-time final .
-    ) .
-
-
-' Add client to client list
-set /add-client-to-list
-    [ op (
-      last record:/client-list /c .
-      next ans .
-      set ans client record:/client-list .
-    ) /client ] .
-
-
-' Select client from menu
-set /choose-client
-    (
-      set /i /c1 .
-      while ( exist i record:/client-list )
-            (
-              print
-                [
-                  combine
-                    [ to-string [ to-number i ] ]
-                    ": " 
-                    record:/client-list:i .
-                ] .
-              set /i [ next i . ] .
-            ) .
-      print "Choose Client: " False .
-      input /num .
-      set /loc [ to-slot [ combine "c" num ] ] .
-      answer record:/client-list:loc .
-    ) .
-
-' Get current status (client, whether running)
-set /status
-    (
-      print [ combine "Current client: " current-client ] .
-      if running
-         {
-           print "Running a task." .
-         }
-         {
-           print "Not running." .
-         } .
-    ) .
-
-' Rename a client
-set /rename-client
-    (
-      ' Update client in list
-      set /i /c1 .
-      set /cont True .
-      while ( and [ exist i record:/client-list ]
-                  cont )
-            (
-              if [ string-eq record:/client-list:i client ]
-                 {
-                   set i new-client record:/client-list .
-                   set /cont False .
-                 } .
-
-              set /i [ next i ] .
-            ) .
-      
-      ' Update client in records
-
-      set /i /r1 .
-      while ( exist i record )
-            (
-              if [ string-eq record:i:/client client ]
-                 {
-                   set /client new-client record:i .
-                 } .
-              set /i [ next i ] .
-            ) .
-    ) .
-          
-
-' Rewind X minutes from start
-
-set /start-back
-    [ op (
-      if [ not running ]
-         {
-           print "Currently not running." .
-         }
-         {
-           up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
-         } .
-    ) /x ] .
-
-' Rewind X minutes from last entry
-
-set /rewind-last
-    [ op (
-
-      set /end [ last record /r ] .
-      set /stop-time [ sub record:end:/stop-time [ mul x 60 1000 ] ]
-          record:end .
-    ) /x ] .
-
-   #+END_SRC
-
-** Building the Code
-
-   We can then use a script like the following, supposing we have saved the above code in a file /billable.slob/, to build a binary version of the program in a convenient location.
-
-   #+BEGIN_SRC slobil
-... source "billable.slob" .
-... save "~/.darbs/billable.darb" .
-   #+END_SRC
-
-** Using the code
-
-   Then, whenever we would like to load the code, we can simply do:
-   #+BEGIN_SRC slobil
-... use "billable" .
-   #+END_SRC
-
-   Then all the instructions from the /billable/ program are available to us.
-
-* Examples
+* Example Instructions
 ** Quicksort
 
    #+INCLUDE: "../examples/quicksort.slob" src slobil
@@ -1330,11 +746,11 @@ t4 of type Integer, value: 1
 
    This example is a simple interactive program where the user enters commands to edit a buffer. 
 
-   #+INCLUDE: "../examples/arbed.slob" src slobil
+   #+INCLUDE: "../examples/slobed.slob" src slobil
 
    Example of use:
    #+BEGIN_SRC slobil
-... import slobiled .
+... import slobed .
 ... i "Hello" .
 ... o .
 Hello
@@ -1372,7 +788,7 @@ ans = 120
 
 *** Note on Recursion
 
-    Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
+Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines =-factorial-recurse= as an instruction and then creates the operation.
 
 ** Numerical Integration
 
@@ -1870,9 +1286,9 @@ ans = 0.693147
 
 ** Package operations
 
-   - =use STRING= --- load a saved object in =~/.darbs/= with the extension =.darb= into the current object. The file being loaded is: =~/.darbs/STRING.darb=.
+   - =use STRING= --- load a saved object in =~/.dslobs/= with the extension =.dslob= into the current object. The file being loaded is: =~/.dslobs/STRING.dslob=.
 
-   - =build STRING OBJECT= --- saves contents of object to =~/.darbs/STRING.darb= so that it can be loaded as a package.
+   - =build STRING OBJECT= --- saves contents of object to =~/.dslobs/STRING.dslob= so that it can be loaded as a package.
 
    - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into SLOBIL operation named =STRING3=.  
 
@@ -1884,7 +1300,7 @@ ans = 0.693147
 
 *** List of options
 
-    - =/print-ans= --- if =True= (default) or any non-Boolean value, then print the value of the =/ans= Slot at the end of commands, if =False= suppress printing.
+    - =/print-ans= --- if =True=, then print the value of the =/ans= Slot at the end of commands, if =False= (default) or any other non-Boolean value, suppress printing.
 
     - =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash objects automatically as they grow in size.  If =False= do not rehash automatically.
 

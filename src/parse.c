@@ -510,7 +510,7 @@ interact (FILE* f, parser_state* state, object* reg)
                   data* opt = get(reg->task->task->slobil_options,
                                   hash_str("print-ans"),
                                   0);
-                  bool print_out = true;
+                  bool print_out = false;
                   if (opt != NULL && opt->type == Boolean)
                     {
                       print_out = *((bool*) opt->data);

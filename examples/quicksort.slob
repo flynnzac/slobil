@@ -19,7 +19,7 @@ set /partition
                    set /i [ next i ] .
                  } .
 
-              if [ register-eq j end ]
+              if [ slot-eq j end ]
                  {
                    set /cont False .
                  } .
@@ -33,16 +33,16 @@ set /partition
 
 set /-quicksort
     (
-      if [ not [ register-eq start end ] ]
+      if [ not [ slot-eq start end ] ]
          {
            partition /input input /start start /end end /compare compare . 
            move /ans /p .
-           if [ not [ register-eq p start ] ]
+           if [ not [ slot-eq p start ] ]
               {
                 -quicksort /input input /start start /end [ previous p . ] .
               } .
 
-           if [ not [ register-eq p end ] ]
+           if [ not [ slot-eq p end ] ]
               {
                 -quicksort /input input /start [ next p . ] /end end .
               } .
@@ -62,12 +62,12 @@ set /quicksort
 
       if [ not [ exist start input ] ]
          {
-           error "Starting register not found in input." .
+           error "Starting slot not found in input." .
          } .
 
       if [ not [ exist end input ] ]
          {
-           error "Ending register not found in input." .
+           error "Ending slot not found in input." .
          } .
 
       -quicksort /input input /start start /end end /compare compare .

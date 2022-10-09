@@ -1,0 +1,286 @@
+' Initial state
+
+/current-thing "Nothing" .
+/last-clock -1 .
+/record [ object ] .
+/running False .
+/current-file Nothing .
+
+' Start a new record of work or load an old one
+
+/init
+  [ op
+      (
+        up set /current-file file .
+        please ( load file record )
+               (
+                 up set /record [ object ] .
+                 up set /thing-list [ object ] record .
+                 print "Starting new file." .
+               ) .
+      ) /file ] .
+
+
+' Save record of work in SLOBIL format
+/save-hours
+  (
+    in record ( save current-file ) .
+  ) .
+
+' Set current thing
+/thing
+  [ op
+      (
+        if [ not running ]
+           {
+             if [ exist /name ]
+                {
+                  up set /current-thing name .
+                  add-thing-to-list name .
+                }
+                {
+                  up set /current-thing [ choose-thing ] .
+                } .
+             up set /last-clock -1 .
+           }
+           {
+             print "Currently running, stop first." .
+           } .
+      )
+      /name ] .
+
+' Start clock for current thing
+/start
+  (
+    if [ not running ]
+       {
+         up set /last-clock [ clock ] .
+         up set /running True .
+         print [ combine "Starting on " current-thing " ..." ] .
+       }
+       {
+         print "Currently running, stop first." .
+       } .
+  ) .
+
+' Stop clock for current thing with a description of task.
+/stop
+  (
+    if running
+       {
+         last record /r .
+         next ans .
+         set ans
+             [
+               object
+                 /thing current-thing
+                 /start-time last-clock
+                 /stop-time [ clock ]
+                 /description desc
+             ]
+             record .
+         up set /running False .
+         save-hours .
+       }
+       {
+         print "Not currently running." .
+       } .
+  ) .
+
+' A map to day of week
+/day-of-week-map
+  [
+    list
+      "Sunday"
+      "Monday"
+      "Tuesday"
+      "Wednesday"
+      "Thursday"
+      "Friday"
+      "Saturday"
+      "Sunday" 
+  ] .
+
+' Convert to hours
+/make-hours-day-time
+  [ op
+      (
+        do [ op ( div t 1000.0 60 60 ) /t ] structure .
+      )
+      /structure ] .
+
+' Return a structure describing a single day of activity
+/report
+  [ op
+      (
+        /final [ object ] .
+        /clock1
+          [
+            make-clock
+              [
+                object
+                  /day day
+                  /month month
+                  /year year
+                  /hour 0
+                  /minute 0
+                  /seconds 0
+                  /milliseconds 0
+              ] 
+          ] .
+
+        /clock2
+          [
+            make-clock
+              [
+                object
+                  /day day
+                  /month month
+                  /year year
+                  /hour 23
+                  /minute 59
+                  /seconds 59
+                  /milliseconds 999
+              ] 
+          ] .
+
+        /i /r1 .
+        while ( exist i record )
+              (
+                if [ and
+                       [ gt-eq record:i:/start-time clock1 ]
+                       [ lt-eq record:i:/start-time clock2 ] ]
+                   {
+                     /thing [ to-slot record:i:/thing ] .
+                     /elapsed [ sub record:i:/stop-time
+                                    record:i:/start-time ] .
+
+                     if [ exist thing final ]
+                        {
+                          set thing [ add final:thing elapsed ]
+                              final .
+                        }
+                        {
+                          set thing elapsed final .
+                        } .
+                   } .
+                /i [ next i ] .
+              ) .
+
+        make-hours-day-time final .
+      ) /year /month /day ] .
+
+' Add thing to thing list
+/add-thing-to-list
+  [ op (
+        if [ not [ exist /thing-list record ] ]
+           {
+             set /thing-list [ object ] record .
+           } .
+        last record:/thing-list /c .
+        next ans .
+        set ans thing record:/thing-list .
+      )
+       /thing ] .
+
+
+' Select thing from menu
+/choose-thing
+  (
+    /i /c1 .
+    while ( exist i record:/thing-list )
+          (
+            print
+              [
+                combine
+                  [ to-string [ to-number i ] ]
+                  ": " 
+                  record:/thing-list:i 
+              ] .
+            /i [ next i ] .
+          ) .
+    print "Choose Thing: " False .
+    input /num .
+    /loc [ to-slot [ combine "c" num ] ] .
+    answer record:/thing-list:loc .
+  ) .
+
+' Print status
+/status
+  (
+    print [ combine "Current thing: " current-thing ] .
+    if running
+       {
+         print "Running a task." .
+       }
+       {
+         print "Not running." .
+       } .
+  ) .
+
+' Update thing in list
+/rename-thing
+  (
+    /i /c1 .
+    /cont True .
+    while ( and
+              [ exist i record:/thing-list ]
+              cont )
+          (
+            if [ string-eq record:/thing-list:i thing ]
+               {
+                 set i new-thing record:/thing-list .
+                 /cont False .
+               } .
+
+            /i [ next i ] .
+          ) .
+    
+    ' Update thing in records
+
+    /i /r1 .
+    while ( exist i record )
+          (
+            if [ string-eq record:i:/thing thing ]
+               {
+                 /thing new-thing record:i .
+               } .
+            /i [ next i ] .
+          ) .
+  ) .
+
+' Rewind X minutes from start
+/start-back
+  [ op
+      (
+        if [ not running ]
+           {
+             print "Currently not running." .
+           }
+           {
+             up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
+           } .
+      )
+      /x ] .
+
+' Rewind X minutes from last entry
+/rewind-last
+  [ op (
+        if running
+           {
+             print "Currently running." .
+           }
+           {
+             /end [ last record /r ] .
+             /stop-time
+               [
+                 sub record:end:/stop-time [ mul x 60 1000 ]
+               ]
+               record:end .
+           } .
+      )
+       /x ] .
+
+
+
+
