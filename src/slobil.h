@@ -553,7 +553,10 @@ task_vars*
 copy_task_vars (task_vars* task0);
 
 arg
-shift_arg_right(arg a);
+shift_arg_left(arg a);
+
+bool
+object_from_args (arg a, object* obj, int arg_start, task_vars* t);
 
 /* task is an interpreter states */
 

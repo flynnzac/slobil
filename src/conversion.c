@@ -23,7 +23,18 @@
 #include <errno.h>
 #include "slobil.h"
 
+/**
+ * @file conversion.c
+ * @brief Functions for converting strings from u32 from/to u8 and for converting from/to host and little endian
+ */
 
+/**
+ * Convert UTF-8 to UTF-32 strings, adapted from u8_to_u32 from libunistring
+ *
+ * @param s a UTF-8 null-terminated string
+ * @param n the number of units
+ * @return UTF-32 encoded version of s
+ */
 uint32_t *
 slobil_u8_to_u32 (const uint8_t *s, size_t n)
 {
@@ -109,6 +120,13 @@ slobil_u8_to_u32 (const uint8_t *s, size_t n)
   return result;
 }
 
+/**
+ * Convert UTF-32 string to UTF-8 string
+ *
+ * @param s a UTF-32 null-terminated string
+ * @param n the length of the string
+ * @return UTF-8 encoded version of s
+ */
 uint8_t *
 slobil_u32_to_u8 (const uint32_t *s, size_t n)
 {
@@ -197,6 +215,12 @@ slobil_u32_to_u8 (const uint32_t *s, size_t n)
   return result;
 }
 
+/**
+ * Converts a UTF-32 string to little endian from host.
+ *
+ * @param str UTF-32 encoded string in host bit order
+ * @return UTF-32 string in little endian order
+ */
 uint32_t*
 u32_str_to_le (const uint32_t* str)
 {
@@ -209,7 +233,12 @@ u32_str_to_le (const uint32_t* str)
   return result;
 }
 
-
+/**
+ * Converts little endian string to host bit order.
+ *
+ * @param str a UTF-32 encoded string in little endian order
+ * @return returns a UTF-32 encoded string in host bit order
+ */
 uint32_t*
 u32_str_to_h (const uint32_t* str)
 {

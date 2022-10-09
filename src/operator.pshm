@@ -1210,7 +1210,7 @@ method_call (arg a, object* reg)
       return;
     }
 
-  arg b = shift_arg_right(a);
+  arg b = shift_arg_left(a);
   b.arg_array[0] = instr;
 
   object* tmp = ((object*) arg0->data)->up;

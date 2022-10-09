@@ -35,7 +35,10 @@
 #endif
 
 
-
+/**
+ * @file memory.c
+ * @brief Functions for manipulating memory
+ */
 
 void
 free_statement (statement* s)

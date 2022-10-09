@@ -24,6 +24,12 @@
 
 /* Assignment functions */
 
+/**
+ * @file copy.c
+ * @brief Functions for copying and assigning new data objects for SLOBIL types
+ */
+
+
 void
 assign_real (data** d, const double num)
 {
