@@ -30,6 +30,11 @@
  */
 
 
+/**
+ * Assigns a double-precision floating point as a Real SLOBIL value.
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param num a double-precision floating point value to assign to the Real data.
+ */
 void
 assign_real (data** d, const double num)
 {
@@ -38,7 +43,12 @@ assign_real (data** d, const double num)
   (*d)->data = malloc(sizeof(double));
   *((double*) (*d)->data) = num;
 }
-          
+
+/**
+ * Assigns a big int (mpz_t) to an Integer SLOBIL value.
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param num A big-integer to assign to a data object.
+ */
 void
 assign_int (data** d, const mpz_t num)
 {
@@ -51,6 +61,12 @@ assign_int (data** d, const mpz_t num)
   
 }
 
+/**
+ * Assigns a UTF-32 string to a String SLOBIL value.
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param str a UTF-32 null-terminated string.
+ * @param copy if copy != 0, then copy the string to the new object.  If copy=0, then do not copy, just set the string to the pointer str.
+ */
 void
 assign_str (data** d, const uint32_t* str, int copy)
 {
@@ -68,6 +84,13 @@ assign_str (data** d, const uint32_t* str, int copy)
     }
 }
 
+/**
+ * Assigns statements to an instruction.
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param s A linked list of statements (pointer is to head) to add to instruction object
+ * @param code the code the instruction runs as a UTF-8 string
+ */
 void
 assign_instr (data** d, statement* s, const char* code)
 {
@@ -80,6 +103,12 @@ assign_instr (data** d, statement* s, const char* code)
   ((instruction*) (*d)->data)->being_called = false;
 }
 
+/**
+ * Assigns statements to an expression
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param s a linked list of statements (pointer is to head) to add to instruction object
+ */
 void
 assign_expression (data** d, statement* s)
 {
@@ -90,6 +119,15 @@ assign_expression (data** d, statement* s)
   ((instruction*) (*d)->data)->being_called = false;
 }
 
+/**
+ * Assigns an operation, either from a C-function or from an instruction and argument specification
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param op a C-operation function pointer
+ * @param instr a data object which is an instruction
+ * @param args a list of data objects describing the slots to insert data into
+ * @param n_arg the number of arguments
+ */
 void
 assign_op (data** d, const operation op,
            data* instr, data** args,
@@ -121,26 +159,41 @@ assign_op (data** d, const operation op,
     }
 }
 
+/**
+ * Assigns an object to data
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param obj a pointer to an object to assign to the data element
+ * @param copy if true, copy the object, if false have the data point to the object as passed in
+ * @param t a task to associate with the object
+ */
 void
-assign_object (data** d, object* r, bool copy, task* t)
+assign_object (data** d, object* obj, bool copy, task* t)
 {
   *d = new_data();
   (*d)->type = Object;
-  if (r == NULL)
+  if (obj == NULL)
     {
       (*d)->data = new_object(NULL, SLOBIL_HASH_SIZE, t);
-      ((object*) (*d)->data)->inherit = r->inherit;
+      ((object*) (*d)->data)->inherit = obj->inherit;
     }
   else if (copy)
     {
-      (*d)->data = copy_object(r);
+      (*d)->data = copy_object(obj);
     }
   else
     {
-      (*d)->data  = r;
+      (*d)->data  = obj;
     }
 }
 
+/**
+ * Assign a slot to data
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param name the slot location, a UTF-8 string
+ * @param key the hashed string
+ */
 void
 assign_slot (data** d, const char* name, unsigned long key)
 {
@@ -153,6 +206,12 @@ assign_slot (data** d, const char* name, unsigned long key)
   
 }
 
+/**
+ * Assigns a file to data
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param f a FILE to stream
+ */
 void
 assign_file (data** d, FILE* f)
 {
@@ -162,6 +221,12 @@ assign_file (data** d, FILE* f)
   
 }
 
+/**
+ * Assigns a boolean to data
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param val a boolean value to assign to the data
+ */
 void
 assign_boolean (data** d, bool val)
 {
@@ -172,6 +237,12 @@ assign_boolean (data** d, bool val)
 }
 
 
+/**
+ * Assigns a task to the data.
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param t the task to assign
+ */
 void
 assign_task (data** d, task* t)
 {
@@ -185,6 +256,11 @@ assign_task (data** d, task* t)
 
 }
 
+/**
+ * Assign Nothing to a data object
+ *
+ * @param a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ */
 void
 assign_nothing (data** d)
 {
@@ -196,6 +272,12 @@ assign_nothing (data** d)
 
 /* copy functions */
 
+/**
+ * Copy elements of a statement
+ *
+ * @param e a linked-list of elements (pointer is to head)
+ * @return a pointer to the head of the copied list
+ */
 element*
 copy_elements (element* e)
 {
@@ -240,6 +322,12 @@ copy_elements (element* e)
   return new_first;
 }
 
+/**
+ * Copy a linked list of statements
+ *
+ * @param s a linked-list of statements (pointer is to head)
+ * @return a pointer to the head of a copy of the linked list
+ */
 statement*
 copy_statement (statement* s)
 {
@@ -266,34 +354,40 @@ copy_statement (statement* s)
   return new_first;
 }
 
+/**
+ * Copy an object
+ *
+ * @param obj
+ * @return a pointer to the newly allocated object
+ */
 object*
-copy_object(object* r0)
+copy_object(object* obj0)
 {
-  object* r1;
-  if (update_hash_size(r0->elements, r0->hash_size))
-    r1 = new_object(r0->up, 2*r0->hash_size, r0->task);
+  object* obj1;
+  if (update_hash_size(obj0->elements, obj0->hash_size))
+    obj1 = new_object(obj0->up, 2*obj0->hash_size, obj0->task);
   else
-    r1 = new_object(r0->up, r0->hash_size, r0->task);
+    obj1 = new_object(obj0->up, obj0->hash_size, obj0->task);
   
   data* d;
 
-  for (int i = 0; i < r0->hash_size; i++)
+  for (int i = 0; i < obj0->hash_size; i++)
     {
-      content* cur = r0->objects[i];
+      content* cur = obj0->objects[i];
       if (cur == NULL)
         continue;
 
-      cur = tail(r0->objects[i]);
+      cur = tail(obj0->objects[i]);
       while (cur != NULL)
         {
           d = copy_data(cur->value);
-          set(r1, d, cur->name, 0);
+          set(obj1, d, cur->name, 0);
           cur = cur->right;
         }
     }
 
-  r1->inherit = r0->inherit;
-  return r1;
+  obj1->inherit = obj0->inherit;
+  return obj1;
 }
 
 instruction*

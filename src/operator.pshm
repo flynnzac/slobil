@@ -18,6 +18,10 @@
    along with SLOBIL (in COPYING file).  If not, see <https://www.gnu.org/licenses/>.
    
 */
+/**
+ * @file operator.c
+ * @brief Functions that define the built-in operations of SLOBIL.
+ */
 
 `#include "slobil.h"'
 
@@ -1215,7 +1219,8 @@ method_call (arg a, object* reg)
 
   object* tmp = ((object*) arg0->data)->up;
   ((object*) arg0->data)->up = reg;
-  _op_call(b, (object*) arg0->data, 0);
+  _op_call(b, (object*) arg0->data, reg, 0);
+
   ((object*) arg0->data)->up = tmp;
   
 }
@@ -3050,7 +3055,7 @@ op_call (arg a, object* reg)
   #op=call@
   #length=1@
   ##CHECK_ARGS~$;
-  _op_call(a,reg,1);
+  _op_call(a,reg,reg,1);
 }
 
 void

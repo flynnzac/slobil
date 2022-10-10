@@ -511,7 +511,7 @@ data*
 resolve (data* arg, object* reg);
 
 void
-_op_call (arg a, object* reg, const int explicit);
+_op_call (arg a, object* obj, object* obj_ans, const int explicit);
 
 void
 auto_set (arg a, object* reg);

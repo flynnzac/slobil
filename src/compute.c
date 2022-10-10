@@ -77,6 +77,8 @@ ret_ans_to_object (object* obj_tmp, object* obj)
       ans = get(obj_tmp, obj->task->task->slobil_hash_ans, 0);
       if (ans != NULL)
         {
+          printf("REALLY HERE!\n");
+          printf("%d\n", ans->type);
           mark_do_not_free(obj_tmp, obj->task->task->slobil_hash_ans);
           ret_ans(obj, ans);
         }
@@ -104,13 +106,14 @@ execute_0 (data* instr, object* obj)
  *
  * @param a the argument object for the SLOBIL statement
  * @param obj the object to execute the instruction in
+ * @param obj_ans the object to set the /ans slot of 
  * @param explicit if 1, the call was made explicitly as call instruction ... .  If 0,the call was made implicitly as instruction ...
  */
 void
-_op_call (arg a, object* obj, const int explicit)
+_op_call (arg a, object* obj, object* obj_ans, const int explicit)
 {
   data* arg1 = resolve(a.arg_array[explicit], obj);
-
+  printf("HERE!\n");
   if (arg1 == NULL || (arg1->type != Instruction && arg1->type != Operation))
     {
       do_error("First argument to `call` must be an instruction.", obj->task->task);
@@ -122,13 +125,14 @@ _op_call (arg a, object* obj, const int explicit)
   bool err_construct = object_from_args(a, obj_tmp, explicit+1, obj->task->task);
   if (err_construct)
     {
+
       free_object(obj_tmp);
       return;
     }
 
   execute_0(arg1, obj_tmp);
 
-  ret_ans_to_object(obj_tmp, obj);
+  ret_ans_to_object(obj_tmp, obj_ans);
   free_object(obj_tmp);
 }
 
@@ -192,7 +196,7 @@ compute (data* cmd, object* obj, arg a)
       do_operation((op_wrapper*) cmd->data, obj, a);
       break;
     case Instruction:
-      _op_call(a, obj, 0);
+      _op_call(a, obj, obj, 0);
       break;
     case Slot:
       auto_set(a, obj);
