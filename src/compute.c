@@ -77,8 +77,6 @@ ret_ans_to_object (object* obj_tmp, object* obj)
       ans = get(obj_tmp, obj->task->task->slobil_hash_ans, 0);
       if (ans != NULL)
         {
-          printf("REALLY HERE!\n");
-          printf("%d\n", ans->type);
           mark_do_not_free(obj_tmp, obj->task->task->slobil_hash_ans);
           ret_ans(obj, ans);
         }
@@ -113,7 +111,6 @@ void
 _op_call (arg a, object* obj, object* obj_ans, const int explicit)
 {
   data* arg1 = resolve(a.arg_array[explicit], obj);
-  printf("HERE!\n");
   if (arg1 == NULL || (arg1->type != Instruction && arg1->type != Operation))
     {
       do_error("First argument to `call` must be an instruction.", obj->task->task);
