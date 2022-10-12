@@ -371,25 +371,24 @@ copy_object(object* obj0)
   
   data* d;
 
-  for (int i = 0; i < obj0->hash_size; i++)
+  object_iter iter = get_object_iter(obj0);
+  while (!iter.done)
     {
-      content* cur = obj0->objects[i];
-      if (cur == NULL)
-        continue;
-
-      cur = tail(obj0->objects[i]);
-      while (cur != NULL)
-        {
-          d = copy_data(cur->value);
-          set(obj1, d, cur->name, 0);
-          cur = cur->right;
-        }
+      d = copy_data(iter.cur->value);
+      set(obj1, d, iter.cur->name, 0);
+      object_next_iter(&iter);
     }
 
   obj1->inherit = obj0->inherit;
   return obj1;
 }
 
+/**
+ * Copy an instruction
+ *
+ * @param instruction to copy
+ * @return a pointer to the newly allocated instruction
+ */
 instruction*
 copy_instruction (instruction* inst0)
 {
@@ -402,6 +401,12 @@ copy_instruction (instruction* inst0)
   return inst1;
 }
 
+/**
+ * Copy a task_vars object
+ *
+ * @param task0 task_vars object to copy
+ * @return a pointer to the newly allocated task_vars object
+ */
 task_vars*
 copy_task_vars (task_vars* task0)
 {
@@ -423,6 +428,12 @@ copy_task_vars (task_vars* task0)
   return task1;
 }
 
+/**
+ * High-level function to copy a data object.  Switches over the data's type.
+ *
+ * @param d_in a pointer to the data to copy.
+ * @return a pointer to a newly-allocated data object.
+ */
 data*
 copy_data (data* d_in)
 {

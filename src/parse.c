@@ -22,6 +22,17 @@
 
 #include "slobil.h"
 
+/**
+ * @file parse.c
+ * @brief Functions for parsing SLOBIL code.
+ */
+
+/**
+ * Creates a fresh parser state object.
+ *
+ * @param print if 1 then print to standard out.
+ * @return a parser state object with print_out set to print
+ */
 struct parser_state
 fresh_state (int print) 
 {
@@ -39,11 +50,15 @@ fresh_state (int print)
   state.print_out = print;
   state.in_comment = 0;
   state.cur_elem = NULL;
-  state.cur_stmt = NULL;
 
   return state;
 }
 
+/**
+ * Frees the memory in the state buffer
+ *
+ * @param state pointer to a parser_state
+ */
 void
 free_state (struct parser_state* state)
 {
@@ -51,6 +66,11 @@ free_state (struct parser_state* state)
     free(state->buffer);
 }
 
+/**
+ * Clears the state buffer (does not reallocate memory, sets null in first character)
+ *
+ * @param state pointer to a parser state
+ */
 void
 clear_state_buffer (struct parser_state* state)
 {
@@ -58,6 +78,13 @@ clear_state_buffer (struct parser_state* state)
   state->i = 0;
 }
 
+/**
+ * Add a character to the state buffer
+ *
+ * @param state pointer to a parser state
+ * @param c character to add
+ * @param incr a boolean for whether to increment the location in the buffer
+ */
 void
 add_to_state_buffer (struct parser_state* state, const char c, bool incr)
 {
@@ -72,7 +99,14 @@ add_to_state_buffer (struct parser_state* state, const char c, bool incr)
   if (incr) state->i++;
 }
 
-
+/**
+ * Add a data literal argument to elements of a statement
+ *
+ * @param head pointer to a linked-list of element*
+ * @param element pointer of last element in list
+ * @param d data object
+ * @return the element at the end of the list
+ */
 element*
 add_literal_argument (element** head, element* e, data* d)
 {
@@ -89,6 +123,13 @@ add_literal_argument (element** head, element* e, data* d)
 
 }
 
+/**
+ * Add a lookup argument which is an argument... that gets looked up
+ *
+ * @param head pointer to the head of a linked-list of element*
+ * @param element pointer of last element in list
+ * @param d a string giving the slot to lookup
+ */
 element*
 add_lookup_argument (element** head, element* e, char* d)
 {
@@ -116,6 +157,13 @@ add_lookup_argument (element** head, element* e, char* d)
 
 }
 
+/**
+ * Add a substatement argument
+ *
+ * @param head pointer to the head of a linked-list of element*
+ * @param element pointer of last element in list
+ * @param s pointer to a statement
+ */
 element*
 add_statement_argument (element** head, element* e, statement* s)
 {

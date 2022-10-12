@@ -69,7 +69,6 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
 #requireans=true@
 #checktype=true@
 
-
 void
 op_range (arg a, object* reg)
 {
@@ -152,12 +151,18 @@ op_range (arg a, object* reg)
   free(prefix);
   
 }
-
+/**
+ * Creates a list-like object with argument values at /t1, /t2, /t3, etc.
+ *
+ * @param a argument list containing the list operation as its first argument and an arbitrary
+ * number of data elements following that.
+ * @param obj the object to execute the operation in.
+ */
 void
 op_list (arg a, object* reg)
 {
-  object* r_new = new_object(NULL, new_hash_size(a.length),
-                                 reg->task);
+  object* obj_new = new_object(NULL, new_hash_size(a.length),
+                               reg->task);
   data* d;
   data* d_new;
   int i = 1;
@@ -167,17 +172,20 @@ op_list (arg a, object* reg)
     {
       r = argument_name(i);
       d_new = copy_data(resolve(a.arg_array[i], reg));
-      set(r_new, d_new, r, 0);
+      set(obj_new, d_new, r, 0);
       free(r);
     }
 
-  d = new_data();
-  d->type = Object;
-  d->data = r_new;
+  assign_object(&d, obj_new, false, reg->task);
   ret_ans(reg, d);
-
 }
 
+/**
+ * Creates an object from pairs of slots and data values
+ *
+ * @param a argument containing the object operation as its first argument and an arbitrary number of slot-data pairs.
+ * @param obj the object to execute the operation in.
+ */
 void
 op_object (arg a, object* reg)
 {
@@ -188,38 +196,30 @@ op_object (arg a, object* reg)
       ##CHECK_ARGS~$;
     }
   
-  object* r_new = new_object(NULL, new_hash_size(a.length / 2 + 1),
+  object* obj_new = new_object(NULL, new_hash_size(a.length / 2 + 1),
                                  reg->task);
-  data* d = NULL;
-  data* d_data = NULL;
-  data* d_new;
 
-  for (int i = 1; i < a.length; i = i + 2)
+  bool error = object_from_args(a, obj_new, 1, reg->task->task);
+  if (error)
     {
-      d = a.arg_array[i];
-      
-      if (d->type != Slot)
-        {
-          do_error("Expected a slot.", reg->task->task);
-          free_object(r_new);
-          return;
-        }
-
-      if (a.length > (i+1))
-        {
-          d_data = resolve(a.arg_array[i+1], reg);
-          d_new = copy_data(d_data);
-          set(r_new, d_new, ((slot*) d->data)->name, 0);
-        }
+      free_object(obj_new);
+      return;
     }
 
+  data* d;
+  assign_object(&d, obj_new, false, reg->task);
 
-  d = new_data();
-  d->type = Object;
-  d->data = r_new;
   ret_ans(reg, d);
 }
 
+/**
+ * Creates a new object, inheriting from an old object.
+ *
+ * @param a an argument list where the first element is this operation, the second argument is the
+ * object to inherit from, and the following arguments (which are optional) are an alternating list
+ * of slots and data values
+ * @param obj the object to execute the operation in
+ */
 void
 op_new(arg a, object* reg)
 {
@@ -234,40 +234,28 @@ op_new(arg a, object* reg)
   object* new = new_object(NULL, SLOBIL_HASH_SIZE, reg->task);
   new->inherit = (object*) arg1->data;
   data* out;
-  assign_object(&out, new, false, reg->task);
 
-  data* d = NULL;
-  data* d_data = NULL;
-  data* d_new = NULL;
+  bool error = object_from_args(a, new, 2, reg->task->task);
 
-  if (a.length > 2)
+  if (error)
     {
-      for (int i=2; i < a.length; i = i + 2)
-        {
-          d = a.arg_array[i];
-          if (d->type != Slot)
-            {
-              do_error("Expected a slot.", reg->task->task);
-              free_object(r_new);
-              return;
-            }
-
-          if (a.length > (i+1))
-            {
-              d_data = resolve(a.arg_array[i+1], reg);
-              d_new = copy_data(d_data);
-              set((object*) out->data,
-                  d_new,
-                  ((slot*) d->data)->name,
-                  0);
-            }
-        }
+      free_object(new);
+      return;
     }
-
+  
+  assign_object(&out, new, false, reg->task);
   ret_ans(reg, out);
 }
 
-
+/**
+ * Unified arithmetic operation, not called from SLOBIL code, used for other
+ * arithmetic operations.
+ *
+ * @param a argument list of Real or Integer objects
+ * @param obj an object to execute the operation in
+ * @param code an integer code to determine the arithmetic to do (1=add, 2=mul,
+ * 3=sub, 4=div)
+ */
 void
 op_arithmetic (arg a, object* reg, const int code)
 {
@@ -348,6 +336,12 @@ op_arithmetic (arg a, object* reg, const int code)
   ret_ans(reg, d);
 }  
 
+/**
+ * Adds its arguments and sets /ans slot to result
+ *
+ * @param a argument list of any number of either Real or Integer data values
+ * @param obj the object to execute the operation in
+ */
 void
 op_add (arg a, object* reg)
 {
@@ -358,6 +352,12 @@ op_add (arg a, object* reg)
   op_arithmetic(a, reg, 1);
 }
 
+/**
+ * Multiplies its arguments and sets /ans slot to result
+ *
+ * @param a argument list of any number of either Real or Integer data values
+ * @param obj the object to execute the operation in
+ */
 void
 op_mul (arg a, object* reg)
 {
@@ -368,6 +368,12 @@ op_mul (arg a, object* reg)
   op_arithmetic(a, reg, 2);
 }
 
+/**
+ * Subtracts its arguments and sets /ans slot to result
+ *
+ * @param a argument list of any number of either Real or Integer data values
+ * @param obj the object to execute the operation in
+ */
 void
 op_sub (arg a, object* reg)
 {
@@ -377,7 +383,12 @@ op_sub (arg a, object* reg)
 
   op_arithmetic(a, reg, 3);
 }
-
+/**
+ * Divides its arguments and sets /ans slot to result
+ *
+ * @param a argument list of any number of either Real or Integer data values
+ * @param obj the object to execute the operation in
+ */
 void
 op_div (arg a, object* reg)
 {
@@ -388,6 +399,12 @@ op_div (arg a, object* reg)
   op_arithmetic(a, reg, 4);
 }
 
+/**
+ * Executed if first element of statement is a slot.
+ *
+ * @param a argument list like for set but omitting the set operation
+ * @param obj the object to set the slot in.
+ */
 void
 auto_set (arg a, object* reg)
 {
@@ -423,7 +440,15 @@ auto_set (arg a, object* reg)
   set(to_set, d, name, 1);
 }
   
-
+/**
+ * Sets a slot in an object to a given data value
+ *
+ * @param a argument list with first object the operation itself, the second a
+ * slot to insert into, the third the value to insert, the fourth (optional) an
+ * object to insert into.  If the last is omitted, insert into the current
+ * object.
+ * @param obj the object to execute the operation in.
+ */
 void
 op_set (arg a, object* reg)
 {

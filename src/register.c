@@ -21,6 +21,11 @@
 
 #include "slobil.h"
 
+/**
+ * @file register.c
+ * @brief Functions for manipulating slots.
+ */
+
 char*
 argument_name (int n)
 {

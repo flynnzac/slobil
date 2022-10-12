@@ -49,6 +49,9 @@
 #include <zlib.h>
 #include <endian.h>
 
+/**
+ * Data type enum, contains integer codes for each data type. They are powers of 2 to allow bitwise OR for accepting multiple argument types
+ */
 enum data_type
   {
    Integer = 1,
@@ -71,6 +74,9 @@ typedef enum data_type data_type;
 struct arg;
 struct object;
 
+/**
+ * Generic data object, contains a type and a pointer to the actual data
+ */
 struct data
 {
   void* data;
@@ -78,7 +84,9 @@ struct data
 };
 typedef struct data data;
 
-
+/**
+ * Contains data, a name for the data, in a linked-list structure.
+ */
 struct content
 {
   data* value;
@@ -92,6 +100,9 @@ struct content
 typedef struct content content;
 
 struct object;
+/**
+ * An object to hold the current state of a task as well as task-level variables
+ */
 struct task_vars
 {
   struct object* current_parse_object;
@@ -117,6 +128,10 @@ struct task_vars
 typedef struct task_vars task_vars;
 
 struct task;
+/**
+ * C representation of an object.  It consists of an array of linked lists equal to hash_size in length.  Items are sorted into buckets by hashing the slot string.  If the object inherits from another one that is marked explicitly. up gives the object above it for scoping.
+ *
+ */
 struct object
 {
   content** objects;
@@ -130,9 +145,23 @@ struct object
 
 typedef struct object object;
 
+/**
+ * An iterator for an object's elements.
+ */
+struct object_iter
+{
+  object* obj;
+  content* cur;
+  int bucket;
+  bool done;
+};
+typedef struct object_iter object_iter;
+
 typedef void (*operation)(struct arg, object*);
 
-
+/**
+ * C representation of a slot.
+ */
 struct slot
 {
   char* name;
@@ -141,6 +170,9 @@ struct slot
 
 typedef struct slot slot;
 
+/**
+ * Wrapper for both C-based operations and instructions masquerading as operations
+ */
 struct op_wrapper
 {
   operation op;
@@ -151,16 +183,12 @@ struct op_wrapper
 
 typedef struct op_wrapper op_wrapper;
 
-struct command
-{
-  char* code;
-  object* reg;
-};
-
-typedef struct command command;
-
 struct statement;
 struct element;
+
+/**
+ * Maintains parser state.
+ */
 struct parser_state
 {
   char* buffer;
@@ -175,12 +203,15 @@ struct parser_state
   char open_paren;
   int print_out;
   struct element* cur_elem;
-  struct statement* cur_stmt;
   
 };
 
 typedef struct parser_state parser_state;
 
+/**
+ * Element in a statement.  Contains pointers to lots of things the element might be.  Most of which
+ * are NULL for a given element.
+ */
 struct element
 {
   data* data;
@@ -196,6 +227,9 @@ struct element
 
 typedef struct element element;
 
+/**
+ * Argument object, contains the data from a statement.
+ */
 struct arg
 {
   data** arg_array;
@@ -205,6 +239,9 @@ struct arg
 
 typedef struct arg arg;
 
+/**
+ * Statements are a linked list of elements and also a linked list of statements.
+ */
 struct statement
 {
   element* head;
@@ -217,6 +254,10 @@ struct statement
 
 typedef struct statement statement;
 
+/**
+ * C-representation of instruction which are statements (effectively, a semi-compiled version of the
+ * code) and the code itself (for printing and saving).
+ */
 struct instruction
 {
   statement* stmt;
@@ -226,6 +267,10 @@ struct instruction
 
 typedef struct instruction instruction;
 
+/**
+ * C representation of a task object.  Contains a task_vars structure, its own state (an object), a
+ * mutex, and thread objects for multithreading.
+ */
 struct task
 {
   task_vars* task;
@@ -604,6 +649,12 @@ u32_str_to_le (const uint32_t* str);
 
 uint32_t*
 u32_str_to_h (const uint32_t* str);
+
+object_iter
+get_object_iter (object* obj);
+
+void
+object_next_iter (object_iter* iter);
 
 /* interpreter internal object */
 

@@ -21,6 +21,16 @@
 
 #include "slobil.h"
 
+/**
+ * @file registry.c
+ * @brief Functions to manipulate objects.
+ */
+
+/**
+ * Standard way of creating a new content.
+ *
+ * @return pointer to the newly allocated content.
+ */
 content*
 new_content ()
 {
@@ -34,6 +44,14 @@ new_content ()
   return c;
 }
 
+/**
+ * Standard way of creating a new object.
+ *
+ * @param up the starting object to be upstream from the current object (for scoping rules).
+ * @param hash_size the hash size for the table.
+ * @param t the task the object will belong to.
+ * @return the newly allocated object
+ */
 object*
 new_object (object* up, size_t hash_size, task* t)
 {
@@ -511,3 +529,59 @@ rehash (object* r0)
 
 }
       
+object_iter
+get_object_iter (object* obj)
+{
+  object_iter iter;
+  iter.obj = obj;
+  iter.bucket = 0;
+  iter.cur = obj->objects[0];
+
+  while ((iter.bucket < obj->hash_size) &&
+         (obj->objects[iter.bucket]==NULL))
+    {
+      iter.bucket++;
+    }
+  
+  if (iter.bucket < obj->hash_size)
+    {
+      iter.cur = tail(obj->objects[iter.bucket]);
+      iter.done = false;
+    }
+  else
+    {
+      iter.done = true;
+    }
+  return iter;
+}
+
+void
+object_next_iter (object_iter* iter)
+{
+  iter->cur = iter->cur->right;
+  if (iter->cur == NULL)
+    {
+      
+      iter->bucket++;
+      while ((iter->bucket < iter->obj->hash_size) &&
+             (iter->obj->objects[iter->bucket] == NULL))
+        {
+          iter->bucket++;
+        }
+
+      if (iter->bucket < iter->obj->hash_size)
+        {
+          iter->cur = tail(iter->obj->objects[iter->bucket]);
+        }
+      else
+        {
+          iter->done = true;
+          return;
+        }
+    }
+}
+  
+  
+
+
+

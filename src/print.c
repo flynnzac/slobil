@@ -21,6 +21,17 @@
 
 #include "slobil.h"
 
+/**
+ * @file print.c
+ * @brief Functions for printing data to screen.
+ */
+
+/**
+ * Print data object out to standard output.
+ *
+ * @param d the data to print.
+ * @param settings the print_settings for output
+ */
 void
 print_data (data* d, print_settings settings)
 {

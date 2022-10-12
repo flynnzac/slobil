@@ -26,6 +26,11 @@
 
 #include "slobil.h"
 
+/**
+ * Generates new data object with NULL data pointer and Nothing type.
+ *
+ * @return newly allocated data object
+ */
 data*
 new_data ()
 {
