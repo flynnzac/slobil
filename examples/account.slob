@@ -25,7 +25,6 @@
                     to-string entry:/amount
                   ]
               ] .
-        answer Nothing .
       )
       /print-entries
       (
@@ -53,7 +52,7 @@
 
 /summary
   (
-    do [ op ( account /summary . answer Nothing . ) /account  ]
+    do [ op ( account /summary ) /account  ]
        account-list ...
   )
   accounting .

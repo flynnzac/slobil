@@ -1058,20 +1058,13 @@ op_do (arg a, object* reg)
 
           compute(arg1, reg, a1);
           d = lookup(reg, reg->task->task->slobil_hash_ans, 0);
-          if (d == NULL)
+          if (d != NULL)
             {
-              do_error("Instruction in <do> did not set /ans slot.",
-                       reg->task->task);
-              break;
+              d = copy_data(d);
+              set(ret_reg, d, c->name, 1);
             }
-          d = copy_data(d);
-          set(ret_reg, d, c->name, 1);
-          
           c = c->right;
         }
-
-      if (d == NULL)
-        break;
     }
 
   if (!is_error(-1, reg->task->task))
