@@ -30,7 +30,7 @@
       /print-entries
       (
         do [ op print-entry /entry ]
-           entries .
+           entries ...
       )
   ]
   accounting .
@@ -54,7 +54,7 @@
 /summary
   (
     do [ op ( account /summary . answer Nothing . ) /account  ]
-       account-list .
+       account-list ...
   )
   accounting .
 

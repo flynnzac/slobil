@@ -344,6 +344,12 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   *complete = 1;
                   continue;
                 }
+              else if (strcmp(state->buffer, "...")==0)
+                {
+                  /* Terminate statement, but quiet. */
+                  *complete = 2;
+                  continue;
+                }
               else if (strcmp(state->buffer, "'")==0)
                 {
                   /* Start comment. */
@@ -514,6 +520,7 @@ parse (FILE* f, parser_state* state, statement** s, task_vars* task)
 
       if (complete && !state->in_comment)
         {
+          stop_reading = complete;
           stmt = append_statement(stmt, state->cur_elem);
 
           if (state != NULL) free_state(state);
@@ -533,7 +540,7 @@ parse (FILE* f, parser_state* state, statement** s, task_vars* task)
           stop_reading = 0;
         }
     }
-  while (complete==1);
+  while (complete != 0);
 
   return (stop_reading);
     
@@ -558,10 +565,14 @@ interact (FILE* f, parser_state* state, object* reg)
                   data* opt = get(reg->task->task->slobil_options,
                                   hash_str("print-ans"),
                                   0);
-                  bool print_out = false;
+                  bool print_out = true;
                   if (opt != NULL && opt->type == Boolean)
                     {
                       print_out = *((bool*) opt->data);
+                    }
+                  if (complete == 2)
+                    {
+                      print_out = false;
                     }
                   if (print_out)
                     {

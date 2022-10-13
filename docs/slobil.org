@@ -618,13 +618,13 @@ Next, we define a generic account object and add it to =accounting=.  I use =+na
       /print-entries
       (
         do [ op print-entry /entry ]
-           entries .
+           entries ...
       )
   ]
   accounting .
 #+END_SRC
 
-We add =answer Nothing= to =print-entry= because the =do= operation expects the =/ans= slot to be set.  Nothing will happen if =Nothing= is the value in the =/ans= slot.
+We add =answer Nothing= to =print-entry= because the =do= operation expects the =/ans= slot to be set.  Nothing will happen if =Nothing= is the value in the =/ans= slot.  To suppress printing out the =/ans= slot, you can end a statement with three periods =...=.
 
 Now, we need an instruction for creating a new account.  We will have the user specify the account as a slot.
 #+BEGIN_SRC slobil
@@ -668,7 +668,7 @@ Lastly, let's add some instructions to summarize our accounts and print out entr
   /summary
     (
       do [ op ( account /summary . answer Nothing . ) /account  ]
-         account-list .
+         account-list ...
     )
     accounting .
 
