@@ -1031,7 +1031,7 @@ op_do (arg a, object* reg)
       if (c == NULL)
         continue;
       
-      if (is_init_reg(c))
+      if (is_init_content(c))
         continue;
 
       c = tail(c);
@@ -2874,7 +2874,7 @@ op_import (arg a, object* reg)
       if (c == NULL)
         continue;
 
-      if (is_init_reg(c))
+      if (is_init_content(c))
         continue;
       
       c = tail(c);
@@ -3139,7 +3139,7 @@ op_filter (arg a, object* reg)
       if (c == NULL)
         continue;
 
-      if (is_init_reg(c))
+      if (is_init_content(c))
         continue;
 
       c = tail(c);

@@ -407,7 +407,7 @@ int
 is_exit (int e, task_vars* t);
 
 bool
-is_init_reg (content* r);
+is_init_content (content* c);
 
 object*
 new_object (object* parent, size_t hash_size, task* t);

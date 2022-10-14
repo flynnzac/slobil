@@ -185,7 +185,7 @@ free_object (object* reg)
       if (c == NULL)
         continue;
       
-      if (is_init_reg(c))
+      if (is_init_content(c))
         {
           free(c);
           continue;

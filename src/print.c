@@ -121,7 +121,7 @@ print_object (object* reg)
   for (int i = 0; i < reg->hash_size; i++)
     {
       content* cur = reg->objects[i];
-      if (cur == NULL || is_init_reg(cur))
+      if (cur == NULL || is_init_content(cur))
         continue;
       cur = tail(cur);
       const char* s = "";

@@ -72,27 +72,47 @@ new_object (object* up, size_t hash_size, task* t)
   return r;
 }
 
+/**
+ * Test if content is initial element of linked list.
+ *
+ * @param c pointer to content to test.
+ * @return true if the content is initial element of linked list and false otherwise.
+ */
 bool
-is_init_reg (content* r)
+is_init_content (content* c)
 {
-  return (r->right == NULL) && (r->left==NULL) && (r->value == NULL) &&
-    (r->key == 0) && (r->name == NULL);
+  return (c->right == NULL) &&
+    (c->left==NULL) &&
+    (c->value == NULL) &&
+    (c->key == 0) &&
+    (c->name == NULL);
 }
 
+
+/**
+ * Sets slot in an object to a data value.
+ *
+ * @param obj the object to set the slot of.
+ * @param d the data value to set the slot to.
+ * @param name the name of the slot to set
+ * @param rehash_flag if 0, do not rehash the object no matter its current size.
+ * @returns The content that it set.  This is a convenience return, the object is modified by the call.
+ */
 content*
-set (object* reg, data* d, const char* name, int rehash_flag)
+set (object* obj, data* d, const char* name, int rehash_flag)
 {
   unsigned long hash_name = hash_str(name);
-  content* c = del(reg,hash_name,-1,false);
+  content* c = del(obj,hash_name,-1,false);
 
   if (c == NULL)
     {
-      if (reg->objects[hash_name % reg->hash_size] == NULL)
+      if (obj->objects[hash_name % obj->hash_size] == NULL)
         {
-          reg->objects[hash_name % reg->hash_size] = new_content();
+          obj->objects[hash_name % obj->hash_size] = new_content();
         }
-      c = reg->objects[hash_name % reg->hash_size];
+      c = obj->objects[hash_name % obj->hash_size];
       c = head(c);
+      
       content* new_c = new_content();
       new_c->left = c;
       new_c->right = NULL;
@@ -101,10 +121,12 @@ set (object* reg, data* d, const char* name, int rehash_flag)
       new_c->name = malloc(sizeof(char)*(strlen(name)+1));
       strcpy(new_c->name, name);
       new_c->key = hash_name;
-      reg->elements++;
-      if (rehash_flag && (reg->elements > (SLOBIL_LOAD_FACTOR*(reg->hash_size))))
+      
+      obj->elements++;
+      
+      if (rehash_flag && (obj->elements > (SLOBIL_LOAD_FACTOR*(obj->hash_size))))
         {
-          data* check_hash = get(reg->task->task->slobil_options,
+          data* check_hash = get(obj->task->task->slobil_options,
                                  hash_str("auto-rehash"), 0);
           bool check = true;
 
@@ -113,7 +135,7 @@ set (object* reg, data* d, const char* name, int rehash_flag)
               check = *((bool*) check_hash->data);
             }
           if (check)
-            rehash(reg);
+            rehash(obj);
         }
 
       return new_c;
@@ -129,32 +151,40 @@ set (object* reg, data* d, const char* name, int rehash_flag)
 
 }
 
+/**
+ * Gets data from slot in a given object.
+ *
+ * @param obj the object to fetch from.
+ * @param hash_name the hashed name of the slot
+ * @param recursive if 0, just check the object itself, if 1, then check the objects containing the object as well.
+ * @return a pointer to the data value from the slot
+ */
 data*
-get (object* reg, unsigned long hash_name, int recursive)
+get (object* obj, unsigned long hash_name, int recursive)
 {
-  if (reg == NULL)
+  if (obj == NULL)
     return NULL;
 
-  if (hash_name == reg->task->task->slobil_hash_underscore)
+  if (hash_name == obj->task->task->slobil_hash_underscore)
     {
       data* d;
-      assign_object(&d, reg, false, reg->task);
+      assign_object(&d, obj, false, obj->task);
       return d;
     }
   
-  content* c = reg->objects[hash_name % reg->hash_size];
-  if (c == NULL || is_init_reg(c))
+  content* c = obj->objects[hash_name % obj->hash_size];
+  if (c == NULL || is_init_content(c))
     {
-      if (reg->inherit != NULL)
+      if (obj->inherit != NULL)
         {
-          data* inherit =  get(reg->inherit, hash_name, 0);
+          data* inherit =  get(obj->inherit, hash_name, 0);
           if (inherit != NULL)
             return inherit;
         }
       
       if (recursive)
         {
-          return get(reg->up, hash_name, recursive);
+          return get(obj->up, hash_name, recursive);
         }
       else
         {
@@ -167,27 +197,21 @@ get (object* reg, unsigned long hash_name, int recursive)
   while (c != NULL)
     {
       if (c->key == hash_name && c->value != NULL)
-        {
-          /* if (c->value->type == Object) */
-          /*   { */
-          /*     ((object*) c->value->data)->up = reg->up; */
-          /*   } */
-          
-          return c->value;
-        }
+        return c->value;
+
       c = c->right;
     }
 
-  if (reg->inherit != NULL)
+  if (obj->inherit != NULL)
     {
-      data* inherit =  get(reg->inherit, hash_name, 0);
+      data* inherit =  get(obj->inherit, hash_name, 0);
       if (inherit != NULL)
         return inherit;
     }
 
-  if ((reg->up != NULL) && recursive)
+  if ((obj->up != NULL) && recursive)
     {
-      return get(reg->up, hash_name, recursive);
+      return get(obj->up, hash_name, recursive);
     }
   else
     {
@@ -195,39 +219,55 @@ get (object* reg, unsigned long hash_name, int recursive)
     }
 }
 
+/**
+ * Gets data from slot in a given object.  If it is an Expression, evaluate it.
+ *
+ * @param obj the object to fetch from.
+ * @param hash_name the hashed name of the slot
+ * @param recursive if 0, just check the object itself, if 1, then check the objects containing the object as well.
+ * @return a pointer to the data value from the slot
+ */
+
 data*
-lookup (object* reg, unsigned long hash_name, int recursive)
+lookup (object* obj, unsigned long hash_name, int recursive)
 {
-  data* d = get(reg, hash_name, recursive);
+  data* d = get(obj, hash_name, recursive);
 
   if (d == NULL)
     return NULL;
 
-  d = resolve(d, reg);
+  d = resolve(d, obj);
 
   return d;
-
 }
 
+/**
+ * Move data from one slot to another in an object.
+ *
+ * @param obj the object.
+ * @param old the current slot for the data.
+ * @param new the new slot for the data.
+ * @return a pointer to the content that was set
+ */
 content*
-mov (object* reg, slot* old, slot* new)
+mov (object* obj, slot* old, slot* new)
 {
-  unsigned long old_element = old->key % reg->hash_size;
+  unsigned long old_element = old->key % obj->hash_size;
 
-  content* cur = reg->objects[old_element];
+  content* cur = obj->objects[old_element];
   if (cur == NULL)
     return NULL;
-  cur = cur->right;
 
+  cur = cur->right;
   while (cur != NULL)
     {
       if (cur->key == old->key)
         {
-          del(reg, new->key, 1, false);
+          del(obj, new->key, 1, false);
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
-          del(reg, old->key, 0, false);
-          content* c = set(reg, d, new->name, 0);
+          del(obj, old->key, 0, false);
+          content* c = set(obj, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
         }
@@ -244,7 +284,7 @@ del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
   if (cur == NULL)
     return NULL;
   
-  if (is_init_reg(cur))
+  if (is_init_content(cur))
     return NULL;
   
   cur = tail(cur);
@@ -294,7 +334,7 @@ del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
             {
               free(cur);
               
-              if (is_init_reg(reg->objects[hash_name % reg->hash_size]))
+              if (is_init_content(reg->objects[hash_name % reg->hash_size]))
                 {
                   free(reg->objects[hash_name % reg->hash_size]);
                   reg->objects[hash_name % reg->hash_size] = NULL;
@@ -315,7 +355,7 @@ mark_do_not_free (object* reg, unsigned long hash_name)
 {
 
   content* c = reg->objects[hash_name % reg->hash_size];
-  if (c==NULL || is_init_reg(c))
+  if (c==NULL || is_init_content(c))
     return;
 
   c = c->right;
@@ -502,7 +542,7 @@ rehash (object* r0)
       /* clean */
 
       cur = objects[i];
-      if (is_init_reg(cur))
+      if (is_init_content(cur))
         {
           free(cur);
           continue;
