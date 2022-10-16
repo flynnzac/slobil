@@ -276,10 +276,19 @@ mov (object* obj, slot* old, slot* new)
   return NULL;
 }
 
+/**
+ * Delete data from a slot.
+ *
+ * @param obj the object.
+ * @param hash_name the hashed name of the slot to delete.
+ * @param del_data if 1, delete the underlying data, if 0 do not delete the data just remove it from the object, if -1, delete the data but do not remove the corresponding content and return the content (this is an optimization) .
+ * @param hard_free if true, deallocate the memory immediately, otherwise garbage collect
+ * @return a pointer to the content where the data was deleted if del_data is less than 0, otherwise returns NULL.
+ */
 content*
-del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
+del (object* obj, unsigned long hash_name, int del_data, bool hard_free)
 {
-  content* cur = reg->objects[hash_name % reg->hash_size];
+  content* cur = obj->objects[hash_name % obj->hash_size];
   
   if (cur == NULL)
     return NULL;
@@ -294,7 +303,7 @@ del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
       if (cur->key == hash_name)
         {
           if (del_data >= 0)
-            reg->elements--;
+            obj->elements--;
           
           if (cur->right != NULL && del_data >= 0)
             {
@@ -334,10 +343,10 @@ del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
             {
               free(cur);
               
-              if (is_init_content(reg->objects[hash_name % reg->hash_size]))
+              if (is_init_content(obj->objects[hash_name % obj->hash_size]))
                 {
-                  free(reg->objects[hash_name % reg->hash_size]);
-                  reg->objects[hash_name % reg->hash_size] = NULL;
+                  free(obj->objects[hash_name % obj->hash_size]);
+                  obj->objects[hash_name % obj->hash_size] = NULL;
                 }
                 
               return NULL;
@@ -350,11 +359,17 @@ del (object* reg, unsigned long hash_name, int del_data, bool hard_free)
   return NULL;
 }
 
+/**
+ * Mark a data value that should not be freed when the object containing it is freed.
+ *
+ * @param obj the object
+ * @param hash_name the hashed slot to mark not to free
+ */
 void
-mark_do_not_free (object* reg, unsigned long hash_name)
+mark_do_not_free (object* obj, unsigned long hash_name)
 {
 
-  content* c = reg->objects[hash_name % reg->hash_size];
+  content* c = obj->objects[hash_name % obj->hash_size];
   if (c==NULL || is_init_content(c))
     return;
 
@@ -371,6 +386,16 @@ mark_do_not_free (object* reg, unsigned long hash_name)
 
 }
 
+/**
+ * Function to get data from the colon notation.  
+ *
+ * @param obj top-level object to get data from.
+ * @param hash_name array of hashes for each slot.
+ * @param levels number of colon levels
+ * @param is_slot array of 1 and 0's giving whether the object is a literal slot as opposed to a variable to look up.
+ * @param name array of strings for each slot.
+ * @return pointer to data value at final slot location
+ */
 data*
 get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, char** name)
 {

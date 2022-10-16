@@ -170,6 +170,30 @@ main (int argc, char** argv)
         }
     }
 
+
+  /* Read extra arguments as an object definition */
+  for (; optind < (argc-1); optind = optind + 2)
+    {
+      if (argv[optind][0] != '/')
+        {
+          fprintf(stderr, "Extra arguments must be in slot-value form.");
+          is_exit(2, task0->task);
+          break;
+        }
+      else
+        {
+          /* For now, treat all as string.*/
+          data* tmp;
+          uint32_t* u32_str = slobil_u8_to_u32(argv[optind+1],
+                                               strlen(argv[optind+1]));
+          assign_str(&tmp, u32_str, 0);
+          set(task0->task->current_parse_object,
+              tmp,
+              argv[optind]+1,
+              1);
+        }
+    }
+
   if (script != NULL)
     {
       f = fopen(script, "r");
