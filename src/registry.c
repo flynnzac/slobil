@@ -466,7 +466,12 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, 
 }
 
 
-
+/**
+ * Find the right-most content in a linked list.
+ *
+ * @param c pointer to an element of a content linked list
+ * @return pointer to the right-most content in the list
+ */
 content*
 head (content* c)
 {
@@ -481,6 +486,13 @@ head (content* c)
   return c;
 }
 
+/**
+ * Go right n times in a content linked-list.
+ *
+ * @param c pointer to a content element.
+ * @param n the number of times to go right.
+ * @return pointer to the content n elements after c in the list.
+ */
 content*
 right_n (content* c, size_t n)
 {
@@ -497,7 +509,12 @@ right_n (content* c, size_t n)
   return c;
 }
 
-
+/**
+ * Find the left-most content in a linked-list.
+ *
+ * @param c pointer to an element of a content linked list.
+ * @return the left most content of a linked list.
+ */
 content*
 tail (content* c)
 {
@@ -512,7 +529,14 @@ tail (content* c)
   return c->right;
 }
 
-int
+/**
+ * Indicates whether hash_size should be updated.
+ *
+ * @param elements number of elements.
+ * @param hash_size the hash_size
+ * @return true if elements exceeds hash_size x SLOBIL_LOAD_FACTOR
+ */
+bool
 update_hash_size (size_t elements, size_t hash_size)
 {
   return elements > (hash_size*SLOBIL_LOAD_FACTOR);
@@ -520,6 +544,12 @@ update_hash_size (size_t elements, size_t hash_size)
     
   
 
+/**
+ * Calculate new hash_size given number of elements.
+ *
+ * @param elements number of elements.
+ * @return new hash size
+ */
 size_t
 new_hash_size (size_t elements)
 {
@@ -527,24 +557,30 @@ new_hash_size (size_t elements)
   size_t factor = (hash_size / SLOBIL_HASH_SIZE) + 1;
   return SLOBIL_HASH_SIZE*factor;
 }
-  
+
+/**
+ * Rehash an object.
+ *
+ * @param obj object to rehash.
+ */
+
 void
-rehash (object* r0)
+rehash (object* obj)
 {
 
-  if (!update_hash_size(r0->elements, r0->hash_size))
+  if (!update_hash_size(obj->elements, obj->hash_size))
     return;
 
-  size_t old_size = r0->hash_size;
-  r0->hash_size = 2*r0->hash_size;
-  r0->elements = 0;
-  content** objects = r0->objects;
+  size_t old_size = obj->hash_size;
+  obj->hash_size = 2*obj->hash_size;
+  obj->elements = 0;
+  content** objects = obj->objects;
 
-  r0->objects = malloc(sizeof(content*)*r0->hash_size);
+  obj->objects = malloc(sizeof(content*)*obj->hash_size);
 
-  for (int i = 0; i < r0->hash_size; i++)
+  for (int i = 0; i < obj->hash_size; i++)
     {
-      r0->objects[i] = NULL;
+      obj->objects[i] = NULL;
     }
 
 
@@ -558,9 +594,9 @@ rehash (object* r0)
       cur = tail(objects[i]);
       while (cur != NULL)
         {
-          set(r0, cur->value, cur->name, 0);
+          set(obj, cur->value, cur->name, 0);
           if (cur->do_not_free_data)
-            mark_do_not_free(r0, cur->key);
+            mark_do_not_free(obj, cur->key);
           cur = cur->right;
         }
 
@@ -593,7 +629,13 @@ rehash (object* r0)
 
 
 }
-      
+
+/**
+ * Get an iterator to an object.
+ *
+ * @param obj pointer to an object.
+ * @return iterator to move through the elements of an object.
+ */
 object_iter
 get_object_iter (object* obj)
 {
@@ -620,6 +662,11 @@ get_object_iter (object* obj)
   return iter;
 }
 
+/**
+ * Get next element of an interator.
+ *
+ * @param iter pointer to the iterator.  Will be set to the next element on exit.
+ */
 void
 object_next_iter (object_iter* iter)
 {

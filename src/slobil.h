@@ -570,7 +570,7 @@ new_hash_size (size_t elements);
 void
 check_length (arg* a, int length, char* op, task_vars* t);
 
-int
+bool
 update_hash_size (size_t elements, size_t hash_size);
 
 void
