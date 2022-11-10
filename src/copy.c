@@ -175,7 +175,7 @@ assign_object (data** d, object* obj, bool copy, task* t)
   if (obj == NULL)
     {
       (*d)->data = new_object(NULL, SLOBIL_HASH_SIZE, t);
-      ((object*) (*d)->data)->inherit = obj->inherit;
+      ((object*) (*d)->data)->inherit = NULL;
     }
   else if (copy)
     {

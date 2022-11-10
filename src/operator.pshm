@@ -37,11 +37,11 @@ free(#data~);
 ''@
 
 
-#CHECK_ARGS=`check_length(&#a~, #length~+1, "#op~", reg->task->task);
-if (is_error(-1, reg->task->task)) return #retcheck~;'@
+#CHECK_ARGS=`check_length(&#a~, #length~+1, "#op~", obj->task->task);
+if (is_error(-1, obj->task->task)) return #retcheck~;'@
 
 #GETARG=`
-data* arg#num~ = resolve(a.arg_array[#num~], reg);
+data* arg#num~ = resolve(a.arg_array[#num~], obj);
 
 if (#requireans~)
   {
@@ -50,7 +50,7 @@ if (#requireans~)
         char* err_msg;
         err_msg = malloc(sizeof(char)*(strlen("<#op~> requires at least  arguments.")+digits(#num~)+1));
         sprintf(err_msg, "<#op~> requires at least %d arguments.", #num~);
-        do_error(err_msg, reg->task->task);
+        do_error(err_msg, obj->task->task);
         free(err_msg);
         return #retfail~;
       }
@@ -59,7 +59,7 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
   {
     char* err_msg = malloc(sizeof(char)*(strlen("Argument  of <#op~> should be of type #type~.")+digits(#num~)+1));
     sprintf(err_msg, "Argument %d of <#op~> should be of type #type~.", #num~);
-    do_error(err_msg, reg->task->task);
+    do_error(err_msg, obj->task->task);
     free(err_msg);
     return #retfail~;
   }
@@ -70,7 +70,7 @@ if (arg#num~ != NULL && #checktype~ && (!(arg#num~->type & #type~)))
 #checktype=true@
 
 void
-op_range (arg a, object* reg)
+op_range (arg a, object* obj)
 {
   #op=range@
 
@@ -102,11 +102,9 @@ op_range (arg a, object* reg)
       #num=4@
       #type=String@
       ##GETARG~$;
-      prefix = slobil_u32_to_u8(
-                               (uint32_t*) arg4->data,
-                               u32_strlen((uint32_t*)
-                                          arg4->data)
-                               );
+      prefix = slobil_u32_to_u8((uint32_t*) arg4->data,
+                                u32_strlen((uint32_t*)
+                                           arg4->data));
     }
   else
     {
@@ -123,8 +121,9 @@ op_range (arg a, object* reg)
   mpz_sub(elements, *ub, *lb);
   mpz_cdiv_q(elements, elements, by);
   
-  object* r_new = new_object
-    (NULL,new_hash_size(mpz_get_ui(elements)), reg->task);
+  object* r_new = new_object(NULL,
+                             new_hash_size(mpz_get_ui(elements)),
+                             obj->task);
 
   mpz_t cur;
   mpz_init_set(cur, *lb);
@@ -146,11 +145,11 @@ op_range (arg a, object* reg)
   d_tmp->type = Object;
   d_tmp->data = r_new;
 
-  ret_ans(reg,d_tmp);
+  ret_ans(obj, d_tmp);
 
   free(prefix);
-  
 }
+
 /**
  * Creates a list-like object with argument values at /t1, /t2, /t3, etc.
  *
@@ -159,10 +158,11 @@ op_range (arg a, object* reg)
  * @param obj the object to execute the operation in.
  */
 void
-op_list (arg a, object* reg)
+op_list (arg a, object* obj)
 {
-  object* obj_new = new_object(NULL, new_hash_size(a.length),
-                               reg->task);
+  object* obj_new = new_object(NULL,
+                               new_hash_size(a.length),
+                               obj->task);
   data* d;
   data* d_new;
   int i = 1;
@@ -171,13 +171,13 @@ op_list (arg a, object* reg)
   for (i=1; i < a.length; i++)
     {
       r = argument_name(i);
-      d_new = copy_data(resolve(a.arg_array[i], reg));
+      d_new = copy_data(resolve(a.arg_array[i], obj));
       set(obj_new, d_new, r, 0);
       free(r);
     }
 
-  assign_object(&d, obj_new, false, reg->task);
-  ret_ans(reg, d);
+  assign_object(&d, obj_new, false, obj->task);
+  ret_ans(obj, d);
 }
 
 /**
@@ -187,7 +187,7 @@ op_list (arg a, object* reg)
  * @param obj the object to execute the operation in.
  */
 void
-op_object (arg a, object* reg)
+op_object (arg a, object* obj)
 {
   if (a.length != 1)
     {
@@ -197,9 +197,9 @@ op_object (arg a, object* reg)
     }
   
   object* obj_new = new_object(NULL, new_hash_size(a.length / 2 + 1),
-                                 reg->task);
+                                 obj->task);
 
-  bool error = object_from_args(a, obj_new, 1, reg->task->task);
+  bool error = object_from_args(a, obj_new, 1, obj->task->task);
   if (error)
     {
       free_object(obj_new);
@@ -207,9 +207,9 @@ op_object (arg a, object* reg)
     }
 
   data* d;
-  assign_object(&d, obj_new, false, reg->task);
+  assign_object(&d, obj_new, false, obj->task);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 /**
@@ -221,7 +221,7 @@ op_object (arg a, object* reg)
  * @param obj the object to execute the operation in
  */
 void
-op_new(arg a, object* reg)
+op_new(arg a, object* obj)
 {
   #op=new@
   #length=1@
@@ -231,11 +231,11 @@ op_new(arg a, object* reg)
   #type=Object@
   ##GETARG~$;
 
-  object* new = new_object(NULL, SLOBIL_HASH_SIZE, reg->task);
+  object* new = new_object(NULL, SLOBIL_HASH_SIZE, obj->task);
   new->inherit = (object*) arg1->data;
   data* out;
 
-  bool error = object_from_args(a, new, 2, reg->task->task);
+  bool error = object_from_args(a, new, 2, obj->task->task);
 
   if (error)
     {
@@ -243,8 +243,8 @@ op_new(arg a, object* reg)
       return;
     }
   
-  assign_object(&out, new, false, reg->task);
-  ret_ans(reg, out);
+  assign_object(&out, new, false, obj->task);
+  ret_ans(obj, out);
 }
 
 /**
@@ -257,7 +257,7 @@ op_new(arg a, object* reg)
  * 3=sub, 4=div)
  */
 void
-op_arithmetic (arg a, object* reg, const int code)
+op_arithmetic (arg a, object* obj, const int code)
 {
   data* d;
   data_type result_type = Integer;
@@ -333,7 +333,7 @@ op_arithmetic (arg a, object* reg, const int code)
   else
     assign_real(&d, dbl_value);
 	      
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }  
 
 /**
@@ -343,13 +343,13 @@ op_arithmetic (arg a, object* reg, const int code)
  * @param obj the object to execute the operation in
  */
 void
-op_add (arg a, object* reg)
+op_add (arg a, object* obj)
 {
   #op=add@
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, reg, 1);
+  op_arithmetic(a, obj, 1);
 }
 
 /**
@@ -359,13 +359,13 @@ op_add (arg a, object* reg)
  * @param obj the object to execute the operation in
  */
 void
-op_mul (arg a, object* reg)
+op_mul (arg a, object* obj)
 {
   #op=mul@
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, reg, 2);
+  op_arithmetic(a, obj, 2);
 }
 
 /**
@@ -375,13 +375,13 @@ op_mul (arg a, object* reg)
  * @param obj the object to execute the operation in
  */
 void
-op_sub (arg a, object* reg)
+op_sub (arg a, object* obj)
 {
   #op=sub@
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, reg, 3);
+  op_arithmetic(a, obj, 3);
 }
 /**
  * Divides its arguments and sets /ans slot to result
@@ -390,13 +390,13 @@ op_sub (arg a, object* reg)
  * @param obj the object to execute the operation in
  */
 void
-op_div (arg a, object* reg)
+op_div (arg a, object* obj)
 {
   #op=div@
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, reg, 4);
+  op_arithmetic(a, obj, 4);
 }
 
 /**
@@ -406,7 +406,7 @@ op_div (arg a, object* reg)
  * @param obj the object to set the slot in.
  */
 void
-auto_set (arg a, object* reg)
+auto_set (arg a, object* obj)
 {
   #op=auto-set@
   #length=1@
@@ -432,7 +432,7 @@ auto_set (arg a, object* reg)
     }
   else
     {
-      to_set = reg;
+      to_set = obj;
     }
 
   char* name = ((slot*) arg0->data)->name;
@@ -450,7 +450,7 @@ auto_set (arg a, object* reg)
  * @param obj the object to execute the operation in.
  */
 void
-op_set (arg a, object* reg)
+op_set (arg a, object* obj)
 {
   #op=set@
 
@@ -477,7 +477,7 @@ op_set (arg a, object* reg)
     }
   else
     {
-      to_set = reg;
+      to_set = obj;
     }
   
   char* name = ((slot*) arg1->data)->name;
@@ -488,7 +488,7 @@ op_set (arg a, object* reg)
 }
 
 void
-op_get (arg a, object* reg)
+op_get (arg a, object* obj)
 {
   #op=get@
   #length=1@
@@ -501,7 +501,7 @@ op_get (arg a, object* reg)
   object* to_look;
   if (a.length == 2)
     {
-      to_look = reg;
+      to_look = obj;
     }
   else
     {
@@ -517,12 +517,12 @@ op_get (arg a, object* reg)
   if (ans != NULL)
     {
       ans = copy_data(ans);
-      ret_ans(reg, ans);
+      ret_ans(obj, ans);
     }
 }
 
 void
-op_if (arg a, object* reg)
+op_if (arg a, object* obj)
 {
   #op=if@
   #length=1@
@@ -545,7 +545,7 @@ op_if (arg a, object* reg)
           if (arg2 != NULL)
             {
               data* d = copy_data(arg2);
-              ret_ans(reg, d);
+              ret_ans(obj, d);
             }
         }
     }
@@ -561,7 +561,7 @@ op_if (arg a, object* reg)
           if (arg3 != NULL)
             {
               data* d = copy_data(arg3);
-              ret_ans(reg,d);
+              ret_ans(obj,d);
             }
         }
     }
@@ -569,18 +569,18 @@ op_if (arg a, object* reg)
 }
 
 void
-op_sit (arg a, object* reg)
+op_sit (arg a, object* obj)
 {
   for (int i=1; i < a.length; i++)
     {
-      (void) resolve(a.arg_array[i], reg);
+      (void) resolve(a.arg_array[i], obj);
     }
   return;
 }
 
 
 void
-op_move (arg a, object* reg)
+op_move (arg a, object* obj)
 {
   #op=move@
   #length=2@
@@ -593,13 +593,13 @@ op_move (arg a, object* reg)
   #num=2@
   ##GETARG~$;
 
-  mov(reg, (slot*) arg1->data,
+  mov(obj, (slot*) arg1->data,
       (slot*) arg2->data);
   
 }
 
 void
-op_delete (arg a, object* reg)
+op_delete (arg a, object* obj)
 {
   #op=delete@
   #length=1@
@@ -609,11 +609,11 @@ op_delete (arg a, object* reg)
   #type=Slot@
   ##GETARG~$;
   
-  del(reg, ((slot*) arg1->data)->key, 1, false);
+  del(obj, ((slot*) arg1->data)->key, 1, false);
 }
 
 void
-op_exit (arg a, object* reg)
+op_exit (arg a, object* obj)
 {
   int err = 0;
   if (a.length >= 2)
@@ -625,12 +625,12 @@ op_exit (arg a, object* reg)
 
       err = mpz_get_si(*((mpz_t*) arg1->data));
     }
-  is_exit(err+1, reg->task->task);
-  is_error(1, reg->task->task);
+  is_exit(err+1, obj->task->task);
+  is_error(1, obj->task->task);
 }
 
 void
-op_exist (arg a, object* reg)
+op_exist (arg a, object* obj)
 {
   #op=exist@
   #length=1@
@@ -640,7 +640,7 @@ op_exist (arg a, object* reg)
   #type=Slot@
   ##GETARG~$;
 
-  object* to_use = reg;
+  object* to_use = obj;
   if (a.length >= 3)
     {
       #num=2@
@@ -650,9 +650,9 @@ op_exist (arg a, object* reg)
       to_use = (object*) arg2->data;
     }
 
-  data* obj = get(to_use, ((slot*) arg1->data)->key, a.length < 3 ? 1 : 0);
+  data* ret_obj = get(to_use, ((slot*) arg1->data)->key, a.length < 3 ? 1 : 0);
   data* d;
-  if (obj == NULL)
+  if (ret_obj == NULL)
     {
       assign_boolean(&d, false);
     }
@@ -661,11 +661,11 @@ op_exist (arg a, object* reg)
       assign_boolean(&d, true);
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_answer (arg a, object* reg)
+op_answer (arg a, object* obj)
 {
   #op=answer@
   #length=1@
@@ -677,11 +677,11 @@ op_answer (arg a, object* reg)
   #checktype=true@
 
   data* d = copy_data(arg1);
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 int
-op_comparison (arg a, object* reg)
+op_comparison (arg a, object* obj)
 {
   #op=comparison@
   #length=2@
@@ -741,12 +741,12 @@ op_comparison (arg a, object* reg)
 }
 
 void
-op_gt (arg a, object* reg)
+op_gt (arg a, object* obj)
 {
   data* d = NULL;
-  int is_gt = op_comparison(a, reg);
+  int is_gt = op_comparison(a, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     return;
 
   if (is_gt==1)
@@ -754,16 +754,16 @@ op_gt (arg a, object* reg)
   else
     assign_boolean(&d, false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_lt (arg a, object* reg)
+op_lt (arg a, object* obj)
 {
   data* d = NULL;
-  int is_lt = op_comparison(a, reg);
+  int is_lt = op_comparison(a, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     return;
 
   if (is_lt==-1)
@@ -771,16 +771,16 @@ op_lt (arg a, object* reg)
   else
     assign_boolean(&d, false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_eq (arg a, object* reg)
+op_eq (arg a, object* obj)
 {
   data* d = NULL;
-  int is_eq = op_comparison(a, reg);
+  int is_eq = op_comparison(a, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     return;
 
   if (is_eq==0)
@@ -788,16 +788,16 @@ op_eq (arg a, object* reg)
   else
     assign_boolean(&d, false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_gt_eq (arg a, object* reg)
+op_gt_eq (arg a, object* obj)
 {
   data* d = NULL;
-  int is_gteq = op_comparison(a, reg);
+  int is_gteq = op_comparison(a, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     return;
 
   if (is_gteq==1 || is_gteq==0)
@@ -805,17 +805,17 @@ op_gt_eq (arg a, object* reg)
   else
     assign_boolean(&d, false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 
 void
-op_lt_eq (arg a, object* reg)
+op_lt_eq (arg a, object* obj)
 {
   data* d = NULL;
-  int is_lteq = op_comparison(a, reg);
+  int is_lteq = op_comparison(a, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     return;
 
   if (is_lteq==-1 || is_lteq==0)
@@ -823,11 +823,11 @@ op_lt_eq (arg a, object* reg)
   else
     assign_boolean(&d, false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_print (arg a, object* reg)
+op_print (arg a, object* obj)
 {
   #op=print@
   #length=1@
@@ -861,7 +861,7 @@ op_print (arg a, object* reg)
 }
 
 void
-op_length (arg a, object* reg)
+op_length (arg a, object* obj)
 {
   #op=length@
   #length=1@
@@ -878,12 +878,12 @@ op_length (arg a, object* reg)
   data* d;
   assign_int(&d, len_z);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   
 }
 
 void
-op_combine (arg a, object* reg)
+op_combine (arg a, object* obj)
 {
   #op=combine@
   #length=2@
@@ -911,12 +911,12 @@ op_combine (arg a, object* reg)
   d->type = String;
   d->data = result;
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 
 }
 
 void
-op_source (arg a, object* reg)
+op_source (arg a, object* obj)
 {
   #op=source@
   #length=1@
@@ -938,13 +938,13 @@ op_source (arg a, object* reg)
                                        + strlen(file) +
                                        6));
       sprintf(msg, "File *%s* not found.", file);
-      do_error(msg, reg->task->task);
+      do_error(msg, obj->task->task);
       free(msg);
       return;
     }
 
   struct parser_state state = fresh_state(0);
-  interact(f, &state, reg);
+  interact(f, &state, obj);
   free_state(&state);
   free(file);
   fclose(f);
@@ -952,23 +952,23 @@ op_source (arg a, object* reg)
 }
 
 void
-op_do (arg a, object* reg)
+op_do (arg a, object* obj)
 {
   #op=do@
   #length=2@
   ##CHECK_ARGS~$;
 
-  data* arg1 = resolve(a.arg_array[1], reg);
+  data* arg1 = resolve(a.arg_array[1], obj);
   data** arg_objects = malloc(sizeof(data*)*
                                  (a.length-2));
   for (int i = 0; i < (a.length - 2); i++)
     {
-      arg_objects[i] = resolve(a.arg_array[i+2], reg);
+      arg_objects[i] = resolve(a.arg_array[i+2], obj);
     }
 
   if (arg1 == NULL)
     {
-      do_error("<do> requires an argument.", reg->task->task);
+      do_error("<do> requires an argument.", obj->task->task);
       free(arg_objects);
       return;
     }
@@ -978,7 +978,7 @@ op_do (arg a, object* reg)
       if (arg_objects[i] == NULL)
         {
           do_error("<do> requires more than one argument.",
-                   reg->task->task);
+                   obj->task->task);
           free(arg_objects);
           return;
         }
@@ -988,7 +988,7 @@ op_do (arg a, object* reg)
   if (arg1->type != Operation)
     {
       do_error("First argument to <do> must be an operation.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
@@ -997,19 +997,19 @@ op_do (arg a, object* reg)
       if (arg_objects[i]->type != Object)
         {
           do_error("Arguments to <do> must be objects.",
-                   reg->task->task);
+                   obj->task->task);
           free(arg_objects);
           return;
         }
     }
 
-  object** arg_reg = malloc(sizeof(object*)*(a.length-2));
+  object** arg_obj = malloc(sizeof(object*)*(a.length-2));
   for (int i = 0; i < (a.length - 2); i++)
     {
-      arg_reg[i] = (object*) arg_objects[i]->data;
+      arg_obj[i] = (object*) arg_objects[i]->data;
     }
-  object* ret_reg = new_object(NULL, SLOBIL_HASH_SIZE,
-                               reg->task);
+  object* ret_obj = new_object(NULL, SLOBIL_HASH_SIZE,
+                               obj->task);
   data* d;
   arg a1;
 
@@ -1025,9 +1025,9 @@ op_do (arg a, object* reg)
     a1.arg_array[i] = NULL;
 
 
-  for  (int i = 0; i < arg_reg[0]->hash_size; i++)
+  for  (int i = 0; i < arg_obj[0]->hash_size; i++)
     {
-      content* c = arg_reg[0]->objects[i];
+      content* c = arg_obj[0]->objects[i];
       if (c == NULL)
         continue;
       
@@ -1040,7 +1040,7 @@ op_do (arg a, object* reg)
           bool in_all = true;
           for (int j = 0; j < (a.length-2); j++)
             {
-              d = get(arg_reg[j], c->key, 0);
+              d = get(arg_obj[j], c->key, 0);
               if (d==NULL)
                 {
                   c = c->right;
@@ -1056,23 +1056,23 @@ op_do (arg a, object* reg)
           if (!in_all)
             continue;
 
-          compute(arg1, reg, a1);
-          d = lookup(reg, reg->task->task->slobil_hash_ans, 0);
+          compute(arg1, obj, a1);
+          d = lookup(obj, obj->task->task->slobil_hash_ans, 0);
           if (d != NULL)
             {
               d = copy_data(d);
-              set(ret_reg, d, c->name, 1);
+              set(ret_obj, d, c->name, 1);
             }
           c = c->right;
         }
     }
 
-  if (!is_error(-1, reg->task->task))
+  if (!is_error(-1, obj->task->task))
     {
       d = new_data();
       d->type = Object;
-      d->data = ret_reg;
-      ret_ans(reg, d);
+      d->data = ret_obj;
+      ret_ans(obj, d);
     }
   
 }
@@ -1121,7 +1121,7 @@ slot_arithmetic (slot* rg, int diff, task_vars* task)
   
 
 void
-op_next (arg a, object* reg)
+op_next (arg a, object* obj)
 {
   #op=next@
   #length=1@
@@ -1132,13 +1132,13 @@ op_next (arg a, object* reg)
   ##GETARG~$;
 
   data* d = slot_arithmetic((slot*) arg1->data, 1,
-                                reg->task->task);
+                                obj->task->task);
   if (d != NULL)
-    ret_ans(reg,d);
+    ret_ans(obj,d);
 }
 
 void
-op_previous (arg a, object* reg)
+op_previous (arg a, object* obj)
 {
   #op=previous@
   #length=1@
@@ -1149,14 +1149,14 @@ op_previous (arg a, object* reg)
   ##GETARG~$;
 
   data* d = slot_arithmetic((slot*) arg1->data, -1,
-                                reg->task->task);
+                                obj->task->task);
   if (d != NULL)
-    ret_ans(reg,d);
+    ret_ans(obj,d);
 }
 
 
 void
-op_last (arg a, object* reg)
+op_last (arg a, object* obj)
 {
   #op=last@
   #length=2@
@@ -1170,7 +1170,7 @@ op_last (arg a, object* reg)
   #type=Slot@
   ##GETARG~$;
 
-  object* arg_reg = (object*) arg1->data;
+  object* arg_obj = (object*) arg1->data;
   char* name = NULL;
   int i = 1;
   data* d;
@@ -1178,7 +1178,7 @@ op_last (arg a, object* reg)
   name = vector_name(root, i);
   unsigned long hash_name = hash_str(name);
 
-  while ((d = get(arg_reg, hash_name, 0)) != NULL)
+  while ((d = get(arg_obj, hash_name, 0)) != NULL)
     {
       i++;
       free(name);
@@ -1195,12 +1195,12 @@ op_last (arg a, object* reg)
   ((slot*) d->data)->name = name;
   ((slot*) d->data)->key = hash_str(name);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   
 }
 
 void
-method_call (arg a, object* reg)
+method_call (arg a, object* obj)
 {
   #op=method-call@
   #length=1@
@@ -1221,14 +1221,14 @@ method_call (arg a, object* reg)
   if (instr == NULL)
     {
       do_error("Slot not found in object.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   if (!(instr->type & Instruction))
     {
       do_error("Method must be an instruction.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
@@ -1236,15 +1236,15 @@ method_call (arg a, object* reg)
   b.arg_array[0] = instr;
 
   object* tmp = ((object*) arg0->data)->up;
-  ((object*) arg0->data)->up = reg;
-  _op_call(b, (object*) arg0->data, reg, 0);
+  ((object*) arg0->data)->up = obj;
+  _op_call(b, (object*) arg0->data, obj, 0);
 
   ((object*) arg0->data)->up = tmp;
   
 }
 
 void
-op_in (arg a, object* reg)
+op_in (arg a, object* obj)
 {
   #op=in@
   #length=2@
@@ -1258,20 +1258,20 @@ op_in (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  ((object*) arg1->data)->up = reg;
+  ((object*) arg1->data)->up = obj;
   execute_0(arg2, (object*) arg1->data);
   ((object*) arg1->data)->up = NULL;
   
-  data* ans = lookup((object*) arg1->data, reg->task->task->slobil_hash_ans, 0);
+  data* ans = lookup((object*) arg1->data, obj->task->task->slobil_hash_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
-      ret_ans(reg, ans);
+      ret_ans(obj, ans);
     }
 }
 
 void
-op_while (arg a, object* reg)
+op_while (arg a, object* obj)
 {
   #op=while@
   #length=2@
@@ -1287,24 +1287,24 @@ op_while (arg a, object* reg)
   data* d;
   while (1)
     {
-      execute_0(arg1, reg);
+      execute_0(arg1, obj);
       
-      if (is_error(-1, reg->task->task))
+      if (is_error(-1, obj->task->task))
         break;
           
-      d = get(reg, reg->task->task->slobil_hash_ans, 0);
+      d = get(obj, obj->task->task->slobil_hash_ans, 0);
 
       if (d == NULL)
         {
           do_error("Instruction did not set *ans* to a value.",
-                   reg->task->task);
+                   obj->task->task);
           break;
         }
 
       if (d->type != Boolean)
         {
           do_error("First instruction should set *ans* to a Boolean.",
-                   reg->task->task);
+                   obj->task->task);
           break;
         }
 
@@ -1313,8 +1313,8 @@ op_while (arg a, object* reg)
           break;
         }
 
-      execute_0(arg2, reg);
-      if (is_error(-1, reg->task->task))
+      execute_0(arg2, obj);
+      if (is_error(-1, obj->task->task))
         break;
 
     }
@@ -1322,7 +1322,7 @@ op_while (arg a, object* reg)
 }
 
 void
-op_repeat (arg a, object* reg)
+op_repeat (arg a, object* obj)
 {
   #op=repeat@
   #length=2@
@@ -1340,14 +1340,14 @@ op_repeat (arg a, object* reg)
   mpz_init_set_si(i, 0);
   while (mpz_cmp(i, *((mpz_t*) arg1->data)) < 0)
     {
-      execute_0(arg2, reg);
-      if (is_error(-1, reg->task->task)) break;
+      execute_0(arg2, obj);
+      if (is_error(-1, obj->task->task)) break;
       mpz_add_ui(i, i, 1);
     }
 }
 
 void
-op_to_slot (arg a, object* reg)
+op_to_slot (arg a, object* obj)
 {
   #op=to-slot@
   #length=1@
@@ -1375,13 +1375,13 @@ op_to_slot (arg a, object* reg)
       free(name);
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 
 }
 
 
 void
-op_collapse (arg a, object* reg)
+op_collapse (arg a, object* obj)
 {
   #op=collapse@
   #length=2@
@@ -1410,14 +1410,14 @@ op_collapse (arg a, object* reg)
   char* first_name;
   int i = 2;
   object* to_walk = (object*) arg2->data;
-  to_walk->up = reg;
+  to_walk->up = obj;
 
   first_name = vector_name(prefix, 1);
   unsigned long first_hash = hash_str(first_name);
   second_name = vector_name(prefix, i);
 
   unsigned long second_hash = hash_str(second_name);
-  object* r = new_object(to_walk, SLOBIL_HASH_SIZE, reg->task);
+  object* r = new_object(to_walk, SLOBIL_HASH_SIZE, obj->task);
 
   arg a1;
   a1.length = 3;
@@ -1447,19 +1447,19 @@ op_collapse (arg a, object* reg)
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, reg->task->task->slobil_hash_ans, 0);
+      d1 = lookup(r, obj->task->task->slobil_hash_ans, 0);
 
       if (d1 == NULL)
         {
           do_error("Operation did not set /ans slot.",
-                   reg->task->task);
+                   obj->task->task);
           break;
         }
       
       if (is_first)
         {
           free(first_name);
-          first_hash = reg->task->task->slobil_hash_ans;
+          first_hash = obj->task->task->slobil_hash_ans;
           is_first = 0;
         }
       i++;
@@ -1467,10 +1467,10 @@ op_collapse (arg a, object* reg)
       second_name = vector_name(prefix, i);
       second_hash = hash_str(second_name);
     }
-  d = lookup(r, reg->task->task->slobil_hash_ans, 0);
+  d = lookup(r, obj->task->task->slobil_hash_ans, 0);
   if (d != NULL)
     {
-      ret_ans(reg, copy_data(d));
+      ret_ans(obj, copy_data(d));
     }
 
   free_object(r);
@@ -1479,7 +1479,7 @@ op_collapse (arg a, object* reg)
 }
 
 void
-op_string_eq (arg a, object* reg)
+op_string_eq (arg a, object* obj)
 {
   #op=string-eq@
   #length=2@
@@ -1505,11 +1505,11 @@ op_string_eq (arg a, object* reg)
       assign_boolean(&d, false);
     }
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 void
-op_char_eq (arg a, object* reg)
+op_char_eq (arg a, object* obj)
 {
   #op=char-eq@
   #length=3@
@@ -1539,7 +1539,7 @@ op_char_eq (arg a, object* reg)
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
-      do_error("Index out of range.", reg->task->task);
+      do_error("Index out of range.", obj->task->task);
       return;
     }
 
@@ -1550,12 +1550,12 @@ op_char_eq (arg a, object* reg)
   data* d = NULL;
   assign_boolean(&d, res);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 
 }
 
 void
-op_string_lt (arg a, object* reg)
+op_string_lt (arg a, object* obj)
 {
   #op=string-lt@
   #length=2@
@@ -1581,11 +1581,11 @@ op_string_lt (arg a, object* reg)
       assign_boolean(&d, false);
     }
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 void
-op_string_gt (arg a, object* reg)
+op_string_gt (arg a, object* obj)
 {
   #op=string-gt@
   #length=2@
@@ -1611,12 +1611,12 @@ op_string_gt (arg a, object* reg)
       assign_boolean(&d, false);
     }
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 
 void
-op_slot_eq (arg a, object* reg)
+op_slot_eq (arg a, object* obj)
 {
   #op=slot-eq@
   #length=2@
@@ -1637,12 +1637,12 @@ op_slot_eq (arg a, object* reg)
   else
     assign_boolean(&d,false);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 
 void
-op_save (arg a, object* reg)
+op_save (arg a, object* obj)
 {
   #op=save@  
   #length=1@
@@ -1655,14 +1655,14 @@ op_save (arg a, object* reg)
   char* file = slobil_u32_to_u8((uint32_t*) arg1->data,
                              u32_strlen((uint32_t*) arg1->data));
              
-  save_outer(reg, file);
+  save_outer(obj, file);
 
   free(file);
 
 }
 
 void
-op_load (arg a, object* reg)
+op_load (arg a, object* obj)
 {
   #op=load@
   #length=1@
@@ -1679,7 +1679,7 @@ op_load (arg a, object* reg)
   if (f == NULL)
     {
       do_error("File cannot be opened.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
   if (a.length >= 3)
@@ -1692,7 +1692,7 @@ op_load (arg a, object* reg)
     }
   else
     {
-      read_outer(f, reg);
+      read_outer(f, obj);
     }
   gzclose(f);
 
@@ -1700,7 +1700,7 @@ op_load (arg a, object* reg)
 }
 
 void
-op_to_string (arg a, object* reg)
+op_to_string (arg a, object* obj)
 {
   #op=to-string@
   #length=1@
@@ -1720,14 +1720,14 @@ op_to_string (arg a, object* reg)
       data* arg2 = NULL;
       if (a.length >= 3)
         {
-          arg2 = resolve(a.arg_array[2], reg);
+          arg2 = resolve(a.arg_array[2], obj);
         }
       
       int prec = 6;
       if (arg2 != NULL && arg2->type != Integer)
         {
           do_error("The second argument to *to-string* should be an integer.",
-                   reg->task->task);
+                   obj->task->task);
           return;
         }
       if (arg2 != NULL)
@@ -1736,7 +1736,7 @@ op_to_string (arg a, object* reg)
           if (prec < 0)
             {
               do_error("The second argument to *to-string* must be non-negative.",
-                       reg->task->task);
+                       obj->task->task);
               return;
             }
         }
@@ -1778,14 +1778,14 @@ op_to_string (arg a, object* reg)
   uint32_t* res32 = slobil_u8_to_u32(result, strlen(result));
   data* d;
   assign_str(&d, res32, 0);
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   
   free(res32);
   
 }
 
 void
-op_to_number (arg a, object* reg)
+op_to_number (arg a, object* obj)
 {
   #op=to-number@
   #length=1@
@@ -1806,17 +1806,17 @@ op_to_number (arg a, object* reg)
           mpz_init_set_str(result, u8_value, 10);
           assign_int(&d, result);
           mpz_clear(result);
-          ret_ans(reg, d);
+          ret_ans(obj, d);
         }
       else if (is_real(u8_value) && (strcmp(u8_value, ".") != 0))
         {
           double result = atof(u8_value);
           assign_real(&d, result);
-          ret_ans(reg, d);
+          ret_ans(obj, d);
         }
       else
         {
-          do_error("String not a number.", reg->task->task);
+          do_error("String not a number.", obj->task->task);
         }
 
       free(u8_value);
@@ -1834,7 +1834,7 @@ op_to_number (arg a, object* reg)
       if (i >= (strlen(name)-1))
         {
           do_error("Slot does not end in a number.",
-                   reg->task->task);
+                   obj->task->task);
           return;
         }
 
@@ -1845,13 +1845,13 @@ op_to_number (arg a, object* reg)
       mpz_init_set_str(m, name, 10);
       assign_int(&d, m);
       mpz_clear(m);
-      ret_ans(reg,d);
+      ret_ans(obj,d);
     }
   
 }
 
 void
-op_to_real (arg a, object* reg)
+op_to_real (arg a, object* obj)
 {
   #op=to-real@
   #length=1@
@@ -1878,12 +1878,12 @@ op_to_real (arg a, object* reg)
 
     }
     
-  ret_ans(reg,d);
+  ret_ans(obj,d);
   
 }
 
 void
-op_output_code (arg a, object* reg)
+op_output_code (arg a, object* obj)
 {
   #op=output-code@
   #length=1@
@@ -1893,35 +1893,35 @@ op_output_code (arg a, object* reg)
   #type=String@
   ##GETARG~$;
 
-  if (reg->task->task->source_code != NULL)
+  if (obj->task->task->source_code != NULL)
     {
       char* fname = slobil_u32_to_u8((uint32_t*) arg1->data,
                                   u32_strlen((uint32_t*) arg1->data));
       FILE* f = fopen(fname, "w");
-      fwrite(reg->task->task->source_code, sizeof(char),
-             strlen(reg->task->task->source_code), f);
+      fwrite(obj->task->task->source_code, sizeof(char),
+             strlen(obj->task->task->source_code), f);
       fclose(f);
       free(fname);
       
     }
   else
     {
-      do_error("No source saved yet.", reg->task->task);
+      do_error("No source saved yet.", obj->task->task);
       return;
     }
 }
 
 void
-op_clear_code (arg a, object* reg)
+op_clear_code (arg a, object* obj)
 {
-  if (reg->task->task->source_code != NULL)
-    free(reg->task->task->source_code);
+  if (obj->task->task->source_code != NULL)
+    free(obj->task->task->source_code);
 
-  reg->task->task->source_code = NULL;
+  obj->task->task->source_code = NULL;
 }
 
 void
-op_error (arg a, object* reg)
+op_error (arg a, object* obj)
 {
   #op=error@
   #length=1@
@@ -1934,7 +1934,7 @@ op_error (arg a, object* reg)
   char* err_msg = slobil_u32_to_u8((uint32_t*) arg1->data,
                                 u32_strlen((uint32_t*) arg1->data));
   
-  do_error(err_msg, reg->task->task);
+  do_error(err_msg, obj->task->task);
   free(err_msg);
   
   if (a.length >= 3)
@@ -1946,13 +1946,13 @@ op_error (arg a, object* reg)
       #requireans=true@
       if (arg2 != NULL)
         {
-          is_error(mpz_get_si(*((mpz_t*) arg2->data)), reg->task->task);
+          is_error(mpz_get_si(*((mpz_t*) arg2->data)), obj->task->task);
         }
     }
 }
 
 void
-op_is_type (arg a, object* reg, const data_type type)
+op_is_type (arg a, object* obj, const data_type type)
 {
   #op=is-Type@
   #length=1@
@@ -1972,72 +1972,72 @@ op_is_type (arg a, object* reg, const data_type type)
       assign_boolean(&d, false);
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_is_integer (arg a, object* reg)
+op_is_integer (arg a, object* obj)
 {
-  op_is_type(a, reg, Integer);
+  op_is_type(a, obj, Integer);
 }
 
 void
-op_is_real (arg a, object* reg)
+op_is_real (arg a, object* obj)
 {
-  op_is_type(a, reg, Real);
+  op_is_type(a, obj, Real);
 }
 
 void
-op_is_string (arg a, object* reg)
+op_is_string (arg a, object* obj)
 {
-  op_is_type(a, reg, String);
+  op_is_type(a, obj, String);
 }
 
 void
-op_is_slot (arg a, object* reg)
+op_is_slot (arg a, object* obj)
 {
-  op_is_type(a, reg, Slot);
+  op_is_type(a, obj, Slot);
 }
 
 void
-op_is_object (arg a, object* reg)
+op_is_object (arg a, object* obj)
 {
-  op_is_type(a, reg, Object);
+  op_is_type(a, obj, Object);
 }
 
 void
-op_is_instruction (arg a, object* reg)
+op_is_instruction (arg a, object* obj)
 {
-  op_is_type(a, reg, Instruction);
+  op_is_type(a, obj, Instruction);
 }
 
 void
-op_is_file (arg a, object* reg)
+op_is_file (arg a, object* obj)
 {
-  op_is_type(a, reg, File);
+  op_is_type(a, obj, File);
 }
 
 void
-op_is_nothing (arg a, object* reg)
+op_is_nothing (arg a, object* obj)
 {
-  op_is_type(a, reg, Nothing);
+  op_is_type(a, obj, Nothing);
 }
 
 void
-op_is_boolean (arg a, object* reg)
+op_is_boolean (arg a, object* obj)
 {
-  op_is_type(a, reg, Boolean);
+  op_is_type(a, obj, Boolean);
 }
 
 void
-op_is_operation (arg a, object* reg)
+op_is_operation (arg a, object* obj)
 {
-  op_is_type(a, reg, Operation);
+  op_is_type(a, obj, Operation);
 }
 
 
 void
-op_open_file (arg a, object* reg)
+op_open_file (arg a, object* obj)
 {
   #op=open-file@
   #length=1@
@@ -2072,19 +2072,19 @@ op_open_file (arg a, object* reg)
   if (f == NULL)
     {
       do_error("File did not open.  Possibly, it does not exist.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   data* d;
 
   assign_file(&d,f);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 
 }
 
 void
-op_read (arg a, object* reg)
+op_read (arg a, object* obj)
 {
   #op=read@
   #length=1@
@@ -2107,11 +2107,11 @@ op_read (arg a, object* reg)
       mpz_init_set_si(m, c);
       assign_int(&d, m);
     }
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 void
-op_read_char (arg a, object* reg)
+op_read_char (arg a, object* obj)
 {
   #op=read-char@  
   #length=1@
@@ -2147,11 +2147,11 @@ op_read_char (arg a, object* reg)
       uint32_t* c32 = slobil_u8_to_u32(c, strlen(c));
       assign_str(&d, c32, 0);
     }
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_close (arg a, object* reg)
+op_close (arg a, object* obj)
 {
   #op=close@
   #length=1@
@@ -2161,19 +2161,19 @@ op_close (arg a, object* reg)
   #type=Slot@
   ##GETARG~$;
 
-  data* f = lookup(reg, ((slot*) arg1->data)->key, 0);
+  data* f = lookup(obj, ((slot*) arg1->data)->key, 0);
 
   if (f == NULL)
     {
       do_error("Slot does not exist.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   if (f->type != File)
     {
       do_error("Slot does not contain a file.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
@@ -2182,12 +2182,12 @@ op_close (arg a, object* reg)
       fclose((FILE*) f->data);
     }
 
-  del(reg, ((slot*) arg1->data)->key, 1, false);
+  del(obj, ((slot*) arg1->data)->key, 1, false);
   
 }
 
 void
-op_or (arg a, object* reg)
+op_or (arg a, object* obj)
 {
   #op=or@
   #length=2@
@@ -2210,11 +2210,11 @@ op_or (arg a, object* reg)
   data* d;
   assign_boolean(&d, check);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_and (arg a, object* reg)
+op_and (arg a, object* obj)
 {
   #op=and@
   #length=2@
@@ -2236,11 +2236,11 @@ op_and (arg a, object* reg)
   data* d;
   assign_boolean(&d, check);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_not (arg a, object* reg)
+op_not (arg a, object* obj)
 {
   #op=not@
   #length=1@
@@ -2260,11 +2260,11 @@ op_not (arg a, object* reg)
       assign_boolean(&d, true);
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_read_line (arg a, object* reg)
+op_read_line (arg a, object* obj)
 {
   #op=read-line@
   #length=1@
@@ -2289,12 +2289,12 @@ op_read_line (arg a, object* reg)
 
 			#data=line@ 
       ##FREE~$;
-      ret_ans(reg,d);
+      ret_ans(obj,d);
     }
   else
     {
       assign_nothing(&d);
-      ret_ans(reg,d);
+      ret_ans(obj,d);
 
       #data=line@ 
       ##FREE~$;
@@ -2303,7 +2303,7 @@ op_read_line (arg a, object* reg)
 }
 
 void
-op_write_string (arg a, object* reg)
+op_write_string (arg a, object* obj)
 {
   #op=write-string@
   #length=2@
@@ -2327,7 +2327,7 @@ op_write_string (arg a, object* reg)
 }
 
 void
-op_write (arg a, object* reg)
+op_write (arg a, object* obj)
 {
   #op=write@
   #length=2@
@@ -2344,7 +2344,7 @@ op_write (arg a, object* reg)
   if ((i >= 255) || (i < 0))
     {
       do_error("Value should be in range [0,255].",
-               reg->task->task);
+               obj->task->task);
       return;
     }
   else
@@ -2355,7 +2355,7 @@ op_write (arg a, object* reg)
 }
 
 void
-op_input (arg a, object* reg)
+op_input (arg a, object* obj)
 {
   #length=1@
   ##CHECK_ARGS~$;
@@ -2372,12 +2372,12 @@ op_input (arg a, object* reg)
                                 
   assign_str(&d, str, 0);
   
-  set(reg, d, ((slot*) arg1->data)->name, 1);
+  set(obj, d, ((slot*) arg1->data)->name, 1);
 
 }
 
 void
-op_shell (arg a, object* reg)
+op_shell (arg a, object* obj)
 {
 
   #op=shell@
@@ -2397,7 +2397,7 @@ op_shell (arg a, object* reg)
   if (f == NULL)
     {
       do_error("Command failed.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
@@ -2423,13 +2423,13 @@ op_shell (arg a, object* reg)
 
   free(cmd);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
   
   
 }
 
 void
-op_link (arg a, object* reg)
+op_link (arg a, object* obj)
 {
   #op=link@
   #length=3@
@@ -2453,7 +2453,7 @@ op_link (arg a, object* reg)
   if (lib == NULL)
     {
       printf("`%'s\n", dlerror());
-      do_error("Library failed to open.", reg->task->task);
+      do_error("Library failed to open.", obj->task->task);
       return;
     }
 
@@ -2463,7 +2463,7 @@ op_link (arg a, object* reg)
   operation new_op = dlsym(lib, op_name);
   if (new_op == NULL)
     {
-      do_error("Error loading function.", reg->task->task);
+      do_error("Error loading function.", obj->task->task);
       dlclose(lib);
       return;
     }
@@ -2472,19 +2472,19 @@ op_link (arg a, object* reg)
                                     u32_strlen((uint32_t*) arg3->data));
   data* d;
   assign_op(&d, new_op, NULL, NULL, 0);
-  set(reg, d, slobil_op_name, 1);
+  set(obj, d, slobil_op_name, 1);
 
-  if (reg->task->task->slobil_ll == NULL)
+  if (obj->task->task->slobil_ll == NULL)
     {
-      reg->task->task->slobil_ll = malloc(sizeof(void*));
+      obj->task->task->slobil_ll = malloc(sizeof(void*));
     }
   else
     {
-      reg->task->task->slobil_ll = realloc(reg->task->task->slobil_ll,
-                                    sizeof(void*)*(reg->task->task->slobil_ll_cnt+1));
+      obj->task->task->slobil_ll = realloc(obj->task->task->slobil_ll,
+                                    sizeof(void*)*(obj->task->task->slobil_ll_cnt+1));
     }
-  reg->task->task->slobil_ll[reg->task->task->slobil_ll_cnt] = lib;
-  reg->task->task->slobil_ll_cnt++;
+  obj->task->task->slobil_ll[obj->task->task->slobil_ll_cnt] = lib;
+  obj->task->task->slobil_ll_cnt++;
 
   free(slobil_op_name);
   free(op_name);
@@ -2492,7 +2492,7 @@ op_link (arg a, object* reg)
 }
 
 void
-op_match (arg a, object* reg)
+op_match (arg a, object* obj)
 {
   #op=match@
   #length=2@
@@ -2525,7 +2525,7 @@ op_match (arg a, object* reg)
   int error = regcomp(&regex, str1, REG_EXTENDED);
   if (error)
     {
-      do_error("Error compiling regular expression.", reg->task->task);
+      do_error("Error compiling objular expression.", obj->task->task);
       return;
     }
 
@@ -2534,13 +2534,13 @@ op_match (arg a, object* reg)
 
 
   data* d;
-  assign_object(&d, NULL, true, reg->task);
+  assign_object(&d, NULL, true, obj->task);
   int i;
   int j;
   char* to_add;
   char* name;
   data* d_str;
-  data* d_reg;
+  data* d_obj;
   int n_matches = 0;
   char* cursor = str2;
   size_t offset;
@@ -2550,7 +2550,7 @@ op_match (arg a, object* reg)
       error = regexec(&regex, cursor, n_groups, matches, 0);
       if (!error)
         {
-          assign_object(&d_reg, NULL, true, reg->task);
+          assign_object(&d_obj, NULL, true, obj->task);
           offset = 0;
           for (i=0; i < n_groups; i++)
             {
@@ -2576,13 +2576,13 @@ op_match (arg a, object* reg)
                   assign_str(&d_str, u32_add, 0);
 
                   name = argument_name(i);
-                  set((object*) d_reg->data, d_str, name, 1);
+                  set((object*) d_obj->data, d_str, name, 1);
                   free(name);
                 }
             }
           n_matches++;
           name = argument_name(n_matches);
-          set((object*) d->data, d_reg, name, 1);
+          set((object*) d->data, d_obj, name, 1);
           free(name);
 
           free(matches);
@@ -2598,12 +2598,12 @@ op_match (arg a, object* reg)
   free(str1);
   free(str2);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   
 }
 
 void
-op_replace (arg a, object* reg)
+op_replace (arg a, object* obj)
 {
   #op=replace@
   #length=3@
@@ -2628,7 +2628,6 @@ op_replace (arg a, object* reg)
   char* str3 = slobil_u32_to_u8((uint32_t*) arg3->data,
                              u32_strlen((uint32_t*) arg3->data));
 
-
   int max_replace = 0;
   if (a.length >= 5)
     {
@@ -2643,14 +2642,13 @@ op_replace (arg a, object* reg)
   if (error)
     {
       do_error("Error compiling regular expression.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   regmatch_t* matches = malloc(sizeof(regmatch_t));
-
   data* d;
-  assign_object(&d, NULL, true, reg->task);
+  assign_object(&d, NULL, true, obj->task);
 
 
   char* cursor = str3;
@@ -2658,6 +2656,7 @@ op_replace (arg a, object* reg)
   /* contains pairs of integers denoting ranges to copy from arg3->data.  After each pair insert string. */
   size_t offset;
   size_t n_ranges = 1;
+
   while (max_replace <= 0 || n_ranges <= max_replace)
     {
       error = regexec(&regex, cursor, 1, &matches[n_ranges-1], 0);
@@ -2729,17 +2728,17 @@ op_replace (arg a, object* reg)
                                       strlen(final));
   
   assign_str(&d, u32_final, 0);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 
-  free(str1);
-  free(str2);
-  free(str3);
+  /* free(str1); */
+  /* free(str2); */
+  /* free(str3); */
   free(matches);
 
 }
 
 void
-op_log (arg a, object* reg)
+op_log (arg a, object* obj)
 {
   #op=log@
   #length=1@
@@ -2759,12 +2758,12 @@ op_log (arg a, object* reg)
       assign_real(&d, log(*((double*) arg1->data)));
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 
 void
-op_exp (arg a, object* reg)
+op_exp (arg a, object* obj)
 {
   #op=exp@
   #length=1@
@@ -2784,11 +2783,11 @@ op_exp (arg a, object* reg)
       assign_real(&d, exp(*((double*) arg1->data)));
     }
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_power (arg a, object* reg)
+op_power (arg a, object* obj)
 {
   #op=power@
   #length=2@
@@ -2824,11 +2823,11 @@ op_power (arg a, object* reg)
 
   assign_real(&d, pow(base,power));
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_change_dir (arg a, object* reg)
+op_change_dir (arg a, object* obj)
 {
   #op=change-dir@
   #length=1@
@@ -2847,7 +2846,7 @@ op_change_dir (arg a, object* reg)
   
   if (error)
     {
-      do_error("Could not change directory.", reg->task->task);
+      do_error("Could not change directory.", obj->task->task);
       return;
     }
 
@@ -2855,7 +2854,7 @@ op_change_dir (arg a, object* reg)
 
 
 void
-op_import (arg a, object* reg)
+op_import (arg a, object* obj)
 {
   #op=import@
   #length=1@
@@ -2886,7 +2885,7 @@ op_import (arg a, object* reg)
           if (d != NULL)
             {
               d = copy_data(d);
-              set(reg, d, (char*) c->name, 1);
+              set(obj, d, (char*) c->name, 1);
             }
           c = c->right;
         }
@@ -2895,12 +2894,12 @@ op_import (arg a, object* reg)
 
 
 void
-op_current_dir (arg a, object* reg)
+op_current_dir (arg a, object* obj)
 {
   char* dir = get_current_dir_name();
   if (dir == NULL)
     {
-      do_error("Error getting current directory.", reg->task->task);
+      do_error("Error getting current directory.", obj->task->task);
       return;
     }
   data* d;
@@ -2910,11 +2909,11 @@ op_current_dir (arg a, object* reg)
   #data=dir@ 
   ##FREE~$; 
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_substring (arg a, object* reg)
+op_substring (arg a, object* obj)
 {
   #op=substring@
   #length=3@
@@ -2946,20 +2945,20 @@ op_substring (arg a, object* reg)
 
   if (mpz_cmp_ui(start,length)>0 || (mpz_cmp_si(start,0) <= 0))
     {
-      do_error("Index out of range.", reg->task->task);
+      do_error("Index out of range.", obj->task->task);
       return;
     }
 
 
   if ((mpz_cmp_ui(end,length)>0) || (mpz_cmp_si(end,0) <= 0))
     {
-      do_error("Index out of range.", reg->task->task);
+      do_error("Index out of range.", obj->task->task);
       return;
     }
 
   if (mpz_cmp(start,end) > 0)
     {
-      do_error("The starting position of the substring is greater than the ending position.", reg->task->task);
+      do_error("The starting position of the substring is greater than the ending position.", obj->task->task);
       return;
     }
 
@@ -2980,7 +2979,7 @@ op_substring (arg a, object* reg)
 
   data* d;
   assign_str(&d, result, 0);
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 
   mpz_clear(start);
   mpz_clear(end);
@@ -2989,32 +2988,32 @@ op_substring (arg a, object* reg)
 }
 
 void
-op_up (arg a, object* reg)
+op_up (arg a, object* obj)
 {
   #op=up@
   #length=1@
   ##CHECK_ARGS~$;
 
-  if (reg->up == NULL)
+  if (obj->up == NULL)
     {
       do_error("Cannot use *up* instruction at top-level object.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   arg a1 = gen_arg(a.length-1,0);
   for (int i=1; i < a.length; i++)
     {
-      a1.arg_array[i-1] = resolve(a.arg_array[i], reg);
+      a1.arg_array[i-1] = resolve(a.arg_array[i], obj);
     }
 
-  compute(a1.arg_array[0], reg->up, a1);
+  compute(a1.arg_array[0], obj->up, a1);
 
-  data* d = lookup(reg->up, reg->task->task->slobil_hash_ans, 0);
+  data* d = lookup(obj->up, obj->task->task->slobil_hash_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
-      ret_ans(reg, d);
+      ret_ans(obj, d);
     }
 
   free_arg(&a1);
@@ -3023,7 +3022,7 @@ op_up (arg a, object* reg)
 }
 
 void
-op_code (arg a, object* reg)
+op_code (arg a, object* obj)
 {
   #op=code@
   #length=1@
@@ -3039,12 +3038,12 @@ op_code (arg a, object* reg)
   
   assign_str(&d, u32code, 0);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
       
 }
 
 void
-op_is_error (arg a, object* reg)
+op_is_error (arg a, object* obj)
 {
   #op=is-error@
   #length=1@
@@ -3054,30 +3053,30 @@ op_is_error (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->slobil_stop_error_threshold;
-  reg->task->task->slobil_stop_error_threshold = 0;
-  execute_0(arg1, reg);
+  int stop_thresh = obj->task->task->slobil_stop_error_threshold;
+  obj->task->task->slobil_stop_error_threshold = 0;
+  execute_0(arg1, obj);
   data* d;
-  assign_boolean(&d, is_error(-1, reg->task->task) > 0 ? true : false);
-  reg->task->task->slobil_stop_error_threshold = stop_thresh;
+  assign_boolean(&d, is_error(-1, obj->task->task) > 0 ? true : false);
+  obj->task->task->slobil_stop_error_threshold = stop_thresh;
 
-  ret_ans(reg, d);
-  is_error(0, reg->task->task);
+  ret_ans(obj, d);
+  is_error(0, obj->task->task);
 
 }
 
 
 void
-op_call (arg a, object* reg)
+op_call (arg a, object* obj)
 {
   #op=call@
   #length=1@
   ##CHECK_ARGS~$;
-  _op_call(a,reg,reg,1);
+  _op_call(a,obj,obj,1);
 }
 
 void
-op_ignore_errors (arg a, object* reg)
+op_ignore_errors (arg a, object* obj)
 {
   #op=ignore-errors@
   #length=1@
@@ -3087,26 +3086,26 @@ op_ignore_errors (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  int stop_thresh = reg->task->task->slobil_stop_error_threshold;
-  reg->task->task->slobil_stop_error_threshold = 0;
-  execute_0(arg1, reg);
-  reg->task->task->slobil_stop_error_threshold = stop_thresh;
+  int stop_thresh = obj->task->task->slobil_stop_error_threshold;
+  obj->task->task->slobil_stop_error_threshold = 0;
+  execute_0(arg1, obj);
+  obj->task->task->slobil_stop_error_threshold = stop_thresh;
 }
 
 void
-op_version (arg a, object* reg)
+op_version (arg a, object* obj)
 {
   data* d;
   uint32_t* u32version = slobil_u8_to_u32(PACKAGE_VERSION,
                                        strlen(PACKAGE_VERSION));
   assign_str(&d, u32version, 0);
 
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   
 }
 
 void
-op_filter (arg a, object* reg)
+op_filter (arg a, object* obj)
 {
   #op=filter@
   #length=2@
@@ -3121,7 +3120,7 @@ op_filter (arg a, object* reg)
   ##GETARG~$;
 
   object* r = (object*) arg1->data;
-  object* result = new_object(reg, r->hash_size, reg->task);
+  object* result = new_object(obj, r->hash_size, obj->task);
   arg a1;
   a1.length = 3;
   a1.free_data = malloc(sizeof(int)*a1.length);
@@ -3151,8 +3150,8 @@ op_filter (arg a, object* reg)
               data* key;
               assign_slot(&key, c->name, c->key);
               a1.arg_array[2] = key;
-              compute(arg2, reg, a1);
-              data* d = lookup(reg, reg->task->task->slobil_hash_ans, 0);
+              compute(arg2, obj, a1);
+              data* d = lookup(obj, obj->task->task->slobil_hash_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3165,12 +3164,12 @@ op_filter (arg a, object* reg)
     }
 
   data* d;
-  assign_object(&d, result, false, reg->task);
-  ret_ans(reg, d);
+  assign_object(&d, result, false, obj->task);
+  ret_ans(obj, d);
 }
 
 void
-op_please (arg a, object* reg)
+op_please (arg a, object* obj)
 {
   #op=please@
 
@@ -3185,17 +3184,17 @@ op_please (arg a, object* reg)
   #type=Instruction@
   ##GETARG~$;
 
-  execute_0(arg1, reg);
+  execute_0(arg1, obj);
 
-  if (is_error(-1, reg->task->task))
+  if (is_error(-1, obj->task->task))
     {
-      is_error(0, reg->task->task);
-      execute_0(arg2, reg);
+      is_error(0, obj->task->task);
+      execute_0(arg2, obj);
     }
 }
 
 void
-op_mod (arg a, object* reg)
+op_mod (arg a, object* obj)
 {
 
   #op=mod@
@@ -3218,11 +3217,11 @@ op_mod (arg a, object* reg)
              *((mpz_t*) arg2->data));
   assign_int(&d, res);
 
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_op (arg a, object* reg)
+op_op (arg a, object* obj)
 {
   #op=op@
 
@@ -3249,11 +3248,11 @@ op_op (arg a, object* reg)
   data* d = malloc(sizeof(data));
   d->data = new_op;
   d->type = Operation;
-  ret_ans(reg, d);
+  ret_ans(obj, d);
 }
 
 void
-op_use (arg a, object* reg)
+op_use (arg a, object* obj)
 {
   #op=use@
   #length=1@
@@ -3277,13 +3276,13 @@ op_use (arg a, object* reg)
   if (f == NULL)
     {
       do_error("File cannot be opened.",
-               reg->task->task);
+               obj->task->task);
       free(fname);
       return;
     }
 
   free(str1);
-  read_outer(f, reg);
+  read_outer(f, obj);
   gzclose(f);
   free(fname);
 }
@@ -3297,7 +3296,7 @@ incr (data* d, mpz_t* shift)
 }
 
 void
-op_incr (arg a, object* reg)
+op_incr (arg a, object* obj)
 {
   #op=incr@
   #length=1@
@@ -3352,7 +3351,7 @@ op_incr (arg a, object* reg)
 }
 
 void
-op_rehash (arg a, object* reg)
+op_rehash (arg a, object* obj)
 {
   #op=rehash@
   #length=1@
@@ -3367,7 +3366,7 @@ op_rehash (arg a, object* reg)
 }
 
 void
-op_clock (arg a, object* reg)
+op_clock (arg a, object* obj)
 {
   #op=clock@
   #length=0@
@@ -3388,11 +3387,11 @@ op_clock (arg a, object* reg)
 
   assign_int(&d, z);
   mpz_clear(z);
-  ret_ans(reg, d);  
+  ret_ans(obj, d);  
 }
 
 void
-op_make_time (arg a, object* reg)
+op_make_time (arg a, object* obj)
 {
   #op=make-time@
   #length=1@
@@ -3409,7 +3408,7 @@ op_make_time (arg a, object* reg)
   mpz_clear(z);
   struct tm* loc = localtime(&t);
 
-  object* r = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
+  object* r = new_object(obj, SLOBIL_HASH_SIZE, obj->task);
   data* d;
 
 
@@ -3448,13 +3447,13 @@ op_make_time (arg a, object* reg)
   mpz_clear(z);
   set(r, d, "day-of-week", 0);
 
-  assign_object(&d, r, false, reg->task);
-  ret_ans(reg, d);
+  assign_object(&d, r, false, obj->task);
+  ret_ans(obj, d);
   
 }
 
 void
-op_make_clock (arg a, object* reg)
+op_make_clock (arg a, object* obj)
 {
   #op=make-clock@
   #length=1@
@@ -3472,7 +3471,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("milliseconds"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /milliseconds.", reg->task->task);
+      do_error("No Integer data at /milliseconds.", obj->task->task);
       return;
     }
 
@@ -3483,7 +3482,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("seconds"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /seconds.", reg->task->task);
+      do_error("No Integer data at /seconds.", obj->task->task);
       return;
     }
 
@@ -3492,7 +3491,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("minute"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /minute.", reg->task->task);
+      do_error("No Integer data at /minute.", obj->task->task);
       return;
     }
 
@@ -3501,7 +3500,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("hour"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /hour.", reg->task->task);
+      do_error("No Integer data at /hour.", obj->task->task);
       return;
     }
 
@@ -3510,7 +3509,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("day"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /day.", reg->task->task);
+      do_error("No Integer data at /day.", obj->task->task);
       return;
     }
 
@@ -3519,7 +3518,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("month"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /month.", reg->task->task);
+      do_error("No Integer data at /month.", obj->task->task);
       return;
     }
 
@@ -3529,7 +3528,7 @@ op_make_clock (arg a, object* reg)
   d = get(r, hash_str("year"), 0);
   if (d == NULL || (d->type != Integer))
     {
-      do_error("No Integer data at /year.", reg->task->task);
+      do_error("No Integer data at /year.", obj->task->task);
       return;
     }
 
@@ -3543,13 +3542,13 @@ op_make_clock (arg a, object* reg)
   mpz_t z;
   mpz_init_set_si(z, time_sec);
   assign_int(&d, z);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
        
 
 void
-op_task (arg a, object* reg)
+op_task (arg a, object* obj)
 {
   #op=task@
   #length=2@
@@ -3598,12 +3597,12 @@ op_task (arg a, object* reg)
   d->type = Task;
   d->data = t;
 
-  set(reg, d, ((slot*) arg1->data)->name, 1);
+  set(obj, d, ((slot*) arg1->data)->name, 1);
   
 }
 
 void
-op_run_task (arg a, object* reg)
+op_run_task (arg a, object* obj)
 {
   #op=run-task@
   #length=1@
@@ -3615,7 +3614,7 @@ op_run_task (arg a, object* reg)
 
   if (((task*) arg1->data)->thread != NULL)
     {
-      do_error("Task already running.", reg->task->task);
+      do_error("Task already running.", obj->task->task);
       return;
     }
 
@@ -3623,7 +3622,7 @@ op_run_task (arg a, object* reg)
   int ret = pthread_create(pt, NULL, run_task_thread, arg1);
   if (ret)
     {
-      do_error("Thread creation failed.", reg->task->task);
+      do_error("Thread creation failed.", obj->task->task);
     }
   else
     {
@@ -3632,7 +3631,7 @@ op_run_task (arg a, object* reg)
 }
 
 void
-op_queue (arg a, object* reg)
+op_queue (arg a, object* obj)
 {
   #op=queue@
   #length=2@
@@ -3659,7 +3658,7 @@ op_queue (arg a, object* reg)
     }
   else
     {
-      t = reg->task;
+      t = obj->task;
     }
 
 
@@ -3667,7 +3666,7 @@ op_queue (arg a, object* reg)
   
   if (t->queued_instruction == NULL)
     {
-      do_error("Task has no queue.  Data cannot be queued.", reg->task->task);
+      do_error("Task has no queue.  Data cannot be queued.", obj->task->task);
     }
   else
     {
@@ -3679,7 +3678,7 @@ op_queue (arg a, object* reg)
 }
 
 void
-op_accept (arg a, object* reg)
+op_accept (arg a, object* obj)
 {
   #op=accept@
   #length=1@
@@ -3689,11 +3688,11 @@ op_accept (arg a, object* reg)
   #type=Slot@
   ##GETARG~$;
 
-  if (reg->task->queued_instruction==NULL)
+  if (obj->task->queued_instruction==NULL)
     {
       /* We are in the main task. */
       do_error("Use <accept-or> from the main task.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
   
@@ -3707,14 +3706,14 @@ op_accept (arg a, object* reg)
     }
   else
     {
-      t = reg->task;
+      t = obj->task;
     }
 
   pthread_mutex_lock(&t->lock);
   if (t->queued_instruction == NULL)
     {
       do_error("Task has no queue, cannot accept data.",
-               reg->task->task);
+               obj->task->task);
       pthread_mutex_unlock(&t->lock);
       return;
     }
@@ -3735,12 +3734,12 @@ op_accept (arg a, object* reg)
 
   del(t->queued_instruction, ((slot*) arg1->data)->key,
       0, false);  
-  ret_ans(reg, d);
+  ret_ans(obj, d);
   pthread_mutex_unlock(&t->lock);
 }
 
 void
-op_select (arg a, object* reg)
+op_select (arg a, object* obj)
 {
   #op=select@
   #length=1@
@@ -3773,18 +3772,18 @@ op_select (arg a, object* reg)
   if (hash_idx != action_idx)
     {
       do_error("Number of locations to select should match the number of actions to take on matching.",
-               reg->task->task);
+               obj->task->task);
       return;
     }
 
   data* d = NULL;
-  task* t = reg->task;
+  task* t = obj->task;
 
   pthread_mutex_lock(&t->lock);
   if (t->queued_instruction == NULL)
     {
       do_error("Task has no queue, cannot accept data.",
-               reg->task->task);
+               obj->task->task);
       pthread_mutex_unlock(&t->lock);
       return;
     }
@@ -3803,7 +3802,7 @@ op_select (arg a, object* reg)
             {
               idx = i;
               d = copy_data(d);
-              ret_ans(reg,d);
+              ret_ans(obj,d);
               del(t->queued_instruction,
                   ((slot*) hashes[idx]->data)->key,
                   1, false);
@@ -3818,12 +3817,12 @@ op_select (arg a, object* reg)
     }
 
   pthread_mutex_unlock(&t->lock);
-  execute_0(actions[idx], reg);
+  execute_0(actions[idx], obj);
   
 }
 
 void
-op_accept_or (arg a, object* reg)
+op_accept_or (arg a, object* obj)
 {
   #op=accept-or@
   #length=2@
@@ -3847,7 +3846,7 @@ op_accept_or (arg a, object* reg)
     }
   else
     {
-      t = reg->task;
+      t = obj->task;
     }
 
   pthread_mutex_lock(&t->lock);
@@ -3858,20 +3857,20 @@ op_accept_or (arg a, object* reg)
 
   if (d==NULL)
     {
-      execute_0(arg2, reg);
+      execute_0(arg2, obj);
     }
   else
     {
       pthread_mutex_lock(&t->lock);
       del(t->queued_instruction, ((slot*) arg1->data)->key,
           0, false);
-      ret_ans(reg,d);
+      ret_ans(obj,d);
       pthread_mutex_unlock(&t->lock);
     }
 }
 
 void
-op_rand (arg a, object* reg)
+op_rand (arg a, object* obj)
 {
   #op=rand@
 
@@ -3886,10 +3885,10 @@ op_rand (arg a, object* reg)
   double r = ((double) rand()) / ((double) RAND_MAX);
   data* d;
   assign_real(&d, r);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
-void op_floor (arg a, object* reg)
+void op_floor (arg a, object* obj)
 {
   #op=floor@
   #length=1@
@@ -3905,10 +3904,10 @@ void op_floor (arg a, object* reg)
   mpz_set_si(res, r);
   data* d;
   assign_int(&d, res);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
-void op_ceiling (arg a, object* reg)
+void op_ceiling (arg a, object* obj)
 {
   #op=ceiling@
   #length=1@
@@ -3924,11 +3923,11 @@ void op_ceiling (arg a, object* reg)
   mpz_set_si(res, r);
   data* d;
   assign_int(&d, res);
-  ret_ans(reg,d);
+  ret_ans(obj,d);
 }
 
 void
-op_interpreter (arg a, object* reg)
+op_interpreter (arg a, object* obj)
 {
   #op=interpreter@
   #length=0@
@@ -3942,19 +3941,19 @@ op_interpreter (arg a, object* reg)
       d1 = a.arg_array[i];
       if (d1->type != Slot)
         {
-          do_error("Expected a slot.", reg->task->task);
+          do_error("Expected a slot.", obj->task->task);
           return;
         }
 
-      d2 = resolve(a.arg_array[i+1], reg);
+      d2 = resolve(a.arg_array[i+1], obj);
       d2 = copy_data(d2);
-      set(reg->task->task->slobil_options,
+      set(obj->task->task->slobil_options,
           d2, ((slot*) d1->data)->name, 1);
     }
 }
 
 void
-op_build (arg a, object* reg)
+op_build (arg a, object* obj)
 {
   #op=build@
   #length=2@
@@ -3991,7 +3990,7 @@ op_build (arg a, object* reg)
 
   
 void
-add_basic_ops (object* reg)
+add_basic_ops (object* obj)
 {
   data* d;
 
@@ -4000,68 +3999,68 @@ add_basic_ops (object* reg)
   /** Creation **/
 
   assign_op(&d, op_object, NULL, NULL, 0);
-  set(reg,d,"object",1);
+  set(obj,d,"object",1);
 
   assign_op(&d, op_list, NULL, NULL, 0);
-  set(reg,d,"list",1);
+  set(obj,d,"list",1);
 
   assign_op(&d, op_range, NULL, NULL, 0);
-  set(reg,d,"range",1);
+  set(obj,d,"range",1);
 
   assign_op(&d, op_new, NULL, NULL, 0);
-  set(reg, d, "new", 1);
+  set(obj, d, "new", 1);
   
   /** Insert, Move, and Remove **/
   
   assign_op(&d, op_set, NULL, NULL, 0);
-  set(reg, d, "set",1);
+  set(obj, d, "set",1);
 
   assign_op(&d, op_move, NULL, NULL, 0);
-  set(reg,d,"move",1);
+  set(obj,d,"move",1);
 
   assign_op(&d, op_delete, NULL, NULL, 0);
-  set(reg,d,"delete",1);
+  set(obj,d,"delete",1);
 
   /** Access Data **/
 
   assign_op(&d, op_get, NULL, NULL, 0);
-  set(reg,d,"get",1);
+  set(obj,d,"get",1);
 
   assign_op(&d, op_exist, NULL, NULL, 0);
-  set(reg,d,"exist",1);
+  set(obj,d,"exist",1);
 
   assign_op(&d, op_import, NULL, NULL, 0);
-  set(reg,d,"import",1);
+  set(obj,d,"import",1);
 
   assign_op(&d, op_filter, NULL, NULL, 0);
-  set(reg,d,"filter",1);
+  set(obj,d,"filter",1);
 
   /** Apply Operations **/
 
   assign_op(&d, op_do, NULL, NULL, 0);
-  set(reg,d,"do",1);
+  set(obj,d,"do",1);
   
   assign_op(&d, op_collapse, NULL, NULL, 0);
-  set(reg,d,"collapse",1);
+  set(obj,d,"collapse",1);
 
   /** Execute Code in Object **/
 
   assign_op(&d, op_in, NULL, NULL, 0);
-  set(reg,d,"in",1);
+  set(obj,d,"in",1);
 
   assign_op(&d, op_up, NULL, NULL, 0);
-  set(reg,d,"up",1);
+  set(obj,d,"up",1);
 
   /** Test if object **/
   
   assign_op(&d, op_is_object, NULL, NULL, 0);
-  set(reg,d,"is-object",1);
+  set(obj,d,"is-object",1);
 
 
   /** Technical **/
   
   assign_op(&d, op_rehash, NULL, NULL, 0);
-  set(reg,d,"rehash",1);
+  set(obj,d,"rehash",1);
 
 
   /* Numeric operations */
@@ -4069,155 +4068,155 @@ add_basic_ops (object* reg)
   /** Arithmetic **/
   
   assign_op(&d, op_add, NULL, NULL, 0);
-  set(reg,d,"add",1);
+  set(obj,d,"add",1);
 
   assign_op(&d, op_mul, NULL, NULL, 0);
-  set(reg,d,"mul",1);
+  set(obj,d,"mul",1);
 
   assign_op(&d, op_sub, NULL, NULL, 0);
-  set(reg,d,"sub",1);
+  set(obj,d,"sub",1);
 
   assign_op(&d, op_div, NULL, NULL, 0);
-  set(reg,d,"div",1);
+  set(obj,d,"div",1);
 
   assign_op(&d, op_mod, NULL, NULL, 0);
-  set(reg,d,"mod",1);
+  set(obj,d,"mod",1);
 
   assign_op(&d, op_incr, NULL, NULL, 0);
-  set(reg,d,"incr",1);
+  set(obj,d,"incr",1);
 
   /** Comparison **/
 
 
   assign_op(&d, op_gt, NULL, NULL, 0);
-  set(reg,d,"gt",1);
+  set(obj,d,"gt",1);
 
   assign_op(&d, op_lt, NULL, NULL, 0);
-  set(reg,d,"lt",1);
+  set(obj,d,"lt",1);
 
   assign_op(&d, op_eq, NULL, NULL, 0);
-  set(reg,d,"eq",1);
+  set(obj,d,"eq",1);
 
   assign_op(&d, op_lt_eq, NULL, NULL, 0);
-  set(reg,d,"lt-eq",1);
+  set(obj,d,"lt-eq",1);
 
   assign_op(&d, op_gt_eq, NULL, NULL, 0);
-  set(reg,d,"gt-eq",1);
+  set(obj,d,"gt-eq",1);
 
   /** Conversion **/
 
   assign_op(&d, op_to_number, NULL, NULL, 0);
-  set(reg,d,"to-number",1);
+  set(obj,d,"to-number",1);
 
   assign_op(&d, op_to_real, NULL, NULL, 0);
-  set(reg,d,"to-real",1);
+  set(obj,d,"to-real",1);
 
   /** Test if type **/
 
   assign_op(&d, op_is_integer, NULL, NULL, 0);
-  set(reg,d,"is-integer",1);
+  set(obj,d,"is-integer",1);
 
   assign_op(&d, op_is_real, NULL, NULL, 0);
-  set(reg,d,"is-real",1);
+  set(obj,d,"is-real",1);
 
   /** Common math operations **/
   assign_op(&d, op_log, NULL, NULL, 0);
-  set(reg,d,"log",1);
+  set(obj,d,"log",1);
 
   assign_op(&d, op_exp, NULL, NULL, 0);
-  set(reg,d,"exp",1);
+  set(obj,d,"exp",1);
 
   assign_op(&d, op_power, NULL, NULL, 0);
-  set(reg,d,"power",1);
+  set(obj,d,"power",1);
 
   assign_op(&d, op_floor, NULL, NULL, 0);
-  set(reg,d, "floor",1);
+  set(obj,d, "floor",1);
 
   assign_op(&d, op_ceiling, NULL, NULL, 0);
-  set(reg,d, "ceiling",1);
+  set(obj,d, "ceiling",1);
 
   /* Boolean operations */
 
   assign_op(&d, op_and, NULL, NULL, 0);
-  set(reg,d,"and",1);
+  set(obj,d,"and",1);
 
   assign_op(&d, op_or, NULL, NULL, 0);
-  set(reg,d,"or",1);
+  set(obj,d,"or",1);
 
   assign_op(&d, op_not, NULL, NULL, 0);
-  set(reg,d,"not",1);
+  set(obj,d,"not",1);
 
   assign_op(&d, op_is_boolean, NULL, NULL, 0);
-  set(reg,d,"is-boolean",1);
+  set(obj,d,"is-boolean",1);
 
   /* Instruction operations */
 
   assign_op(&d, op_code, NULL, NULL, 0);
-  set(reg,d,"code",1);
+  set(obj,d,"code",1);
 
   assign_op(&d, op_call, NULL, NULL, 0);
-  set(reg,d,"call",1);
+  set(obj,d,"call",1);
 
   assign_op(&d, op_op, NULL, NULL, 0);
-  set(reg,d,"op",1);
+  set(obj,d,"op",1);
 
   assign_op(&d, op_is_instruction, NULL, NULL, 0);
-  set(reg,d,"is-instruction",1);
+  set(obj,d,"is-instruction",1);
 
   assign_op(&d, op_is_operation, NULL, NULL, 0);
-  set(reg,d,"is-operation",1);
+  set(obj,d,"is-operation",1);
 
   /* String operations */
 
   /** Access, search, and modify **/
 
   assign_op(&d, op_substring, NULL, NULL, 0);
-  set(reg,d,"substring",1);
+  set(obj,d,"substring",1);
 
   assign_op(&d, op_match, NULL, NULL, 0);
-  set(reg,d,"match",1);
+  set(obj,d,"match",1);
 
   assign_op(&d, op_replace, NULL, NULL, 0);
-  set(reg,d,"replace",1);
+  set(obj,d,"replace",1);
 
   /** String Properties **/
   
   assign_op(&d, op_length, NULL, NULL, 0);
-  set(reg,d,"length",1);
+  set(obj,d,"length",1);
 
   /** String Comparison **/
   
   assign_op(&d, op_string_eq, NULL, NULL, 0);
-  set(reg,d,"string-eq",1);
+  set(obj,d,"string-eq",1);
 
   assign_op(&d, op_string_gt, NULL, NULL, 0);
-  set(reg,d,"string-gt",1);
+  set(obj,d,"string-gt",1);
   
   assign_op(&d, op_string_lt, NULL, NULL, 0);
-  set(reg,d,"string-lt",1);
+  set(obj,d,"string-lt",1);
 
   assign_op(&d, op_char_eq, NULL, NULL, 0);
-  set(reg,d,"char-eq",1);
+  set(obj,d,"char-eq",1);
 
   /** Combine Strings **/
 
   assign_op(&d, op_combine, NULL, NULL, 0);
-  set(reg,d,"combine",1);
+  set(obj,d,"combine",1);
 
   /** Convert to Strings **/
 
   assign_op(&d, op_to_string, NULL, NULL, 0);
-  set(reg,d,"to-string",1);
+  set(obj,d,"to-string",1);
 
   /** Test if string **/
 
   assign_op(&d, op_is_string, NULL, NULL, 0);
-  set(reg,d,"is-string",1);
+  set(obj,d,"is-string",1);
 
   /** Strings from User Input **/
 
   assign_op(&d, op_input, NULL, NULL, 0);
-  set(reg,d,"input",1);
+  set(obj,d,"input",1);
 
 
   /* Environment operations */
@@ -4225,107 +4224,107 @@ add_basic_ops (object* reg)
   /** Modify the /ans slot **/
 
   assign_op(&d, op_answer, NULL, NULL, 0);
-  set(reg,d,"answer",1);
+  set(obj,d,"answer",1);
 
   assign_op(&d, op_sit, NULL, NULL, 0);
-  set(reg,d,"sit",1);
+  set(obj,d,"sit",1);
 
   /** Exit SLOBIL **/
   
   assign_op(&d, op_exit, NULL, NULL, 0);
-  set(reg,d,"exit",1);
+  set(obj,d,"exit",1);
 
   /** Print output **/
   
   assign_op(&d, op_print, NULL, NULL, 0);
-  set(reg,d,"print",1);
+  set(obj,d,"print",1);
 
   /** Input and output files and state **/
 
   assign_op(&d, op_save, NULL, NULL, 0);
-  set(reg,d,"save",1);
+  set(obj,d,"save",1);
 
   assign_op(&d, op_load, NULL, NULL, 0);
-  set(reg,d,"load",1);
+  set(obj,d,"load",1);
 
   assign_op(&d, op_output_code, NULL, NULL, 0);
-  set(reg,d,"output-code",1);
+  set(obj,d,"output-code",1);
 
   assign_op(&d, op_clear_code, NULL, NULL, 0);
-  set(reg,d,"clear-code",1);
+  set(obj,d,"clear-code",1);
 
   assign_op(&d, op_source, NULL, NULL, 0);
-  set(reg,d,"source",1);
+  set(obj,d,"source",1);
 
   /** Error handling **/
 
   assign_op(&d, op_error, NULL, NULL, 0);
-  set(reg,d,"error",1);
+  set(obj,d,"error",1);
 
   assign_op(&d, op_ignore_errors, NULL, NULL, 0);
-  set(reg,d,"ignore-errors",1);
+  set(obj,d,"ignore-errors",1);
 
 
   assign_op(&d, op_is_error, NULL, NULL, 0);
-  set(reg,d,"is-error",1);
+  set(obj,d,"is-error",1);
 
   /** Version **/
 
   assign_op(&d, op_version, NULL, NULL, 0);
-  set(reg,d,"version",1);
+  set(obj,d,"version",1);
 
   /* Slot operations */
 
   /** Operations on "list" slots **/
   assign_op(&d, op_next, NULL, NULL, 0);
-  set(reg,d,"next",1);
+  set(obj,d,"next",1);
 
   assign_op(&d, op_previous, NULL, NULL, 0);
-  set(reg,d,"previous",1);
+  set(obj,d,"previous",1);
 
   assign_op(&d, op_last, NULL, NULL, 0);
-  set(reg,d,"last",1);
+  set(obj,d,"last",1);
 
   /** Convert to slot **/
 
   assign_op(&d, op_to_slot, NULL, NULL, 0);
-  set(reg,d,"to-slot",1);
+  set(obj,d,"to-slot",1);
 
   /** Slot Comparison **/
 
   assign_op(&d, op_slot_eq, NULL, NULL, 0);
-  set(reg,d,"slot-eq",1);
+  set(obj,d,"slot-eq",1);
 
   /** Test if slot **/
 
   assign_op(&d, op_is_slot, NULL, NULL, 0);
-  set(reg,d,"is-slot",1);
+  set(obj,d,"is-slot",1);
 
   /* File operations */
 
   assign_op(&d, op_is_file, NULL, NULL, 0);
-  set(reg,d,"is-file",1);
+  set(obj,d,"is-file",1);
 
   assign_op(&d, op_open_file, NULL, NULL, 0);
-  set(reg,d,"open-file",1);
+  set(obj,d,"open-file",1);
 
   assign_op(&d, op_read_char, NULL, NULL, 0);
-  set(reg,d,"read-char",1);
+  set(obj,d,"read-char",1);
 
   assign_op(&d, op_read, NULL, NULL, 0);
-  set(reg,d,"read",1);
+  set(obj,d,"read",1);
 
   assign_op(&d, op_close, NULL, NULL, 0);
-  set(reg,d,"close",1);
+  set(obj,d,"close",1);
 
   assign_op(&d, op_read_line, NULL, NULL, 0);
-  set(reg,d,"read-line",1);
+  set(obj,d,"read-line",1);
   
   assign_op(&d, op_write, NULL, NULL, 0);
-  set(reg,d,"write",1);
+  set(obj,d,"write",1);
 
   assign_op(&d, op_write_string, NULL, NULL, 0);
-  set(reg,d,"write-string",1);
+  set(obj,d,"write-string",1);
 
   /* System operations */
 
@@ -4334,88 +4333,88 @@ add_basic_ops (object* reg)
 
 
   assign_op(&d, op_shell, NULL, NULL, 0);
-  set(reg,d,"shell",1);
+  set(obj,d,"shell",1);
 
   assign_op(&d, op_change_dir, NULL, NULL, 0);
-  set(reg,d,"change-dir",1);
+  set(obj,d,"change-dir",1);
 
   assign_op(&d, op_current_dir, NULL, NULL, 0);
-  set(reg,d,"current-dir",1);
+  set(obj,d,"current-dir",1);
 
 
 
   /** Time operations **/
   
   assign_op(&d, op_clock, NULL, NULL, 0);
-  set(reg,d,"clock",1);
+  set(obj,d,"clock",1);
 
   assign_op(&d, op_make_time, NULL, NULL, 0);
-  set(reg,d,"make-time",1);
+  set(obj,d,"make-time",1);
 
   assign_op(&d, op_make_clock, NULL, NULL, 0);
-  set(reg,d,"make-clock",1);
+  set(obj,d,"make-clock",1);
 
   /** Random operations **/
 
   assign_op(&d, op_rand, NULL, NULL, 0);
-  set(reg, d, "rand", 1);
+  set(obj, d, "rand", 1);
 
   /* Nothing operations */
 
   assign_op(&d, op_is_nothing, NULL, NULL, 0);
-  set(reg,d,"is-nothing",1);
+  set(obj,d,"is-nothing",1);
 
 
   /* Task operations */
 
   assign_op(&d, op_task, NULL, NULL, 0);
-  set(reg,d,"task",1);
+  set(obj,d,"task",1);
 
   assign_op(&d, op_run_task, NULL, NULL, 0);
-  set(reg,d,"run-task",1);
+  set(obj,d,"run-task",1);
 
   assign_op(&d, op_queue, NULL, NULL, 0);
-  set(reg,d,"queue",1);
+  set(obj,d,"queue",1);
 
   assign_op(&d, op_accept, NULL, NULL, 0);
-  set(reg,d,"accept",1);
+  set(obj,d,"accept",1);
 
   assign_op(&d, op_select, NULL, NULL, 0);
-  set(reg,d,"select",1);
+  set(obj,d,"select",1);
 
   assign_op(&d, op_accept_or, NULL, NULL, 0);
-  set(reg,d,"accept-or",1);
+  set(obj,d,"accept-or",1);
 
   /* Control flow operations */
 
   assign_op(&d, op_if, NULL, NULL, 0);
-  set(reg,d,"if",1);
+  set(obj,d,"if",1);
 
   assign_op(&d, op_while, NULL, NULL, 0);
-  set(reg,d,"while",1);
+  set(obj,d,"while",1);
   
   assign_op(&d, op_repeat, NULL, NULL, 0);
-  set(reg,d,"repeat",1);
+  set(obj,d,"repeat",1);
   
   assign_op(&d, op_please, NULL, NULL, 0);
-  set(reg,d,"please",1);
+  set(obj,d,"please",1);
 
 
   /* Interpreter options */
 
   assign_op(&d, op_interpreter, NULL, NULL, 0);
-  set(reg, d, "interpreter", 1);
+  set(obj, d, "interpreter", 1);
 
   /* Package build */
 
   assign_op(&d, op_build, NULL, NULL, 0);
-  set(reg, d, "build", 1);
+  set(obj, d, "build", 1);
 
   assign_op(&d, op_use, NULL, NULL, 0);
-  set(reg,d,"use",1);
+  set(obj,d,"use",1);
 
   assign_op(&d, op_link, NULL, NULL, 0);
-  set(reg,d,"link",1);
+  set(obj,d,"link",1);
 
   
 }
