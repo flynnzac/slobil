@@ -262,6 +262,7 @@ struct instruction
 {
   statement* stmt;
   char* code;
+  char* help;
   bool being_called;
 };
 
@@ -422,7 +423,8 @@ void
 relabel (object* reg, const char* name, const char* new_name);
 
 void
-assign_instr (data** d, statement* s, const char* code);
+assign_instr (data** d, statement* s, const char* code,
+              const char* help);
 
 struct parser_state
 fresh_state ();

@@ -3988,7 +3988,49 @@ op_build (arg a, object* obj)
   
 }
 
-  
+void
+op_set_help (arg a, object* obj)
+{
+  #op=set-help@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Instruction@
+  ##GETARG~$;
+
+  #num=2@
+  #type=String@
+  ##GETARG~$;
+
+  char* help_text = slobil_u32_to_u8((uint32_t*) arg2->data,
+                                     u32_strlen((uint32_t*) arg2->data));
+
+  if (((instruction*) arg1->data)->help != NULL)
+    {
+      free(((instruction*) arg1->data)->help);
+    }
+
+  ((instruction*) arg1->data)->help = help_text;
+
+}
+
+void
+op_help (arg a, object* obj)
+{
+  #op=help@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Instruction@
+  ##GETARG~$;
+
+  printf("\n%s\n", ((instruction*) arg1->data)->help);
+
+}
+
+
 void
 add_basic_ops (object* obj)
 {
@@ -4166,6 +4208,12 @@ add_basic_ops (object* obj)
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(obj,d,"is-operation",1);
 
+  assign_op(&d, op_set_help, NULL, NULL, 0);
+  set(obj,d,"set-help",1);
+
+  assign_op(&d, op_help, NULL, NULL, 0);
+  set(obj,d,"help",1);
+  
   /* String operations */
 
   /** Access, search, and modify **/

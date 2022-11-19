@@ -121,6 +121,12 @@ save_content (gzFile f, content* reg)
               gzfwrite(&size, sizeof(uint64_t), 1, f);
               gzfwrite(((instruction*) reg->value->data)->code, sizeof(char),
                        strlen(((instruction*) reg->value->data)->code), f);
+              size = (uint64_t) strlen8(((instruction*) reg->value->data)->help,
+                                        CHAR_BIT);
+              size = htole64(size);
+              gzfwrite(&size, sizeof(uint64_t), 1, f);
+              gzfwrite(((instruction*) reg->value->data)->help, sizeof(char),
+                       strlen(((instruction*) reg->value->data)->help), f);
               break;
             case Operation:
               {
@@ -195,6 +201,7 @@ read_object (gzFile f, object* reg)
   parser_state state;
   FILE* f_sub;
   char* code;
+  char* help;
   int complete;
   while (gzfread(type_cache, sizeof(uint32_t), 1, f))
     {
@@ -295,12 +302,26 @@ read_object (gzFile f, object* reg)
               free(ending);
             }
 
+          free(cache);
+
+          cache = malloc(sizeof(uint64_t));
+          gzfread(cache, sizeof(uint64_t), 1, f);
+          size = le64toh(*((uint64_t*) cache));
+          free(cache);
+
+          cache = malloc(BYT(size)+1);
+          gzfread(cache, 1, BYT(size), f);
+          ((char*) cache)[BYT(size)] = '\0';
+
+          help = malloc(BYT(size)+1);
+          strcpy(help, (char*) cache);
 
           d = new_data();
           d->type = Instruction;
           d->data = malloc(sizeof(instruction));
           ((instruction*) d->data)->stmt = stmt;
           ((instruction*) d->data)->code = code;
+          ((instruction*) d->data)->help = help;
           stmt = NULL;
           free(cache);
           break;

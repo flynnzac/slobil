@@ -92,7 +92,7 @@ assign_str (data** d, const uint32_t* str, int copy)
  * @param code the code the instruction runs as a UTF-8 string
  */
 void
-assign_instr (data** d, statement* s, const char* code)
+assign_instr (data** d, statement* s, const char* code, const char* help)
 {
   *d = new_data();
   (*d)->type = Instruction;
@@ -100,6 +100,8 @@ assign_instr (data** d, statement* s, const char* code)
   ((instruction*) (*d)->data)->stmt = copy_statement(s);
   ((instruction*) (*d)->data)->code = malloc(sizeof(char)*(strlen(code)+1));
   strcpy(((instruction*) (*d)->data)->code, code);
+    ((instruction*) (*d)->data)->help = malloc(sizeof(char)*(strlen(help)+1));
+  strcpy(((instruction*) (*d)->data)->help, help);
   ((instruction*) (*d)->data)->being_called = false;
 }
 
@@ -466,7 +468,8 @@ copy_data (data* d_in)
       break;
     case Instruction:
       assign_instr(&d, ((instruction*) d_in->data)->stmt,
-                   ((instruction*) d_in->data)->code);
+                   ((instruction*) d_in->data)->code,
+                   ((instruction*) d_in->data)->help);
       break;
     case Expression:
       assign_expression(&d, ((instruction*) d_in->data)->stmt);

@@ -254,7 +254,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                       switch (state->open_paren)
                         {
                         case '(':
-                          assign_instr(&d, NULL, state->buffer);
+                          assign_instr(&d, NULL, state->buffer, "");
                           ((instruction*) d->data)->stmt = sub_stmt;
                           e = add_literal_argument(&head, e, d);
                           break;
