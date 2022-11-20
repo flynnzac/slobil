@@ -54,8 +54,7 @@ print_data (data* d, print_settings settings)
       printf("%f", *((double*) d->data));
       break;
     case Object:
-      printf("an Object with:\n");
-      print_object((object*) d->data);
+      print_object((object*) d->data, true);
       break;
     case Instruction:
       printf("( %s )", ((instruction*) d->data)->code);
@@ -113,14 +112,28 @@ print_data (data* d, print_settings settings)
 }
 
 void
-print_object (object* reg)
+print_object (object* obj, bool initial)
 {
-  if (reg == NULL)
+  if (obj == NULL)
     return;
-  
-  for (int i = 0; i < reg->hash_size; i++)
+
+  if (obj->inherit != NULL)
     {
-      content* cur = reg->objects[i];
+      printf("->Inherits:\n");
+      print_object(obj->inherit, false);
+    }
+
+  if (initial)
+    {
+      if (obj->inherit != NULL)
+        {
+          printf("\n");
+        }
+      printf("an Object with:\n");
+    }
+  for (int i = 0; i < obj->hash_size; i++)
+    {
+      content* cur = obj->objects[i];
       if (cur == NULL || is_init_content(cur))
         continue;
       cur = tail(cur);

@@ -3996,22 +3996,32 @@ op_set_help (arg a, object* obj)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Instruction@
+	#type=`(Instruction|Operation)'@
   ##GETARG~$;
 
   #num=2@
   #type=String@
   ##GETARG~$;
 
+  data* instr;
+  if (arg1->type == Operation)
+    {
+      if (((op_wrapper*) arg1->data)->instr == NULL)
+        {
+          do_error("Base operations cannot have help text.",
+                   obj->task->task);
+          return;
+        }
+      instr = ((op_wrapper*) arg1->data)->instr;
+    }
+  else
+    {
+      instr = arg1;
+    }
   char* help_text = slobil_u32_to_u8((uint32_t*) arg2->data,
                                      u32_strlen((uint32_t*) arg2->data));
 
-  if (((instruction*) arg1->data)->help != NULL)
-    {
-      free(((instruction*) arg1->data)->help);
-    }
-
-  ((instruction*) arg1->data)->help = help_text;
+  ((instruction*) instr->data)->help = help_text;
 
 }
 
@@ -4023,11 +4033,23 @@ op_help (arg a, object* obj)
   ##CHECK_ARGS~$;
 
   #num=1@
-  #type=Instruction@
+	#type=`(Operation|Instruction)'@
   ##GETARG~$;
 
-  printf("\n%s\n", ((instruction*) arg1->data)->help);
+  data* instr;
+  if (arg1->type == Operation)
+    {
+      instr = ((op_wrapper*) arg1->data)->instr;
+    }
+  else
+    {
+      instr = arg1;
+    }
 
+  if (((instruction*) instr->data)->help != NULL)
+    {
+      printf("\n%s\n", ((instruction*) instr->data)->help);
+    }
 }
 
 

@@ -390,7 +390,7 @@ bool
 is_whitespace (const char c);
 
 void
-print_object (object* reg);
+print_object (object* reg, bool initial);
 
 char*
 append_nl (char* str);

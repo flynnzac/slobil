@@ -68,7 +68,7 @@ TESTS += test/unit/test_copy
 
 
 lib_LTLIBRARIES = libslobil.la
-libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/register.c src/registry.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
+libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/slot.c src/object.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
 
 libslobil_la_SOURCES += src/operator.pshm
 

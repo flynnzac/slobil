@@ -48,6 +48,68 @@ nbytes (size_t nbits)
   return (size_t) ceil(((double) nbits) / CHAR_BIT);
 }
 
+uint8_t*
+read_string(gzFile f)
+{
+  uint64_t size;
+  uint8_t* string;
+  gzfread(&size, sizeof(uint64_t), 1, f);
+
+  size = le64toh(size);
+
+  string = malloc(BYT(size)+1);
+  gzfread(string, 1, BYT(size), f);
+  string[BYT(size)] = '\0';
+
+  return string;
+}
+
+uint32_t*
+read_string_u32(gzFile f)
+{
+  uint64_t size;
+  uint32_t* string;
+  gzfread(&size, sizeof(uint64_t), 1, f);
+
+  size = le64toh(size);
+
+  string = malloc(sizeof(uint32_t)*(size+1));
+  gzfread(string, sizeof(uint32_t), size, f);
+  string[size] = (uint32_t) 0;
+  uint32_t* u32 = u32_str_to_h((uint32_t*) string);
+  free(string);
+
+  return u32;
+}
+
+
+statement*
+read_in_instruction(uint8_t* code, task_vars* tv)
+{
+  FILE* f_sub = fmemopen(code, BYT(strlen(code)), "r");
+  parser_state state = fresh_state(0);
+  statement* stmt = NULL;
+
+  int complete = parse(f_sub, &state, &stmt, tv);
+  fclose(f_sub);
+  if (!complete)
+    {
+      char* ending = malloc(sizeof(char)*(strlen(" . ")+1));
+      strcpy(ending, " . ");
+      f_sub = fmemopen(ending,
+                       sizeof(char)*strlen(ending),
+                       "r");
+      complete = parse(f_sub, &state, &stmt, tv);
+      fclose(f_sub);
+      free(ending);
+    }
+
+  return stmt;
+}
+
+
+
+
 int
 save_content (gzFile f, content* reg)
 {
@@ -106,7 +168,7 @@ save_content (gzFile f, content* reg)
                                         CHAR_BIT);
               size = htole64(size);
               gzfwrite(&size, sizeof(uint64_t), 1, f);
-              gzfwrite(reg->value->data, sizeof(char),
+              gzfwrite(((slot*) reg->value->data)->name, sizeof(char),
                        strlen(((slot*) reg->value->data)->name), f);
               break;
             case Object:
@@ -215,57 +277,33 @@ read_object (gzFile f, object* reg)
         {
         case Integer:
           {
-            cache = malloc(sizeof(uint64_t));
-            gzfread(cache, sizeof(uint64_t), 1, f);
-            size = *((uint64_t*) cache);
-            size = le64toh(size);
-            free(cache);
-            cache = malloc(sizeof(uint8_t)*(size+1));
-            gzfread(cache, sizeof(uint8_t), size, f);
-            *((char*) (cache+size)) = '\0';
+            uint8_t* number = read_string(f);
             mpz_t z;
-            mpz_init_set_str(z, cache, 10);
+            mpz_init_set_str(z, number, 10);
             assign_int(&d, z);
             mpz_clear(z);
-            free(cache);
           }
           break;
         case Real:
           {
-
-            cache = malloc(sizeof(uint64_t));
-            gzfread(cache, sizeof(uint64_t), 1, f);
-            uint64_t tmp = le64toh(*((uint64_t*) cache));
+            uint64_t input;
+            gzfread(&input, sizeof(uint64_t), 1, f);
+            uint64_t tmp = le64toh(input);
             double* to_assign = &tmp;
-
             assign_real(&d, *to_assign);
-            free(cache);
           }
           break;
         case String:
           {
-            cache = malloc(sizeof(uint64_t));
-            gzfread(cache, sizeof(uint64_t), 1, f);
-            size = le64toh(*((uint64_t*) cache));
-            free(cache);
-            cache = malloc((size+1)*sizeof(uint32_t));
-            gzfread(cache, sizeof(uint32_t), size, f);
-            *((uint32_t*)(cache)+size) = (uint32_t) 0;
-            uint32_t* u32 = u32_str_to_h((uint32_t*) cache);
-            assign_str(&d, (uint32_t*) cache, 0);
-            free(cache);
+            uint32_t* u32_string = read_string_u32(f);
+            assign_str(&d, u32_string, 0);
           }
           break;
         case Slot:
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-          cache = malloc(BYT(size)+1);
-          gzfread(cache, 1, BYT(size), f);
-          *((char*) (cache+BYT(size))) = '\0';
-          assign_slot(&d, (char*) cache, hash_str((char*) cache));
-          free(cache);
+          {
+            char* slot_name = read_string(f);
+            assign_slot(&d, slot_name, hash_str(slot_name));
+          }
           break;
         case Object:
           r = new_object(reg, SLOBIL_HASH_SIZE, reg->task);
@@ -273,48 +311,9 @@ read_object (gzFile f, object* reg)
           assign_object(&d, r, false, reg->task);
           break;
         case Instruction:
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-          
-          cache = malloc(BYT(size)+1);
-          gzfread(cache, 1, BYT(size), f);
-          ((char*) cache)[BYT(size)] = '\0';
-          code = malloc(BYT(size)+1);
-          strcpy(code, (char*) cache);
-          
-          f_sub = fmemopen(cache, BYT(size), "r");
-          state = fresh_state(0);
-          stmt = NULL;
-          complete = parse(f_sub, &state, &stmt, reg->task->task);
-          fclose(f_sub);
-          if (!complete)
-            {
-              char* ending = malloc(sizeof(char)*(strlen(" . ")+1));
-              strcpy(ending, " . ");
-              f_sub = fmemopen(ending,
-                               sizeof(char)*strlen(ending),
-                               "r");
-              complete = parse(f_sub, &state, &stmt,
-                               reg->task->task);
-              fclose(f_sub);
-              free(ending);
-            }
-
-          free(cache);
-
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-
-          cache = malloc(BYT(size)+1);
-          gzfread(cache, 1, BYT(size), f);
-          ((char*) cache)[BYT(size)] = '\0';
-
-          help = malloc(BYT(size)+1);
-          strcpy(help, (char*) cache);
+          code = read_string(f);
+          stmt = read_in_instruction(code, reg->task->task);
+          help = read_string(f);
 
           d = new_data();
           d->type = Instruction;
@@ -323,25 +322,10 @@ read_object (gzFile f, object* reg)
           ((instruction*) d->data)->code = code;
           ((instruction*) d->data)->help = help;
           stmt = NULL;
-          free(cache);
           break;
         case Operation:
-          cache = malloc(sizeof(uint64_t));
-          gzfread(cache, sizeof(uint64_t), 1, f);
-          size = le64toh(*((uint64_t*) cache));
-          free(cache);
-
-          cache = malloc(BYT(size)+1);
-          gzfread(cache, 1, BYT(size), f);
-          ((char*) cache)[BYT(size)] = '\0';
-          code = malloc(BYT(size)+1);
-          strcpy(code, (char*) cache);
-
-          f_sub = fmemopen(cache, BYT(size), "r");
-          state = fresh_state(0);
-          stmt = NULL;
-          parse(f_sub, &state, &stmt, reg->task->task);
-          fclose(f_sub);
+          code = read_string(f);
+          stmt = read_in_instruction(code, reg->task->task);
 
           op_wrapper* op = malloc(sizeof(op_wrapper));
           op->instr = new_data();
@@ -350,7 +334,6 @@ read_object (gzFile f, object* reg)
           ((instruction*) op->instr->data)->stmt = stmt;
           ((instruction*) op->instr->data)->code = code;
           stmt = NULL;
-          free(cache);
 
           cache = malloc(sizeof(uint64_t));
           gzfread(cache, sizeof(uint64_t), 1, f);
@@ -361,15 +344,7 @@ read_object (gzFile f, object* reg)
 
           for (int i = 0; i < op->n_arg; i++)
             {
-              cache = malloc(sizeof(uint64_t));
-              gzfread(cache, sizeof(uint64_t), 1, f);
-              size = le64toh(*((uint64_t*) cache));
-              free(cache);
-
-              char* name = malloc(BYT(size)+1);
-              gzfread(name, 1, BYT(size), f);
-              name[BYT(size)] = '\0';
-
+              char* name = read_string(f);
               unsigned long hash = hash_str(name);
 
               assign_slot(&op->args[i], name, hash);
@@ -386,27 +361,15 @@ read_object (gzFile f, object* reg)
             t->task = new_task(t);
             t->state = new_object(t->task->current_parse_object, SLOBIL_HASH_SIZE, t);
             read_object(f, t->state);
-            cache = malloc(sizeof(uint64_t));
-            gzfread(cache, sizeof(uint64_t), 1, f);
-            size = le64toh(*((uint64_t*) cache));
-            free(cache);
 
-            cache = malloc(BYT(size)+1);
-            gzfread(cache, 1, BYT(size), f);
-            ((char*) cache)[BYT(size)] = '\0';
-            code = malloc(BYT(size)+1);
-            strcpy(code, (char*) cache);
-
-            f_sub = fmemopen(cache, BYT(size), "r");
-            state = fresh_state(0);
-            stmt=NULL;
-            parse(f_sub, &state, &stmt, t->task);
-            fclose(f_sub);
+            code = read_string(f);
+            stmt = read_in_instruction(f, t->task);
+            
             t->code = malloc(sizeof(instruction));
             t->code->stmt = stmt;
             t->code->code = code;
+
             stmt = NULL;
-            free(cache);
 
             t->task->current_parse_object = t->state;
             t->queued_instruction = new_object(NULL, SLOBIL_HASH_SIZE, t);
@@ -431,18 +394,10 @@ read_object (gzFile f, object* reg)
         default:
           break;
         }
-      cache = malloc(sizeof(uint64_t));
-      gzfread(cache, sizeof(uint64_t), 1, f);
-      size = le64toh(*((uint64_t*) cache));
-      free(cache);
-      cache = malloc(BYT(size)+1);
-      gzfread(cache, 1, BYT(size), f);
-      *((char*) (cache+BYT(size))) = '\0';
-
+      char* loc = read_string(f);
       if (d != NULL)
-        set(reg, d, (char*) cache, 1);
+        set(reg, d, loc, 1);
 
-      free(cache);
     }
 
   free(type_cache);
