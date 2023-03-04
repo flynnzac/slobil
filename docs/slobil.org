@@ -3,6 +3,7 @@
 #+AUTHOR: Zach Flynn
 #+DESCRIPTION: SLOBIL is A Object-Based Environment and Language. This manual describes how to use it.
 #+SETUPFILE: theme-readtheorg-local.setup
+#+OPTIONS: num:1
 
 #+HTML_HEAD: <!-- Global site tag (gtag.js) - Google Analytics -->
 #+HTML_HEAD: <script async src="https://www.googletagmanager.com/gtag/js?id=UA-59441513-2"></script>
@@ -893,44 +894,98 @@ ans = 0.693147
 
 **** Creation
 
-     - =object SLOT1 VALUE1 SLOT2 VALUE2 ...= --- sets the =/ans= slot to a object with =VALUE1= located at =SLOT1= and so on.
+***** =object=
 
-     - =list VALUE1 VALUE2 ...= --- set the =/ans= slot to a Object with =VALUE1= at Slot =/t1=, =VALUE2= at Slot =/t2=, and so on.
+Usage: =object SLOT1 VALUE1 SLOT2 VALUE2 ...=
 
-     - =range INTEGER1 INTEGER2 |INTEGER3|= --- set the =/ans= slot to a Object with =INTEGER1= at =/t1= and =INTEGER1 + INTEGER3= at =/t2= and so on so long as the value is less than or equal to =INTEGER2=.
+Sets the =/ans= slot to a object with =VALUE1= located at =SLOT1= and so on.
+
+***** =list=
+
+Usage: =list VALUE1 VALUE2 ...=
+
+Set the =/ans= slot to a Object with =VALUE1= at Slot =/t1=, =VALUE2= at Slot =/t2=, and so on.
+
+
+***** =range=
+
+Usage: =range INTEGER1 INTEGER2 |INTEGER3|=
+
+Set the =/ans= slot to a Object with =INTEGER1= at =/t1= and =INTEGER1 + INTEGER3= at =/t2= and so on so long as the value is less than or equal to =INTEGER2=.
 
 
 **** Insert, move, and remove data to and from slots
-     - =set SLOT VALUE |OBJECT|= --- sets the value at =SLOT= to =VALUE= in the object =OBJECT=.  If the =OBJECT= argument is omitted, then it will set the slot in the current object.
 
-     - =move SLOT1 SLOT2= --- move the value located at =SLOT1= to =SLOT2=.  Does not copy the data so it is an efficient way to move data.
+***** =set=
 
-     - =delete SLOT= --- delete the value at =SLOT= in the current object.
+Usage: =set SLOT VALUE |OBJECT|=
 
-     - =free SLOT= --- delete the value at =SLOT= in the current object.  Does not send the free'd data to the garbage collector but instead releases the memory immediately.  The trade-off versus =delete= is that it forces immediate removal of memory in main execution thread (which takes longer and blocks other instructions) while =delete= is faster but the memory may not be immediately removed (higher memory use).
+Sets the value at =SLOT= to =VALUE= in the object =OBJECT=.  If the =OBJECT= argument is omitted, then it will set the slot in the current object.
 
+***** =move=
+
+Usage: =move SLOT1 SLOT2=
+
+Move the value located at =SLOT1= to =SLOT2=.  Does not copy the data so it is an efficient way to move data.
+
+***** =delete=
+
+Usage: =delete SLOT=
+
+Delete the value at =SLOT= in the current object.
 
 **** Access data in Object
 
-     - =get SLOT |OBJECT|= --- sets the =/ans= slot to the value located at =SLOT= in =OBJECT=.  If the =OBJECT= argument is not specified, get from the current object.
+***** =get=
 
-     - =exist SLOT |OBJECT|= --- set the =/ans= slot to =True= if a value exists at the =SLOT= in =OBJECT=.  If the =OBJECT= argument is omitted, check in the current object.
+Usage: =get SLOT |OBJECT|=
 
-     - =import OBJECT= --- set the Slots in the current Object to hold the same values that they hold in =OBJECT=.
+Sets the =/ans= slot to the value located at =SLOT= in =OBJECT=.  If the =OBJECT= argument is not specified, get from the current object.
 
-     - =filter OBJECT OPERATION= --- set the =/ans= slot to a Object containing all the elements in =OBJECT= such that the =OPERATION= applied to the element of the Object sets the =/ans= slot to =True=.
+***** =exist=
+
+Usage: =exist SLOT |OBJECT|=
+
+Set the =/ans= slot to =True= if a value exists at the =SLOT= in =OBJECT=.  If the =OBJECT= argument is omitted, check in the current object.
+
+***** =import=
+
+Usage: =import OBJECT=
+
+Set the Slots in the current Object to hold the same values that they hold in =OBJECT=.
+
+***** =filter=
+
+Usage: =filter OBJECT OPERATION=
+
+Set the =/ans= slot to a Object containing all the elements in =OBJECT= such that the =OPERATION= applied to the element of the Object sets the =/ans= slot to =True=.
 
 **** Apply Operations to elements of a Object
 
-     - =do OPERATION OBJECT1 OBJECT2 ... OBJECTN= --- execute =OPERATION= which takes its arguments (1...N) from each element in =OBJECT1=, ..., =OBJECTN=.  Sets the =/ans= slot to a Object which contains whatever the =OPERATION= evaluates to at the corresponding Slots.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= slot to a Object with elements (5,7,9) at slots =(/t1,/t2,/t3)=.  =do= will only return results at Slots that exist in all Objects.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Slot to =list 5 7=.
+***** =do=
+Usage: =do OPERATION OBJECT1 OBJECT2 ... OBJECTN=
 
-     - =collapse OPERATION OBJECT |SLOT|= --- sets the =/ans= slot to the value of applying =OPERATION= to the value in the =OBJECT= at Slot =/SLOT1= and =/SLOT2= and then again to the result of that and to the value of  =/SLOT3= and so on. For example, =collapse add [ list 1 2 3 . ] /t= sets the =/ans= slot to =6=.  If the =SLOT= argument is omitted, it is assumed to be =/t=.
+Execute =OPERATION= which takes its arguments (1...N) from each element in =OBJECT1=, ..., =OBJECTN=.  Sets the =/ans= slot to a Object which contains whatever the =OPERATION= evaluates to at the corresponding Slots.  For example, =do add [ list 1 2 3 . ] [ list 4 5 6 . ]= sets the =/ans= slot to a Object with elements (5,7,9) at slots =(/t1,/t2,/t3)=.  =do= will only return results at Slots that exist in all Objects.  So, for example, =do add [ list 1 2 3 . ] [ list 4 5 . ]= sets the =/ans= Slot to =list 5 7=.
+
+***** =collapse=
+
+Usage: =collapse OPERATION OBJECT |SLOT|=
+
+Sets the =/ans= slot to the value of applying =OPERATION= to the value in the =OBJECT= at Slot =/SLOT1= and =/SLOT2= and then again to the result of that and to the value of  =/SLOT3= and so on. For example, =collapse add [ list 1 2 3 . ] /t= sets the =/ans= slot to =6=.  If the =SLOT= argument is omitted, it is assumed to be =/t=.
 
 **** Execute code in a object
 
-     - =in OBJECT INSTRUCTION= --- call =INSTRUCTION= in =OBJECT=.
+***** =in=
 
-     - =up STATEMENT= --- execute STATEMENT in the object above the current one after resolving the values of the arguments of the statement in the current object.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
+Usage: =in OBJECT INSTRUCTION=
+
+Call =INSTRUCTION= in =OBJECT=.
+
+***** =up=
+
+Usage: =up STATEMENT=
+
+Execute STATEMENT in the object above the current one after resolving the values of the arguments of the statement in the current object.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
        #+BEGIN_SRC slobil
        ... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
        ... set /x 1 . 
@@ -941,11 +996,17 @@ ans = 0.693147
 
 **** Test if a object
 
-     - =is-object VALUE= --- sets the =/ans= Slot to =True= if =VALUE= is a Object and to =False= otherwise.
+***** =is-object=
+Usage: =is-object VALUE=
+
+Sets the =/ans= Slot to =True= if =VALUE= is a Object and to =False= otherwise.
 
 **** Technical
 
-     - =rehash OBJECT= --- manually rehash the object's underlying hash table.
+***** =rehash=
+Usage: =rehash OBJECT=
+
+Manually rehash the object's underlying hash table.
 
 
 ** Reals and Integers
@@ -961,50 +1022,125 @@ ans = 0.693147
 
 *** Real and Integer operations
 **** Arithmetic operations
-     - =add NUMBER1 NUMBER2 ...= --- adds all the numbers together and sets the =/ans= slot to the result.
+***** =add=
 
-     - =mul NUMBER1 NUMBER2 ...= --- multiplies all the numbers together and sets the =/ans= slot to the result.
+Usage: =add NUMBER1 NUMBER2 ...=
 
-     - =sub NUMBER1 NUMBER2 ...= --- subtracts the second number from the first and the third number from that and so on and sets the =/ans= slot to the result. 
+Adds all the numbers together and sets the =/ans= slot to the result.
 
-     - =div NUMBER1 NUMBER2 ...= --- divides the first number by the second, the result by the third number, and so on and sets the =/ans= slot to the result.
+***** =mul=
 
-     - =mod NUMBER1 NUMBER2= --- return the remainder of dividing the first number by the second.
+Usage: =mul NUMBER1 NUMBER2 ...=
 
-     - =incr INTEGER1 |INTEGER2|= --- increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.  =INTEGER2= can be a negative number.
+Multiplies all the numbers together and sets the =/ans= slot to the result.
+
+***** =sub=
+
+Usage: =sub NUMBER1 NUMBER2 ...=
+
+Subtracts the second number from the first and the third number from that and so on and sets the =/ans= slot to the result.
+
+***** =div=
+
+Usage: =div NUMBER1 NUMBER2 ...=
+
+Divides the first number by the second, the result by the third number, and so on and sets the =/ans= slot to the result.
+
+***** =mod=
+
+Usage: =mod NUMBER1 NUMBER2=
+
+Return the remainder of dividing the first number by the second.
+
+***** =incr=
+
+Usage: =incr INTEGER1 |INTEGER2|=
+
+Increment =INTEGER1= by =INTEGER2= or by 1 if INTEGER2 is omitted.  The difference between this operation and =add= is that it modifies =INTEGER1= in place.  =INTEGER2= can be a negative number.
 
 
 **** Comparison operations
-     - =gt NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
 
-     - =lt NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is less than =NUMBER2= and to =False= otherwise.
+***** =gt=
 
-     - =eq NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is equal to =NUMBER2= and to =False= otherwise.
+Usage: =gt NUMBER1 NUMBER2=
 
-     - =lt-eq NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is less than or equal to =NUMBER2= and to =False= otherwise.
+Set the =/ans= slot to =True= if =NUMBER1= is greater than =NUMBER2= and to =False= otherwise.
 
-     - =gt-eq NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
+***** =lt=
+
+Usage: =lt NUMBER1 NUMBER2=
+
+Set the =/ans= slot to =True= if =NUMBER1= is less than =NUMBER2= and to =False= otherwise.
+
+***** =eq=
+
+Usage: =eq NUMBER1 NUMBER2=
+
+Set the =/ans= slot to =True= if =NUMBER1= is equal to =NUMBER2= and to =False= otherwise.
+
+***** =lt-eq=
+
+Usage: =lt-eq NUMBER1 NUMBER2= --- set the =/ans= slot to =True= if =NUMBER1= is less than or equal to =NUMBER2= and to =False= otherwise.
+
+***** =gt-eq=
+
+Usage: =gt-eq NUMBER1 NUMBER2=
+
+Set the =/ans= slot to =True= if =NUMBER1= is greater than or equal to =NUMBER2= and to =False= otherwise.
 
 **** Conversion operations
-     - =to-number STRING|SLOT= --- if the argument is a String, try to convert to a number and set the =/ans= Slot to the result.  If the argument is a Slot and ends in a number, set the =/ans= Slot to the result.
 
-     - =to-real INTEGER= --- set the =/ans= Slot to a Real representing the =INTEGER=.
+***** =to-number=
+Usage: =to-number STRING|SLOT=
+
+If the argument is a String, try to convert to a number and set the =/ans= Slot to the result.  If the argument is a Slot and ends in a number, set the =/ans= Slot to the result.
+
+***** =to-real=
+Usage: =to-real INTEGER=
+
+Set the =/ans= Slot to a Real representing the =INTEGER=.
 
 **** Test if type operations
-     - =is-integer VALUE= --- sets the =/ans= Slot to =True= if the =Value= is an Integer and to =False= otherwise.
 
-     - =is-real VALUE= --- sets the =/ans= Slot to =True= if the =Value= is a Real and to =False= otherwise.
+***** =is-integer=
+
+Usage: =is-integer VALUE=
+
+Sets the =/ans= Slot to =True= if the =Value= is an Integer and to =False= otherwise.
+
+***** =is-real=
+
+Usage: =is-real VALUE=
+
+Sets the =/ans= Slot to =True= if the =Value= is a Real and to =False= otherwise.
 
 **** Common mathematical operations
-     - =log NUMBER= --- set the =/ans= Slot to the natural logarithm of =NUMBER=.
 
-     - =exp NUMBER= --- set the =/ans= Slot to the =NUMBER= power of the natural base.
+***** =log=
+Usage: =log NUMBER=
 
-     - =power NUMBER1 NUMBER2= --- set the =/ans= Slot to =NUMBER1= raised to the =NUMBER2= power.
+Set the =/ans= Slot to the natural logarithm of =NUMBER=.
 
-     - =floor REAL1= --- set the =/ans= Slot to the greatest Integer less than =REAL1=.
+***** =exp=
+Usage: =exp NUMBER=
 
-     - =ceiling REAL1= --- set the =/ans= Slot to smallest Integer greater than =REAL1=.
+Set the =/ans= Slot to the =NUMBER= power of the natural base.
+
+***** =power=
+Usage: =power NUMBER1 NUMBER2=
+
+Set the =/ans= Slot to =NUMBER1= raised to the =NUMBER2= power.
+
+***** =floor=
+Usage: =floor REAL1=
+
+Set the =/ans= Slot to the greatest Integer less than =REAL1=.
+
+***** =ceiling=
+Usage: =ceiling REAL1=
+
+Set the =/ans= Slot to smallest Integer greater than =REAL1=.
 
 
 ** Strings
@@ -1031,42 +1167,77 @@ ans = 0.693147
 
 *** String operations
 **** Access, search, and modify string elements
+***** =substring=
+Usage: =substring STRING INTEGER1 INTEGER2=
 
-     - =substring STRING INTEGER1 INTEGER2= --- sets the =/ans= Slot to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in SLOBIL so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= slot to the last character in =STRING=.
+Sets the =/ans= Slot to the subset of =STRING= where the characters included are determined by =INTEGER1= and =INTEGER2=.  Strings are 1-indexed in SLOBIL so the first character is at location 1.  If the =INTEGER= is less than or equal to 0, determine the location from the end of the String.  So if =INTEGER1= and =INTEGER2= are =0=, then it will set the =/ans= slot to the last character in =STRING=.
 
-     - =match STRING1 STRING2 |INTEGER|= --- find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Slot to a Object with all submatches located at the =/tN= objects.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+***** =match=
+Usage: =match STRING1 STRING2 |INTEGER|=
 
-     - =replace STRING1 STRING2 STRING3 |INTEGER|= --- set the =/ans= Slot to a String formed by replacing all occurences of regular expression =STRING1= with =STRING2= in =STRING3=.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
+Find occurences of regular expression =STRING1= in String =STRING2=.  Sets the =/ans= Slot to a Object with all submatches located at the =/tN= objects.  The optional third argument gives the number of matches to return.  If =0= is provided, return all matches (default).
+
+***** =replace=
+Usage: =replace STRING1 STRING2 STRING3 |INTEGER|=
+
+Set the =/ans= Slot to a String formed by replacing all occurences of regular expression =STRING1= with =STRING2= in =STRING3=.  The optional fourth argument gives the number of matches to replace.  If =0=, replace all (default).
 
 **** String properties
 
-     - =length STRING= --- sets the =/ans= slot to the number of characters in =STRING=.
+***** =length=
+Usage: =length STRING=
+
+Sets the =/ans= slot to the number of characters in =STRING=.
 
 **** String comparison
 
-     - =string-eq STRING1 STRING2= --- sets the =/ans= Slot to =True= if the two strings are equal and to =False= otherwise.
+***** =string-eq=
+Usage: =string-eq STRING1 STRING2=
 
-     - =string-lt STRING1 STRING2= --- sets the =/ans= Slot to =True= if =STRING1= is less than =STRING2= in the sense that the ASCII characters have lower values.
+Sets the =/ans= Slot to =True= if the two strings are equal and to =False= otherwise.
 
-     - =string-gt STRING1 STRING2= --- sets the =/ans= Slot to =True= if =STRING1= is greater than =STRING2= in the sense that the ASCII characters have lower values.
+***** =string-lt=
+Usage: =string-lt STRING1 STRING2=
 
-     - =char-eq STRING1 INTEGER STRING2= --- test if character =INTEGER= of string (using same index numbers as for =substring=) is equal to =STRING2=.  This is a slight performance improvement over testing whether the =substring= with only one character is equal to the string.
+Sets the =/ans= Slot to =True= if =STRING1= is less than =STRING2= in the sense that the ASCII characters have lower values.
+
+***** =string-gt=
+Usage: =string-gt STRING1 STRING2=
+
+Sets the =/ans= Slot to =True= if =STRING1= is greater than =STRING2= in the sense that the ASCII characters have lower values.
+
+***** =char-eq=
+Usage: =char-eq STRING1 INTEGER STRING2=
+
+Test if character =INTEGER= of string (using same index numbers as for =substring=) is equal to =STRING2=.  This is a slight performance improvement over testing whether the =substring= with only one character is equal to the string.
 
 **** Combine strings
 
-     - =combine STRING1 STRING2 ... STRINGN= --- sets the =/ans= slot to the concatenation of the two Strings so that the resulting String is ="STRING1STRING2"=.
+***** =combine=
+Usage: =combine STRING1 STRING2 ... STRINGN=
+
+Sets the =/ans= slot to the concatenation of the two Strings so that the resulting String is ="STRING1STRING2"=.
 
 **** Convert to string
 
-     - =to-string INTEGER|REAL|SLOT |INTEGER2|= --- sets the =/ans= Slot to a String representing the =INTEGER= or =REAL= or =SLOT= provided as the first argument.  The second argument is used if a =REAL= argument is provided.  =INTEGER2= gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
+***** =to-string=
+Usage: =to-string INTEGER|REAL|SLOT |INTEGER2|=
+
+Sets the =/ans= Slot to a String representing the =INTEGER= or =REAL= or =SLOT= provided as the first argument.  The second argument is used if a =REAL= argument is provided.  =INTEGER2= gives the number of elements after the decimal point to include.  If not provided, 6 decimal places are included.
 
 **** Test if string
 
-     - =is-string VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is a String and to =False= otherwise.
+***** =is-string=
+Usage: =is-string VALUE=
+
+Sets the =/ans= Slot to =True= if the =VALUE= is a String and to =False= otherwise.
 
 **** Strings from User Input
 
-     - =input SLOT= --- reads a line of text the user enters and sets =SLOT= to that value (always a String).
+***** =input=
+Usage: =input SLOT=
+
+Reads a line of text the user enters and sets =SLOT= to that value (always a String).
 
 ** Slots
 
@@ -1082,22 +1253,41 @@ ans = 0.693147
 
 **** Operations on "list" slots
 
-     - =next SLOT= --- if the =SLOT= ends in a number, return the Slot with that number incremented by 1.
+***** =next=
+Usage: =next SLOT=
 
-     - =previous SLOT= --- if the =SLOT= ends in a number, return the Slot with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Slot to the "first" slot with that prefix so that =previous /t1 .= sets =/ans= to =/t1=.
+If the =SLOT= ends in a number, return the Slot with that number incremented by 1.
 
-     - =last OBJECT SLOT= --- return the last Slot in the =OBJECT= that starts with =SLOT=.  So that if you had slots =/x0=, =/x1=, and =/x2= in the Object, =last OBJECT /x= would return =/x2=.
+***** =previous=
+Usage: =previous SLOT=
+
+If the =SLOT= ends in a number, return the Slot with that number minus 1.  If that would cause the number to be less than 1 set the =/ans= Slot to the "first" slot with that prefix so that =previous /t1 .= sets =/ans= to =/t1=.
+
+***** =last=
+Usage: =last OBJECT SLOT=
+
+Return the last Slot in the =OBJECT= that starts with =SLOT=.  So that if you had slots =/x0=, =/x1=, and =/x2= in the Object, =last OBJECT /x= would return =/x2=.
 
 **** Convert to slot
 
-     - =to-slot STRING|INTEGER= --- sets the =/ans= slot to a Slot named =STRING= or to =/tINTEGER=.
+***** =to-slot=
+Usage: =to-slot STRING|INTEGER=
+
+Sets the =/ans= slot to a Slot named =STRING= or to =/tINTEGER=.
 
 **** Slot comparison
-     - =slot-eq SLOT1 SLOT2= --- sets the =/ans= Slot to =True= if the two Slots are the same and to =False= otherwise.
+
+***** =slot-eq=
+Usage: =slot-eq SLOT1 SLOT2=
+
+Sets the =/ans= Slot to =True= if the two Slots are the same and to =False= otherwise.
 
 **** Test if a slot
-     - =is-slot VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is a Slot and to =False= otherwise.
 
+***** =is-slot=
+Usage: =is-slot VALUE=
+
+Sets the =/ans= Slot to =True= if the =VALUE= is a Slot and to =False= otherwise.
 
 
 ** Booleans
@@ -1112,13 +1302,25 @@ ans = 0.693147
     
 *** Boolean operations
 
-    - =is-boolean VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is a Boolean and to =False= otherwise.
+**** =is-boolean=
+Usage: =is-boolean VALUE=
 
-    - =and BOOLEAN1 BOOLEAN2= --- sets the =/ans= Slot to =True= if BOOLEAN1 and BOOLEAN2 are =True= and to =False= otherwise.
+Sets the =/ans= Slot to =True= if the =VALUE= is a Boolean and to =False= otherwise.
 
-    - =or BOOLEAN1 BOOLEAN2= --- sets the =/ans= Slot to =True= if either BOOLEAN1 or BOOLEAN2 are =True= and to =False= otherwise.
+**** =and=
+Usage: =and BOOLEAN1 BOOLEAN2=
 
-    - =not BOOLEAN= --- sets the =/ans= Slot to =True= if BOOLEAN is =False= and to =False= otherwise.
+Sets the =/ans= Slot to =True= if BOOLEAN1 and BOOLEAN2 are =True= and to =False= otherwise.
+
+**** =or=
+Usage: =or BOOLEAN1 BOOLEAN2=
+
+Sets the =/ans= Slot to =True= if either BOOLEAN1 or BOOLEAN2 are =True= and to =False= otherwise.
+
+**** =not=
+Usage: =not BOOLEAN=
+
+Sets the =/ans= Slot to =True= if BOOLEAN is =False= and to =False= otherwise.
 
 ** Instructions
 
@@ -1132,19 +1334,40 @@ ans = 0.693147
 
 *** Instruction operations
 
-    - =call INSTRUCTION SLOT1 VALUE1 SLOT2 VALUE2 ...= --- executes =INSTRUCTION= in a Object with =SLOT1= assigned to =VALUE1= and so on.
+**** =call=
+Usage: =call INSTRUCTION SLOT1 VALUE1 SLOT2 VALUE2 ...=
 
-    - =is-instruction VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is an Instruction and to =False= otherwise.
+Executes =INSTRUCTION= in a Object with =SLOT1= assigned to =VALUE1= and so on.
 
-    - =op INSTRUCTION SLOT1 ... SLOTN= --- set the =/ans= slot to an operation that calls =INSTRUCTION= after binding =SLOT1= to the first argument, and so on.
+**** =is-instruction=
+Usage: =is-instruction VALUE=
 
-    - =code INSTRUCTION= --- sets the =/ans= slot to a String containing the code for the =INSTRUCTION=.
+Sets the =/ans= Slot to =True= if the =VALUE= is an Instruction and to =False= otherwise.
 
-    - =is-operation VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is an Operation and to =False= otherwise.
+**** =op=
+Usage: =op INSTRUCTION SLOT1 ... SLOTN=
 
-    - =set-help INSTRUCTION STRING= --- sets the help for =INSTRUCTION= to =STRING=.
+Set the =/ans= slot to an operation that calls =INSTRUCTION= after binding =SLOT1= to the first argument, and so on.
 
-    - =help INSTRUCTION= --- Print the help string.
+**** =code=
+Usage: =code INSTRUCTION=
+
+Sets the =/ans= slot to a String containing the code for the =INSTRUCTION=.
+
+**** =is-operation=
+Usage: =is-operation VALUE=
+
+Sets the =/ans= Slot to =True= if the =VALUE= is an Operation and to =False= otherwise.
+
+**** =set-help=
+Usage: =set-help INSTRUCTION STRING=
+
+Sets the help for =INSTRUCTION= to =STRING=.
+
+**** =help=
+Usage: =help INSTRUCTION=
+
+Print the help string.
 
 ** Files
 
@@ -1158,21 +1381,45 @@ ans = 0.693147
 
 *** File operations
 
-    - =is-file VALUE= --- sets the =/ans= Slot to =True= if the =VALUE= is a File and to =False= otherwise.
+**** =is-file=
+Usage: =is-file VALUE=
 
-    - =open-file STRING1 |STRING2|= --- sets the =/ans= Slot to a File object corresponding to the file named =STRING1= with mode =STRING2= (default: "r+").
+Sets the =/ans= Slot to =True= if the =VALUE= is a File and to =False= otherwise.
 
-    - =read FILE= --- read a byte from a file and set the =/ans= slot to the result (an Integer).
+**** =open-file=
+Usage: =open-file STRING1 |STRING2|=
 
-    - =read-char FILE= --- read a single character from a File object and set the =/ans= Slot to that character (a String).
+Sets the =/ans= Slot to a File object corresponding to the file named =STRING1= with mode =STRING2= (default: "r+").
 
-    - =read-line FILE= --- sets the =/ans= Slot to the next line from FILE.
+**** =read=
+Usage: =read FILE=
 
-    - =write INTEGER FILE= --- =INTEGER= must be in [0,255].  Directly writes a byte to =FILE=.
+Read a byte from a file and set the =/ans= slot to the result (an Integer).
 
-    - =write-string STRING FILE= --- Write a =STRING= to =FILE= using UTF-8 encoding. 
+**** =read-char=
+Usage: =read-char FILE=
 
-    - =close SLOT= --- if a File object is located at =SLOT=, close the File and remove its reference from the =SLOT=.
+Read a single character from a File object and set the =/ans= Slot to that character (a String).
+
+**** =read-line=
+Usage: =read-line FILE=
+
+Sets the =/ans= Slot to the next line from FILE.
+
+**** =write=
+Usage: =write INTEGER FILE=
+
+=Integer= must be in [0,255].  Directly writes a byte to =FILE=.
+
+**** =write-string=
+Usage: =write-string STRING FILE=
+
+Write a =STRING= to =FILE= using UTF-8 encoding. 
+
+**** =close=
+Usage: =close SLOT=
+
+If a File object is located at =SLOT=, close the File and remove its reference from the =SLOT=.
 
 ** Nothing 
 
@@ -1182,7 +1429,10 @@ ans = 0.693147
 
 *** Nothing operations
 
-    - =is-nothing VALUE= --- sets the =/ans= slot to =True= if the value is =Nothing= and to =False= otherwise.
+**** =is-nothing=
+Usage: =is-nothing VALUE=
+
+Sets the =/ans= slot to =True= if the value is =Nothing= and to =False= otherwise.
 
 ** Task Operations
 
@@ -1202,111 +1452,219 @@ ans = 0.693147
 
 *** Task operations
 
-    - =task SLOT INSTRUCTION |OBJECT|= --- Sets =SLOT= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =OBJECT=.  If no =OBJECT= argument is given, the initial state is a object containing only the basic operations (the object always contains the basic operations even if they are not in the initial object passed to =Task=).
+**** =task=
+Usage: =task SLOT INSTRUCTION |OBJECT|=
 
-    - =run-task TASK= --- executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
+Sets =SLOT= to contain a new Task with its Body given by the =INSTRUCTION= and the initial state being set to =OBJECT=.  If no =OBJECT= argument is given, the initial state is a object containing only the basic operations (the object always contains the basic operations even if they are not in the initial object passed to =Task=).
 
-    - =queue SLOT DATA |TASK|= --- Sets the =SLOT= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main SLOBIL Task.
+**** =run-task=
+Usage: =run-task TASK=
 
-    - =accept SLOT |TASK|= --- Waits until =SLOT= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= slot to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
+Executes the Task's Body in a separate thread.  The same Task object cannot be running in two threads.  The operation will give an Error if it is already running.
 
-    - =select SLOT1 INSTRUCTION1 SLOT2 INSTRUCTION2 ... SLOTN INSTRUCTIONN= --- Waits for the Queue in the current task to contain data at any of the Slots (it will prefer earlier Slots if data is available at both).  Once it receives data, it sets the =/ans= slot to the data and executes the Instruction in the current object.
+**** =queue=
+Usage: =queue SLOT DATA |TASK|=
 
-    - =accept-or SLOT INSTRUCTION |TASK|= --- Checks if =SLOT= is set in =TASK='s Queue.  If it is, the =/ans= slot is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
+Sets the =SLOT= in the Queue of =TASK= to value =DATA=.  If the =TASK= argument is omitted, it is assumed to be set in the queue of the current task (for sharing Task data with another thread).  =queue= cannot be used for the main SLOBIL Task.
+
+**** =accept=
+Usage: =accept SLOT |TASK|=
+
+Waits until =SLOT= has a value in =TASK='s Queue.  Once it finds a value, set the =/ans= slot to that value.  If =TASK= is omitted, wait for the current Task's Queue to be set.
+
+**** =select=
+Usage: =select SLOT1 INSTRUCTION1 SLOT2 INSTRUCTION2 ... SLOTN INSTRUCTIONN=
+
+Waits for the Queue in the current task to contain data at any of the Slots (it will prefer earlier Slots if data is available at both).  Once it receives data, it sets the =/ans= slot to the data and executes the Instruction in the current object.
+
+**** =accept-or=
+Usage: =accept-or SLOT INSTRUCTION |TASK|=
+
+Checks if =SLOT= is set in =TASK='s Queue.  If it is, the =/ans= slot is set to the result. If it is not, it executes =INSTRUCTION=. If =TASK= is omitted, search in the current =TASK='s Queue.
 
 ** Control flow operations
 
-   - =if BOOLEAN VALUE1 |VALUE2|= --- if the first argument is =True=, sets the =/ans= slot to =VALUE1=, if it is =False=, sets the =/ans= slot to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
+*** =if=
+Usage: =if BOOLEAN VALUE1 |VALUE2|=
 
-   - =while INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1= in the current Object. If it sets its =/ans= slot to =True=, call =INSTRUCTION2=.  Repeat.
+If the first argument is =True=, sets the =/ans= slot to =VALUE1=, if it is =False=, sets the =/ans= slot to =VALUE2=.  If =VALUE2= is omitted, do nothing if the first argument is =False=.
 
-   - =repeat INTEGER INSTRUCTION= --- call =INSTRUCTION= =INTEGER= times.
+*** =while=
+Usage: =while INSTRUCTION1 INSTRUCTION2=
 
-   - =please INSTRUCTION1 INSTRUCTION2= --- Call =INSTRUCTION1=.  If there is an error, then call =INSTRUCTION2=.
+Call =INSTRUCTION1= in the current Object. If it sets its =/ans= slot to =True=, call =INSTRUCTION2=.  Repeat.
+
+*** =repeat=
+Usage: =repeat INTEGER INSTRUCTION=
+
+Call =INSTRUCTION= =INTEGER= times.
+
+*** =please=
+Usage: =please INSTRUCTION1 INSTRUCTION2=
+
+Call =INSTRUCTION1=.  If there is an error, then call =INSTRUCTION2=.
 
 ** Environment operations
 
 *** Modify the /ans slot
 
-    - =answer VALUE= --- set the =/ans= slot to =VALUE=.
+**** =answer=
+Usage: =answer VALUE=
 
-    - =sit= --- do nothing but lookup all arguments (causes Expressions --- instructions in curly brackets --- to be executed).
+Set the =/ans= slot to =VALUE=.
+
+**** =sit=
+Usage: =sit=
+
+Do nothing but lookup all arguments (causes Expressions --- instructions in curly brackets --- to be executed).
 
 *** Exit SLOBIL
 
-    - =exit= --- exit SLOBIL.
+**** =exit=
+Usage: =exit=
+
+Exit SLOBIL.
 
 *** Print output
 
-    - =print VALUE |BOOLEAN|= --- prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
+**** =print=
+Usage: =print VALUE |BOOLEAN|=
+
+Prints =VALUE= to screen.  If =BOOLEAN= is =False=, then omit the newline (default: add newline after printing value).
       
 *** Input and output files and state
 
-    - =source STRING= --- executes SLOBIL code in the file named by STRING.
+**** =source=
+Usage: =source STRING=
 
-    - =save FILENAME= --- save the contents of the current object to file.
+Executes SLOBIL code in the file named by STRING.
 
-    - =load FILENAME= --- load the contents of a saved file into the environment.
+**** =save=
+Usage: =save FILENAME=
 
-    - =output-code STRING= --- outputs the code that has been entered at the prompt so far to the file named STRING.
+Save the contents of the current object to file.
 
-    - =clear-code= --- clear code that has been entered so far so that the code that =output-code= outputs will be empty.
+**** =load=
+Usage: =load FILENAME=
+
+Load the contents of a saved file into the environment.
+
+**** =output-code=
+Usage: =output-code STRING=
+
+Outputs the code that has been entered at the prompt so far to the file named STRING.
+
+**** =clear-code=
+Usage: =clear-code=
+
+Clear code that has been entered so far so that the code that =output-code= outputs will be empty.
 
 
 *** Error handling
 
-    - =error STRING |INTEGER|= --- outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
+**** =error=
+Usage: =error STRING |INTEGER|=
 
-    - =is-error INSTRUCTION= --- sets the =/ans= Slot to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
+Outputs error message String and sets an error code INTEGER (if specified, otherwise, the error number is =1=).
 
-    - =ignore-errors INSTRUCTION= --- ignore any errors while executing the instruction, i.e. go to the next statement if one statement errors.
+**** =is-error=
+Usage: =is-error INSTRUCTION=
+
+Sets the =/ans= Slot to =True= if there was an error executing the =INSTRUCTION= and to =False= otherwise.
+
+**** =ignore-errors=
+Usage: =ignore-errors INSTRUCTION=
+
+Ignore any errors while executing the instruction, i.e. go to the next statement if one statement errors.
 
 *** Version
 
-    - =version= --- sets the =/ans= Slot to a String giving the version of SLOBIL.
+**** =version=
+Usage: =version=
+
+Sets the =/ans= Slot to a String giving the version of SLOBIL.
 
 ** System operations
 *** Interacting with the shell
+**** =shell=
+Usage: =shell STRING=
 
-    - =shell STRING= --- execute the shell command =STRING=.
+Execute the shell command =STRING=.
+**** =change-dir=
+Usage: =change-dir STRING=
 
-    - =change-dir STRING= --- change directory to the location given in =STRING=.
+Change directory to the location given in =STRING=.
+**** =current-dir=
+Usage: =current-dir=
 
-    - =current-dir= --- set the =/ans= Slot to a String giving the current directory.
+Set the =/ans= Slot to a String giving the current directory.
 
 *** Time
 
-    - =clock= --- set the =/ans= slot to the current time in milliseconds from January 1, 1970.
+**** =clock=
+Usage: =clock=
 
-    - =make-time INTEGER= --- given a clock value in milliseconds (as returned by =clock=) return a object with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31),
+Set the =/ans= slot to the current time in milliseconds from January 1, 1970.
 
-    - =make-clock OBJECT= --- make a clock value in milliseconds from a object describing the time (like the object returned by =make-time=)
+**** =make-time=
+Usage: =make-time INTEGER=
+
+Given a clock value in milliseconds (as returned by =clock=) return a object with elements =second= (a number of seconds between 0-59), =minute= (giving a number between 0-59), =hour= (a number between 0-23), =day= (giving a number between 1-31),
+
+**** =make-clock=
+Usage: =make-clock OBJECT=
+
+Make a clock value in milliseconds from a object describing the time (like the object returned by =make-time=)
 
 *** Random numbers
 
-    - =rand |INTEGER|= --- set the =/ans= Slot to a uniformly distributed random Real between 0 and 1.  If =INTEGER= is provided, set the seed to the =INTEGER= before drawing random value.
+**** =rand=
+Usage: =rand |INTEGER|=
+
+Set the =/ans= Slot to a uniformly distributed random Real between 0 and 1.  If =INTEGER= is provided, set the seed to the =INTEGER= before drawing random value.
 
 ** Package operations
 
-   - =use STRING= --- load a saved object in =~/.dslobs/= with the extension =.dslob= into the current object. The file being loaded is: =~/.dslobs/STRING.dslob=.
+*** =use=
+Usage: =use STRING=
 
-   - =build STRING OBJECT= --- saves contents of object to =~/.dslobs/STRING.dslob= so that it can be loaded as a package.
+Load a saved object in =~/.dslobs/= with the extension =.dslob= into the current object. The file being loaded is: =~/.dslobs/STRING.dslob=.
 
-   - =link STRING1 STRING2 STRING3= --- loads shared object file =STRING1= and its function named =STRING2= into SLOBIL operation named =STRING3=.  
+*** =build=
+Usage: =build STRING OBJECT=
+
+Saves contents of object to =~/.dslobs/STRING.dslob= so that it can be loaded as a package.
+
+*** =link=
+Usage: =link STRING1 STRING2 STRING3=
+
+Loads shared object file =STRING1= and its function named =STRING2= into SLOBIL operation named =STRING3=.  
 
 ** Interpreter options
 
 *** Operation
 
-    - =interpreter SLOT VALUE= --- sets interpreter option =SLOT= to =VALUE=.
+**** =interpreter=
+Usage: =interpreter SLOT VALUE=
+
+Sets interpreter option =SLOT= to =VALUE=.
 
 *** List of options
 
-    - =/print-ans= --- if =True=, then print the value of the =/ans= Slot at the end of commands, if =False= (default) or any other non-Boolean value, suppress printing.
+**** =print-ans=
+Usage: =/print-ans=
 
-    - =/auto-rehash= --- if =True= (default) or any non-Boolean value, then rehash objects automatically as they grow in size.  If =False= do not rehash automatically.
+If =True=, then print the value of the =/ans= Slot at the end of commands, if =False= (default) or any other non-Boolean value, suppress printing.
 
-    - =/print-errors= --- if =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
+**** =auto-rehash=
+Usage: =/auto-rehash=
+
+If =True= (default) or any non-Boolean value, then rehash objects automatically as they grow in size.  If =False= do not rehash automatically.
+
+**** =print-errors=
+Usage: =/print-errors=
+
+If =True= (default) or any non-Boolean value, then print error descriptions.  if =False=, do not print error descriptions.
 
 * Saved Objects
 
