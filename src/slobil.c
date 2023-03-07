@@ -50,16 +50,24 @@ interrupt_handler (int status)
     }
 }
 
+void*
+mp_realloc_func (void* data, size_t old_size, size_t new_size)
+{
+  return GC_realloc(data, new_size);
+}
+
+void
+mp_free (void* data, size_t size)
+{
+  GC_free(data);
+}
+
 int
 main (int argc, char** argv)
 {
 #ifdef GARBAGE
   GC_INIT();
-#endif
-#ifdef GARBAGE
-  mp_set_memory_functions(GC_malloc, GC_realloc, GC_free);
-#else
-  mp_set_memory_functions(malloc, realloc, free);
+  mp_set_memory_functions(GC_malloc, mp_realloc_func, mp_free);
 #endif
 
   srand((unsigned) time(NULL));
@@ -74,8 +82,6 @@ main (int argc, char** argv)
 
   task0->task->reading = true;
 
-  char* code = NULL;
-  char* prompt = "... ";
   FILE* f;
   int complete = 1;
   struct parser_state state = fresh_state(0);
