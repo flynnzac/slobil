@@ -103,6 +103,17 @@ print_data (data* d, print_settings settings)
         }
       pthread_mutex_unlock(&((task*) d->data)->lock);
       break;
+    case Vector:
+      {
+        printf("Vector with: \n");
+        for (uint64_t i = 0; i < ((vector*) d->data)->len; i++)
+          {
+            printf("%lu - ", i+1);
+            print_data(&((vector*) d->data)->elements[i],
+                       PRINT_NEWLINE);
+          }
+      }
+      break;
     default:
       break;
     }

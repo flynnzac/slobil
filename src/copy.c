@@ -85,6 +85,36 @@ assign_str (data** d, const uint32_t* str, int copy)
 }
 
 /**
+ * Assign data elements to a vector.
+ *
+ * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
+ * @param len the length of the vector.
+ * @param elements the elements of the vector
+ * @param copy whether to copy the elements or just assign
+ */
+
+void
+assign_vector(data** d,
+              const uint64_t len,
+              const data* elements,
+              bool copy)
+{
+  *d = new_data();
+  (*d)->type = Vector;
+  (*d)->data = malloc(sizeof(vector));
+  ((vector*) (*d)->data)->len = len;
+  ((vector*) (*d)->data)->elements = malloc(sizeof(data)*len);
+
+  for (uint64_t i = 0; i < len; i++)
+    {
+      if (copy)
+        ((vector*) (*d)->data)->elements[i] = *(copy_data(&elements[i]));
+      else
+        ((vector*) (*d)->data)->elements[i] = elements[i];
+    }
+}
+
+/**
  * Assigns statements to an instruction.
  *
  * @param d a pointer to a pointer of data.  The data object will be allocated after the call.  On exit, *d will point to the newly-allocated memory.
@@ -482,6 +512,11 @@ copy_data (data* d_in)
       break;
     case Nothing:
       assign_nothing(&d);
+      break;
+    case Vector:
+      assign_vector(&d, ((vector*) d_in->data)->len,
+                    ((vector*) d_in->data)->elements,
+                    true);
       break;
     }
 

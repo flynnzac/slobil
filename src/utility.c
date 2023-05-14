@@ -116,13 +116,13 @@ escape_str (char* str)
 }
 
 void
-slobil_location (mpz_t loc, const int n)
+slobil_location (mpz_t loc, const uint64_t n)
 {
   if (mpz_cmp_si(loc,0) <= 0)
     {
       mpz_add_ui(loc, loc, n);
     }
-  if ((mpz_cmp_si(loc,0) > 0) && (mpz_cmp_si(loc,n) <= 0))
+  if ((mpz_cmp_si(loc,0) > 0) && (mpz_cmp_ui(loc,n) <= 0))
     {
     }
   else

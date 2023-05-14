@@ -181,6 +181,136 @@ op_list (arg a, object* obj)
 }
 
 /**
+ * Creates a vector of length equal to number of arguments.
+ *
+ * @param a argument list containing the vector operation as its first argument and an arbitrary
+ * number of data elements following that.
+ * @param obj the object to execute the operation in.
+ */
+void
+op_vector (arg a, object* obj)
+{
+	#op=vector@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  uint64_t len = a.length-1;
+  data* elements = malloc(sizeof(data)*len);
+  for (uint64_t i = 1; i <= len; i++)
+    {
+      elements[i-1] = *(resolve(a.arg_array[i], obj));
+    }
+
+  data* d;
+  assign_vector(&d, len, elements, true);
+  ret_ans(obj, d);
+}
+
+/**
+ * Returns an element from a vector.
+ *
+ * @param a argument list containing the element operation, a vector as its second argument, and an integer giving the element to grab from.
+ * @param obj the object to execute the operation in.
+ */
+void
+op_element (arg a, object* obj)
+{
+	#op=element@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Vector@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Integer@
+  ##GETARG~$;
+
+  mpz_t loc;
+  mpz_init(loc);
+  if (mpz_cmp_si(*((mpz_t*) arg2->data), 0) <= 0)
+    {
+      mpz_add_ui(loc, *((mpz_t*) arg2->data),
+                 ((vector*) arg1->data)->len);
+    }
+  else
+    {
+      mpz_set(loc, *((mpz_t*) arg2->data));
+    }
+
+  
+  if ((mpz_cmp_ui(loc, ((vector*) arg1->data)->len) > 0) ||
+      (mpz_cmp_si(loc, 0) <= 0))
+    {
+      do_error("Element out of range.", obj->task->task);
+      return;
+    }
+
+  uint64_t element = mpz_get_ui(loc);
+
+  data* d = copy_data(&((vector*) arg1->data)->elements[element-1]);
+  ret_ans(obj, d);
+}
+
+/**
+ * Returns a vector that makes subsets
+ *
+ * @param an argument list containing the subset operation, a vector as its second element, and a vector giving the subset logic
+ * @param obj the object to execute the operation in.
+ */
+void
+op_subset (arg a, object* obj)
+{
+	#op=subset@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Vector@
+  ##GETARG~$;
+
+  #num=2@
+  #type=Vector@
+  ##GETARG~$;
+
+
+  uint64_t src_len = ((vector*) arg1->data)->len;
+  uint64_t len = ((vector*) arg2->data)->len;
+  data* elements = malloc(sizeof(data)*len);
+  for (uint64_t i=0; i < len; i++)
+    {
+      data* el = &((vector*) arg2->data)->elements[i];
+      if (el->type == Integer)
+        {
+          mpz_t loc;
+          uint64_t u64_loc;
+          mpz_init(loc);
+          mpz_set(loc, *((mpz_t*) el->data));
+          slobil_location(loc, src_len);
+          if (mpz_cmp_si(loc, 0) <= 0)
+            {
+              do_error("Index out of range.",
+                       obj->task->task);
+              return;
+            }
+          u64_loc = mpz_get_ui(loc);
+          elements[i] = ((vector*) arg1->data)->elements[u64_loc-1];
+        }
+      else
+        {
+          do_error("Vector should contain indices.",
+                   obj->task->task);
+          return;
+        }
+    }
+
+  data* d;
+  assign_vector(&d, len, elements, true);
+  ret_ans(obj, d);
+}
+
+/**
  * Creates an object from pairs of slots and data values
  *
  * @param a argument containing the object operation as its first argument and an arbitrary number of slot-data pairs.
@@ -247,6 +377,71 @@ op_new(arg a, object* obj)
   ret_ans(obj, out);
 }
 
+void
+do_arithmetic(int code,
+              data* argi,
+              mpz_t* int_value,
+              double* dbl_value,
+              data_type* result_type,
+              bool init)
+{
+  if (argi->type == Real && *result_type == Integer)
+    {
+      *dbl_value = mpz_get_d(*int_value);
+      *result_type = Real;
+    }
+
+  if (*result_type == Integer)
+    {
+      if (init)
+        mpz_set(*int_value, *((mpz_t*) argi->data));
+      else
+        switch (code)
+          {
+          case 1:
+            mpz_add(*int_value, *int_value, *((mpz_t*) argi->data));
+            break;
+          case 2:
+            mpz_mul(*int_value, *int_value, *((mpz_t*) argi->data));
+            break;
+          case 3:
+            mpz_sub(*int_value, *int_value, *((mpz_t*) argi->data));
+            break;
+          case 4:
+            mpz_fdiv_q(*int_value,
+                       *int_value, *((mpz_t*) argi->data));
+            break;
+          }
+    }
+  else
+    {
+      double val;
+      if (argi->type == Integer)
+        val = mpz_get_d(*((mpz_t*) argi->data));
+      else
+        val = *((double*) argi->data);
+	    
+      if (init)
+        *dbl_value = val;
+      else
+        switch (code)
+          {
+          case 1:
+            *dbl_value += val;
+            break;
+          case 2:
+            *dbl_value *= val;
+            break;
+          case 3:
+            *dbl_value -= val;
+            break;
+          case 4:
+            *dbl_value /= val;
+          }
+    }
+  
+}
+
 /**
  * Unified arithmetic operation, not called from SLOBIL code, used for other
  * arithmetic operations.
@@ -272,60 +467,13 @@ op_arithmetic (arg a, object* obj, const int code)
       #type=`(Real|Integer)'@
       ##GETARG~$;
 
-      if (argi->type == Real && result_type == Integer)
-        {
-          dbl_value = mpz_get_d(int_value);
-          result_type = Real;
-        }
-
-      if (result_type == Integer)
-        {
-          if (i == 1)
-            mpz_set(int_value, *((mpz_t*) argi->data));
-          else
-            switch (code)
-              {
-              case 1:
-                mpz_add(int_value, int_value, *((mpz_t*) argi->data));
-                break;
-              case 2:
-                mpz_mul(int_value, int_value, *((mpz_t*) argi->data));
-                break;
-              case 3:
-                mpz_sub(int_value, int_value, *((mpz_t*) argi->data));
-                break;
-              case 4:
-                mpz_fdiv_q(int_value,
-                           int_value, *((mpz_t*) argi->data));
-                break;
-              }
-        }
-      else
-        {
-          double val;
-          if (argi->type == Integer)
-            val = mpz_get_d(*((mpz_t*) argi->data));
-          else
-            val = *((double*) argi->data);
-	    
-          if (i == 1)
-            dbl_value = val;
-          else
-            switch (code)
-              {
-              case 1:
-                dbl_value += val;
-                break;
-              case 2:
-                dbl_value *= val;
-                break;
-              case 3:
-                dbl_value -= val;
-                break;
-              case 4:
-                dbl_value /= val;
-              }
-        }
+      do_arithmetic(code,
+                    argi,
+                    &int_value,
+                    &dbl_value,
+                    &result_type,
+                    i==1);
+                    
     }
 
   if (result_type == Integer)
@@ -335,6 +483,67 @@ op_arithmetic (arg a, object* obj, const int code)
 	      
   ret_ans(obj, d);
 }  
+
+void
+op_vector_arithmetic (arg a, object* obj, const int code)
+{
+	#op=vector-arithmetic@
+
+  data** args = malloc(sizeof(data*)*(a.length-1));
+  uint64_t min_len = 0;
+
+  for (int i=1; i < a.length; i++)
+    {
+      #num=i@
+      #type=Vector@
+      ##GETARG~$;
+
+      args[i-1] = argi;
+      if (min_len == 0)
+        min_len = ((vector*) args[i-1]->data)->len;
+      else
+        min_len = min_len > ((vector*) args[i-1]->data)->len ?
+          ((vector*) args[i-1]->data)->len :
+          min_len;
+    }
+
+  data* output = malloc(sizeof(data)*min_len);
+  
+  for (uint64_t j = 0; j < min_len; j++)
+    {
+      data* d;
+      data_type result_type = Integer;
+      mpz_t int_value;
+      mpz_init_set_si(int_value, 0);
+      double dbl_value = 0.0;
+
+      for (int i = 1; i < a.length; i++)
+        {
+
+          data* argi_el = &((vector*) args[i-1]->data)->elements[j];
+          do_arithmetic(code,
+                        argi_el,
+                        &int_value,
+                        &dbl_value,
+                        &result_type,
+                        i==1);
+                    
+        }
+
+      if (result_type == Integer)
+        assign_int(&d, int_value);
+      else
+        assign_real(&d, dbl_value);
+
+      output[j] = *d;
+    }
+
+  data* ret;
+  assign_vector(&ret, min_len, output, false);
+
+  ret_ans(obj, ret);
+}  
+
 
 /**
  * Adds its arguments and sets /ans slot to result
@@ -349,7 +558,18 @@ op_add (arg a, object* obj)
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, obj, 1);
+  #num=1@
+	#type=`(Real|Integer|Vector)'@
+  ##GETARG~$;
+
+  if (arg1->type == Vector)
+    {
+      op_vector_arithmetic(a, obj, 1);
+    }
+  else
+    {
+      op_arithmetic(a, obj, 1);
+    }
 }
 
 /**
@@ -365,7 +585,19 @@ op_mul (arg a, object* obj)
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, obj, 2);
+	#num=1@
+	#type=`(Real|Integer|Vector)'@
+  ##GETARG~$;
+
+  if (arg1->type == Vector)
+    {
+      op_vector_arithmetic(a, obj, 2);
+    }
+  else
+    {
+      op_arithmetic(a, obj, 2);
+    }
+
 }
 
 /**
@@ -381,7 +613,20 @@ op_sub (arg a, object* obj)
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, obj, 3);
+	#num=1@
+	#type=`(Real|Integer|Vector)'@
+  ##GETARG~$;
+
+
+  if (arg1->type == Vector)
+    {
+      op_vector_arithmetic(a, obj, 3);
+    }
+  else
+    {
+      op_arithmetic(a, obj, 3);
+    }
+
 }
 /**
  * Divides its arguments and sets /ans slot to result
@@ -396,7 +641,19 @@ op_div (arg a, object* obj)
   #length=2@
   ##CHECK_ARGS~$;
 
-  op_arithmetic(a, obj, 4);
+	#num=1@
+	#type=`(Real|Integer|Vector)'@
+  ##GETARG~$;
+
+  
+  if (arg1->type == Vector)
+    {
+      op_vector_arithmetic(a, obj, 4);
+    }
+  else
+    {
+      op_arithmetic(a, obj, 4);
+    }
 }
 
 /**
@@ -948,6 +1205,75 @@ op_source (arg a, object* obj)
   free_state(&state);
   free(file);
   fclose(f);
+
+}
+
+void
+op_vector_do(arg a, object* obj)
+{
+  #op=vector-do@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Operation@
+  ##GETARG~$;
+
+  data** arg_objects = malloc(sizeof(data*)*(a.length-2));
+  uint64_t min_length = 0;
+  for (int i=0; i < (a.length - 2); i++)
+    {
+      arg_objects[i] = resolve(a.arg_array[i+2], obj);
+      if (arg_objects[i]->type != Vector)
+        {
+          do_error("<vector-do> requires vector arguments.",
+                   obj->task->task);
+          free(arg_objects);
+          return;
+        }
+      uint64_t vec_length = ((vector*) arg_objects[i]->data)->len;
+      if (min_length==0)
+        {
+          min_length = vec_length;
+        }
+      else
+        {
+          min_length = min_length > vec_length ? vec_length : min_length;
+        }
+    }
+
+  data* elements = malloc(sizeof(data)*min_length);
+  data* d;
+  arg a1 = gen_arg(a.length-2, 0);
+  a1.arg_array[0] = arg1;
+  
+  for (uint64_t j=0; j < min_length; j++)
+    {
+      for (int i=0; i < (a.length - 2); i++)
+        {
+          a1.arg_array[i+1] =
+            &((vector*) arg_objects[i]->data)->elements[j];
+        }
+
+      compute(arg1, obj, a1);
+      d = lookup(obj, obj->task->task->slobil_hash_ans, 0);
+      if (d == NULL)
+        {
+          do_error("Operation did not set ans slot!",
+                   obj->task->task);
+          free(elements);
+          return;
+        }
+      d = copy_data(d);
+      printf("d = %f\n", *((double*) d->data));
+      elements[j] = *d;
+    }
+
+  data* ret;
+  assign_vector(&ret, min_length,
+                elements, true);
+
+  ret_ans(obj, ret);
 
 }
 
@@ -4412,7 +4738,6 @@ add_basic_ops (object* obj)
   set(obj,d,"current-dir",1);
 
 
-
   /** Time operations **/
   
   assign_op(&d, op_clock, NULL, NULL, 0);
@@ -4429,6 +4754,23 @@ add_basic_ops (object* obj)
   assign_op(&d, op_rand, NULL, NULL, 0);
   set(obj, d, "rand", 1);
 
+  /* Vector operations */
+
+  assign_op(&d, op_vector, NULL, NULL, 0);
+  set(obj, d, "vector", 1);
+
+  assign_op(&d, op_element, NULL, NULL, 0);
+  set(obj, d, "element", 1);
+
+  assign_op(&d, op_subset, NULL, NULL, 0);
+  set(obj, d, "subset", 1);
+
+  assign_op(&d, op_vector_do, NULL, NULL, 0);
+  set(obj, d, "vector-do", 1);
+
+  
+  /* vectorize - turn a list to a vector
+  
   /* Nothing operations */
 
   assign_op(&d, op_is_nothing, NULL, NULL, 0);

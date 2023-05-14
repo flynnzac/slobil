@@ -66,7 +66,8 @@ enum data_type
    Boolean = 512,
    Nothing = 1024,
    NotAType = 2048,
-   Task = 4096
+   Task = 4096,
+   Vector = 8192
   };
 
 typedef enum data_type data_type;
@@ -145,6 +146,7 @@ struct object
 
 typedef struct object object;
 
+
 /**
  * An iterator for an object's elements.
  */
@@ -158,6 +160,17 @@ struct object_iter
 typedef struct object_iter object_iter;
 
 typedef void (*operation)(struct arg, object*);
+
+/**
+ * Vectors are fixed-length objects.
+ */
+struct vector
+{
+  uint64_t len;
+  data* elements;
+};
+
+typedef struct vector vector;
 
 /**
  * C representation of a slot.
@@ -307,6 +320,10 @@ is_integer (const char* str);
 
 void
 assign_real (data** d, const double num);
+
+void
+assign_vector (data** d, const uint64_t len,
+               const data* elements, bool copy);
 
 void
 assign_int (data** d, const mpz_t num);
@@ -588,7 +605,7 @@ data*
 new_data();
 
 void
-slobil_location(mpz_t loc, int n);
+slobil_location(mpz_t loc, uint64_t n);
 
 int
 digits (int n);
