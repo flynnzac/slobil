@@ -38,7 +38,9 @@ new_task (task* t0)
   t->last_ans = NULL;
   t->source_code = NULL;
   t->slobil_options = new_object(NULL, SLOBIL_HASH_SIZE, t0);
-  t->slobil_hash_ans = hash_str("ans");
+  
+  t->slobil_slot_ans.name = "ans";
+  t->slobil_slot_ans.key = hash_str("ans");
   t->slobil_hash_t = hash_str("t");
   t->slobil_hash_underscore = hash_str("_");
   t->reading = false;

@@ -99,18 +99,20 @@ is_init_content (content* c)
  * @returns The content that it set.  This is a convenience return, the object is modified by the call.
  */
 content*
-set (object* obj, data* d, const char* name, int rehash_flag)
+set (object* obj, data* d, char* name, int rehash_flag)
 {
-  unsigned long hash_name = hash_str(name);
-  content* c = del(obj,hash_name,-1,false);
+  slot new_slot;
+  new_slot.name = name;
+  new_slot.key = hash_str(name);
+  content* c = del(obj, &new_slot,-1,false);
 
   if (c == NULL)
     {
-      if (obj->objects[hash_name % obj->hash_size] == NULL)
+      if (obj->objects[new_slot.key % obj->hash_size] == NULL)
         {
-          obj->objects[hash_name % obj->hash_size] = new_content();
+          obj->objects[new_slot.key % obj->hash_size] = new_content();
         }
-      c = obj->objects[hash_name % obj->hash_size];
+      c = obj->objects[new_slot.key % obj->hash_size];
       c = head(c);
       
       content* new_c = new_content();
@@ -120,14 +122,17 @@ set (object* obj, data* d, const char* name, int rehash_flag)
       c->right = new_c;
       new_c->name = malloc(sizeof(char)*(strlen(name)+1));
       strcpy(new_c->name, name);
-      new_c->key = hash_name;
+      new_c->key = new_slot.key;
       
       obj->elements++;
       
       if (rehash_flag && (obj->elements > (SLOBIL_LOAD_FACTOR*(obj->hash_size))))
         {
+          slot sl;
+          sl.name = "auto-rehash";
+          sl.key = hash_str(sl.name);
           data* check_hash = get(obj->task->task->slobil_options,
-                                 hash_str("auto-rehash"), 0);
+                                 &sl, 0);
           bool check = true;
 
           if (!(check_hash == NULL || check_hash->type != Boolean))
@@ -160,31 +165,31 @@ set (object* obj, data* d, const char* name, int rehash_flag)
  * @return a pointer to the data value from the slot
  */
 data*
-get (object* obj, unsigned long hash_name, int recursive)
+get (object* obj, slot* sl, int recursive)
 {
   if (obj == NULL)
     return NULL;
 
-  if (hash_name == obj->task->task->slobil_hash_underscore)
+  if (strcmp(sl->name, "_")==0)
     {
       data* d;
       assign_object(&d, obj, false, obj->task);
       return d;
     }
   
-  content* c = obj->objects[hash_name % obj->hash_size];
+  content* c = obj->objects[sl->key % obj->hash_size];
   if (c == NULL || is_init_content(c))
     {
       if (obj->inherit != NULL)
         {
-          data* inherit =  get(obj->inherit, hash_name, 0);
+          data* inherit =  get(obj->inherit, sl, 0);
           if (inherit != NULL)
             return inherit;
         }
       
       if (recursive)
         {
-          return get(obj->up, hash_name, recursive);
+          return get(obj->up, sl, recursive);
         }
       else
         {
@@ -196,22 +201,21 @@ get (object* obj, unsigned long hash_name, int recursive)
 
   while (c != NULL)
     {
-      if (c->key == hash_name && c->value != NULL)
+      if ((strcmp(c->name, sl->name) == 0) && c->value != NULL)
         return c->value;
-
       c = c->right;
     }
 
   if (obj->inherit != NULL)
     {
-      data* inherit =  get(obj->inherit, hash_name, 0);
+      data* inherit =  get(obj->inherit, sl, 0);
       if (inherit != NULL)
         return inherit;
     }
 
   if ((obj->up != NULL) && recursive)
     {
-      return get(obj->up, hash_name, recursive);
+      return get(obj->up, sl, recursive);
     }
   else
     {
@@ -229,9 +233,9 @@ get (object* obj, unsigned long hash_name, int recursive)
  */
 
 data*
-lookup (object* obj, unsigned long hash_name, int recursive)
+lookup (object* obj, slot* sl, int recursive)
 {
-  data* d = get(obj, hash_name, recursive);
+  data* d = get(obj, sl, recursive);
 
   if (d == NULL)
     return NULL;
@@ -261,12 +265,12 @@ mov (object* obj, slot* old, slot* new)
   cur = cur->right;
   while (cur != NULL)
     {
-      if (cur->key == old->key)
+      if (cur->name == old->name)
         {
-          del(obj, new->key, 1, false);
+          del(obj, new, 1, false);
           data* d = cur->value;
           int do_not_free_data = cur->do_not_free_data;
-          del(obj, old->key, 0, false);
+          del(obj, old, 0, false);
           content* c = set(obj, d, new->name, 0);
           c->do_not_free_data = do_not_free_data;
           return c;
@@ -286,9 +290,9 @@ mov (object* obj, slot* old, slot* new)
  * @return a pointer to the content where the data was deleted if del_data is less than 0, otherwise returns NULL.
  */
 content*
-del (object* obj, unsigned long hash_name, int del_data, bool hard_free)
+del (object* obj, slot* sl, int del_data, bool hard_free)
 {
-  content* cur = obj->objects[hash_name % obj->hash_size];
+  content* cur = obj->objects[sl->key % obj->hash_size];
   
   if (cur == NULL)
     return NULL;
@@ -300,7 +304,7 @@ del (object* obj, unsigned long hash_name, int del_data, bool hard_free)
 
   while (cur != NULL)
     {
-      if (cur->key == hash_name)
+      if (strcmp(cur->name, sl->name)==0)
         {
           if (del_data >= 0)
             obj->elements--;
@@ -343,10 +347,10 @@ del (object* obj, unsigned long hash_name, int del_data, bool hard_free)
             {
               free(cur);
               
-              if (is_init_content(obj->objects[hash_name % obj->hash_size]))
+              if (is_init_content(obj->objects[sl->key % obj->hash_size]))
                 {
-                  free(obj->objects[hash_name % obj->hash_size]);
-                  obj->objects[hash_name % obj->hash_size] = NULL;
+                  free(obj->objects[sl->key % obj->hash_size]);
+                  obj->objects[sl->key % obj->hash_size] = NULL;
                 }
                 
               return NULL;
@@ -397,9 +401,12 @@ mark_do_not_free (object* obj, unsigned long hash_name)
  * @return pointer to data value at final slot location
  */
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, char** name)
+get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name)
 {
-  data* d = get(reg, hash_name[0], 1);
+  slot sl;
+  sl.name = name[0];
+  sl.key = hash[0];
+  data* d = get(reg, &sl, 1);
   if (d == NULL)
     {
       char* msg = malloc(sizeof(char)*
@@ -431,13 +438,15 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, 
               return NULL;
             }
 
+          sl.name = name[i];
+          sl.key = hash[i];
           if (is_slot[i])
             {
-              d = get((object*) d->data, hash_name[i], 0);
+              d = get((object*) d->data, &sl, 0);
             }
           else
             {
-              data* d1 = get(reg, hash_name[i], 1);
+              data* d1 = get(reg, &sl, 1);
               if (d1 == NULL || d1->type != Slot)
                 {
                   do_error("Cannot use `:` with non-slot.",
@@ -447,7 +456,7 @@ get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, 
               else
                 {
                   d = get((object*) d->data,
-                          ((slot*) d1->data)->key,
+                          ((slot*) d1->data),
                           0);
                 }
             }
