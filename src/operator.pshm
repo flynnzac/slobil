@@ -1174,7 +1174,6 @@ op_last (arg a, object* obj)
   ##GETARG~$;
 
   object* arg_obj = (object*) arg1->data;
-  char* name = NULL;
   int i = 1;
   data* d;
   char* root = ((slot*) arg2->data)->name;
@@ -1188,7 +1187,7 @@ op_last (arg a, object* obj)
       i++;
       free(sl.name);
       sl.name = vector_name(root, i);
-      sl.key = hash_str(name);
+      sl.key = hash_str(sl.name);
     }
   free(sl.name);
 

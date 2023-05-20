@@ -265,7 +265,7 @@ mov (object* obj, slot* old, slot* new)
   cur = cur->right;
   while (cur != NULL)
     {
-      if (cur->name == old->name)
+      if (strcmp(cur->name, old->name)==0)
         {
           del(obj, new, 1, false);
           data* d = cur->value;
