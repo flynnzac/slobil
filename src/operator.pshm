@@ -1419,14 +1419,8 @@ op_collapse (arg a, object* obj)
   first_name = vector_name(prefix, 1);
   second_name = vector_name(prefix, i);
   
-  slot first_slot;
-  slot second_slot;
-  
-  first_slot.name = first_name;
-  first_slot.key = hash_str(first_name);
-
-  second_slot.name = second_name;
-  second_slot.key = hash_str(second_name);
+  slot first_slot = make_slot(first_name);
+  slot second_slot = make_slot(second_name);
 
   object* r = new_object(to_walk, SLOBIL_HASH_SIZE, obj->task);
 
@@ -1476,8 +1470,7 @@ op_collapse (arg a, object* obj)
       i++;
       free(second_name);
       second_name = vector_name(prefix, i);
-      second_slot.name = second_name;
-      second_slot.key = hash_str(second_name);
+      second_slot = make_slot(second_name);
     }
   d = lookup(r, &obj->task->task->slobil_slot_ans, 0);
   if (d != NULL)
@@ -3480,9 +3473,7 @@ op_make_clock (arg a, object* obj)
   object* r = (object*) arg1->data;
   data* d;
 
-  slot sl_ms;
-  sl_ms.name = "milliseconds";
-  sl_ms.key = hash_str("milliseconds");
+  slot sl_ms = make_slot("milliseconds");
   d = get(r, &sl_ms, 0);
   if (d == NULL || (d->type != Integer))
     {
@@ -3494,9 +3485,7 @@ op_make_clock (arg a, object* obj)
   z_ms = (mpz_t*) d->data;
   time_t ms = mpz_get_si(*z_ms);
 
-  slot sl_sec;
-  sl_sec.name = "seconds";
-  sl_sec.key = hash_str("seconds");
+  slot sl_sec = make_slot("seconds");
   
   d = get(r, &sl_sec, 0);
   if (d == NULL || (d->type != Integer))
@@ -3507,10 +3496,8 @@ op_make_clock (arg a, object* obj)
 
   time.tm_sec = mpz_get_si(*((mpz_t*) d->data));
 
-  slot sl_minute;
-  sl_minute.name = "minute";
-  sl_minute.key = hash_str("minute");
-  
+  slot sl_minute = make_slot("minute");
+
   d = get(r, &sl_minute, 0);
   if (d == NULL || (d->type != Integer))
     {
@@ -3520,9 +3507,7 @@ op_make_clock (arg a, object* obj)
 
   time.tm_min = mpz_get_si(*((mpz_t*) d->data));
 
-  slot sl_hour;
-  sl_hour.name = "hours";
-  sl_hour.key = hash_str("hour");
+  slot sl_hour = make_slot("hour");
   
   d = get(r, &sl_hour, 0);
   if (d == NULL || (d->type != Integer))
@@ -3533,9 +3518,7 @@ op_make_clock (arg a, object* obj)
 
   time.tm_hour = mpz_get_si(*((mpz_t*) d->data));
 
-  slot sl_day;
-  sl_day.name = "day";
-  sl_day.key = hash_str("day");
+  slot sl_day = make_slot("day");
   
   d = get(r, &sl_day, 0);
   if (d == NULL || (d->type != Integer))
@@ -3546,9 +3529,7 @@ op_make_clock (arg a, object* obj)
 
   time.tm_mday = mpz_get_si(*((mpz_t*) d->data));
 
-  slot sl_month;
-  sl_month.name = "month";
-  sl_month.key = hash_str("month");
+  slot sl_month = make_slot("month");
   
   d = get(r, &sl_month, 0);
   if (d == NULL || (d->type != Integer))
@@ -3559,9 +3540,7 @@ op_make_clock (arg a, object* obj)
 
   time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) - 1;
   
-  slot sl_year;
-  sl_year.name = "year";
-  sl_year.key = hash_str("year");
+  slot sl_year = make_slot("year");
 
   d = get(r, &sl_year, 0);
   if (d == NULL || (d->type != Integer))

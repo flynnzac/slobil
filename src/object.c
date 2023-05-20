@@ -101,9 +101,7 @@ is_init_content (content* c)
 content*
 set (object* obj, data* d, char* name, int rehash_flag)
 {
-  slot new_slot;
-  new_slot.name = name;
-  new_slot.key = hash_str(name);
+  slot new_slot = make_slot(name);
   content* c = del(obj, &new_slot,-1,false);
 
   if (c == NULL)
@@ -128,9 +126,7 @@ set (object* obj, data* d, char* name, int rehash_flag)
       
       if (rehash_flag && (obj->elements > (SLOBIL_LOAD_FACTOR*(obj->hash_size))))
         {
-          slot sl;
-          sl.name = "auto-rehash";
-          sl.key = hash_str(sl.name);
+          slot sl = make_slot("auto-rehash");
           data* check_hash = get(obj->task->task->slobil_options,
                                  &sl, 0);
           bool check = true;
@@ -456,7 +452,7 @@ get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char*
               else
                 {
                   d = get((object*) d->data,
-                          ((slot*) d1->data),
+                          (slot*) d1->data,
                           0);
                 }
             }
