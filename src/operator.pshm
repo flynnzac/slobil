@@ -512,8 +512,8 @@ op_get (arg a, object* obj)
       to_look = (object*) arg2->data;
     }
 
-  data* ans = lookup(to_look, ((slot*) arg1->data)->key,
-		     a.length==2);
+  data* ans = lookup(to_look, ((slot*) arg1->data),
+                     a.length==2);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -609,7 +609,7 @@ op_delete (arg a, object* obj)
   #type=Slot@
   ##GETARG~$;
   
-  del(obj, ((slot*) arg1->data)->key, 1, false);
+  del(obj, ((slot*) arg1->data), 1, false);
 }
 
 void
@@ -650,7 +650,7 @@ op_exist (arg a, object* obj)
       to_use = (object*) arg2->data;
     }
 
-  data* ret_obj = get(to_use, ((slot*) arg1->data)->key, a.length < 3 ? 1 : 0);
+  data* ret_obj = get(to_use, ((slot*) arg1->data), a.length < 3 ? 1 : 0);
   data* d;
   if (ret_obj == NULL)
     {
@@ -1040,7 +1040,10 @@ op_do (arg a, object* obj)
           bool in_all = true;
           for (int j = 0; j < (a.length-2); j++)
             {
-              d = get(arg_obj[j], c->key, 0);
+              slot sl;
+              sl.name = c->name;
+              sl.key = c->key;
+              d = get(arg_obj[j], &sl, 0);
               if (d==NULL)
                 {
                   c = c->right;
@@ -1057,7 +1060,7 @@ op_do (arg a, object* obj)
             continue;
 
           compute(arg1, obj, a1);
-          d = lookup(obj, obj->task->task->slobil_hash_ans, 0);
+          d = lookup(obj, &obj->task->task->slobil_slot_ans, 0);
           if (d != NULL)
             {
               d = copy_data(d);
@@ -1171,29 +1174,30 @@ op_last (arg a, object* obj)
   ##GETARG~$;
 
   object* arg_obj = (object*) arg1->data;
-  char* name = NULL;
   int i = 1;
   data* d;
   char* root = ((slot*) arg2->data)->name;
-  name = vector_name(root, i);
-  unsigned long hash_name = hash_str(name);
 
-  while ((d = get(arg_obj, hash_name, 0)) != NULL)
+  slot sl;
+  sl.name = vector_name(root, i);
+  sl.key = hash_str(sl.name);
+
+  while ((d = get(arg_obj, &sl, 0)) != NULL)
     {
       i++;
-      free(name);
-      name = vector_name(root, i);
-      hash_name = hash_str(name);
+      free(sl.name);
+      sl.name = vector_name(root, i);
+      sl.key = hash_str(sl.name);
     }
-  free(name);
+  free(sl.name);
 
-  name = vector_name(root, i-1);
+  sl.name = vector_name(root, i-1);
 
   d = new_data();
   d->type = Slot;
   d->data = malloc(sizeof(slot));
-  ((slot*) d->data)->name = name;
-  ((slot*) d->data)->key = hash_str(name);
+  ((slot*) d->data)->name = sl.name;
+  ((slot*) d->data)->key = hash_str(sl.name);
 
   ret_ans(obj, d);
   
@@ -1215,7 +1219,7 @@ method_call (arg a, object* obj)
   ##GETARG~$;
 
   data* instr = get((object*) arg0->data,
-                    ((slot*) arg1->data)->key,
+                    ((slot*) arg1->data),
                     0);
 
   if (instr == NULL)
@@ -1262,7 +1266,7 @@ op_in (arg a, object* obj)
   execute_0(arg2, (object*) arg1->data);
   ((object*) arg1->data)->up = NULL;
   
-  data* ans = lookup((object*) arg1->data, obj->task->task->slobil_hash_ans, 0);
+  data* ans = lookup((object*) arg1->data, &obj->task->task->slobil_slot_ans, 0);
   if (ans != NULL)
     {
       ans = copy_data(ans);
@@ -1292,7 +1296,7 @@ op_while (arg a, object* obj)
       if (is_error(-1, obj->task->task))
         break;
           
-      d = get(obj, obj->task->task->slobil_hash_ans, 0);
+      d = get(obj, &obj->task->task->slobil_slot_ans, 0);
 
       if (d == NULL)
         {
@@ -1413,10 +1417,11 @@ op_collapse (arg a, object* obj)
   to_walk->up = obj;
 
   first_name = vector_name(prefix, 1);
-  unsigned long first_hash = hash_str(first_name);
   second_name = vector_name(prefix, i);
+  
+  slot first_slot = make_slot(first_name);
+  slot second_slot = make_slot(second_name);
 
-  unsigned long second_hash = hash_str(second_name);
   object* r = new_object(to_walk, SLOBIL_HASH_SIZE, obj->task);
 
   arg a1;
@@ -1435,19 +1440,19 @@ op_collapse (arg a, object* obj)
 
   int is_first = 1;
   
-  while ((d = lookup(to_walk, second_hash, 0)) != NULL)
+  while ((d = lookup(to_walk, &second_slot, 0)) != NULL)
     {
 
       if (is_first)
-        d1 = lookup(to_walk, first_hash, 0);
+        d1 = lookup(to_walk, &first_slot, 0);
       
-      d2 = lookup(to_walk, second_hash, 0);
+      d2 = lookup(to_walk, &second_slot, 0);
 
       a1.arg_array[1] = d1;
       a1.arg_array[2] = d2;
         
       compute(arg1, r, a1);
-      d1 = lookup(r, obj->task->task->slobil_hash_ans, 0);
+      d1 = lookup(r, &obj->task->task->slobil_slot_ans, 0);
 
       if (d1 == NULL)
         {
@@ -1459,15 +1464,15 @@ op_collapse (arg a, object* obj)
       if (is_first)
         {
           free(first_name);
-          first_hash = obj->task->task->slobil_hash_ans;
+          first_slot = obj->task->task->slobil_slot_ans;
           is_first = 0;
         }
       i++;
       free(second_name);
       second_name = vector_name(prefix, i);
-      second_hash = hash_str(second_name);
+      second_slot = make_slot(second_name);
     }
-  d = lookup(r, obj->task->task->slobil_hash_ans, 0);
+  d = lookup(r, &obj->task->task->slobil_slot_ans, 0);
   if (d != NULL)
     {
       ret_ans(obj, copy_data(d));
@@ -2161,7 +2166,7 @@ op_close (arg a, object* obj)
   #type=Slot@
   ##GETARG~$;
 
-  data* f = lookup(obj, ((slot*) arg1->data)->key, 0);
+  data* f = lookup(obj, ((slot*) arg1->data), 0);
 
   if (f == NULL)
     {
@@ -2182,7 +2187,7 @@ op_close (arg a, object* obj)
       fclose((FILE*) f->data);
     }
 
-  del(obj, ((slot*) arg1->data)->key, 1, false);
+  del(obj, ((slot*) arg1->data), 1, false);
   
 }
 
@@ -3009,7 +3014,7 @@ op_up (arg a, object* obj)
 
   compute(a1.arg_array[0], obj->up, a1);
 
-  data* d = lookup(obj->up, obj->task->task->slobil_hash_ans, 0);
+  data* d = lookup(obj->up, &obj->task->task->slobil_slot_ans, 0);
   if (d != NULL)
     {
       d = copy_data(d);
@@ -3151,7 +3156,7 @@ op_filter (arg a, object* obj)
               assign_slot(&key, c->name, c->key);
               a1.arg_array[2] = key;
               compute(arg2, obj, a1);
-              data* d = lookup(obj, obj->task->task->slobil_hash_ans, 0);
+              data* d = lookup(obj, &obj->task->task->slobil_slot_ans, 0);
               if ((d != NULL) && (d->type == Boolean) &&
                   *((bool*) d->data))
                 {
@@ -3468,7 +3473,8 @@ op_make_clock (arg a, object* obj)
   object* r = (object*) arg1->data;
   data* d;
 
-  d = get(r, hash_str("milliseconds"), 0);
+  slot sl_ms = make_slot("milliseconds");
+  d = get(r, &sl_ms, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /milliseconds.", obj->task->task);
@@ -3479,7 +3485,9 @@ op_make_clock (arg a, object* obj)
   z_ms = (mpz_t*) d->data;
   time_t ms = mpz_get_si(*z_ms);
 
-  d = get(r, hash_str("seconds"), 0);
+  slot sl_sec = make_slot("seconds");
+  
+  d = get(r, &sl_sec, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /seconds.", obj->task->task);
@@ -3488,7 +3496,9 @@ op_make_clock (arg a, object* obj)
 
   time.tm_sec = mpz_get_si(*((mpz_t*) d->data));
 
-  d = get(r, hash_str("minute"), 0);
+  slot sl_minute = make_slot("minute");
+
+  d = get(r, &sl_minute, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /minute.", obj->task->task);
@@ -3496,8 +3506,10 @@ op_make_clock (arg a, object* obj)
     }
 
   time.tm_min = mpz_get_si(*((mpz_t*) d->data));
+
+  slot sl_hour = make_slot("hour");
   
-  d = get(r, hash_str("hour"), 0);
+  d = get(r, &sl_hour, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /hour.", obj->task->task);
@@ -3505,8 +3517,10 @@ op_make_clock (arg a, object* obj)
     }
 
   time.tm_hour = mpz_get_si(*((mpz_t*) d->data));
-     
-  d = get(r, hash_str("day"), 0);
+
+  slot sl_day = make_slot("day");
+  
+  d = get(r, &sl_day, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /day.", obj->task->task);
@@ -3515,7 +3529,9 @@ op_make_clock (arg a, object* obj)
 
   time.tm_mday = mpz_get_si(*((mpz_t*) d->data));
 
-  d = get(r, hash_str("month"), 0);
+  slot sl_month = make_slot("month");
+  
+  d = get(r, &sl_month, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /month.", obj->task->task);
@@ -3524,8 +3540,9 @@ op_make_clock (arg a, object* obj)
 
   time.tm_mon = mpz_get_si(*((mpz_t*) d->data)) - 1;
   
+  slot sl_year = make_slot("year");
 
-  d = get(r, hash_str("year"), 0);
+  d = get(r, &sl_year, 0);
   if (d == NULL || (d->type != Integer))
     {
       do_error("No Integer data at /year.", obj->task->task);
@@ -3724,7 +3741,7 @@ op_accept (arg a, object* obj)
     {
       pthread_mutex_lock(&t->lock);
       d = get(t->queued_instruction,
-              ((slot*) arg1->data)->key,
+              ((slot*) arg1->data),
               0);
       if (d==NULL)
         {
@@ -3732,7 +3749,7 @@ op_accept (arg a, object* obj)
         }
     }
 
-  del(t->queued_instruction, ((slot*) arg1->data)->key,
+  del(t->queued_instruction, ((slot*) arg1->data),
       0, false);  
   ret_ans(obj, d);
   pthread_mutex_unlock(&t->lock);
@@ -3796,7 +3813,7 @@ op_select (arg a, object* obj)
       for (int i=0; i < hash_idx; i++)
         {
           d = get(t->queued_instruction,
-                  ((slot*) hashes[i]->data)->key,
+                  ((slot*) hashes[i]->data),
                   0);
           if (d != NULL)
             {
@@ -3804,7 +3821,7 @@ op_select (arg a, object* obj)
               d = copy_data(d);
               ret_ans(obj,d);
               del(t->queued_instruction,
-                  ((slot*) hashes[idx]->data)->key,
+                  ((slot*) hashes[idx]->data),
                   1, false);
 
               break;
@@ -3851,7 +3868,7 @@ op_accept_or (arg a, object* obj)
 
   pthread_mutex_lock(&t->lock);
   data* d = get(t->queued_instruction,
-                ((slot*) arg1->data)->key,
+                ((slot*) arg1->data),
                 0);
   pthread_mutex_unlock(&t->lock);
 
@@ -3862,7 +3879,7 @@ op_accept_or (arg a, object* obj)
   else
     {
       pthread_mutex_lock(&t->lock);
-      del(t->queued_instruction, ((slot*) arg1->data)->key,
+      del(t->queued_instruction, ((slot*) arg1->data),
           0, false);
       ret_ans(obj,d);
       pthread_mutex_unlock(&t->lock);

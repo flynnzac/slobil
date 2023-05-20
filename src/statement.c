@@ -150,7 +150,7 @@ execute_statement (statement* s, object* reg)
           if (e->statement)
             {
               execute_code(e->s, reg);
-              d = get(reg, reg->task->task->slobil_hash_ans, 0);
+              d = get(reg, &reg->task->task->slobil_slot_ans, 0);
               if (d == NULL)
                 {
                   do_error("Instruction in [] did not set /ans slot.",
@@ -158,7 +158,7 @@ execute_statement (statement* s, object* reg)
                 }
               else 
                 {
-                  del(reg, reg->task->task->slobil_hash_ans, 0, false);
+                  del(reg, &reg->task->task->slobil_slot_ans, 0, false);
                   /* mark_do_not_free(reg, slobil_hash_ans); */
                 }
             }

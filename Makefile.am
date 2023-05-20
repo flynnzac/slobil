@@ -72,6 +72,7 @@ libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse
 
 libslobil_la_SOURCES += src/operator.pshm
 
+
 test_unit_test_arg_SOURCES = test/unit/test_arg.c
 test_unit_test_arg_DEPENDENCIES = libslobil.la
 test_unit_test_arg_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lslobil

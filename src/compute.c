@@ -35,7 +35,7 @@
  * @param name the name of the slot to set, null-terminated string
  */
 void
-ret (object* obj, data* d, const char* name)
+ret (object* obj, data* d, char* name)
 {
   if (obj != NULL)
     {
@@ -74,10 +74,10 @@ ret_ans_to_object (object* obj_tmp, object* obj)
   data* ans;
   if (!is_error(-1, obj->task->task))
     {
-      ans = get(obj_tmp, obj->task->task->slobil_hash_ans, 0);
+      ans = get(obj_tmp, &obj->task->task->slobil_slot_ans, 0);
       if (ans != NULL)
         {
-          mark_do_not_free(obj_tmp, obj->task->task->slobil_hash_ans);
+          mark_do_not_free(obj_tmp, obj->task->task->slobil_slot_ans.key);
           ret_ans(obj, ans);
         }
     }

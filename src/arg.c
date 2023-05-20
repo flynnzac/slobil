@@ -84,7 +84,7 @@ resolve (data* arg, object* obj)
   if (arg->type == Expression)
     {
       execute_0(arg, obj);
-      return get(obj, obj->task->task->slobil_hash_ans, 0);
+      return get(obj, &obj->task->task->slobil_slot_ans, 0);
     }
   else
     {

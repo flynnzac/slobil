@@ -36,8 +36,9 @@ is_error (int e, task_vars* t)
 void
 do_error (const char* msg, task_vars* t)
 {
+  slot sl = make_slot("print-errors");
   data* d = get(t->slobil_options,
-                hash_str("print-errors"),
+                &sl,
                 0);
   bool print_error = true;
   if (!(d==NULL || d->type != Boolean))

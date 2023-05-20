@@ -559,11 +559,12 @@ interact (FILE* f, parser_state* state, object* reg)
         {
           if (reg->up == NULL && state->print_out)
             {
-              d = get(reg, reg->task->task->slobil_hash_ans, 0);
+              d = get(reg, &reg->task->task->slobil_slot_ans, 0);
               if (d != NULL && d != (reg->task->task->last_ans))
                 {
+                  slot sl = make_slot("print-ans");
                   data* opt = get(reg->task->task->slobil_options,
-                                  hash_str("print-ans"),
+                                  &sl,
                                   0);
                   bool print_out = true;
                   if (opt != NULL && opt->type == Boolean)

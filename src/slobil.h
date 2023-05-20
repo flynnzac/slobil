@@ -70,6 +70,16 @@ enum data_type
   };
 
 typedef enum data_type data_type;
+/**
+ * C representation of a slot.
+ */
+struct slot
+{
+  char* name;
+  unsigned long key;
+};
+
+typedef struct slot slot;
 
 struct arg;
 struct object;
@@ -118,10 +128,7 @@ struct task_vars
   
   struct object* slobil_options;
 
-  unsigned long slobil_hash_ans;
-  unsigned long slobil_hash_t;
-  unsigned long slobil_hash_underscore;
-
+  slot slobil_slot_ans;
   bool reading;
 };
 
@@ -159,16 +166,6 @@ typedef struct object_iter object_iter;
 
 typedef void (*operation)(struct arg, object*);
 
-/**
- * C representation of a slot.
- */
-struct slot
-{
-  char* name;
-  unsigned long key;
-};
-
-typedef struct slot slot;
 
 /**
  * Wrapper for both C-based operations and instructions masquerading as operations
@@ -354,16 +351,16 @@ content*
 tail (content* reg);
 
 content*
-set (object* reg, data* d, const char* name, int rehash);
+set (object* reg, data* d, char* name, int rehash);
 
 data*
-get (object* reg, unsigned long hash_name, int recursive);
+get (object* reg, slot* sl, int recursive);
 
 content*
 mov (object* reg, slot* old, slot* new);
 
 content*
-del (object* reg, unsigned long hash_name, int del_data, bool hard_free);
+del (object* reg, slot* sl, int del_data, bool hard_free);
 
 data*
 get_data_in_object (object* reg, const slot name);
@@ -414,7 +411,7 @@ object*
 new_object (object* parent, size_t hash_size, task* t);
 
 void
-ret (object* reg, data* d, const char* name);
+ret (object* reg, data* d, char* name);
 
 void
 ret_ans (object* reg, data* d);
@@ -448,7 +445,7 @@ void
 assign_expression (data** d, statement* s);
 
 data*
-lookup (object* reg, unsigned long hash_name, int recursive);
+lookup (object* reg, slot* sl, int recursive);
 
 void
 compute (data* cmd, object* reg, arg arg);
@@ -525,7 +522,7 @@ int*
 copy_isslot (int* is_slot, int levels);
 
 data*
-get_by_levels (object* reg, unsigned long* hash_name, int levels, int* is_slot, char** name);
+get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name);
 
 const char*
 str_type (data_type type);
@@ -659,6 +656,9 @@ void
 object_next_iter (object_iter* iter);
 
 /* interpreter internal object */
+
+slot
+make_slot(char* name);
 
 
 #ifdef GARBAGE

@@ -139,5 +139,13 @@ digits (int n)
   else
     return floor(log10(n))+1;
 }
-    
+
+slot
+make_slot(char* name)
+{
+  slot sl;
+  sl.name = name;
+  sl.key = hash_str(name);
+  return sl;
+}
   
