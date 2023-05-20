@@ -41,8 +41,7 @@ new_task (task* t0)
   
   t->slobil_slot_ans.name = "ans";
   t->slobil_slot_ans.key = hash_str("ans");
-  t->slobil_hash_t = hash_str("t");
-  t->slobil_hash_underscore = hash_str("_");
+  
   t->reading = false;
   t0->task = t;
 

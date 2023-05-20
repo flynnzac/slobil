@@ -129,9 +129,6 @@ struct task_vars
   struct object* slobil_options;
 
   slot slobil_slot_ans;
-  unsigned long slobil_hash_t;
-  unsigned long slobil_hash_underscore;
-
   bool reading;
 };
 
