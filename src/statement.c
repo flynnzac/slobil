@@ -219,9 +219,21 @@ execute_code (statement* s, object* reg)
       if (reg->task->task->slobil_stop_error_threshold > 0 &&
           (error >= reg->task->task->slobil_stop_error_threshold))
         {
-          printf("-> ");
-          print_statement(stmt);
-          printf("\n");
+          slot sl = make_slot("print-errors");
+          data* d = get(reg->task->task->slobil_options,
+                        &sl,
+                        0);
+          bool print_error = true;
+          if (!(d==NULL || d->type != Boolean))
+            {
+              print_error = *((bool*) d->data);
+            }
+          if (print_error)
+            {
+              printf("-> ");
+              print_statement(stmt);
+              printf("\n");
+            }
           break;
         }
       else

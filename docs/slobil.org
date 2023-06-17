@@ -483,6 +483,12 @@ ans = 6
 
 =collapse= and =last= both operate on the =/t= prefix by default so the last argument can be omitted if that is the prefix desired,
 
+*** Exceptions and Error Handling
+
+=please= is the SLOBIL operation for handling errors.  It takes two arguments.  The first is an instruction to execute in the current object.  The second is an instruction to execute if the first instruction fails.
+
+Note that errors will still be printed to the console unless you run =interpreter /print-errors False .= first.
+
 *** Saving and Loading Objects
 
 Objects can be saved with the =save= operation.  =save= saves the current object to the given filepath.
