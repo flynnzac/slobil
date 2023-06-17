@@ -2,10 +2,10 @@
 ' riemmann sum over range
 
 set /integrate 
-    ( 
-      set /delta [ div [ sub ub lb ] n ] .
-      set /x lb .
-      set /int 0.0 .
+    (
+      /delta [ div [ sub ub lb ] n ] .
+      /x lb .
+      /int 0.0 .
       repeat n
              (
                incr int [ f x ] .

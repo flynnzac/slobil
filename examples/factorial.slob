@@ -1,15 +1,15 @@
 ' compute a factorial using while
 set /factorial
     [ op (
-      set /i 2 .
-      set /prod 1 .
+      /i 2 .
+      /prod 1 .
       while ( lt-eq i t )
             (
-              set /prod [ mul i prod ] .
+              /prod [ mul i prod ] .
               incr i .
             ) .
       answer prod .
-    ) /t ] .    
+    ) /t ] .
 
 
 ' compute factorial using recursion

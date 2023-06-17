@@ -1,5 +1,4 @@
 /* 
-
    SLOBIL is a Object Based Environment and Language
    Copyright 2021 Zach Flynn <zlflynn@gmail.com>
 

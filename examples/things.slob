@@ -9,16 +9,16 @@
 ' Start a new record of work or load an old one
 
 /init
-  [ op
-      (
-        up set /current-file file .
-        please ( load file record )
-               (
-                 up set /record [ object ] .
-                 up set /thing-list [ object ] record .
-                 print "Starting new file." .
-               ) .
-      ) /file ] .
+  [ op (
+            up set /current-file file .
+            please ( load file record )
+                   (
+                     up set /record [ object ] .
+                     up set /thing-list [ object ] record .
+                     print "Starting new file." .
+                   ) .
+      ) /file
+  ] .
 
 
 ' Save record of work in SLOBIL format
@@ -260,8 +260,7 @@
            {
              up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
            } .
-      )
-      /x ] .
+      ) /x ] .
 
 ' Rewind X minutes from last entry
 /rewind-last
@@ -278,8 +277,7 @@
                ]
                record:end .
            } .
-      )
-       /x ] .
+      ) /x ] .
 
 
 

@@ -12,6 +12,17 @@
 
 * Introduction
 
+SLOBIL is easy to use interactively. It is natural to write line-by-line in the REPL and has a command-like syntax.  SLOBIL programs can just be collections of functions executed in the SLOBIL REPL itself.
+
+SLOBIL is a dynamically-typed language.  You do not define new types in the language.  Instead the language provides a few flexible types. The language has a prototype object system, i.e. reference instances of an object are used to create new instances and changes to parent instances cascade down the chain.  In other words, you do not declare an object a member of class X.  You say, this object is like that other object, except in these ways.
+
+SLOBIL prioritizes what the caller of the code wants to do.  /Instructions/, which would be functions or procedures in other languages, do not have fixed argument lists and users can modify other aspects of the instruction that, perhaps, the original author did not intend.  The language gives you the sharp knife and lets you cut.
+
+It is biased against strict encapsulation and towards flexibility for the end user.  
+
+It has superficial syntax similarities to Tcl in that the language is a command-based language that uses different types of parenthesis to do different things.  The semantics are very different though.
+
+
 * The Language
 
 ** Lexical Elements
@@ -52,13 +63,13 @@ Programmers do not define types.  The following are the data types: /Integer/, /
 
 /String/'s are UTF-8 encoded character strings.  Internally, they are represented as UTF-32 strings for speed, but they output to UTF-8.
 
-/Slot/'s indicate the location of data and also can act as symbols.  They are written by giving a name that begins with a forward-slash. They are represented as a hash of their name internally.
+/Slot/'s indicate the location of data and also can act as symbols.  They are written by giving a name that begins with a forward-slash. 
 
 /Object/'s can contain any number of slots and store data in these locations.  Code is executed inside of objects and can refer to data located in the object's slots.  Objects are represented internally as a hash table.
 
 /Instruction/'s are SLOBIL code objects that are executed only when the programmer explicitly requests their execution.  They are the primary way programmers write functions, procedures, and methods.  Instructions are created by enclosing code between the tokens =(= and =)=.
 
-/Expression/'s are SLOBIL code objects that are executed whenever the programmer requests their value.  Expressions are created by enclosing code between the tokens ={= and =}=.
+/Expression/'s are SLOBIL code objects that are executed whenever the programmer requests their value, i.e. they are /lazy/.  Expressions are created by enclosing code between the tokens ={= and =}=.
 
 /Operation/'s are code objects that take a series of positional arguments.  The built-in operations are written in C, but users can also define operations.
 
@@ -68,7 +79,7 @@ Programmers do not define types.  The following are the data types: /Integer/, /
 
 /Nothing/ is the type for the literal nothing value /Nothing/.  Nothing else has this type.
 
-/Task/'s are processes running on the computer.  When the program starts, it is in the main tasks.  Additional tasks can be created for multi-threaded programs.
+/Task/'s are processes running on the computer.  When the program starts, it is in the main task.  Additional tasks can be created for multi-threaded programs.
 
 /File/, /Task/, and /Object/ data are passed by reference.  All others are by value.
 
@@ -711,7 +722,7 @@ Now, whenever we start a SLOBIL session, we can simply type:
 	
 ** A Time-Keeping Program
 
-When I worked for a company that billed clients by the hour, I had to keep track of my time.  I used this program to do it until I left the job.  With two and a half years of use, it is certainly the most used SLOBIL program.
+I used this program to keep track of billable hours for about three years. It is certainly the most used SLOBIL program as of June 2023.
 
 #+INCLUDE: "../examples/things.slob" src slobil
 
@@ -840,6 +851,17 @@ t2 of type String, value: 2
 t3 of type String, value: 3
    #+END_SRC
 
+
+** Concurrent Programming
+
+   SLOBIL uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
+
+   #+INCLUDE: "../examples/task.slob" src slobil
+
+   The following task that can be used to run any code in the background.  
+
+   #+INCLUDE: "../examples/background.slob" src slobil
+
 ** Linking C code
 
    One of the big outstanding tasks with SLOBIL is to write a more user-friendly (and documented) /libslobil/ for adding extensions, but it is currently possible to write SLOBIL operations in C, using SLOBIL's =link= operation to import the code.
@@ -863,17 +885,7 @@ t3 of type String, value: 3
 ... log1 1 .
 ans = 0.693147
    #+END_SRC
-
-** Concurrent Programming
-
-   SLOBIL uses Tasks to run Instructions in separate processes.  The following example demonstrates how =queue=, =accept=, and =select= work to move data between the main Task and other Tasks.
-
-   #+INCLUDE: "../examples/task.slob" src slobil
-
-   The following task that can be used to run any code in the background.  
-
-   #+INCLUDE: "../examples/background.slob" src slobil
-
+   
 * Reference
 
   This section gives the full vocabulary of the language.  The grammar of the language is described in the previous sections.  I describe each type of data, and the operations associated with it. 
