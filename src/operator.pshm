@@ -4056,6 +4056,11 @@ op_help (arg a, object* obj)
   data* instr;
   if (arg1->type == Operation)
     {
+      if (((op_wrapper*) arg1->data)->instr == NULL)
+        {
+          do_error("Built-in operations are not yet supported in help system.  See http://zflynn.com/slobil/slobil.html for reference for built-in-operations.", obj->task->task);
+          return;
+        }
       instr = ((op_wrapper*) arg1->data)->instr;
     }
   else
