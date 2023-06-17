@@ -197,7 +197,10 @@ run_task_readline (task_vars* task, bool save_code,
       else
         code = readline("");
 
-      complete = input_code(task, code, save_code, echo, state);
+      if (code == NULL)
+        is_exit(1, task);
+      else
+        complete = input_code(task, code, save_code, echo, state);
     }
 }
 
