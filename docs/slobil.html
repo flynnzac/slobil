@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-06-18 Sun 15:08 -->
+<!-- 2023-06-19 Mon 01:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SLOBIL</title>
@@ -227,7 +227,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-SLOBIL<br>Zach Flynn<br>2023-06-18 Sun 15:08
+SLOBIL<br>Zach Flynn<br>2023-06-19 Mon 01:27
 </div>
 <div id="content" class="content">
 <h1 class="title">SLOBIL</h1>
@@ -235,167 +235,167 @@ SLOBIL<br>Zach Flynn<br>2023-06-18 Sun 15:08
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7c9e506">1. Introduction</a></li>
-<li><a href="#org0d9f790">2. The Language</a>
+<li><a href="#org6a5b2c8">1. Introduction</a></li>
+<li><a href="#orgc172f71">2. The Language</a>
 <ul>
-<li><a href="#org10d712e">Lexical Elements</a></li>
-<li><a href="#orgf13ef56">Data and Types</a></li>
-<li><a href="#org7eb5657">Statements and Objects</a>
+<li><a href="#orgcef9937">Lexical Elements</a></li>
+<li><a href="#org4e62ee8">Data and Types</a></li>
+<li><a href="#org4e62146">Statements and Objects</a>
 <ul>
-<li><a href="#org6b77b77">Creating Objects</a></li>
-<li><a href="#orgf2b8212">The <code>/ans</code> Slot</a></li>
-<li><a href="#orga44824b">Substatements</a></li>
-<li><a href="#orgf647ca7">Inserting Data Into Slots</a></li>
-<li><a href="#org1a24d2d">Instructions</a></li>
-<li><a href="#org8338b91">Getting data</a></li>
-<li><a href="#org3184366">Control flow operations</a></li>
-<li><a href="#org3dff64b">Prototyping</a></li>
-<li><a href="#org78de772">Applying Instructions To Data In An Object</a></li>
-<li><a href="#org376e227">Objects As Arrays</a></li>
-<li><a href="#orgf940df5">Exceptions and Error Handling</a></li>
-<li><a href="#orgaf03d47">Saving and Loading Objects</a></li>
-<li><a href="#org43e97fa">REPL Settings</a></li>
+<li><a href="#orgec55050">Creating Objects</a></li>
+<li><a href="#org947a3c6">The <code>/ans</code> Slot</a></li>
+<li><a href="#orgc274601">Substatements</a></li>
+<li><a href="#org8e34059">Inserting Data Into Slots</a></li>
+<li><a href="#orgd0142ae">Instructions</a></li>
+<li><a href="#org1567a4a">Getting data</a></li>
+<li><a href="#org1e2997c">Control flow operations</a></li>
+<li><a href="#org7805823">Prototyping</a></li>
+<li><a href="#org3340000">Applying Instructions To Data In An Object</a></li>
+<li><a href="#org3ad9a15">Objects As Arrays</a></li>
+<li><a href="#org0446c6b">Exceptions and Error Handling</a></li>
+<li><a href="#org50340b5">Saving and Loading Objects</a></li>
+<li><a href="#orgb2fcb47">REPL Settings</a></li>
 </ul>
 </li>
-<li><a href="#org81690a0">Multi-threaded Programs</a></li>
+<li><a href="#org37cf736">Multi-threaded Programs</a></li>
 </ul>
 </li>
-<li><a href="#org7a073c0">3. Example Programs</a>
+<li><a href="#org6c41c4e">3. Example Programs</a>
 <ul>
-<li><a href="#org612da63">Accounting System</a></li>
-<li><a href="#orgf4694fe">A Time-Keeping Program</a></li>
+<li><a href="#orgf95a27e">Accounting System</a></li>
+<li><a href="#orgf391640">A Time-Keeping Program</a></li>
 </ul>
 </li>
-<li><a href="#orgbb69a12">4. Example Instructions</a>
+<li><a href="#org0acb31c">4. Example Instructions</a>
 <ul>
-<li><a href="#org2cca9ef">Quicksort</a></li>
-<li><a href="#org186689a">A Line-Oriented Text Editor</a></li>
-<li><a href="#org5881c0e">Numerical Differentiation</a></li>
-<li><a href="#orge345630">Compute Factorial</a>
+<li><a href="#orgf22c3f3">Quicksort</a></li>
+<li><a href="#orgbe93189">A Line-Oriented Text Editor</a></li>
+<li><a href="#orgbe0b45d">Numerical Differentiation</a></li>
+<li><a href="#orgf2aabed">Compute Factorial</a>
 <ul>
-<li><a href="#org96373ba">Note on Recursion</a></li>
+<li><a href="#orgceb9d47">Note on Recursion</a></li>
 </ul>
 </li>
-<li><a href="#orge48f36d">Numerical Integration</a></li>
-<li><a href="#orgfb00a03">Basic Linear Algebra</a></li>
-<li><a href="#orgb4852fb">Split a String</a></li>
-<li><a href="#org7c19bce">Concurrent Programming</a></li>
-<li><a href="#org363e42c">Linking C code</a></li>
+<li><a href="#orga36c22a">Numerical Integration</a></li>
+<li><a href="#org7534d52">Basic Linear Algebra</a></li>
+<li><a href="#org5e2dcdb">Split a String</a></li>
+<li><a href="#org2a7ca04">Concurrent Programming</a></li>
+<li><a href="#orgf351731">Linking C code</a></li>
 </ul>
 </li>
-<li><a href="#orgc29aa14">5. Reference</a>
+<li><a href="#orgfa48fe6">5. Reference</a>
 <ul>
-<li><a href="#org5d2eeb6">Objects</a>
+<li><a href="#org7b210f1">Objects</a>
 <ul>
-<li><a href="#orga6567fb">Short description</a></li>
-<li><a href="#org34d7c15">Implementation details</a></li>
-<li><a href="#org3068ca6">Object operations</a></li>
+<li><a href="#org1e15fda">Short description</a></li>
+<li><a href="#orgc390be5">Implementation details</a></li>
+<li><a href="#org6f0441a">Object operations</a></li>
 </ul>
 </li>
-<li><a href="#org6039c9c">Reals and Integers</a>
+<li><a href="#orgaba5f6f">Reals and Integers</a>
 <ul>
-<li><a href="#org307cf1f">Short description</a></li>
-<li><a href="#org42ea43f">Implementation details</a></li>
-<li><a href="#org0ba01a1">Real and Integer operations</a></li>
+<li><a href="#org8c4528b">Short description</a></li>
+<li><a href="#org76daf71">Implementation details</a></li>
+<li><a href="#org98faa46">Real and Integer operations</a></li>
 </ul>
 </li>
-<li><a href="#orga889c3c">Strings</a>
+<li><a href="#org29e36f2">Strings</a>
 <ul>
-<li><a href="#orgda98342">Short description</a></li>
-<li><a href="#org958739a">Implementation details</a></li>
-<li><a href="#orgc8bd521">String operations</a></li>
+<li><a href="#org5f86ea0">Short description</a></li>
+<li><a href="#orgb50e030">Implementation details</a></li>
+<li><a href="#org4afd2c0">String operations</a></li>
 </ul>
 </li>
-<li><a href="#orgd8e7002">Slots</a>
+<li><a href="#org548d1b9">Slots</a>
 <ul>
-<li><a href="#orgb8a122e">Short description</a></li>
-<li><a href="#org9ce9f58">Implementation details</a></li>
-<li><a href="#org9c601db">Slot operations</a></li>
+<li><a href="#org2cb5fb6">Short description</a></li>
+<li><a href="#orge85f2e0">Implementation details</a></li>
+<li><a href="#org2119f47">Slot operations</a></li>
 </ul>
 </li>
-<li><a href="#org244f25d">Booleans</a>
+<li><a href="#orga7ceb4e">Booleans</a>
 <ul>
-<li><a href="#orgd160738">Short description</a></li>
-<li><a href="#org0a1ec32">Implementation details</a></li>
-<li><a href="#org0b3c29f">Boolean operations</a></li>
+<li><a href="#org42b6000">Short description</a></li>
+<li><a href="#orgeda4a25">Implementation details</a></li>
+<li><a href="#org87a4bf8">Boolean operations</a></li>
 </ul>
 </li>
-<li><a href="#orgdbedfbb">Instructions</a>
+<li><a href="#orgdf70300">Instructions</a>
 <ul>
-<li><a href="#orga5e55ae">Short description</a></li>
-<li><a href="#orgf81ee2f">Implementation details</a></li>
-<li><a href="#org3b6b9b5">Instruction operations</a></li>
+<li><a href="#org0023d1f">Short description</a></li>
+<li><a href="#org6d80ef7">Implementation details</a></li>
+<li><a href="#org72d9ad0">Instruction operations</a></li>
 </ul>
 </li>
-<li><a href="#org1da8b4c">Files</a>
+<li><a href="#org7786231">Files</a>
 <ul>
-<li><a href="#org48af5cc">Short description</a></li>
-<li><a href="#org91407e9">Implementation details</a></li>
-<li><a href="#orga2c9edc">File operations</a></li>
+<li><a href="#orgc81798f">Short description</a></li>
+<li><a href="#orgfb07317">Implementation details</a></li>
+<li><a href="#org0890fc8">File operations</a></li>
 </ul>
 </li>
-<li><a href="#orgc26231e">Nothing</a>
+<li><a href="#org9362d4f">Nothing</a>
 <ul>
-<li><a href="#orgae590de">Short description</a></li>
-<li><a href="#org2abc013">Nothing operations</a></li>
+<li><a href="#org48e6dda">Short description</a></li>
+<li><a href="#org8360ff9">Nothing operations</a></li>
 </ul>
 </li>
-<li><a href="#org01616d6">Task Operations</a>
+<li><a href="#org6959e68">Task Operations</a>
 <ul>
-<li><a href="#orgff7fdf5">Short description</a></li>
-<li><a href="#org77a7eb1">Implementation details</a></li>
-<li><a href="#orgc32382f">Task operations</a></li>
+<li><a href="#orgf41ff78">Short description</a></li>
+<li><a href="#org5c46d7a">Implementation details</a></li>
+<li><a href="#org9496f04">Task operations</a></li>
 </ul>
 </li>
-<li><a href="#org015b7ea">Control flow operations</a>
+<li><a href="#orgf5b08bd">Control flow operations</a>
 <ul>
-<li><a href="#org13ad90d"><code>if</code></a></li>
-<li><a href="#org64e70e6"><code>while</code></a></li>
-<li><a href="#org608d839"><code>repeat</code></a></li>
-<li><a href="#org74c013d"><code>please</code></a></li>
+<li><a href="#org8d2f1ba"><code>if</code></a></li>
+<li><a href="#orga6c5289"><code>while</code></a></li>
+<li><a href="#orgd41310e"><code>repeat</code></a></li>
+<li><a href="#orgaf4831e"><code>please</code></a></li>
 </ul>
 </li>
-<li><a href="#org9aea7cd">Environment operations</a>
+<li><a href="#org8786887">Environment operations</a>
 <ul>
-<li><a href="#org0c97cd6">Modify the /ans slot</a></li>
-<li><a href="#org103e705">Exit SLOBIL</a></li>
-<li><a href="#orgfc6d5c7">Print output</a></li>
-<li><a href="#org37bf1f4">Input and output files and state</a></li>
-<li><a href="#org5a0ec9d">Error handling</a></li>
-<li><a href="#org6a48eeb">Version</a></li>
+<li><a href="#org47a7c7e">Modify the /ans slot</a></li>
+<li><a href="#org50a517c">Exit SLOBIL</a></li>
+<li><a href="#orge6b98ca">Print output</a></li>
+<li><a href="#orgb3141dc">Input and output files and state</a></li>
+<li><a href="#org7589c8b">Error handling</a></li>
+<li><a href="#org55df870">Version</a></li>
 </ul>
 </li>
-<li><a href="#orga5c20d2">System operations</a>
+<li><a href="#orgc9d9ae7">System operations</a>
 <ul>
-<li><a href="#orgcd0bc96">Interacting with the shell</a></li>
-<li><a href="#org62f9c4a">Time</a></li>
-<li><a href="#orge8ce52e">Random numbers</a></li>
+<li><a href="#org02c7629">Interacting with the shell</a></li>
+<li><a href="#org5243331">Time</a></li>
+<li><a href="#org85a2c86">Random numbers</a></li>
 </ul>
 </li>
-<li><a href="#org757912c">Package operations</a>
+<li><a href="#orgfe2ab5b">Package operations</a>
 <ul>
-<li><a href="#org747586a"><code>use</code></a></li>
-<li><a href="#orge38921a"><code>build</code></a></li>
-<li><a href="#org5523f8d"><code>link</code></a></li>
+<li><a href="#org90c4a35"><code>use</code></a></li>
+<li><a href="#orgad4bd48"><code>build</code></a></li>
+<li><a href="#orgadf861c"><code>link</code></a></li>
 </ul>
 </li>
-<li><a href="#orgcb2a00c">Interpreter options</a>
+<li><a href="#org6434868">Interpreter options</a>
 <ul>
-<li><a href="#orgaf5cf37">Operation</a></li>
-<li><a href="#orgca6b9fb">List of options</a></li>
+<li><a href="#orgef30fe1">Operation</a></li>
+<li><a href="#org3d0c9af">List of options</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgb71a0a6">6. Saved Objects</a></li>
-<li><a href="#orgeac9ec3">7. GNU Free Documentation License</a></li>
+<li><a href="#orga0bc401">6. Saved Objects</a></li>
+<li><a href="#org7df547c">7. GNU Free Documentation License</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-org7c9e506" class="outline-2">
-<h2 id="org7c9e506"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-org6a5b2c8" class="outline-2">
+<h2 id="org6a5b2c8"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 SLOBIL is easy to use interactively. It is natural to write line-by-line in the REPL and has a command-like syntax.  SLOBIL programs can just be collections of functions executed in the SLOBIL REPL itself because it is a natural command syntax.
@@ -419,13 +419,13 @@ It has superficial syntax similarities to Tcl in that the language is a command-
 </div>
 </div>
 
-<div id="outline-container-org0d9f790" class="outline-2">
-<h2 id="org0d9f790"><span class="section-number-2">2.</span> The Language</h2>
+<div id="outline-container-orgc172f71" class="outline-2">
+<h2 id="orgc172f71"><span class="section-number-2">2.</span> The Language</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org10d712e" class="outline-3">
-<h3 id="org10d712e">Lexical Elements</h3>
-<div class="outline-text-3" id="text-org10d712e">
+<div id="outline-container-orgcef9937" class="outline-3">
+<h3 id="orgcef9937">Lexical Elements</h3>
+<div class="outline-text-3" id="text-orgcef9937">
 <p>
 <i>Slots</i> are represented by a forward-slash (<code>/</code>) followed by any non-whitespace characters.  Slot names are case-sensitive.  <code>/a</code> and <code>/A</code> refer to different slots. I use lower case names for slots with multiple words separated by hyphens.  Like this: <code>/a-name-for-a-slot</code>.
 </p>
@@ -476,9 +476,9 @@ SLOBIL programs are whitespaced-separated lists of the above tokens.
 </div>
 </div>
 
-<div id="outline-container-orgf13ef56" class="outline-3">
-<h3 id="orgf13ef56">Data and Types</h3>
-<div class="outline-text-3" id="text-orgf13ef56">
+<div id="outline-container-org4e62ee8" class="outline-3">
+<h3 id="org4e62ee8">Data and Types</h3>
+<div class="outline-text-3" id="text-org4e62ee8">
 <p>
 Programmers do not define types.  The following are the data types: <i>Integer</i>, <i>Real</i>, <i>String</i>, <i>Slot</i>, <i>Object</i>, <i>Instruction</i>, <i>Expression</i>, <i>Operation</i>, <i>File</i>, <i>Boolean</i>, <i>Nothing</i>, and <i>Task</i>.
 </p>
@@ -538,9 +538,9 @@ Programmers do not define types.  The following are the data types: <i>Integer</
 </div>
 
 
-<div id="outline-container-org7eb5657" class="outline-3">
-<h3 id="org7eb5657">Statements and Objects</h3>
-<div class="outline-text-3" id="text-org7eb5657">
+<div id="outline-container-org4e62146" class="outline-3">
+<h3 id="org4e62146">Statements and Objects</h3>
+<div class="outline-text-3" id="text-org4e62146">
 <p>
 A statement is a list of whitespace-separated tokens ended by a <code>.</code>.  Naturally, the tokens included in the list cannot include <code>.</code>.
 </p>
@@ -565,22 +565,22 @@ Statements begin with an <i>operation</i>.  There are a few exceptions to this r
 The obligatory first statement in SLOBIL:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... print "Hello, world!" .
+<pre class="src src-slobil">... print <span style="color: #50a14f;">"Hello, world!"</span> .
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org6b77b77" class="outline-4">
-<h4 id="org6b77b77">Creating Objects</h4>
-<div class="outline-text-4" id="text-org6b77b77">
+<div id="outline-container-orgec55050" class="outline-4">
+<h4 id="orgec55050">Creating Objects</h4>
+<div class="outline-text-4" id="text-orgec55050">
 <p>
 Objects are created by using the <code>object</code> operation, followed by an alternating sequence of slots and data elements.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... object /number 10 /string "Hello!" /real 3.2 .
+<pre class="src src-slobil">... object <span style="color: #8b4513;">/number</span> 10 <span style="color: #8b4513;">/string</span> <span style="color: #50a14f;">"Hello!"</span> <span style="color: #8b4513;">/real</span> 3.2 .
 ans = an Object with:
 number of type Integer, value: 10
-string of type String, value: "Hello!"
+string of type String, value: <span style="color: #50a14f;">"Hello!"</span>
 real of type Real, value: 3.200000
 </pre>
 </div>
@@ -591,9 +591,9 @@ The <code>object</code> operation sets the <code>/ans</code> slot to the relevan
 </div>
 </div>
 
-<div id="outline-container-orgf2b8212" class="outline-4">
-<h4 id="orgf2b8212">The <code>/ans</code> Slot</h4>
-<div class="outline-text-4" id="text-orgf2b8212">
+<div id="outline-container-org947a3c6" class="outline-4">
+<h4 id="org947a3c6">The <code>/ans</code> Slot</h4>
+<div class="outline-text-4" id="text-org947a3c6">
 <p>
 Each Object has a special slot called the <code>/ans</code> slot.  Many built-in operations put data in the <code>/ans</code> slot.  It is the standard place to return values from an instruction, operation, or expression.  For example,
 </p>
@@ -607,9 +607,9 @@ ans = 9
 </div>
 </div>
 
-<div id="outline-container-orga44824b" class="outline-4">
-<h4 id="orga44824b">Substatements</h4>
-<div class="outline-text-4" id="text-orga44824b">
+<div id="outline-container-orgc274601" class="outline-4">
+<h4 id="orgc274601">Substatements</h4>
+<div class="outline-text-4" id="text-orgc274601">
 <p>
 Substatements are statements included as an element of another statement.  They are surrounded by square brackets (<code>[]</code>) and executed in the order they appear in the statement <i>prior</i> to the statement itself being evaluated.  When the outer statement is evaluated the substatements are replaced by the value each substatement set the <code>/ans</code> slot to after it was executed.
 </p>
@@ -618,11 +618,10 @@ Substatements are statements included as an element of another statement.  They 
 For example,
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... object /number 10 /string "Hello!" /real 3.2
-/object [ object /x 3 /y 2 ] .
+<pre class="src src-slobil">... object <span style="color: #8b4513;">/number</span> 10 <span style="color: #8b4513;">/string</span> <span style="color: #50a14f;">"Hello!"</span> <span style="color: #8b4513;">/real</span> 3.2 <span style="color: #8b4513;">/object</span> [ object <span style="color: #8b4513;">/x</span> 3 <span style="color: #8b4513;">/y</span> 2 ] .
 ans = an Object with:
 number of type Integer, value: 10
-string of type String, value: "Hello!"
+string of type String, value: <span style="color: #50a14f;">"Hello!"</span>
 real of type Real, value: 3.200000
 object of type Object, value: an Object with:
 x of type Integer, value: 3
@@ -635,17 +634,45 @@ ans = 12
 <p>
 Substatements do not need to include a <code>.</code> to end the last statement in the substatement.  They can, but they do not have to.  Substatements can include multiple statements.
 </p>
+
+<p>
+The brackets <i>can</i> be placed right next to the other tokens.  For example,
+</p>
+<div class="org-src-container">
+<pre class="src src-slobil">... add 5 [add 4 3] .
+ans = 12
+</pre>
+</div>
+
+<p>
+Will work, but the thing to keep in mind is that a sentence is not complete with a period until some whitespace follows the period.  So this will not work.
+</p>
+<div class="org-src-container">
+<pre class="src src-slobil">... <span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Will not work</span>
+... add 5 [add 4 3 .]
+... 'Will work
+... add 5 [add 4 3 . ]
+</pre>
+</div>
+
+<p>
+So if you prefer putting parenthesis next to the other tokens, I recommend not including the <code>.</code> on the last statement.
+</p>
+
+<p>
+I prefer always including spaces between the parenthesis and other tokens.
+</p>
 </div>
 </div>
 
-<div id="outline-container-orgf647ca7" class="outline-4">
-<h4 id="orgf647ca7">Inserting Data Into Slots</h4>
-<div class="outline-text-4" id="text-orgf647ca7">
+<div id="outline-container-org8e34059" class="outline-4">
+<h4 id="org8e34059">Inserting Data Into Slots</h4>
+<div class="outline-text-4" id="text-org8e34059">
 <p>
 Slots determine the location of data.  The <code>set</code> operation inserts data into a slot, like so:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... set /number 10 .
+<pre class="src src-slobil">... set <span style="color: #8b4513;">/number</span> 10 .
 ... print number .
 10
 </pre>
@@ -663,7 +690,7 @@ The second line in the above example, <code>print number .</code>, demonstrates 
 Because this is a common procedure in SLOBIL, if the first element of a statement is a slot, then SLOBIL assumes you want to call <code>set</code>.  For example, the above could have been written as:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /number 10 .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/number</span> 10 .
 </pre>
 </div>
 
@@ -671,12 +698,12 @@ Because this is a common procedure in SLOBIL, if the first element of a statemen
 <code>set</code> has an optional third argument: the object whose slot we should insert the data into.  If the third argument is omitted, then the value is inserted into the current object's slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /rectangle [ object /length 10 /width 5 ] .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/rectangle</span> [ object <span style="color: #8b4513;">/length</span> 10 <span style="color: #8b4513;">/width</span> 5 ] .
 ... print rectangle .
 an Object with:
 length of type Integer, value: 10
 width of type Integer, value: 5
-... /width 4 rectangle .
+... <span style="color: #8b4513;">/width</span> 4 rectangle .
 ... print rectangle .
 an Object with:
 length of type Integer, value: 10
@@ -688,14 +715,14 @@ width of type Integer, value: 4
 The <code>move</code> operation moves data between different slots without copying the data.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /x "Hello." .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/x</span> <span style="color: #50a14f;">"Hello."</span> .
 ... print x .
 Hello.
-... move /x /y .
+... move <span style="color: #8b4513;">/x</span> <span style="color: #8b4513;">/y</span> .
 ... print y .
 Hello.
 ... print x .
-Error: Value at slot /x not found.
+Error: Value at slot <span style="color: #8b4513;">/x</span> not found.
 </pre>
 </div>
 
@@ -703,20 +730,20 @@ Error: Value at slot /x not found.
 The <code>delete</code> operation removes data from the slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /x "Hello." .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/x</span> <span style="color: #50a14f;">"Hello."</span> .
 ... print x .
 Hello
-... delete /x .
+... delete <span style="color: #8b4513;">/x</span> .
 ... print x .
-Error: Value at slot /x not found.
+Error: Value at slot <span style="color: #8b4513;">/x</span> not found.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1a24d2d" class="outline-4">
-<h4 id="org1a24d2d">Instructions</h4>
-<div class="outline-text-4" id="text-org1a24d2d">
+<div id="outline-container-orgd0142ae" class="outline-4">
+<h4 id="orgd0142ae">Instructions</h4>
+<div class="outline-text-4" id="text-orgd0142ae">
 <p>
 Instructions are a data type that contains code to execute.  They are created by enclosing a series of statements in parenthesis.  The last statement in the parenthesis does not have to end with a period.
 </p>
@@ -725,7 +752,7 @@ Instructions are a data type that contains code to execute.  They are created by
 For example:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /add-one ( add t 1 ) .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/add-one</span> ( add t 1 ) .
 ... print add-one .
 (  add t 1  )
 </pre>
@@ -736,7 +763,7 @@ The <code>call</code> operation calls an instruction in a temporary object deter
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... call add-one /t 4 .
+<pre class="src src-slobil">... call add-one <span style="color: #8b4513;">/t</span> 4 .
 ans = 5
 </pre>
 </div>
@@ -746,18 +773,18 @@ When instructions execute, whatever data they set the <code>/ans</code> slot to 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /circle-area
+<pre class="src src-slobil">... <span style="color: #8b4513;">/circle-area</span>
 (
-  /pi 3.1459 .
-  /r2 [ power r 2 ] .
+  <span style="color: #8b4513;">/pi</span> 3.1459 .
+  <span style="color: #8b4513;">/r2</span> [ power r 2 ] .
   mul r2 pi .
 ) .
-... call circle-area /r 2
+... call circle-area <span style="color: #8b4513;">/r</span> 2
 ans = 12.583600
 ... print ans.
 12.583600
 ... print pi .
-Error: Value at slot /pi not found.
+Error: Value at slot <span style="color: #8b4513;">/pi</span> not found.
 -&gt; print pi .
 </pre>
 </div>
@@ -766,7 +793,7 @@ Error: Value at slot /pi not found.
 Calling instructions is a common thing to do.  So, if the first element of a statement is an instruction, SLOBIL assumes the programmer wants to <code>call</code> it.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... circle-area /r 2 .
+<pre class="src src-slobil">... circle-area <span style="color: #8b4513;">/r</span> 2 .
 ans = 12.583600
 </pre>
 </div>
@@ -775,10 +802,10 @@ ans = 12.583600
 Instructions are just code, they do not carry an environment around with them.  When the programmer <code>call</code>'s an instruction, the programmer determines the environment the code is executed in.  Instructions do not have a fixed set of arguments but allow the caller of the code to manipulate the environment in which they are called arbitrarily.  For example:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /add-one ( add t 1 ) .
-... add-one /t 5 .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/add-one</span> ( add t 1 ) .
+... add-one <span style="color: #8b4513;">/t</span> 5 .
 ans = 6
-... add-one /t 5 /add sub .
+... add-one <span style="color: #8b4513;">/t</span> 5 <span style="color: #8b4513;">/add</span> sub .
 ans = 4
 </pre>
 </div>
@@ -789,20 +816,20 @@ Any non-literal in an instruction can be changed by adjusting the environment in
 </div>
 </div>
 
-<div id="outline-container-org8338b91" class="outline-4">
-<h4 id="org8338b91">Getting data</h4>
-<div class="outline-text-4" id="text-org8338b91">
+<div id="outline-container-org1567a4a" class="outline-4">
+<h4 id="org1567a4a">Getting data</h4>
+<div class="outline-text-4" id="text-org1567a4a">
 <p>
 The <code>get</code> operation sets the <code>/ans</code> slot to the data located at a certain slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /x "Hello." .
-... /y [ object /test "Goodbye." ] .
-... get /x .
-ans = "Hello."
-... get /test .
-... get /test y .
-ans = "Goodbye."
+<pre class="src src-slobil">... <span style="color: #8b4513;">/x</span> <span style="color: #50a14f;">"Hello."</span> .
+... <span style="color: #8b4513;">/y</span> [ object <span style="color: #8b4513;">/test</span> <span style="color: #50a14f;">"Goodbye."</span> ] .
+... get <span style="color: #8b4513;">/x</span> .
+ans = <span style="color: #50a14f;">"Hello."</span>
+... get <span style="color: #8b4513;">/test</span> .
+... get <span style="color: #8b4513;">/test</span> y .
+ans = <span style="color: #50a14f;">"Goodbye."</span>
 </pre>
 </div>
 
@@ -811,7 +838,7 @@ The second argument to <code>get</code> is the object to get the data from.  If 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... print y:/test .
+<pre class="src src-slobil">... print y:<span style="color: #8b4513;">/test</span> .
 Goodbye
 </pre>
 </div>
@@ -820,8 +847,8 @@ Goodbye
 One limitation to the colon notation is that it cannot be used with substatements.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... ' Will give an error
-... print y:[ answer /test ] .
+<pre class="src src-slobil">... <span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Will give an error</span>
+... print y:[ answer <span style="color: #8b4513;">/test</span> ] .
 </pre>
 </div>
 
@@ -830,28 +857,28 @@ The <code>exist</code> operation tests whether data exists at a given slot in an
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... exist /new-slot .
-ans = False.
-... /new-slot 0 .
-... exist /new-slot .
-ans = True.
+<pre class="src src-slobil">... exist <span style="color: #8b4513;">/new-slot</span> .
+ans = <span style="color: #008b8b;">False</span>.
+... <span style="color: #8b4513;">/new-slot</span> 0 .
+... exist <span style="color: #8b4513;">/new-slot</span> .
+ans = <span style="color: #008b8b;">True</span>.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3184366" class="outline-4">
-<h4 id="org3184366">Control flow operations</h4>
-<div class="outline-text-4" id="text-org3184366">
+<div id="outline-container-org1e2997c" class="outline-4">
+<h4 id="org1e2997c">Control flow operations</h4>
+<div class="outline-text-4" id="text-org1e2997c">
 <p>
 The <code>if</code> operation sets the <code>/ans</code> slot to its second argument if its first argument is <code>True</code> and to its third argument if its first argument is <code>False</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... if True "Hello." "Goodbye." .
-ans = "Hello."
-... if False "Hello." "Goodbye." .
-ans = "Goodbye."
+<pre class="src src-slobil">... if <span style="color: #008b8b;">True</span> <span style="color: #50a14f;">"Hello."</span> <span style="color: #50a14f;">"Goodbye."</span> .
+ans = <span style="color: #50a14f;">"Hello."</span>
+... if <span style="color: #008b8b;">False</span> <span style="color: #50a14f;">"Hello."</span> <span style="color: #50a14f;">"Goodbye."</span> .
+ans = <span style="color: #50a14f;">"Goodbye."</span>
 </pre>
 </div>
 
@@ -860,11 +887,11 @@ The <code>if</code> operation can be used for control flow by using Expressions.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /x 10 .
-... if [ gt x 3 ] { print "x is greater than 3." } { print "x is less than three." } .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/x</span> 10 .
+... if [ gt x 3 ] { print <span style="color: #50a14f;">"x is greater than 3."</span> } { print <span style="color: #50a14f;">"x is less than three."</span> } .
 x is greater than 3.
-... /x 1 .
-... if [ gt x 3 ] { print "x is greater than 3." } { print "x is less than three." } .
+... <span style="color: #8b4513;">/x</span> 1 .
+... if [ gt x 3 ] { print <span style="color: #50a14f;">"x is greater than 3."</span> } { print <span style="color: #50a14f;">"x is less than three."</span> } .
 x is less than three.
 </pre>
 </div>
@@ -874,7 +901,7 @@ Expressions are like substatements in that they evaluate to what they set the <c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... if [ gt x 3 ] [ print "x is greater than 3." . answer 0 . ] [ print "x is less than three." . answer 0 . ] .
+<pre class="src src-slobil">... if [ gt x 3 ] [ print <span style="color: #50a14f;">"x is greater than 3."</span> . answer 0 . ] [ print <span style="color: #50a14f;">"x is less than three."</span> . answer 0 . ] .
 x is greater than 3.
 x is less than three.
 ans = 0
@@ -890,7 +917,7 @@ The <code>while</code> operation is a looping operation.  It takes two instructi
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /i 1 .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/i</span> 1 .
 ... while ( lt-eq i 10 )
 (
   print i .
@@ -906,7 +933,7 @@ The <code>while</code> operation is a looping operation.  It takes two instructi
 8
 9
 10
-ans = False.
+ans = <span style="color: #008b8b;">False</span>.
 ... print i .
 10
 </pre>
@@ -917,7 +944,7 @@ The <code>repeat</code> operation executes an instruction a fixed number of time
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /i 1
+<pre class="src src-slobil">... <span style="color: #8b4513;">/i</span> 1
 ... repeat 10 ( print i . incr i . ) .
 1
 2
@@ -938,21 +965,21 @@ The <code>repeat</code> loop is faster than the <code>while</code> loop when it 
 </div>
 </div>
 
-<div id="outline-container-org3dff64b" class="outline-4">
-<h4 id="org3dff64b">Prototyping</h4>
-<div class="outline-text-4" id="text-org3dff64b">
+<div id="outline-container-org7805823" class="outline-4">
+<h4 id="org7805823">Prototyping</h4>
+<div class="outline-text-4" id="text-org7805823">
 <p>
 SLOBIL is a prototyped-based object language.  New objects can inherit from other objects using the <code>new</code> operation.  When changes are made to the parent object, it propogates to all the children.  The <code>new</code> operation also adds to (or replaces) the slots included from their parent object in an analogous way to the <code>object</code> operation.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /+rectangle+ [ object /area ( mul l w ) ] .
-... /rect1 [ new +rectangle+ /l 5 /w 4 ] .
-... print rect1:/area .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/+rectangle+</span> [ object <span style="color: #8b4513;">/area</span> ( mul l w ) ] .
+... <span style="color: #8b4513;">/rect1</span> [ new +rectangle+ <span style="color: #8b4513;">/l</span> 5 <span style="color: #8b4513;">/w</span> 4 ] .
+... print rect1:<span style="color: #8b4513;">/area</span> .
 (  mul l w  )
-... set /d 2 +rectangle+ .
-... set /area ( mul l w d ) +rectangle+ .
-... print rect1:/area
+... set <span style="color: #8b4513;">/d</span> 2 +rectangle+ .
+... set <span style="color: #8b4513;">/area</span> ( mul l w d ) +rectangle+ .
+... print rect1:<span style="color: #8b4513;">/area</span>
 (  mul l w d )
 </pre>
 </div>
@@ -961,7 +988,7 @@ SLOBIL is a prototyped-based object language.  New objects can inherit from othe
 The <code>in</code> operation executes code inside a given object.  It can be used to do what other languages call "method calls".
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... in rect1 rect1:/area .
+<pre class="src src-slobil">... in rect1 rect1:<span style="color: #8b4513;">/area</span> .
 ans = 40
 </pre>
 </div>
@@ -970,8 +997,8 @@ ans = 40
 Without using <code>in</code>, calling <code>rect1:/area</code> will not reference the values at the <code>/l</code> and <code>/w</code> slot in the object at <code>/rect1</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... rect1:/area .
-Error: Value at slot /l not found.
+<pre class="src src-slobil">... rect1:<span style="color: #8b4513;">/area</span> .
+Error: Value at slot <span style="color: #8b4513;">/l</span> not found.
 </pre>
 </div>
 
@@ -979,7 +1006,7 @@ Error: Value at slot /l not found.
 Calling instructions within an object is a common thing to do. So SLOBIL provides a convenience syntax. If the first element of a statement is an object, it calls the instruction at the slot provided in the first argument from within the object.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... rect1 /area .
+<pre class="src src-slobil">... rect1 <span style="color: #8b4513;">/area</span> .
 ans = 40
 </pre>
 </div>
@@ -988,33 +1015,33 @@ ans = 40
 The link between objects created by <code>new</code> is a link between the objects themselves, not the slots at which the objects are inserted.  If the parent object is moved, deleted, or the slot is overwritten with a new object, it will not change the children because the object is simply removed from the slot it was located in originally, the object itself has not changed. 
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /+rectangle+ [ object /area ( mul w l ) ] .
-... /rect1 [ new +rectangle+ /l 5 /w 4 ] .
-... rect1 /area .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/+rectangle+</span> [ object <span style="color: #8b4513;">/area</span> ( mul w l ) ] .
+... <span style="color: #8b4513;">/rect1</span> [ new +rectangle+ <span style="color: #8b4513;">/l</span> 5 <span style="color: #8b4513;">/w</span> 4 ] .
+... rect1 <span style="color: #8b4513;">/area</span> .
 ans = 20
-... move /+rectangle+ /x .
-... rect1 /area .
+... move <span style="color: #8b4513;">/+rectangle+</span> <span style="color: #8b4513;">/x</span> .
+... rect1 <span style="color: #8b4513;">/area</span> .
 ans = 20
-... /+rectangle+ [ object /area ( add l w ) ] .
-... rect1 /area .
+... <span style="color: #8b4513;">/+rectangle+</span> [ object <span style="color: #8b4513;">/area</span> ( add l w ) ] .
+... rect1 <span style="color: #8b4513;">/area</span> .
 ans = 20
-... delete /x .
-... rect1 /area .
+... delete <span style="color: #8b4513;">/x</span> .
+... rect1 <span style="color: #8b4513;">/area</span> .
 ans = 20
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org78de772" class="outline-4">
-<h4 id="org78de772">Applying Instructions To Data In An Object</h4>
-<div class="outline-text-4" id="text-org78de772">
+<div id="outline-container-org3340000" class="outline-4">
+<h4 id="org3340000">Applying Instructions To Data In An Object</h4>
+<div class="outline-text-4" id="text-org3340000">
 <p>
 The <code>do</code> operation applies an operation to each slot in a set of objects.  For example:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... do add [ object /x 2 /y 3 /z 4 ] [ object /x 5 /y 2 ] .
+<pre class="src src-slobil">... do add [ object <span style="color: #8b4513;">/x</span> 2 <span style="color: #8b4513;">/y</span> 3 <span style="color: #8b4513;">/z</span> 4 ] [ object <span style="color: #8b4513;">/x</span> 5 <span style="color: #8b4513;">/y</span> 2 ] .
 ans = an Object with:
 x of type Integer, value: 7
 y of type Integer, value: 5
@@ -1030,9 +1057,9 @@ For each slot that has data in all the objects passed to <code>do</code> as argu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... do [ op ( div [ sub y x ] x ) /x /y ]
-[ object /x 2.0 /y 3.0 /z 4.0 ]
-[ object /x 5.0 /y 2.0 ] .
+<pre class="src src-slobil">... do [ op ( div [ sub y x ] x ) <span style="color: #8b4513;">/x</span> <span style="color: #8b4513;">/y</span> ]
+[ object <span style="color: #8b4513;">/x</span> 2.0 <span style="color: #8b4513;">/y</span> 3.0 <span style="color: #8b4513;">/z</span> 4.0 ]
+[ object <span style="color: #8b4513;">/x</span> 5.0 <span style="color: #8b4513;">/y</span> 2.0 ] .
 ans = an Object with:
 x of type Real, value: 1.500000
 y of type Real, value: -0.333333
@@ -1045,9 +1072,9 @@ The <code>op</code> operation converts the instruction given into an operation b
 </div>
 </div>
 
-<div id="outline-container-org376e227" class="outline-4">
-<h4 id="org376e227">Objects As Arrays</h4>
-<div class="outline-text-4" id="text-org376e227">
+<div id="outline-container-org3ad9a15" class="outline-4">
+<h4 id="org3ad9a15">Objects As Arrays</h4>
+<div class="outline-text-4" id="text-org3ad9a15">
 <p>
 There is no <i>array</i> type in SLOBIL.  Objects are used as array as well.  Several operations make use of a slot-naming convention to treat objects like arrays.  Slots that match the pattern <code>/name1</code>, <code>/name2</code>, &#x2026;, <code>/nameN</code> can be treated like an array by operations.
 </p>
@@ -1056,8 +1083,8 @@ There is no <i>array</i> type in SLOBIL.  Objects are used as array as well.  Se
 The <code>next</code> operation sets the <code>/ans</code> slot to the next slot given the current slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... next /c1 .
-ans = /c2
+<pre class="src src-slobil">... next <span style="color: #8b4513;">/c1</span> .
+ans = <span style="color: #8b4513;">/c2</span>
 </pre>
 </div>
 
@@ -1065,8 +1092,8 @@ ans = /c2
 The <code>previous</code> operation sets the <code>/ans</code> slot to the previous slot given the current slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... previous /c10 .
-ans = /c9
+<pre class="src src-slobil">... previous <span style="color: #8b4513;">/c10</span> .
+ans = <span style="color: #8b4513;">/c9</span>
 </pre>
 </div>
 
@@ -1075,14 +1102,14 @@ The <code>last</code> operation sets the <code>/ans</code> slot to the last slot
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /array [ list 1 2 3 ] .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/array</span> [ list 1 2 3 ] .
 ... print array .
 an Object with:
 t1 of type Integer, value: 1
 t2 of type Integer, value: 2
 t3 of type Integer, value: 3
-... last array /t .
-ans = /t3
+... last array <span style="color: #8b4513;">/t</span> .
+ans = <span style="color: #8b4513;">/t3</span>
 </pre>
 </div>
 
@@ -1095,8 +1122,8 @@ The <code>collapse</code> operation can be used to summarize a list.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... /array [ list 3 -1 4 ] .
-... collapse add array /t .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/array</span> [ list 3 -1 4 ] .
+... collapse add array <span style="color: #8b4513;">/t</span> .
 ans = 6
 </pre>
 </div>
@@ -1111,9 +1138,9 @@ ans = 6
 </div>
 </div>
 
-<div id="outline-container-orgf940df5" class="outline-4">
-<h4 id="orgf940df5">Exceptions and Error Handling</h4>
-<div class="outline-text-4" id="text-orgf940df5">
+<div id="outline-container-org0446c6b" class="outline-4">
+<h4 id="org0446c6b">Exceptions and Error Handling</h4>
+<div class="outline-text-4" id="text-org0446c6b">
 <p>
 <code>please</code> is the SLOBIL operation for handling errors.  It takes two arguments.  The first is an instruction to execute in the current object.  The second is an instruction to execute if the first instruction fails.
 </p>
@@ -1124,15 +1151,15 @@ Note that errors will still be printed to the console unless you run <code>inter
 </div>
 </div>
 
-<div id="outline-container-orgaf03d47" class="outline-4">
-<h4 id="orgaf03d47">Saving and Loading Objects</h4>
-<div class="outline-text-4" id="text-orgaf03d47">
+<div id="outline-container-org50340b5" class="outline-4">
+<h4 id="org50340b5">Saving and Loading Objects</h4>
+<div class="outline-text-4" id="text-org50340b5">
 <p>
 Objects can be saved with the <code>save</code> operation.  <code>save</code> saves the current object to the given filepath.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... /test [ object /x 1 /y "hello" /z True ] .
-... in test ( save "test.dslob" ) .
+<pre class="src src-slobil">... <span style="color: #8b4513;">/test</span> [ object <span style="color: #8b4513;">/x</span> 1 <span style="color: #8b4513;">/y</span> <span style="color: #50a14f;">"hello"</span> <span style="color: #8b4513;">/z</span> <span style="color: #008b8b;">True</span> ] .
+... in test ( save <span style="color: #50a14f;">"test.dslob"</span> ) .
 </pre>
 </div>
 
@@ -1140,7 +1167,7 @@ Objects can be saved with the <code>save</code> operation.  <code>save</code> sa
 The <code>build</code> operation saves objects in a standard location, <code>~/.dslobs</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... build "test" test .
+<pre class="src src-slobil">... build <span style="color: #50a14f;">"test"</span> test .
 </pre>
 </div>
 
@@ -1152,23 +1179,23 @@ The above statement saves the object <code>test</code> to <code>~/.dslobs/test.d
 Similarly, the <code>load</code> operation loads a given filepath into the current object, while the <code>use</code> operation imports an object from the standard location for save files, <code>~/.dslobs</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... load "test.dslob" .
-... use "test" .
+<pre class="src src-slobil">... load <span style="color: #50a14f;">"test.dslob"</span> .
+... use <span style="color: #50a14f;">"test"</span> .
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org43e97fa" class="outline-4">
-<h4 id="org43e97fa">REPL Settings</h4>
-<div class="outline-text-4" id="text-org43e97fa">
+<div id="outline-container-orgb2fcb47" class="outline-4">
+<h4 id="orgb2fcb47">REPL Settings</h4>
+<div class="outline-text-4" id="text-orgb2fcb47">
 <p>
 The REPL itself has a few settings that can be configured using the <code>interpreter</code> operation.  The below example demonstrates how to change the various values from their defaults.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... interpreter /print-ans True .
-... interpreter /auto-rehash False .
-... interpreter /print-errors False .
+<pre class="src src-slobil">... interpreter <span style="color: #8b4513;">/print-ans</span> <span style="color: #008b8b;">True</span> .
+... interpreter <span style="color: #8b4513;">/auto-rehash</span> <span style="color: #008b8b;">False</span> .
+... interpreter <span style="color: #8b4513;">/print-errors</span> <span style="color: #008b8b;">False</span> .
 </pre>
 </div>
 
@@ -1187,9 +1214,9 @@ The <code>print-errors</code> setting indicates whether to print the trace of th
 </div>
 </div>
 
-<div id="outline-container-org81690a0" class="outline-3">
-<h3 id="org81690a0">Multi-threaded Programs</h3>
-<div class="outline-text-3" id="text-org81690a0">
+<div id="outline-container-org37cf736" class="outline-3">
+<h3 id="org37cf736">Multi-threaded Programs</h3>
+<div class="outline-text-3" id="text-org37cf736">
 <p>
 Tasks model processes.  They enable multi-threaded programming.  
 </p>
@@ -1199,7 +1226,7 @@ The <code>task</code> operation creates a task.  The <code>task</code> operation
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... task /my-task ( commands to run... ) [ object . ] .
+<pre class="src src-slobil">... task <span style="color: #8b4513;">/my-task</span> ( commands to run... ) [ object . ] .
 </pre>
 </div>
 
@@ -1260,9 +1287,9 @@ The <code>queue</code> operation moves data from one object into the queue of an
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... task /t1 ( print [ accept /hello ] . ) .
+<pre class="src src-slobil">... task <span style="color: #8b4513;">/t1</span> ( print [ accept <span style="color: #8b4513;">/hello</span> ] . ) .
 ... run-task t1 .
-... queue /hello "Hi!" t1 .
+... queue <span style="color: #8b4513;">/hello</span> <span style="color: #50a14f;">"Hi!"</span> t1 .
 Hi!
 </pre>
 </div>
@@ -1276,7 +1303,7 @@ The <code>accept-or</code> operation checks whether data exists at a certain slo
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">accept-or /hello ( set /hello "Hello." ) .
+<pre class="src src-slobil">accept-or <span style="color: #8b4513;">/hello</span> ( set <span style="color: #8b4513;">/hello</span> <span style="color: #50a14f;">"Hello."</span> ) .
 </pre>
 </div>
 
@@ -1289,19 +1316,19 @@ Alternatively, the <code>select</code> operation executes one of several instruc
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... task /t1 ( 
-      set /continue True .
+<pre class="src src-slobil">... task <span style="color: #8b4513;">/t1</span> ( 
+      set <span style="color: #8b4513;">/continue</span> <span style="color: #008b8b;">True</span> .
       while ( answer continue )
             (
-              select /add-one ( print [ add ans 1 ] ) 
-                     /sub-one ( print [ sub ans 1 ] )
-                     /continue ( set /continue ans ) .
+              select <span style="color: #8b4513;">/add-one</span> ( print [ add ans 1 ] ) 
+                     <span style="color: #8b4513;">/sub-one</span> ( print [ sub ans 1 ] )
+                     <span style="color: #8b4513;">/continue</span> ( set <span style="color: #8b4513;">/continue</span> ans ) .
             ) .
     ) .
 ... run-task t1 .
-... queue /add-one 3 t1 .
+... queue <span style="color: #8b4513;">/add-one</span> 3 t1 .
 4
-  ... queue /sub-one 3 t1 .
+  ... queue <span style="color: #8b4513;">/sub-one</span> 3 t1 .
 2
 </pre>
 </div>
@@ -1309,13 +1336,13 @@ Alternatively, the <code>select</code> operation executes one of several instruc
 </div>
 </div>
 
-<div id="outline-container-org7a073c0" class="outline-2">
-<h2 id="org7a073c0"><span class="section-number-2">3.</span> Example Programs</h2>
+<div id="outline-container-org6c41c4e" class="outline-2">
+<h2 id="org6c41c4e"><span class="section-number-2">3.</span> Example Programs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org612da63" class="outline-3">
-<h3 id="org612da63">Accounting System</h3>
-<div class="outline-text-3" id="text-org612da63">
+<div id="outline-container-orgf95a27e" class="outline-3">
+<h3 id="orgf95a27e">Accounting System</h3>
+<div class="outline-text-3" id="text-orgf95a27e">
 <p>
 SLOBIL programs can use SLOBIL itself as their means of interacting with the user because the language is "command-like".  This section describes a simple double-entry accounting program written in SLOBIL.
 </p>
@@ -1324,9 +1351,9 @@ SLOBIL programs can use SLOBIL itself as their means of interacting with the use
 Interactive programs are usually created as objects so they can be easily loaded into SLOBIL with both state variables and instructions.  So we start by defining the program object which will contain a list of accounts.  
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">/accounting
+<pre class="src src-slobil"><span style="color: #8b4513;">/accounting</span>
   [ object
-      /account-list [ object ]
+      <span style="color: #8b4513;">/account-list</span> [ object ]
   ] .
 </pre>
 </div>
@@ -1336,32 +1363,32 @@ Next, we define a generic account object and add it to <code>accounting</code>. 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">/+account+
+<pre class="src src-slobil"><span style="color: #8b4513;">/+account+</span>
 [ object
-    /add-entry
+    <span style="color: #8b4513;">/add-entry</span>
     (
-      last entries /entry .
+      last entries <span style="color: #8b4513;">/entry</span> .
       next ans .
       set ans entry entries .
 
-      incr balance entry:/amount .
+      incr balance entry:<span style="color: #8b4513;">/amount</span> .
     )
-    /summary
+    <span style="color: #8b4513;">/summary</span>
     (
-      print [ combine name ": " balance ] .
+      print [ combine name <span style="color: #50a14f;">": "</span> balance ] .
     )
-    /print-entry
+    <span style="color: #8b4513;">/print-entry</span>
     (
       print [ combine
-                entry:/desc ": "
+                entry:<span style="color: #8b4513;">/desc</span> <span style="color: #50a14f;">": "</span>
                 [
-                  to-string entry:/amount
+                  to-string entry:<span style="color: #8b4513;">/amount</span>
                 ]
             ] .
     )
-    /print-entries
+    <span style="color: #8b4513;">/print-entries</span>
     (
-      do [ op print-entry /entry ]
+      do [ op print-entry <span style="color: #8b4513;">/entry</span> ]
          entries ...
     )
 ]
@@ -1377,12 +1404,12 @@ To suppress printing out the <code>/ans</code> slot, you can end a statement wit
 Now, we need an instruction for creating a new account.  We will have the user specify the account as a slot.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">/new-account
+<pre class="src src-slobil"><span style="color: #8b4513;">/new-account</span>
 (
   set name
       [
-        new +account+ /name [ to-string name ] /balance balance
-            /entries [ object ] 
+        new +account+ <span style="color: #8b4513;">/name</span> [ to-string name ] <span style="color: #8b4513;">/balance</span> balance
+            <span style="color: #8b4513;">/entries</span> [ object ] 
       ] account-list .
 )
 accounting .
@@ -1397,19 +1424,19 @@ This instruction might not seem to do much beyond what the <code>new</code> oper
 We next need an instruction to transfer money between two accounts.  Let's define one.
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">/transfer
+<pre class="src src-slobil"><span style="color: #8b4513;">/transfer</span>
   (
-    /to-entry [ object /desc desc /amount amount ] .
-    /from-entry [ object /desc desc /amount [ mul -1 amount ] ] .
+    <span style="color: #8b4513;">/to-entry</span> [ object <span style="color: #8b4513;">/desc</span> desc <span style="color: #8b4513;">/amount</span> amount ] .
+    <span style="color: #8b4513;">/from-entry</span> [ object <span style="color: #8b4513;">/desc</span> desc <span style="color: #8b4513;">/amount</span> [ mul -1 amount ] ] .
 
     if [ exist from-account account-list ]
        {
-         account-list:from-account /add-entry /entry from-entry .
+         account-list:from-account <span style="color: #8b4513;">/add-entry</span> <span style="color: #8b4513;">/entry</span> from-entry .
        }
        {
          if [ exist to-account account-list ]
             {
-              account-list:to-account /add-entry /entry to-entry .
+              account-list:to-account <span style="color: #8b4513;">/add-entry</span> <span style="color: #8b4513;">/entry</span> to-entry .
             } .
        } .
   )
@@ -1422,16 +1449,16 @@ Lastly, let's add some instructions to summarize our accounts and print out entr
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">/summary
+<pre class="src src-slobil"><span style="color: #8b4513;">/summary</span>
   (
-    do [ op ( account /summary ) /account  ]
+    do [ op ( account <span style="color: #8b4513;">/summary</span> ) <span style="color: #8b4513;">/account</span>  ]
        account-list ...
   )
   accounting .
 
-/entries
+<span style="color: #8b4513;">/entries</span>
   (
-    account-list:account /print-entries .
+    account-list:account <span style="color: #8b4513;">/print-entries</span> .
   ) 
   accounting .
 </pre>
@@ -1441,17 +1468,17 @@ Lastly, let's add some instructions to summarize our accounts and print out entr
 Let's see the program in action.  
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">  ... accounting /new-account /name /Checking /balance 1000.50 .
-  ... accounting /new-account /name /Savings /balance 20000.00 .
-  ... accounting /transfer
-  /desc "Saving Money"
-  /amount 100
-  /to-account /Savings
-  /from-account /Checking .
-...  accounting /summary .
+<pre class="src src-slobil">  ... accounting <span style="color: #8b4513;">/new-account</span> <span style="color: #8b4513;">/name</span> <span style="color: #8b4513;">/Checking</span> <span style="color: #8b4513;">/balance</span> 1000.50 .
+  ... accounting <span style="color: #8b4513;">/new-account</span> <span style="color: #8b4513;">/name</span> <span style="color: #8b4513;">/Savings</span> <span style="color: #8b4513;">/balance</span> 20000.00 .
+  ... accounting <span style="color: #8b4513;">/transfer</span>
+  <span style="color: #8b4513;">/desc</span> <span style="color: #50a14f;">"Saving Money"</span>
+  <span style="color: #8b4513;">/amount</span> 100
+  <span style="color: #8b4513;">/to-account</span> <span style="color: #8b4513;">/Savings</span>
+  <span style="color: #8b4513;">/from-account</span> <span style="color: #8b4513;">/Checking</span> .
+...  accounting <span style="color: #8b4513;">/summary</span> .
 Savings: 20100.000000
 Checking: 900.500000
-... accounting /entries /account /Checking .
+... accounting <span style="color: #8b4513;">/entries</span> <span style="color: #8b4513;">/account</span> <span style="color: #8b4513;">/Checking</span> .
 Saving Money: -100
 </pre>
 </div>
@@ -1461,7 +1488,7 @@ The user shouldn't have to type <code>accounting</code> every time.  Temporarily
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... build "accounting" accounting .
+<pre class="src src-slobil">... build <span style="color: #50a14f;">"accounting"</span> accounting .
 </pre>
 </div>
 
@@ -1469,8 +1496,8 @@ The user shouldn't have to type <code>accounting</code> every time.  Temporarily
 Now, whenever we start a SLOBIL session, we can simply type:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... use "accounting" .
-... new-account /name /Checking /balance 1000.50 .
+<pre class="src src-slobil">... use <span style="color: #50a14f;">"accounting"</span> .
+... new-account <span style="color: #8b4513;">/name</span> <span style="color: #8b4513;">/Checking</span> <span style="color: #8b4513;">/balance</span> 1000.50 .
 ... summary .
 
 </pre>
@@ -1478,170 +1505,170 @@ Now, whenever we start a SLOBIL session, we can simply type:
 </div>
 </div>
 
-<div id="outline-container-orgf4694fe" class="outline-3">
-<h3 id="orgf4694fe">A Time-Keeping Program</h3>
-<div class="outline-text-3" id="text-orgf4694fe">
+<div id="outline-container-orgf391640" class="outline-3">
+<h3 id="orgf391640">A Time-Keeping Program</h3>
+<div class="outline-text-3" id="text-orgf391640">
 <p>
 I used this program to keep track of billable hours for about three years. It is certainly the most used SLOBIL program as of June 2023.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">' Initial state
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Initial state</span>
 
-/current-thing "Nothing" .
-/last-clock -1 .
-/record [ object ] .
-/running False .
-/current-file Nothing .
+<span style="color: #8b4513;">/current-thing</span> <span style="color: #50a14f;">"Nothing"</span> .
+<span style="color: #8b4513;">/last-clock</span> -1 .
+<span style="color: #8b4513;">/record</span> [ object ] .
+<span style="color: #8b4513;">/running</span> <span style="color: #008b8b;">False</span> .
+<span style="color: #8b4513;">/current-file</span> Nothing .
 
-' Start a new record of work or load an old one
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Start a new record of work or load an old one</span>
 
-/init
+<span style="color: #8b4513;">/init</span>
   [ op (
-            up set /current-file file .
+            up set <span style="color: #8b4513;">/current-file</span> file .
             please ( load file record )
                    (
-                     up set /record [ object ] .
-                     up set /thing-list [ object ] record .
-                     print "Starting new file." .
+                     up set <span style="color: #8b4513;">/record</span> [ object ] .
+                     up set <span style="color: #8b4513;">/thing-list</span> [ object ] record .
+                     print <span style="color: #50a14f;">"Starting new file."</span> .
                    ) .
-      ) /file
+      ) <span style="color: #8b4513;">/file</span>
   ] .
 
 
-' Save record of work in SLOBIL format
-/save-hours
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Save record of work in SLOBIL format</span>
+<span style="color: #8b4513;">/save-hours</span>
   (
     in record ( save current-file ) .
   ) .
 
-' Set current thing
-/thing
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Set current thing</span>
+<span style="color: #8b4513;">/thing</span>
   [ op
       (
         if [ not running ]
            {
-             if [ exist /name ]
+             if [ exist <span style="color: #8b4513;">/name</span> ]
                 {
-                  up set /current-thing name .
+                  up set <span style="color: #8b4513;">/current-thing</span> name .
                   add-thing-to-list name .
                 }
                 {
-                  up set /current-thing [ choose-thing ] .
+                  up set <span style="color: #8b4513;">/current-thing</span> [ choose-thing ] .
                 } .
-             up set /last-clock -1 .
+             up set <span style="color: #8b4513;">/last-clock</span> -1 .
            }
            {
-             print "Currently running, stop first." .
+             print <span style="color: #50a14f;">"Currently running, stop first."</span> .
            } .
       )
-      /name ] .
+      <span style="color: #8b4513;">/name</span> ] .
 
-' Start clock for current thing
-/start
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Start clock for current thing</span>
+<span style="color: #8b4513;">/start</span>
   (
     if [ not running ]
        {
-         up set /last-clock [ clock ] .
-         up set /running True .
-         print [ combine "Starting on " current-thing " ..." ] .
+         up set <span style="color: #8b4513;">/last-clock</span> [ clock ] .
+         up set <span style="color: #8b4513;">/running</span> <span style="color: #008b8b;">True</span> .
+         print [ combine <span style="color: #50a14f;">"Starting on "</span> current-thing <span style="color: #50a14f;">" ..."</span> ] .
        }
        {
-         print "Currently running, stop first." .
+         print <span style="color: #50a14f;">"Currently running, stop first."</span> .
        } .
   ) .
 
-' Stop clock for current thing with a description of task.
-/stop
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Stop clock for current thing with a description of task.</span>
+<span style="color: #8b4513;">/stop</span>
   (
     if running
        {
-         last record /r .
+         last record <span style="color: #8b4513;">/r</span> .
          next ans .
          set ans
              [
                object
-                 /thing current-thing
-                 /start-time last-clock
-                 /stop-time [ clock ]
-                 /description desc
+                 <span style="color: #8b4513;">/thing</span> current-thing
+                 <span style="color: #8b4513;">/start-time</span> last-clock
+                 <span style="color: #8b4513;">/stop-time</span> [ clock ]
+                 <span style="color: #8b4513;">/description</span> desc
              ]
              record .
-         up set /running False .
+         up set <span style="color: #8b4513;">/running</span> <span style="color: #008b8b;">False</span> .
          save-hours .
        }
        {
-         print "Not currently running." .
+         print <span style="color: #50a14f;">"Not currently running."</span> .
        } .
   ) .
 
-' A map to day of week
-/day-of-week-map
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">A map to day of week</span>
+<span style="color: #8b4513;">/day-of-week-map</span>
   [
     list
-      "Sunday"
-      "Monday"
-      "Tuesday"
-      "Wednesday"
-      "Thursday"
-      "Friday"
-      "Saturday"
-      "Sunday" 
+      <span style="color: #50a14f;">"Sunday"</span>
+      <span style="color: #50a14f;">"Monday"</span>
+      <span style="color: #50a14f;">"Tuesday"</span>
+      <span style="color: #50a14f;">"Wednesday"</span>
+      <span style="color: #50a14f;">"Thursday"</span>
+      <span style="color: #50a14f;">"Friday"</span>
+      <span style="color: #50a14f;">"Saturday"</span>
+      <span style="color: #50a14f;">"Sunday"</span> 
   ] .
 
-' Convert to hours
-/make-hours-day-time
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Convert to hours</span>
+<span style="color: #8b4513;">/make-hours-day-time</span>
   [ op
       (
-        do [ op ( div t 1000.0 60 60 ) /t ] structure .
+        do [ op ( div t 1000.0 60 60 ) <span style="color: #8b4513;">/t</span> ] structure .
       )
-      /structure ] .
+      <span style="color: #8b4513;">/structure</span> ] .
 
-' Return a structure describing a single day of activity
-/report
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Return a structure describing a single day of activity</span>
+<span style="color: #8b4513;">/report</span>
   [ op
       (
-        /final [ object ] .
-        /clock1
+        <span style="color: #8b4513;">/final</span> [ object ] .
+        <span style="color: #8b4513;">/clock1</span>
           [
             make-clock
               [
                 object
-                  /day day
-                  /month month
-                  /year year
-                  /hour 0
-                  /minute 0
-                  /seconds 0
-                  /milliseconds 0
+                  <span style="color: #8b4513;">/day</span> day
+                  <span style="color: #8b4513;">/month</span> month
+                  <span style="color: #8b4513;">/year</span> year
+                  <span style="color: #8b4513;">/hour</span> 0
+                  <span style="color: #8b4513;">/minute</span> 0
+                  <span style="color: #8b4513;">/seconds</span> 0
+                  <span style="color: #8b4513;">/milliseconds</span> 0
               ] 
           ] .
 
-        /clock2
+        <span style="color: #8b4513;">/clock2</span>
           [
             make-clock
               [
                 object
-                  /day day
-                  /month month
-                  /year year
-                  /hour 23
-                  /minute 59
-                  /seconds 59
-                  /milliseconds 999
+                  <span style="color: #8b4513;">/day</span> day
+                  <span style="color: #8b4513;">/month</span> month
+                  <span style="color: #8b4513;">/year</span> year
+                  <span style="color: #8b4513;">/hour</span> 23
+                  <span style="color: #8b4513;">/minute</span> 59
+                  <span style="color: #8b4513;">/seconds</span> 59
+                  <span style="color: #8b4513;">/milliseconds</span> 999
               ] 
           ] .
 
-        /i /r1 .
+        <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/r1</span> .
         while ( exist i record )
               (
                 if [ and
-                       [ gt-eq record:i:/start-time clock1 ]
-                       [ lt-eq record:i:/start-time clock2 ] ]
+                       [ gt-eq record:i:<span style="color: #8b4513;">/start-time</span> clock1 ]
+                       [ lt-eq record:i:<span style="color: #8b4513;">/start-time</span> clock2 ] ]
                    {
-                     /thing [ to-slot record:i:/thing ] .
-                     /elapsed [ sub record:i:/stop-time
-                                    record:i:/start-time ] .
+                     <span style="color: #8b4513;">/thing</span> [ to-slot record:i:<span style="color: #8b4513;">/thing</span> ] .
+                     <span style="color: #8b4513;">/elapsed</span> [ sub record:i:<span style="color: #8b4513;">/stop-time</span>
+                                    record:i:<span style="color: #8b4513;">/start-time</span> ] .
 
                      if [ exist thing final ]
                         {
@@ -1652,120 +1679,120 @@ I used this program to keep track of billable hours for about three years. It is
                           set thing elapsed final .
                         } .
                    } .
-                /i [ next i ] .
+                <span style="color: #8b4513;">/i</span> [ next i ] .
               ) .
 
         make-hours-day-time final .
-      ) /year /month /day ] .
+      ) <span style="color: #8b4513;">/year</span> <span style="color: #8b4513;">/month</span> <span style="color: #8b4513;">/day</span> ] .
 
-' Add thing to thing list
-/add-thing-to-list
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Add thing to thing list</span>
+<span style="color: #8b4513;">/add-thing-to-list</span>
   [ op (
-        if [ not [ exist /thing-list record ] ]
+        if [ not [ exist <span style="color: #8b4513;">/thing-list</span> record ] ]
            {
-             set /thing-list [ object ] record .
+             set <span style="color: #8b4513;">/thing-list</span> [ object ] record .
            } .
-        last record:/thing-list /c .
+        last record:<span style="color: #8b4513;">/thing-list</span> <span style="color: #8b4513;">/c</span> .
         next ans .
-        set ans thing record:/thing-list .
+        set ans thing record:<span style="color: #8b4513;">/thing-list</span> .
       )
-       /thing ] .
+       <span style="color: #8b4513;">/thing</span> ] .
 
 
-' Select thing from menu
-/choose-thing
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Select thing from menu</span>
+<span style="color: #8b4513;">/choose-thing</span>
   (
-    /i /c1 .
-    while ( exist i record:/thing-list )
+    <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/c1</span> .
+    while ( exist i record:<span style="color: #8b4513;">/thing-list</span> )
           (
             print
               [
                 combine
                   [ to-string [ to-number i ] ]
-                  ": " 
-                  record:/thing-list:i 
+                  <span style="color: #50a14f;">": "</span> 
+                  record:<span style="color: #8b4513;">/thing-list:i</span> 
               ] .
-            /i [ next i ] .
+            <span style="color: #8b4513;">/i</span> [ next i ] .
           ) .
-    print "Choose Thing: " False .
-    input /num .
-    /loc [ to-slot [ combine "c" num ] ] .
-    answer record:/thing-list:loc .
+    print <span style="color: #50a14f;">"Choose Thing: "</span> <span style="color: #008b8b;">False</span> .
+    input <span style="color: #8b4513;">/num</span> .
+    <span style="color: #8b4513;">/loc</span> [ to-slot [ combine <span style="color: #50a14f;">"c"</span> num ] ] .
+    answer record:<span style="color: #8b4513;">/thing-list:loc</span> .
   ) .
 
-' Print status
-/status
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Print status</span>
+<span style="color: #8b4513;">/status</span>
   (
-    print [ combine "Current thing: " current-thing ] .
+    print [ combine <span style="color: #50a14f;">"Current thing: "</span> current-thing ] .
     if running
        {
-         print "Running a task." .
+         print <span style="color: #50a14f;">"Running a task."</span> .
        }
        {
-         print "Not running." .
+         print <span style="color: #50a14f;">"Not running."</span> .
        } .
   ) .
 
-' Update thing in list
-/rename-thing
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Update thing in list</span>
+<span style="color: #8b4513;">/rename-thing</span>
   (
-    /i /c1 .
-    /cont True .
+    <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/c1</span> .
+    <span style="color: #8b4513;">/cont</span> <span style="color: #008b8b;">True</span> .
     while ( and
-              [ exist i record:/thing-list ]
+              [ exist i record:<span style="color: #8b4513;">/thing-list</span> ]
               cont )
           (
-            if [ string-eq record:/thing-list:i thing ]
+            if [ string-eq record:<span style="color: #8b4513;">/thing-list:i</span> thing ]
                {
-                 set i new-thing record:/thing-list .
-                 /cont False .
+                 set i new-thing record:<span style="color: #8b4513;">/thing-list</span> .
+                 <span style="color: #8b4513;">/cont</span> <span style="color: #008b8b;">False</span> .
                } .
 
-            /i [ next i ] .
+            <span style="color: #8b4513;">/i</span> [ next i ] .
           ) .
 
-    ' Update thing in records
+    <span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Update thing in records</span>
 
-    /i /r1 .
+    <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/r1</span> .
     while ( exist i record )
           (
-            if [ string-eq record:i:/thing thing ]
+            if [ string-eq record:i:<span style="color: #8b4513;">/thing</span> thing ]
                {
-                 /thing new-thing record:i .
+                 <span style="color: #8b4513;">/thing</span> new-thing record:i .
                } .
-            /i [ next i ] .
+            <span style="color: #8b4513;">/i</span> [ next i ] .
           ) .
   ) .
 
-' Rewind X minutes from start
-/start-back
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Rewind X minutes from start</span>
+<span style="color: #8b4513;">/start-back</span>
   [ op
       (
         if [ not running ]
            {
-             print "Currently not running." .
+             print <span style="color: #50a14f;">"Currently not running."</span> .
            }
            {
-             up set /last-clock [ sub last-clock [ mul x 60 1000 ] ] .
+             up set <span style="color: #8b4513;">/last-clock</span> [ sub last-clock [ mul x 60 1000 ] ] .
            } .
-      ) /x ] .
+      ) <span style="color: #8b4513;">/x</span> ] .
 
-' Rewind X minutes from last entry
-/rewind-last
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Rewind X minutes from last entry</span>
+<span style="color: #8b4513;">/rewind-last</span>
   [ op (
         if running
            {
-             print "Currently running." .
+             print <span style="color: #50a14f;">"Currently running."</span> .
            }
            {
-             /end [ last record /r ] .
-             /stop-time
+             <span style="color: #8b4513;">/end</span> [ last record <span style="color: #8b4513;">/r</span> ] .
+             <span style="color: #8b4513;">/stop-time</span>
                [
-                 sub record:end:/stop-time [ mul x 60 1000 ]
+                 sub record:end:<span style="color: #8b4513;">/stop-time</span> [ mul x 60 1000 ]
                ]
                record:end .
            } .
-      ) /x ] .
+      ) <span style="color: #8b4513;">/x</span> ] .
 </pre>
 </div>
 </div>
@@ -1773,87 +1800,87 @@ I used this program to keep track of billable hours for about three years. It is
 </div>
 
 
-<div id="outline-container-orgbb69a12" class="outline-2">
-<h2 id="orgbb69a12"><span class="section-number-2">4.</span> Example Instructions</h2>
+<div id="outline-container-org0acb31c" class="outline-2">
+<h2 id="org0acb31c"><span class="section-number-2">4.</span> Example Instructions</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2cca9ef" class="outline-3">
-<h3 id="org2cca9ef">Quicksort</h3>
-<div class="outline-text-3" id="text-org2cca9ef">
+<div id="outline-container-orgf22c3f3" class="outline-3">
+<h3 id="orgf22c3f3">Quicksort</h3>
+<div class="outline-text-3" id="text-orgf22c3f3">
 <div class="org-src-container">
-<pre class="src src-slobil">set /swap
+<pre class="src src-slobil">set <span style="color: #8b4513;">/swap</span>
     (
-      set /tmp input:i .
+      set <span style="color: #8b4513;">/tmp</span> input:i .
       set i input:j input .
       set j tmp input .
     ) .
 
-set /partition
+set <span style="color: #8b4513;">/partition</span>
     (
-      set /pivot input:end .
-      set /i start .
-      set /j start .
-      set /cont True .
+      set <span style="color: #8b4513;">/pivot</span> input:end .
+      set <span style="color: #8b4513;">/i</span> start .
+      set <span style="color: #8b4513;">/j</span> start .
+      set <span style="color: #8b4513;">/cont</span> <span style="color: #008b8b;">True</span> .
       while ( answer cont )
             (
               if [ compare input:j pivot ]
                  {
-                   swap /input input /i i /j j .
-                   set /i [ next i ] .
+                   swap <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/i</span> i <span style="color: #8b4513;">/j</span> j .
+                   set <span style="color: #8b4513;">/i</span> [ next i ] .
                  } .
 
               if [ slot-eq j end ]
                  {
-                   set /cont False .
+                   set <span style="color: #8b4513;">/cont</span> <span style="color: #008b8b;">False</span> .
                  } .
 
-              set /j [ next j ] .
+              set <span style="color: #8b4513;">/j</span> [ next j ] .
             ) .
 
-      swap /input input /i i /j end .
+      swap <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/i</span> i <span style="color: #8b4513;">/j</span> end .
       answer i .
     ) .
 
-set /-quicksort
+set <span style="color: #8b4513;">/-quicksort</span>
     (
       if [ not [ slot-eq start end ] ]
          {
-           partition /input input /start start /end end /compare compare . 
-           move /ans /p .
+           partition <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/start</span> start <span style="color: #8b4513;">/end</span> end <span style="color: #8b4513;">/compare</span> compare . 
+           move <span style="color: #8b4513;">/ans</span> <span style="color: #8b4513;">/p</span> .
            if [ not [ slot-eq p start ] ]
               {
-                -quicksort /input input /start start /end [ previous p . ] .
+                -quicksort <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/start</span> start <span style="color: #8b4513;">/end</span> [ previous p . ] .
               } .
 
            if [ not [ slot-eq p end ] ]
               {
-                -quicksort /input input /start [ next p . ] /end end .
+                -quicksort <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/start</span> [ next p . ] <span style="color: #8b4513;">/end</span> end .
               } .
          } .
     ) .
 
-set /quicksort
+set <span style="color: #8b4513;">/quicksort</span>
     (
-      if [ not [ exist /end ] ]
+      if [ not [ exist <span style="color: #8b4513;">/end</span> ] ]
          {
-           set /end [ last input slice . ] .
+           set <span style="color: #8b4513;">/end</span> [ last input slice . ] .
          } .
-      if [ not [ exist /start ] ]
+      if [ not [ exist <span style="color: #8b4513;">/start</span> ] ]
          {
-           set /start [ next slice . ] . 
+           set <span style="color: #8b4513;">/start</span> [ next slice . ] . 
          } .
 
       if [ not [ exist start input ] ]
          {
-           error "Starting slot not found in input." .
+           error <span style="color: #50a14f;">"Starting slot not found in input."</span> .
          } .
 
       if [ not [ exist end input ] ]
          {
-           error "Ending slot not found in input." .
+           error <span style="color: #50a14f;">"Ending slot not found in input."</span> .
          } .
 
-      -quicksort /input input /start start /end end /compare compare .
+      -quicksort <span style="color: #8b4513;">/input</span> input <span style="color: #8b4513;">/start</span> start <span style="color: #8b4513;">/end</span> end <span style="color: #8b4513;">/compare</span> compare .
     ) .
 </pre>
 </div>
@@ -1863,15 +1890,15 @@ Example of use:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">... set /x [ list 3 2 4 1 ] .
-... quicksort /input x /slice /t /compare lt .
+<pre class="src src-slobil">... set <span style="color: #8b4513;">/x</span> [ list 3 2 4 1 ] .
+... quicksort <span style="color: #8b4513;">/input</span> x <span style="color: #8b4513;">/slice</span> <span style="color: #8b4513;">/t</span> <span style="color: #8b4513;">/compare</span> lt .
 ... print x .
 ans = a object with:
 t1 of type Integer, value: 1
 t2 of type Integer, value: 2
 t3 of type Integer, value: 3
 t4 of type Integer, value: 4
-... quicksort /input x /slice /t /compare gt .
+... quicksort <span style="color: #8b4513;">/input</span> x <span style="color: #8b4513;">/slice</span> <span style="color: #8b4513;">/t</span> <span style="color: #8b4513;">/compare</span> gt .
 ... print x .
 a object with:
 t1 of type Integer, value: 4
@@ -1883,32 +1910,32 @@ t4 of type Integer, value: 1
 </div>
 </div>
 
-<div id="outline-container-org186689a" class="outline-3">
-<h3 id="org186689a">A Line-Oriented Text Editor</h3>
-<div class="outline-text-3" id="text-org186689a">
+<div id="outline-container-orgbe93189" class="outline-3">
+<h3 id="orgbe93189">A Line-Oriented Text Editor</h3>
+<div class="outline-text-3" id="text-orgbe93189">
 <p>
 This example is a simple interactive program where the user enters commands to edit a buffer. 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">' Line-oriented text editor
-/slobed [ object . ] .
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Line-oriented text editor</span>
+<span style="color: #8b4513;">/slobed</span> [ object . ] .
 in slobed
    (
-     /buffer [ list . ] . 
-     /cur-line /t1 . 
-     /n ( up set /cur-line [ next cur-line . ] . ) .
-     /p ( up set /cur-line [ previous cur-line . ] . ) .
-     /i
+     <span style="color: #8b4513;">/buffer</span> [ list . ] . 
+     <span style="color: #8b4513;">/cur-line</span> <span style="color: #8b4513;">/t1</span> . 
+     <span style="color: #8b4513;">/n</span> ( up set <span style="color: #8b4513;">/cur-line</span> [ next cur-line . ] . ) .
+     <span style="color: #8b4513;">/p</span> ( up set <span style="color: #8b4513;">/cur-line</span> [ previous cur-line . ] . ) .
+     <span style="color: #8b4513;">/i</span>
        [ op (
-         /arbed-str s buffer .
+         <span style="color: #8b4513;">/arbed-str</span> s buffer .
          in buffer
             (
               set cur-line arbed-str .
             ) .
        )
-       /s ] . 
-     /o
+       <span style="color: #8b4513;">/s</span> ] . 
+     <span style="color: #8b4513;">/o</span>
        (
          print [ get cur-line buffer . ] .
        ) .
@@ -1921,11 +1948,11 @@ Example of use:
 </p>
 <div class="org-src-container">
 <pre class="src src-slobil">... import slobed .
-... i "Hello" .
+... i <span style="color: #50a14f;">"Hello"</span> .
 ... o .
 Hello
 ... n .
-... i "Goodbye" .
+... i <span style="color: #50a14f;">"Goodbye"</span> .
 ... o .
 Goodbye
 ... p .
@@ -1936,16 +1963,16 @@ Hello
 </div>
 </div>
 
-<div id="outline-container-org5881c0e" class="outline-3">
-<h3 id="org5881c0e">Numerical Differentiation</h3>
-<div class="outline-text-3" id="text-org5881c0e">
+<div id="outline-container-orgbe0b45d" class="outline-3">
+<h3 id="orgbe0b45d">Numerical Differentiation</h3>
+<div class="outline-text-3" id="text-orgbe0b45d">
 <div class="org-src-container">
-<pre class="src src-slobil">' Compute the numerical derivative of an operation that takes an arg
-set /deriv
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Compute the numerical derivative of an operation that takes an arg</span>
+set <span style="color: #8b4513;">/deriv</span>
     (
-      if [ not [ exist /h ] ]
+      if [ not [ exist <span style="color: #8b4513;">/h</span> ] ]
          {
-           set /h 0.001 .
+           set <span style="color: #8b4513;">/h</span> 0.001 .
          } .
       div [ sub [ f [ add x h ] ]
                 [ f [ sub x h ] ] ]
@@ -1958,44 +1985,44 @@ set /deriv
 Example of use:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... set /f [ op ( power t 2 ) /t ] .
-... deriv /f f /x 1.0
+<pre class="src src-slobil">... set <span style="color: #8b4513;">/f</span> [ op ( power t 2 ) <span style="color: #8b4513;">/t</span> ] .
+... deriv <span style="color: #8b4513;">/f</span> f <span style="color: #8b4513;">/x</span> 1.0
 ans = 2.0
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge345630" class="outline-3">
-<h3 id="orge345630">Compute Factorial</h3>
-<div class="outline-text-3" id="text-orge345630">
+<div id="outline-container-orgf2aabed" class="outline-3">
+<h3 id="orgf2aabed">Compute Factorial</h3>
+<div class="outline-text-3" id="text-orgf2aabed">
 <div class="org-src-container">
-<pre class="src src-slobil">' compute a factorial using while
-set /factorial
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">compute a factorial using while</span>
+set <span style="color: #8b4513;">/factorial</span>
     [ op (
-      /i 2 .
-      /prod 1 .
+      <span style="color: #8b4513;">/i</span> 2 .
+      <span style="color: #8b4513;">/prod</span> 1 .
       while ( lt-eq i t )
             (
-              /prod [ mul i prod ] .
+              <span style="color: #8b4513;">/prod</span> [ mul i prod ] .
               incr i .
             ) .
       answer prod .
-    ) /t ] .
+    ) <span style="color: #8b4513;">/t</span> ] .
 
 
-' compute factorial using recursion
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">compute factorial using recursion</span>
 
-set /-factorial-recurse
+set <span style="color: #8b4513;">/-factorial-recurse</span>
     (
       if [ eq t 1 ]
          1
          {
-           mul t [ -factorial-recurse /t [ sub t 1 ] ] .
+           mul t [ -factorial-recurse <span style="color: #8b4513;">/t</span> [ sub t 1 ] ] .
          } .
     ) .
 
-set /factorial-recurse [ op -factorial-recurse /t ] .
+set <span style="color: #8b4513;">/factorial-recurse</span> [ op -factorial-recurse <span style="color: #8b4513;">/t</span> ] .
 </pre>
 </div>
 
@@ -2005,15 +2032,15 @@ Example of use:
 <div class="org-src-container">
 <pre class="src src-slobil">... factorial 5 .
 ans = 120
-... factorial-recurse /t 5 .
+... factorial-recurse <span style="color: #8b4513;">/t</span> 5 .
 ans = 120
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org96373ba" class="outline-4">
-<h4 id="org96373ba">Note on Recursion</h4>
-<div class="outline-text-4" id="text-org96373ba">
+<div id="outline-container-orgceb9d47" class="outline-4">
+<h4 id="orgceb9d47">Note on Recursion</h4>
+<div class="outline-text-4" id="text-orgceb9d47">
 <p>
 Operations cannot be directly defined recursively, but Instructions can be.  That is why the code above first defines <code>-factorial-recurse</code> as an instruction and then creates the operation.
 </p>
@@ -2021,18 +2048,18 @@ Operations cannot be directly defined recursively, but Instructions can be.  Tha
 </div>
 </div>
 
-<div id="outline-container-orge48f36d" class="outline-3">
-<h3 id="orge48f36d">Numerical Integration</h3>
-<div class="outline-text-3" id="text-orge48f36d">
+<div id="outline-container-orga36c22a" class="outline-3">
+<h3 id="orga36c22a">Numerical Integration</h3>
+<div class="outline-text-3" id="text-orga36c22a">
 <div class="org-src-container">
-<pre class="src src-slobil">' takes an operation as an argument and return left hand
-' riemmann sum over range
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">takes an operation as an argument and return left hand</span>
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">riemmann sum over range</span>
 
-set /integrate 
+set <span style="color: #8b4513;">/integrate</span> 
     (
-      /delta [ div [ sub ub lb ] n ] .
-      /x lb .
-      /int 0.0 .
+      <span style="color: #8b4513;">/delta</span> [ div [ sub ub lb ] n ] .
+      <span style="color: #8b4513;">/x</span> lb .
+      <span style="color: #8b4513;">/int</span> 0.0 .
       repeat n
              (
                incr int [ f x ] .
@@ -2047,58 +2074,58 @@ set /integrate
 Example of use:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... integrate /f [ op ( power t 2 ) /t ] /lb 0.0 /ub 1.0 /n 1000 .
+<pre class="src src-slobil">... integrate <span style="color: #8b4513;">/f</span> [ op ( power t 2 ) <span style="color: #8b4513;">/t</span> ] <span style="color: #8b4513;">/lb</span> 0.0 <span style="color: #8b4513;">/ub</span> 1.0 <span style="color: #8b4513;">/n</span> 1000 .
 ans = 0.332834
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgfb00a03" class="outline-3">
-<h3 id="orgfb00a03">Basic Linear Algebra</h3>
-<div class="outline-text-3" id="text-orgfb00a03">
+<div id="outline-container-org7534d52" class="outline-3">
+<h3 id="org7534d52">Basic Linear Algebra</h3>
+<div class="outline-text-3" id="text-org7534d52">
 <p>
 This example demonstrates both application methods like <code>do</code> and <code>collapse</code> as well as when to use operations for programmer code.  Operations make more sense when the arguments are all the same kind of thing, the order is the only thing that might matter, like in this example where we are multiplying two matrices.  Instructions are preferred when the argument's position is uninformative about the purpose of the argument, as in the previous example with numerical integration.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">' Computes v^T w for a vector 
-set /dotproduct
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Computes v^T w for a vector </span>
+set <span style="color: #8b4513;">/dotproduct</span>
     [ op (
       do mul v w .
       collapse add ans  .
-    ) /v /w ] .
+    ) <span style="color: #8b4513;">/v</span> <span style="color: #8b4513;">/w</span> ] .
 
-' matrix-multiply A B computes A^T B
-set /matrix-multiply
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">matrix-multiply A B computes A^T B</span>
+set <span style="color: #8b4513;">/matrix-multiply</span>
     [ op (
-      set /i /t1 .
-      set /out [ list ] .
+      set <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/t1</span> .
+      set <span style="color: #8b4513;">/out</span> [ list ] .
       while ( exist i B )
             (
-              do [ op ( dotproduct t1 B:i ) /t1 ] A .
+              do [ op ( dotproduct t1 B:i ) <span style="color: #8b4513;">/t1</span> ] A .
               in out ( set i ans ) .
               next i .
-              move /ans /i .
+              move <span style="color: #8b4513;">/ans</span> <span style="color: #8b4513;">/i</span> .
             ) .
       answer out .
-    ) /A /B ] .
+    ) <span style="color: #8b4513;">/A</span> <span style="color: #8b4513;">/B</span> ] .
 
-' Computes A^T 
-set /transpose
+<span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Computes A^T </span>
+set <span style="color: #8b4513;">/transpose</span>
     [ op (
-      set /i /t1 .
-      set /out [ list ] .
-      while ( exist i A:/t1 )
+      set <span style="color: #8b4513;">/i</span> <span style="color: #8b4513;">/t1</span> .
+      set <span style="color: #8b4513;">/out</span> [ list ] .
+      while ( exist i A:<span style="color: #8b4513;">/t1</span> )
             (
-              do [ op ( answer t1:i ) /t1 ] A .
-              move /ans /res .
+              do [ op ( answer t1:i ) <span style="color: #8b4513;">/t1</span> ] A .
+              move <span style="color: #8b4513;">/ans</span> <span style="color: #8b4513;">/res</span> .
               in out ( set i res ) .
               next i .
-              move /ans /i .
+              move <span style="color: #8b4513;">/ans</span> <span style="color: #8b4513;">/i</span> .
             ) .
       answer out .
-    ) /A ] .
+    ) <span style="color: #8b4513;">/A</span> ] .
 </pre>
 </div>
 
@@ -2106,8 +2133,8 @@ set /transpose
 Example of use:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... set /A [ list [ list 1 2 ] [ list 3 4 ] ] .
-... set /B [ list [ list 6 2 ] [ list 3 4 ] ] .
+<pre class="src src-slobil">... set <span style="color: #8b4513;">/A</span> [ list [ list 1 2 ] [ list 3 4 ] ] .
+... set <span style="color: #8b4513;">/B</span> [ list [ list 6 2 ] [ list 3 4 ] ] .
 ... transpose A .
 ans = a object with:
 t1 of type Object, value: a object with:
@@ -2129,33 +2156,33 @@ t2 of type Integer, value: 25
 </div>
 </div>
 
-<div id="outline-container-orgb4852fb" class="outline-3">
-<h3 id="orgb4852fb">Split a String</h3>
-<div class="outline-text-3" id="text-orgb4852fb">
+<div id="outline-container-org5e2dcdb" class="outline-3">
+<h3 id="org5e2dcdb">Split a String</h3>
+<div class="outline-text-3" id="text-org5e2dcdb">
 <div class="org-src-container">
-<pre class="src src-slobil">' Tokenize a string /line by splitting on string /sep
-set /tokenize
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Tokenize a string /line by splitting on string /sep</span>
+set <span style="color: #8b4513;">/tokenize</span>
     (
-      set /i 1 .
-      set /len [ length line . ] .
-      set /cur-reg /t1 .
-      set /tokened [ list . ] .
-      set /init True .
+      set <span style="color: #8b4513;">/i</span> 1 .
+      set <span style="color: #8b4513;">/len</span> [ length line . ] .
+      set <span style="color: #8b4513;">/cur-reg</span> <span style="color: #8b4513;">/t1</span> .
+      set <span style="color: #8b4513;">/tokened</span> [ list . ] .
+      set <span style="color: #8b4513;">/init</span> <span style="color: #008b8b;">True</span> .
       while ( lt-eq i len . )
             (
-              set /d [ substring line i i . ] .
+              set <span style="color: #8b4513;">/d</span> [ substring line i i . ] .
               if [ string-eq d sep . ]
                  {
                    in tokened ( set cur-reg buffer . ) .
-                   set /cur-reg [ next cur-reg . ] .
-                   set /init True .
+                   set <span style="color: #8b4513;">/cur-reg</span> [ next cur-reg . ] .
+                   set <span style="color: #8b4513;">/init</span> <span style="color: #008b8b;">True</span> .
                  }
                  {
                    if init
-                      { set /buffer d . set /init False . }
-                      { set /buffer [ combine buffer d . ] . } .
+                      { set <span style="color: #8b4513;">/buffer</span> d . set <span style="color: #8b4513;">/init</span> <span style="color: #008b8b;">False</span> . }
+                      { set <span style="color: #8b4513;">/buffer</span> [ combine buffer d . ] . } .
                  } .
-              set /i [ add i 1 . ] .
+              set <span style="color: #8b4513;">/i</span> [ add i 1 . ] .
             ) .
       in tokened ( set cur-reg buffer . ) .
       answer tokened .
@@ -2167,7 +2194,7 @@ set /tokenize
 Examples of use:
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... tokenize /line "1,2,3" /sep "," .
+<pre class="src src-slobil">... tokenize <span style="color: #8b4513;">/line</span> <span style="color: #50a14f;">"1,2,3"</span> <span style="color: #8b4513;">/sep</span> <span style="color: #50a14f;">","</span> .
 ans = a object with:
 t1 of type String, value: 1
 t2 of type String, value: 2
@@ -2178,57 +2205,57 @@ t3 of type String, value: 3
 </div>
 
 
-<div id="outline-container-org7c19bce" class="outline-3">
-<h3 id="org7c19bce">Concurrent Programming</h3>
-<div class="outline-text-3" id="text-org7c19bce">
+<div id="outline-container-org2a7ca04" class="outline-3">
+<h3 id="org2a7ca04">Concurrent Programming</h3>
+<div class="outline-text-3" id="text-org2a7ca04">
 <p>
 SLOBIL uses Tasks to run Instructions in separate processes.  The following example demonstrates how <code>queue</code>, <code>accept</code>, and <code>select</code> work to move data between the main Task and other Tasks.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">' Demonstrate tasks
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Demonstrate tasks</span>
 
-task /t1
+task <span style="color: #8b4513;">/t1</span>
      (
-       while ( answer True . )
+       while ( answer <span style="color: #008b8b;">True</span> . )
              (
-               queue /current [ accept /hello . ] .
+               queue <span style="color: #8b4513;">/current</span> [ accept <span style="color: #8b4513;">/hello</span> . ] .
              ) .
      )
      [ object . ] .
 
 run-task t1 .
 
-queue /hello "Hi!" t1 .
-accept-or /current ( print "Result not ready yet." . ) t1 .
+queue <span style="color: #8b4513;">/hello</span> <span style="color: #50a14f;">"Hi!"</span> t1 .
+accept-or <span style="color: #8b4513;">/current</span> ( print <span style="color: #50a14f;">"Result not ready yet."</span> . ) t1 .
 
-task /t2
+task <span style="color: #8b4513;">/t2</span>
      (
-       set /continue True .
+       set <span style="color: #8b4513;">/continue</span> <span style="color: #008b8b;">True</span> .
        while ( answer continue . )
              (
                select 
-                 /double
+                 <span style="color: #8b4513;">/double</span>
                  (
                    print [ mul ans 2 . ] .
                  )
-                 /triple
+                 <span style="color: #8b4513;">/triple</span>
                  (
                    print [ mul ans 3 . ] .
                  )
-                 /end
+                 <span style="color: #8b4513;">/end</span>
                  (
-                   set /continue False .
+                   set <span style="color: #8b4513;">/continue</span> <span style="color: #008b8b;">False</span> .
                  ) .
              ) .
      )
      [ object . ] .
 
 run-task t2 .
-queue /double 3 t2 .
-queue /triple 10 t2 .
-queue /double 7 t2 .
-queue /end Nothing t2 .
+queue <span style="color: #8b4513;">/double</span> 3 t2 .
+queue <span style="color: #8b4513;">/triple</span> 10 t2 .
+queue <span style="color: #8b4513;">/double</span> 7 t2 .
+queue <span style="color: #8b4513;">/end</span> Nothing t2 .
 </pre>
 </div>
 
@@ -2237,30 +2264,30 @@ The following task that can be used to run any code in the background.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">task /t1
+<pre class="src src-slobil">task <span style="color: #8b4513;">/t1</span>
      (
-       /instr [ accept /instruction ] .
-       print "HELLO" .
-       accept /context .
+       <span style="color: #8b4513;">/instr</span> [ accept <span style="color: #8b4513;">/instruction</span> ] .
+       print <span style="color: #50a14f;">"HELLO"</span> .
+       accept <span style="color: #8b4513;">/context</span> .
        import ans .
        instr .
-       queue /result ans .
+       queue <span style="color: #8b4513;">/result</span> ans .
      )
      [ object ] .
 
 run-task t1 .
-queue /instruction ( add x y ) t1 .
-queue /context [ object /x 2 /y 4 ] t1 .
-accept-or /result ( print "Result not ready yet." ) t1 .
-accept-or /result ( print "Result not ready yet." ) t1 .
+queue <span style="color: #8b4513;">/instruction</span> ( add x y ) t1 .
+queue <span style="color: #8b4513;">/context</span> [ object <span style="color: #8b4513;">/x</span> 2 <span style="color: #8b4513;">/y</span> 4 ] t1 .
+accept-or <span style="color: #8b4513;">/result</span> ( print <span style="color: #50a14f;">"Result not ready yet."</span> ) t1 .
+accept-or <span style="color: #8b4513;">/result</span> ( print <span style="color: #50a14f;">"Result not ready yet."</span> ) t1 .
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org363e42c" class="outline-3">
-<h3 id="org363e42c">Linking C code</h3>
-<div class="outline-text-3" id="text-org363e42c">
+<div id="outline-container-orgf351731" class="outline-3">
+<h3 id="orgf351731">Linking C code</h3>
+<div class="outline-text-3" id="text-orgf351731">
 <p>
 One of the big outstanding tasks with SLOBIL is to write a more user-friendly (and documented) <i>libslobil</i> for adding extensions, but it is currently possible to write SLOBIL operations in C, using SLOBIL's <code>link</code> operation to import the code.
 </p>
@@ -2337,8 +2364,8 @@ The code then can be loaded into SLOBIL with the <code>link</code> operation lik
 </p>
 
 <div class="org-src-container">
-<pre class="src src-slobil">' Demonstrates linking C code in
-link "./link.so" "log_plus_one" "log1" .
+<pre class="src src-slobil"><span style="color: #a0a1a7; font-weight: bold;">' </span><span style="color: #a0a1a7;">Demonstrates linking C code in</span>
+link <span style="color: #50a14f;">"./link.so"</span> <span style="color: #50a14f;">"log_plus_one"</span> <span style="color: #50a14f;">"log1"</span> .
 </pre>
 </div>
 
@@ -2358,8 +2385,8 @@ ans = 0.693147
 </div>
 </div>
 
-<div id="outline-container-orgc29aa14" class="outline-2">
-<h2 id="orgc29aa14"><span class="section-number-2">5.</span> Reference</h2>
+<div id="outline-container-orgfa48fe6" class="outline-2">
+<h2 id="orgfa48fe6"><span class="section-number-2">5.</span> Reference</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This section gives the full vocabulary of the language.  The grammar of the language is described in the previous sections.  I describe each type of data, and the operations associated with it. 
@@ -2370,37 +2397,37 @@ Throughout, I enclose an operation's optional arguments between bars (||).
 </p>
 </div>
 
-<div id="outline-container-org5d2eeb6" class="outline-3">
-<h3 id="org5d2eeb6">Objects</h3>
-<div class="outline-text-3" id="text-org5d2eeb6">
+<div id="outline-container-org7b210f1" class="outline-3">
+<h3 id="org7b210f1">Objects</h3>
+<div class="outline-text-3" id="text-org7b210f1">
 </div>
-<div id="outline-container-orga6567fb" class="outline-4">
-<h4 id="orga6567fb">Short description</h4>
-<div class="outline-text-4" id="text-orga6567fb">
+<div id="outline-container-org1e15fda" class="outline-4">
+<h4 id="org1e15fda">Short description</h4>
+<div class="outline-text-4" id="text-org1e15fda">
 <p>
 A object contains data located at slots.  Data can be retrieved  from and inserted into objects.  Objects also defined the <i>scope</i> of SLOBIL code because code is executed inside objects.  So the values of variables depend on which object you are executing the code.  This allows the user to flexibly manipulate scope.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org34d7c15" class="outline-4">
-<h4 id="org34d7c15">Implementation details</h4>
-<div class="outline-text-4" id="text-org34d7c15">
+<div id="outline-container-orgc390be5" class="outline-4">
+<h4 id="orgc390be5">Implementation details</h4>
+<div class="outline-text-4" id="text-orgc390be5">
 <p>
 Objects are hash tables.  The keys to the table are called slots.  The number of bins in the hash table grows as more elements are added.  This keeps lookup times low, but the object will rehash as it grows.  Rehashing can be turned off by using the <code>auto-rehash</code> operation.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3068ca6" class="outline-4">
-<h4 id="org3068ca6">Object operations</h4>
-<div class="outline-text-4" id="text-org3068ca6">
+<div id="outline-container-org6f0441a" class="outline-4">
+<h4 id="org6f0441a">Object operations</h4>
+<div class="outline-text-4" id="text-org6f0441a">
 </div>
 <ul class="org-ul">
-<li><a id="org83c672e"></a>Creation<br />
+<li><a id="org26c2ddd"></a>Creation<br />
 <ul class="org-ul">
-<li><a id="org786bfd1"></a><code>object</code><br />
-<div class="outline-text-6" id="text-org786bfd1">
+<li><a id="org0b03f4e"></a><code>object</code><br />
+<div class="outline-text-6" id="text-org0b03f4e">
 <p>
 Usage: <code>object SLOT1 VALUE1 SLOT2 VALUE2 ...</code>
 </p>
@@ -2411,8 +2438,8 @@ Sets the <code>/ans</code> slot to a object with <code>VALUE1</code> located at 
 </div>
 </li>
 
-<li><a id="org1157848"></a><code>list</code><br />
-<div class="outline-text-6" id="text-org1157848">
+<li><a id="org4ab7299"></a><code>list</code><br />
+<div class="outline-text-6" id="text-org4ab7299">
 <p>
 Usage: <code>list VALUE1 VALUE2 ...</code>
 </p>
@@ -2424,8 +2451,8 @@ Set the <code>/ans</code> slot to a Object with <code>VALUE1</code> at Slot <cod
 </li>
 
 
-<li><a id="orgb232f6a"></a><code>range</code><br />
-<div class="outline-text-6" id="text-orgb232f6a">
+<li><a id="orgeea7c51"></a><code>range</code><br />
+<div class="outline-text-6" id="text-orgeea7c51">
 <p>
 Usage: <code>range INTEGER1 INTEGER2 |INTEGER3|</code>
 </p>
@@ -2439,10 +2466,10 @@ Set the <code>/ans</code> slot to a Object with <code>INTEGER1</code> at <code>/
 </li>
 
 
-<li><a id="orgd164fe1"></a>Insert, move, and remove data to and from slots<br />
+<li><a id="org5c778a4"></a>Insert, move, and remove data to and from slots<br />
 <ul class="org-ul">
-<li><a id="org1fb6cb2"></a><code>set</code><br />
-<div class="outline-text-6" id="text-org1fb6cb2">
+<li><a id="org9ef4612"></a><code>set</code><br />
+<div class="outline-text-6" id="text-org9ef4612">
 <p>
 Usage: <code>set SLOT VALUE |OBJECT|</code>
 </p>
@@ -2453,8 +2480,8 @@ Sets the value at <code>SLOT</code> to <code>VALUE</code> in the object <code>OB
 </div>
 </li>
 
-<li><a id="orge88277f"></a><code>move</code><br />
-<div class="outline-text-6" id="text-orge88277f">
+<li><a id="org04d4cae"></a><code>move</code><br />
+<div class="outline-text-6" id="text-org04d4cae">
 <p>
 Usage: <code>move SLOT1 SLOT2</code>
 </p>
@@ -2465,8 +2492,8 @@ Move the value located at <code>SLOT1</code> to <code>SLOT2</code>.  Does not co
 </div>
 </li>
 
-<li><a id="org731cda5"></a><code>delete</code><br />
-<div class="outline-text-6" id="text-org731cda5">
+<li><a id="org2503280"></a><code>delete</code><br />
+<div class="outline-text-6" id="text-org2503280">
 <p>
 Usage: <code>delete SLOT</code>
 </p>
@@ -2479,10 +2506,10 @@ Delete the value at <code>SLOT</code> in the current object.
 </ul>
 </li>
 
-<li><a id="orgb974fc9"></a>Access data in Object<br />
+<li><a id="orgd9e9ab3"></a>Access data in Object<br />
 <ul class="org-ul">
-<li><a id="org5358763"></a><code>get</code><br />
-<div class="outline-text-6" id="text-org5358763">
+<li><a id="org0e35775"></a><code>get</code><br />
+<div class="outline-text-6" id="text-org0e35775">
 <p>
 Usage: <code>get SLOT |OBJECT|</code>
 </p>
@@ -2493,8 +2520,8 @@ Sets the <code>/ans</code> slot to the value located at <code>SLOT</code> in <co
 </div>
 </li>
 
-<li><a id="org46fbbce"></a><code>exist</code><br />
-<div class="outline-text-6" id="text-org46fbbce">
+<li><a id="org440ed39"></a><code>exist</code><br />
+<div class="outline-text-6" id="text-org440ed39">
 <p>
 Usage: <code>exist SLOT |OBJECT|</code>
 </p>
@@ -2505,8 +2532,8 @@ Set the <code>/ans</code> slot to <code>True</code> if a value exists at the <co
 </div>
 </li>
 
-<li><a id="orga2a295c"></a><code>import</code><br />
-<div class="outline-text-6" id="text-orga2a295c">
+<li><a id="org4dd8ac5"></a><code>import</code><br />
+<div class="outline-text-6" id="text-org4dd8ac5">
 <p>
 Usage: <code>import OBJECT</code>
 </p>
@@ -2517,8 +2544,8 @@ Set the Slots in the current Object to hold the same values that they hold in <c
 </div>
 </li>
 
-<li><a id="org2f2ab7b"></a><code>filter</code><br />
-<div class="outline-text-6" id="text-org2f2ab7b">
+<li><a id="org7d0513e"></a><code>filter</code><br />
+<div class="outline-text-6" id="text-org7d0513e">
 <p>
 Usage: <code>filter OBJECT OPERATION</code>
 </p>
@@ -2531,10 +2558,10 @@ Set the <code>/ans</code> slot to a Object containing all the elements in <code>
 </ul>
 </li>
 
-<li><a id="org47be882"></a>Apply Operations to elements of a Object<br />
+<li><a id="org8439acb"></a>Apply Operations to elements of a Object<br />
 <ul class="org-ul">
-<li><a id="org1586775"></a><code>do</code><br />
-<div class="outline-text-6" id="text-org1586775">
+<li><a id="orgfa5d848"></a><code>do</code><br />
+<div class="outline-text-6" id="text-orgfa5d848">
 <p>
 Usage: <code>do OPERATION OBJECT1 OBJECT2 ... OBJECTN</code>
 </p>
@@ -2545,8 +2572,8 @@ Execute <code>OPERATION</code> which takes its arguments (1&#x2026;N) from each 
 </div>
 </li>
 
-<li><a id="org66f2d98"></a><code>collapse</code><br />
-<div class="outline-text-6" id="text-org66f2d98">
+<li><a id="orgc8b641b"></a><code>collapse</code><br />
+<div class="outline-text-6" id="text-orgc8b641b">
 <p>
 Usage: <code>collapse OPERATION OBJECT |SLOT|</code>
 </p>
@@ -2559,10 +2586,10 @@ Sets the <code>/ans</code> slot to the value of applying <code>OPERATION</code> 
 </ul>
 </li>
 
-<li><a id="orgb338ffc"></a>Execute code in a object<br />
+<li><a id="orge38e29e"></a>Execute code in a object<br />
 <ul class="org-ul">
-<li><a id="org34f63ae"></a><code>in</code><br />
-<div class="outline-text-6" id="text-org34f63ae">
+<li><a id="orgd098ba0"></a><code>in</code><br />
+<div class="outline-text-6" id="text-orgd098ba0">
 <p>
 Usage: <code>in OBJECT INSTRUCTION</code>
 </p>
@@ -2573,8 +2600,8 @@ Call <code>INSTRUCTION</code> in <code>OBJECT</code>.
 </div>
 </li>
 
-<li><a id="orgaebe13e"></a><code>up</code><br />
-<div class="outline-text-6" id="text-orgaebe13e">
+<li><a id="orgd4f20bd"></a><code>up</code><br />
+<div class="outline-text-6" id="text-orgd4f20bd">
 <p>
 Usage: <code>up STATEMENT</code>
 </p>
@@ -2583,9 +2610,9 @@ Usage: <code>up STATEMENT</code>
 Execute STATEMENT in the object above the current one after resolving the values of the arguments of the statement in the current object.  For example, we can create an Instruction that can be used to increment a variable in place, like so: 
 </p>
 <div class="org-src-container">
-<pre class="src src-slobil">... set /inc ( up set x [ add 1 [ up get x . ] . ] . ) .
-... set /x 1 . 
-... inc /x /x . 
+<pre class="src src-slobil">... set <span style="color: #8b4513;">/inc</span> ( up set x [ add 1 [ up get x . ] . ] . ) .
+... set <span style="color: #8b4513;">/x</span> 1 . 
+... inc <span style="color: #8b4513;">/x</span> <span style="color: #8b4513;">/x</span> . 
 ... print x .
 2
 </pre>
@@ -2595,10 +2622,10 @@ Execute STATEMENT in the object above the current one after resolving the values
 </ul>
 </li>
 
-<li><a id="orgab51305"></a>Test if a object<br />
+<li><a id="org0d7e52f"></a>Test if a object<br />
 <ul class="org-ul">
-<li><a id="org544f96a"></a><code>is-object</code><br />
-<div class="outline-text-6" id="text-org544f96a">
+<li><a id="orgc508915"></a><code>is-object</code><br />
+<div class="outline-text-6" id="text-orgc508915">
 <p>
 Usage: <code>is-object VALUE</code>
 </p>
@@ -2611,10 +2638,10 @@ Sets the <code>/ans</code> Slot to <code>True</code> if <code>VALUE</code> is a 
 </ul>
 </li>
 
-<li><a id="orgf9f8373"></a>Technical<br />
+<li><a id="org3002f2d"></a>Technical<br />
 <ul class="org-ul">
-<li><a id="org0c6d263"></a><code>rehash</code><br />
-<div class="outline-text-6" id="text-org0c6d263">
+<li><a id="org1b09892"></a><code>rehash</code><br />
+<div class="outline-text-6" id="text-org1b09892">
 <p>
 Usage: <code>rehash OBJECT</code>
 </p>
@@ -2631,22 +2658,22 @@ Manually rehash the object's underlying hash table.
 </div>
 
 
-<div id="outline-container-org6039c9c" class="outline-3">
-<h3 id="org6039c9c">Reals and Integers</h3>
-<div class="outline-text-3" id="text-org6039c9c">
+<div id="outline-container-orgaba5f6f" class="outline-3">
+<h3 id="orgaba5f6f">Reals and Integers</h3>
+<div class="outline-text-3" id="text-orgaba5f6f">
 </div>
-<div id="outline-container-org307cf1f" class="outline-4">
-<h4 id="org307cf1f">Short description</h4>
-<div class="outline-text-4" id="text-org307cf1f">
+<div id="outline-container-org8c4528b" class="outline-4">
+<h4 id="org8c4528b">Short description</h4>
+<div class="outline-text-4" id="text-org8c4528b">
 <p>
 Real and Integer are distinct types in SLOBIL.  A Real is a number with a decimal point.  An Integer is a number without a decimal point. Sometimes either type can be used for an operation.  In this case, I refer to the argument type as a Number in describing the operation for brevity.  Number is <i>not</i> a SLOBIL type.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org42ea43f" class="outline-4">
-<h4 id="org42ea43f">Implementation details</h4>
-<div class="outline-text-4" id="text-org42ea43f">
+<div id="outline-container-org76daf71" class="outline-4">
+<h4 id="org76daf71">Implementation details</h4>
+<div class="outline-text-4" id="text-org76daf71">
 <p>
 A Real is a double-precision floating point value (equivalent to C's double).
 </p>
@@ -2657,15 +2684,15 @@ An Integer is an arbitrarily long integer (a "bignum").  Integers are implemente
 </div>
 </div>
 
-<div id="outline-container-org0ba01a1" class="outline-4">
-<h4 id="org0ba01a1">Real and Integer operations</h4>
-<div class="outline-text-4" id="text-org0ba01a1">
+<div id="outline-container-org98faa46" class="outline-4">
+<h4 id="org98faa46">Real and Integer operations</h4>
+<div class="outline-text-4" id="text-org98faa46">
 </div>
 <ul class="org-ul">
-<li><a id="orgd4379a1"></a>Arithmetic operations<br />
+<li><a id="org4a4bab1"></a>Arithmetic operations<br />
 <ul class="org-ul">
-<li><a id="org1c2a83b"></a><code>add</code><br />
-<div class="outline-text-6" id="text-org1c2a83b">
+<li><a id="org5821165"></a><code>add</code><br />
+<div class="outline-text-6" id="text-org5821165">
 <p>
 Usage: <code>add NUMBER1 NUMBER2 ...</code>
 </p>
@@ -2676,8 +2703,8 @@ Adds all the numbers together and sets the <code>/ans</code> slot to the result.
 </div>
 </li>
 
-<li><a id="org95b0ca1"></a><code>mul</code><br />
-<div class="outline-text-6" id="text-org95b0ca1">
+<li><a id="org25259c8"></a><code>mul</code><br />
+<div class="outline-text-6" id="text-org25259c8">
 <p>
 Usage: <code>mul NUMBER1 NUMBER2 ...</code>
 </p>
@@ -2688,8 +2715,8 @@ Multiplies all the numbers together and sets the <code>/ans</code> slot to the r
 </div>
 </li>
 
-<li><a id="org8d80918"></a><code>sub</code><br />
-<div class="outline-text-6" id="text-org8d80918">
+<li><a id="org563f4dc"></a><code>sub</code><br />
+<div class="outline-text-6" id="text-org563f4dc">
 <p>
 Usage: <code>sub NUMBER1 NUMBER2 ...</code>
 </p>
@@ -2700,8 +2727,8 @@ Subtracts the second number from the first and the third number from that and so
 </div>
 </li>
 
-<li><a id="org035e1b9"></a><code>div</code><br />
-<div class="outline-text-6" id="text-org035e1b9">
+<li><a id="org89e5587"></a><code>div</code><br />
+<div class="outline-text-6" id="text-org89e5587">
 <p>
 Usage: <code>div NUMBER1 NUMBER2 ...</code>
 </p>
@@ -2712,8 +2739,8 @@ Divides the first number by the second, the result by the third number, and so o
 </div>
 </li>
 
-<li><a id="orgaacd423"></a><code>mod</code><br />
-<div class="outline-text-6" id="text-orgaacd423">
+<li><a id="org2a370f9"></a><code>mod</code><br />
+<div class="outline-text-6" id="text-org2a370f9">
 <p>
 Usage: <code>mod NUMBER1 NUMBER2</code>
 </p>
@@ -2724,8 +2751,8 @@ Return the remainder of dividing the first number by the second.
 </div>
 </li>
 
-<li><a id="org120407f"></a><code>incr</code><br />
-<div class="outline-text-6" id="text-org120407f">
+<li><a id="orgb4dccef"></a><code>incr</code><br />
+<div class="outline-text-6" id="text-orgb4dccef">
 <p>
 Usage: <code>incr INTEGER1 |INTEGER2|</code>
 </p>
@@ -2739,10 +2766,10 @@ Increment <code>INTEGER1</code> by <code>INTEGER2</code> or by 1 if INTEGER2 is 
 </li>
 
 
-<li><a id="org2e31061"></a>Comparison operations<br />
+<li><a id="org92d6111"></a>Comparison operations<br />
 <ul class="org-ul">
-<li><a id="org49e30da"></a><code>gt</code><br />
-<div class="outline-text-6" id="text-org49e30da">
+<li><a id="org7d4e5c9"></a><code>gt</code><br />
+<div class="outline-text-6" id="text-org7d4e5c9">
 <p>
 Usage: <code>gt NUMBER1 NUMBER2</code>
 </p>
@@ -2753,8 +2780,8 @@ Set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is g
 </div>
 </li>
 
-<li><a id="org0540289"></a><code>lt</code><br />
-<div class="outline-text-6" id="text-org0540289">
+<li><a id="org56c39cc"></a><code>lt</code><br />
+<div class="outline-text-6" id="text-org56c39cc">
 <p>
 Usage: <code>lt NUMBER1 NUMBER2</code>
 </p>
@@ -2765,8 +2792,8 @@ Set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is l
 </div>
 </li>
 
-<li><a id="orge7eafe3"></a><code>eq</code><br />
-<div class="outline-text-6" id="text-orge7eafe3">
+<li><a id="org8405f27"></a><code>eq</code><br />
+<div class="outline-text-6" id="text-org8405f27">
 <p>
 Usage: <code>eq NUMBER1 NUMBER2</code>
 </p>
@@ -2777,16 +2804,16 @@ Set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is e
 </div>
 </li>
 
-<li><a id="org46c4376"></a><code>lt-eq</code><br />
-<div class="outline-text-6" id="text-org46c4376">
+<li><a id="orgb39e104"></a><code>lt-eq</code><br />
+<div class="outline-text-6" id="text-orgb39e104">
 <p>
 Usage: <code>lt-eq NUMBER1 NUMBER2</code> &#x2014; set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is less than or equal to <code>NUMBER2</code> and to <code>False</code> otherwise.
 </p>
 </div>
 </li>
 
-<li><a id="orgbd26625"></a><code>gt-eq</code><br />
-<div class="outline-text-6" id="text-orgbd26625">
+<li><a id="org8541cf0"></a><code>gt-eq</code><br />
+<div class="outline-text-6" id="text-org8541cf0">
 <p>
 Usage: <code>gt-eq NUMBER1 NUMBER2</code>
 </p>
@@ -2799,10 +2826,10 @@ Set the <code>/ans</code> slot to <code>True</code> if <code>NUMBER1</code> is g
 </ul>
 </li>
 
-<li><a id="org6291de1"></a>Conversion operations<br />
+<li><a id="org35a9be5"></a>Conversion operations<br />
 <ul class="org-ul">
-<li><a id="orgbd48eeb"></a><code>to-number</code><br />
-<div class="outline-text-6" id="text-orgbd48eeb">
+<li><a id="org1182acf"></a><code>to-number</code><br />
+<div class="outline-text-6" id="text-org1182acf">
 <p>
 Usage: <code>to-number STRING|SLOT</code>
 </p>
@@ -2813,8 +2840,8 @@ If the argument is a String, try to convert to a number and set the <code>/ans</
 </div>
 </li>
 
-<li><a id="org849358f"></a><code>to-real</code><br />
-<div class="outline-text-6" id="text-org849358f">
+<li><a id="org663d1a1"></a><code>to-real</code><br />
+<div class="outline-text-6" id="text-org663d1a1">
 <p>
 Usage: <code>to-real INTEGER</code>
 </p>
@@ -2827,10 +2854,10 @@ Set the <code>/ans</code> Slot to a Real representing the <code>INTEGER</code>.
 </ul>
 </li>
 
-<li><a id="orgeac34c8"></a>Test if type operations<br />
+<li><a id="orgac4c24d"></a>Test if type operations<br />
 <ul class="org-ul">
-<li><a id="org72f9219"></a><code>is-integer</code><br />
-<div class="outline-text-6" id="text-org72f9219">
+<li><a id="org748373e"></a><code>is-integer</code><br />
+<div class="outline-text-6" id="text-org748373e">
 <p>
 Usage: <code>is-integer VALUE</code>
 </p>
@@ -2841,8 +2868,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>Value</code> i
 </div>
 </li>
 
-<li><a id="org784e3c0"></a><code>is-real</code><br />
-<div class="outline-text-6" id="text-org784e3c0">
+<li><a id="orgffbb9a1"></a><code>is-real</code><br />
+<div class="outline-text-6" id="text-orgffbb9a1">
 <p>
 Usage: <code>is-real VALUE</code>
 </p>
@@ -2855,10 +2882,10 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>Value</code> i
 </ul>
 </li>
 
-<li><a id="org1d1964b"></a>Common mathematical operations<br />
+<li><a id="org78bb8d0"></a>Common mathematical operations<br />
 <ul class="org-ul">
-<li><a id="orga13d97d"></a><code>log</code><br />
-<div class="outline-text-6" id="text-orga13d97d">
+<li><a id="orge6fe410"></a><code>log</code><br />
+<div class="outline-text-6" id="text-orge6fe410">
 <p>
 Usage: <code>log NUMBER</code>
 </p>
@@ -2869,8 +2896,8 @@ Set the <code>/ans</code> Slot to the natural logarithm of <code>NUMBER</code>.
 </div>
 </li>
 
-<li><a id="orge9b0888"></a><code>exp</code><br />
-<div class="outline-text-6" id="text-orge9b0888">
+<li><a id="orgfb05631"></a><code>exp</code><br />
+<div class="outline-text-6" id="text-orgfb05631">
 <p>
 Usage: <code>exp NUMBER</code>
 </p>
@@ -2881,8 +2908,8 @@ Set the <code>/ans</code> Slot to the <code>NUMBER</code> power of the natural b
 </div>
 </li>
 
-<li><a id="orge20e423"></a><code>power</code><br />
-<div class="outline-text-6" id="text-orge20e423">
+<li><a id="org25dce5c"></a><code>power</code><br />
+<div class="outline-text-6" id="text-org25dce5c">
 <p>
 Usage: <code>power NUMBER1 NUMBER2</code>
 </p>
@@ -2893,8 +2920,8 @@ Set the <code>/ans</code> Slot to <code>NUMBER1</code> raised to the <code>NUMBE
 </div>
 </li>
 
-<li><a id="org360b07e"></a><code>floor</code><br />
-<div class="outline-text-6" id="text-org360b07e">
+<li><a id="org6c2d528"></a><code>floor</code><br />
+<div class="outline-text-6" id="text-org6c2d528">
 <p>
 Usage: <code>floor REAL1</code>
 </p>
@@ -2905,8 +2932,8 @@ Set the <code>/ans</code> Slot to the greatest Integer less than <code>REAL1</co
 </div>
 </li>
 
-<li><a id="org95cf7b5"></a><code>ceiling</code><br />
-<div class="outline-text-6" id="text-org95cf7b5">
+<li><a id="org7ef6e0d"></a><code>ceiling</code><br />
+<div class="outline-text-6" id="text-org7ef6e0d">
 <p>
 Usage: <code>ceiling REAL1</code>
 </p>
@@ -2923,13 +2950,13 @@ Set the <code>/ans</code> Slot to smallest Integer greater than <code>REAL1</cod
 </div>
 
 
-<div id="outline-container-orga889c3c" class="outline-3">
-<h3 id="orga889c3c">Strings</h3>
-<div class="outline-text-3" id="text-orga889c3c">
+<div id="outline-container-org29e36f2" class="outline-3">
+<h3 id="org29e36f2">Strings</h3>
+<div class="outline-text-3" id="text-org29e36f2">
 </div>
-<div id="outline-container-orgda98342" class="outline-4">
-<h4 id="orgda98342">Short description</h4>
-<div class="outline-text-4" id="text-orgda98342">
+<div id="outline-container-org5f86ea0" class="outline-4">
+<h4 id="org5f86ea0">Short description</h4>
+<div class="outline-text-4" id="text-org5f86ea0">
 <p>
 Strings in SLOBIL are text.  A string literal is enclosed in quotation marks.  SLOBIL supports UTF-8 encodings. Non-ASCII characters are handled correctly: a single character is a single character no matter how many bytes it is. It also implements a collection of escape sequences for whitespace and quotation marks that should be included in the string itself.
 </p>
@@ -2987,24 +3014,24 @@ The escape sequences are:
 </div>
 </div>
 
-<div id="outline-container-org958739a" class="outline-4">
-<h4 id="org958739a">Implementation details</h4>
-<div class="outline-text-4" id="text-org958739a">
+<div id="outline-container-orgb50e030" class="outline-4">
+<h4 id="orgb50e030">Implementation details</h4>
+<div class="outline-text-4" id="text-orgb50e030">
 <p>
 Strings are internally UTF-32 encoded to enable faster access by index number and because it makes creating substrings faster.  SLOBIL accepts UTF-8 as input because that is more common in terminals and in file-encodings.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgc8bd521" class="outline-4">
-<h4 id="orgc8bd521">String operations</h4>
-<div class="outline-text-4" id="text-orgc8bd521">
+<div id="outline-container-org4afd2c0" class="outline-4">
+<h4 id="org4afd2c0">String operations</h4>
+<div class="outline-text-4" id="text-org4afd2c0">
 </div>
 <ul class="org-ul">
-<li><a id="org0d3d976"></a>Access, search, and modify string elements<br />
+<li><a id="org973df06"></a>Access, search, and modify string elements<br />
 <ul class="org-ul">
-<li><a id="org4daee79"></a><code>substring</code><br />
-<div class="outline-text-6" id="text-org4daee79">
+<li><a id="org791c904"></a><code>substring</code><br />
+<div class="outline-text-6" id="text-org791c904">
 <p>
 Usage: <code>substring STRING INTEGER1 INTEGER2</code>
 </p>
@@ -3015,8 +3042,8 @@ Sets the <code>/ans</code> Slot to the subset of <code>STRING</code> where the c
 </div>
 </li>
 
-<li><a id="orgd70747a"></a><code>match</code><br />
-<div class="outline-text-6" id="text-orgd70747a">
+<li><a id="orgfa4e83a"></a><code>match</code><br />
+<div class="outline-text-6" id="text-orgfa4e83a">
 <p>
 Usage: <code>match STRING1 STRING2 |INTEGER|</code>
 </p>
@@ -3027,8 +3054,8 @@ Find occurences of regular expression <code>STRING1</code> in String <code>STRIN
 </div>
 </li>
 
-<li><a id="org92d35b3"></a><code>replace</code><br />
-<div class="outline-text-6" id="text-org92d35b3">
+<li><a id="org59a70da"></a><code>replace</code><br />
+<div class="outline-text-6" id="text-org59a70da">
 <p>
 Usage: <code>replace STRING1 STRING2 STRING3 |INTEGER|</code>
 </p>
@@ -3041,10 +3068,10 @@ Set the <code>/ans</code> Slot to a String formed by replacing all occurences of
 </ul>
 </li>
 
-<li><a id="org070f3f8"></a>String properties<br />
+<li><a id="org8ed3ba8"></a>String properties<br />
 <ul class="org-ul">
-<li><a id="orgbed7110"></a><code>length</code><br />
-<div class="outline-text-6" id="text-orgbed7110">
+<li><a id="org3b1afde"></a><code>length</code><br />
+<div class="outline-text-6" id="text-org3b1afde">
 <p>
 Usage: <code>length STRING</code>
 </p>
@@ -3057,10 +3084,10 @@ Sets the <code>/ans</code> slot to the number of characters in <code>STRING</cod
 </ul>
 </li>
 
-<li><a id="org44f87d0"></a>String comparison<br />
+<li><a id="org977282e"></a>String comparison<br />
 <ul class="org-ul">
-<li><a id="orgd2684ea"></a><code>string-eq</code><br />
-<div class="outline-text-6" id="text-orgd2684ea">
+<li><a id="org6952d33"></a><code>string-eq</code><br />
+<div class="outline-text-6" id="text-org6952d33">
 <p>
 Usage: <code>string-eq STRING1 STRING2</code>
 </p>
@@ -3071,8 +3098,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the two strings are equa
 </div>
 </li>
 
-<li><a id="orgeee63cb"></a><code>string-lt</code><br />
-<div class="outline-text-6" id="text-orgeee63cb">
+<li><a id="org1808dab"></a><code>string-lt</code><br />
+<div class="outline-text-6" id="text-org1808dab">
 <p>
 Usage: <code>string-lt STRING1 STRING2</code>
 </p>
@@ -3083,8 +3110,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if <code>STRING1</code> is 
 </div>
 </li>
 
-<li><a id="orga887758"></a><code>string-gt</code><br />
-<div class="outline-text-6" id="text-orga887758">
+<li><a id="org7d0b008"></a><code>string-gt</code><br />
+<div class="outline-text-6" id="text-org7d0b008">
 <p>
 Usage: <code>string-gt STRING1 STRING2</code>
 </p>
@@ -3095,8 +3122,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if <code>STRING1</code> is 
 </div>
 </li>
 
-<li><a id="orge583c48"></a><code>char-eq</code><br />
-<div class="outline-text-6" id="text-orge583c48">
+<li><a id="org5fd9c12"></a><code>char-eq</code><br />
+<div class="outline-text-6" id="text-org5fd9c12">
 <p>
 Usage: <code>char-eq STRING1 INTEGER STRING2</code>
 </p>
@@ -3109,10 +3136,10 @@ Test if character <code>INTEGER</code> of string (using same index numbers as fo
 </ul>
 </li>
 
-<li><a id="orgf8fa6bb"></a>Combine strings<br />
+<li><a id="org124947c"></a>Combine strings<br />
 <ul class="org-ul">
-<li><a id="org6b5e437"></a><code>combine</code><br />
-<div class="outline-text-6" id="text-org6b5e437">
+<li><a id="org0458935"></a><code>combine</code><br />
+<div class="outline-text-6" id="text-org0458935">
 <p>
 Usage: <code>combine STRING1 STRING2 ... STRINGN</code>
 </p>
@@ -3125,10 +3152,10 @@ Sets the <code>/ans</code> slot to the concatenation of the two Strings so that 
 </ul>
 </li>
 
-<li><a id="org5355b6f"></a>Convert to string<br />
+<li><a id="orgced397a"></a>Convert to string<br />
 <ul class="org-ul">
-<li><a id="org894e310"></a><code>to-string</code><br />
-<div class="outline-text-6" id="text-org894e310">
+<li><a id="orgebe4971"></a><code>to-string</code><br />
+<div class="outline-text-6" id="text-orgebe4971">
 <p>
 Usage: <code>to-string INTEGER|REAL|SLOT |INTEGER2|</code>
 </p>
@@ -3141,10 +3168,10 @@ Sets the <code>/ans</code> Slot to a String representing the <code>INTEGER</code
 </ul>
 </li>
 
-<li><a id="org1553280"></a>Test if string<br />
+<li><a id="orgbf34857"></a>Test if string<br />
 <ul class="org-ul">
-<li><a id="orgc396efb"></a><code>is-string</code><br />
-<div class="outline-text-6" id="text-orgc396efb">
+<li><a id="orgb35a1d1"></a><code>is-string</code><br />
+<div class="outline-text-6" id="text-orgb35a1d1">
 <p>
 Usage: <code>is-string VALUE</code>
 </p>
@@ -3157,10 +3184,10 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </ul>
 </li>
 
-<li><a id="orge43894f"></a>Strings from User Input<br />
+<li><a id="org1c7e41a"></a>Strings from User Input<br />
 <ul class="org-ul">
-<li><a id="org1c1211b"></a><code>input</code><br />
-<div class="outline-text-6" id="text-org1c1211b">
+<li><a id="orgabc0b4c"></a><code>input</code><br />
+<div class="outline-text-6" id="text-orgabc0b4c">
 <p>
 Usage: <code>input SLOT</code>
 </p>
@@ -3176,37 +3203,37 @@ Reads a line of text the user enters and sets <code>SLOT</code> to that value (a
 </div>
 </div>
 
-<div id="outline-container-orgd8e7002" class="outline-3">
-<h3 id="orgd8e7002">Slots</h3>
-<div class="outline-text-3" id="text-orgd8e7002">
+<div id="outline-container-org548d1b9" class="outline-3">
+<h3 id="org548d1b9">Slots</h3>
+<div class="outline-text-3" id="text-org548d1b9">
 </div>
-<div id="outline-container-orgb8a122e" class="outline-4">
-<h4 id="orgb8a122e">Short description</h4>
-<div class="outline-text-4" id="text-orgb8a122e">
+<div id="outline-container-org2cb5fb6" class="outline-4">
+<h4 id="org2cb5fb6">Short description</h4>
+<div class="outline-text-4" id="text-org2cb5fb6">
 <p>
 Slots are a type of data in SLOBIL usually used to refer to locations in slots.  More generally, they are symbols.  They can be compared with one another and modified.  Slots are not "associated" with objects.  They are data without any associated context.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org9ce9f58" class="outline-4">
-<h4 id="org9ce9f58">Implementation details</h4>
-<div class="outline-text-4" id="text-org9ce9f58">
+<div id="outline-container-orge85f2e0" class="outline-4">
+<h4 id="orge85f2e0">Implementation details</h4>
+<div class="outline-text-4" id="text-orge85f2e0">
 <p>
 Slots are a structure containing the name of the object and the hashed value of the name so they can be easily inserted into the object hash table.  
 </p>
 </div>
 </div>
 
-<div id="outline-container-org9c601db" class="outline-4">
-<h4 id="org9c601db">Slot operations</h4>
-<div class="outline-text-4" id="text-org9c601db">
+<div id="outline-container-org2119f47" class="outline-4">
+<h4 id="org2119f47">Slot operations</h4>
+<div class="outline-text-4" id="text-org2119f47">
 </div>
 <ul class="org-ul">
-<li><a id="org1dc3f82"></a>Operations on "list" slots<br />
+<li><a id="orga81669f"></a>Operations on "list" slots<br />
 <ul class="org-ul">
-<li><a id="org353aaca"></a><code>next</code><br />
-<div class="outline-text-6" id="text-org353aaca">
+<li><a id="org991f206"></a><code>next</code><br />
+<div class="outline-text-6" id="text-org991f206">
 <p>
 Usage: <code>next SLOT</code>
 </p>
@@ -3217,8 +3244,8 @@ If the <code>SLOT</code> ends in a number, return the Slot with that number incr
 </div>
 </li>
 
-<li><a id="org01e03b2"></a><code>previous</code><br />
-<div class="outline-text-6" id="text-org01e03b2">
+<li><a id="org00f0d4a"></a><code>previous</code><br />
+<div class="outline-text-6" id="text-org00f0d4a">
 <p>
 Usage: <code>previous SLOT</code>
 </p>
@@ -3229,8 +3256,8 @@ If the <code>SLOT</code> ends in a number, return the Slot with that number minu
 </div>
 </li>
 
-<li><a id="org10721dd"></a><code>last</code><br />
-<div class="outline-text-6" id="text-org10721dd">
+<li><a id="org70c8dbb"></a><code>last</code><br />
+<div class="outline-text-6" id="text-org70c8dbb">
 <p>
 Usage: <code>last OBJECT SLOT</code>
 </p>
@@ -3243,10 +3270,10 @@ Return the last Slot in the <code>OBJECT</code> that starts with <code>SLOT</cod
 </ul>
 </li>
 
-<li><a id="orge262413"></a>Convert to slot<br />
+<li><a id="orgecbefe7"></a>Convert to slot<br />
 <ul class="org-ul">
-<li><a id="org92504d0"></a><code>to-slot</code><br />
-<div class="outline-text-6" id="text-org92504d0">
+<li><a id="org8104345"></a><code>to-slot</code><br />
+<div class="outline-text-6" id="text-org8104345">
 <p>
 Usage: <code>to-slot STRING|INTEGER</code>
 </p>
@@ -3259,10 +3286,10 @@ Sets the <code>/ans</code> slot to a Slot named <code>STRING</code> or to <code>
 </ul>
 </li>
 
-<li><a id="org395f02a"></a>Slot comparison<br />
+<li><a id="orge3d750c"></a>Slot comparison<br />
 <ul class="org-ul">
-<li><a id="org4e86d69"></a><code>slot-eq</code><br />
-<div class="outline-text-6" id="text-org4e86d69">
+<li><a id="orgb221cfb"></a><code>slot-eq</code><br />
+<div class="outline-text-6" id="text-orgb221cfb">
 <p>
 Usage: <code>slot-eq SLOT1 SLOT2</code>
 </p>
@@ -3275,10 +3302,10 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the two Slots are the sa
 </ul>
 </li>
 
-<li><a id="org9dee5f5"></a>Test if a slot<br />
+<li><a id="org2e182c3"></a>Test if a slot<br />
 <ul class="org-ul">
-<li><a id="org47eaf03"></a><code>is-slot</code><br />
-<div class="outline-text-6" id="text-org47eaf03">
+<li><a id="org9600e0c"></a><code>is-slot</code><br />
+<div class="outline-text-6" id="text-org9600e0c">
 <p>
 Usage: <code>is-slot VALUE</code>
 </p>
@@ -3295,35 +3322,35 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </div>
 
 
-<div id="outline-container-org244f25d" class="outline-3">
-<h3 id="org244f25d">Booleans</h3>
-<div class="outline-text-3" id="text-org244f25d">
+<div id="outline-container-orga7ceb4e" class="outline-3">
+<h3 id="orga7ceb4e">Booleans</h3>
+<div class="outline-text-3" id="text-orga7ceb4e">
 </div>
-<div id="outline-container-orgd160738" class="outline-4">
-<h4 id="orgd160738">Short description</h4>
-<div class="outline-text-4" id="text-orgd160738">
+<div id="outline-container-org42b6000" class="outline-4">
+<h4 id="org42b6000">Short description</h4>
+<div class="outline-text-4" id="text-org42b6000">
 <p>
 Booleans can take on two values: <code>True</code> or <code>False</code>.  Comparison and testing operations usually set the <code>/ans</code> slot to a Boolean value.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0a1ec32" class="outline-4">
-<h4 id="org0a1ec32">Implementation details</h4>
-<div class="outline-text-4" id="text-org0a1ec32">
+<div id="outline-container-orgeda4a25" class="outline-4">
+<h4 id="orgeda4a25">Implementation details</h4>
+<div class="outline-text-4" id="text-orgeda4a25">
 <p>
 Booleans are simply a binary value.  They use the C99 bool type internally.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0b3c29f" class="outline-4">
-<h4 id="org0b3c29f">Boolean operations</h4>
-<div class="outline-text-4" id="text-org0b3c29f">
+<div id="outline-container-org87a4bf8" class="outline-4">
+<h4 id="org87a4bf8">Boolean operations</h4>
+<div class="outline-text-4" id="text-org87a4bf8">
 </div>
 <ul class="org-ul">
-<li><a id="org996e4a1"></a><code>is-boolean</code><br />
-<div class="outline-text-5" id="text-org996e4a1">
+<li><a id="org6ae7683"></a><code>is-boolean</code><br />
+<div class="outline-text-5" id="text-org6ae7683">
 <p>
 Usage: <code>is-boolean VALUE</code>
 </p>
@@ -3334,8 +3361,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </div>
 </li>
 
-<li><a id="orgc38422b"></a><code>and</code><br />
-<div class="outline-text-5" id="text-orgc38422b">
+<li><a id="org3e94c36"></a><code>and</code><br />
+<div class="outline-text-5" id="text-org3e94c36">
 <p>
 Usage: <code>and BOOLEAN1 BOOLEAN2</code>
 </p>
@@ -3346,8 +3373,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if BOOLEAN1 and BOOLEAN2 ar
 </div>
 </li>
 
-<li><a id="org9b4392a"></a><code>or</code><br />
-<div class="outline-text-5" id="text-org9b4392a">
+<li><a id="org43d1fbe"></a><code>or</code><br />
+<div class="outline-text-5" id="text-org43d1fbe">
 <p>
 Usage: <code>or BOOLEAN1 BOOLEAN2</code>
 </p>
@@ -3358,8 +3385,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if either BOOLEAN1 or BOOLE
 </div>
 </li>
 
-<li><a id="orge10cd6d"></a><code>not</code><br />
-<div class="outline-text-5" id="text-orge10cd6d">
+<li><a id="org2285e9d"></a><code>not</code><br />
+<div class="outline-text-5" id="text-org2285e9d">
 <p>
 Usage: <code>not BOOLEAN</code>
 </p>
@@ -3373,35 +3400,35 @@ Sets the <code>/ans</code> Slot to <code>True</code> if BOOLEAN is <code>False</
 </div>
 </div>
 
-<div id="outline-container-orgdbedfbb" class="outline-3">
-<h3 id="orgdbedfbb">Instructions</h3>
-<div class="outline-text-3" id="text-orgdbedfbb">
+<div id="outline-container-orgdf70300" class="outline-3">
+<h3 id="orgdf70300">Instructions</h3>
+<div class="outline-text-3" id="text-orgdf70300">
 </div>
-<div id="outline-container-orga5e55ae" class="outline-4">
-<h4 id="orga5e55ae">Short description</h4>
-<div class="outline-text-4" id="text-orga5e55ae">
+<div id="outline-container-org0023d1f" class="outline-4">
+<h4 id="org0023d1f">Short description</h4>
+<div class="outline-text-4" id="text-org0023d1f">
 <p>
 Instructions are code objects which have not yet been executed.  They can be called or executed in different objects.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgf81ee2f" class="outline-4">
-<h4 id="orgf81ee2f">Implementation details</h4>
-<div class="outline-text-4" id="text-orgf81ee2f">
+<div id="outline-container-org6d80ef7" class="outline-4">
+<h4 id="org6d80ef7">Implementation details</h4>
+<div class="outline-text-4" id="text-org6d80ef7">
 <p>
 Instructions are internally "compiled" code.  They are then supplied with an environment (a object) before they are executed.  The compiled code object is a linked list of statements each of which is a linked list of elements.  Elements are either literal data values or the names of slots to lookup in the environment.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3b6b9b5" class="outline-4">
-<h4 id="org3b6b9b5">Instruction operations</h4>
-<div class="outline-text-4" id="text-org3b6b9b5">
+<div id="outline-container-org72d9ad0" class="outline-4">
+<h4 id="org72d9ad0">Instruction operations</h4>
+<div class="outline-text-4" id="text-org72d9ad0">
 </div>
 <ul class="org-ul">
-<li><a id="org6f3e1fc"></a><code>call</code><br />
-<div class="outline-text-5" id="text-org6f3e1fc">
+<li><a id="org984ba17"></a><code>call</code><br />
+<div class="outline-text-5" id="text-org984ba17">
 <p>
 Usage: <code>call INSTRUCTION SLOT1 VALUE1 SLOT2 VALUE2 ...</code>
 </p>
@@ -3412,8 +3439,8 @@ Executes <code>INSTRUCTION</code> in a Object with <code>SLOT1</code> assigned t
 </div>
 </li>
 
-<li><a id="org894dd84"></a><code>is-instruction</code><br />
-<div class="outline-text-5" id="text-org894dd84">
+<li><a id="orgb1286f6"></a><code>is-instruction</code><br />
+<div class="outline-text-5" id="text-orgb1286f6">
 <p>
 Usage: <code>is-instruction VALUE</code>
 </p>
@@ -3424,8 +3451,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </div>
 </li>
 
-<li><a id="orgda891f8"></a><code>op</code><br />
-<div class="outline-text-5" id="text-orgda891f8">
+<li><a id="orge6f2427"></a><code>op</code><br />
+<div class="outline-text-5" id="text-orge6f2427">
 <p>
 Usage: <code>op INSTRUCTION SLOT1 ... SLOTN</code>
 </p>
@@ -3436,8 +3463,8 @@ Set the <code>/ans</code> slot to an operation that calls <code>INSTRUCTION</cod
 </div>
 </li>
 
-<li><a id="org534b16f"></a><code>code</code><br />
-<div class="outline-text-5" id="text-org534b16f">
+<li><a id="orgd59dd22"></a><code>code</code><br />
+<div class="outline-text-5" id="text-orgd59dd22">
 <p>
 Usage: <code>code INSTRUCTION</code>
 </p>
@@ -3448,8 +3475,8 @@ Sets the <code>/ans</code> slot to a String containing the code for the <code>IN
 </div>
 </li>
 
-<li><a id="org5c0991e"></a><code>is-operation</code><br />
-<div class="outline-text-5" id="text-org5c0991e">
+<li><a id="org2a9ba6a"></a><code>is-operation</code><br />
+<div class="outline-text-5" id="text-org2a9ba6a">
 <p>
 Usage: <code>is-operation VALUE</code>
 </p>
@@ -3460,8 +3487,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </div>
 </li>
 
-<li><a id="org195e4ff"></a><code>set-help</code><br />
-<div class="outline-text-5" id="text-org195e4ff">
+<li><a id="orge63687d"></a><code>set-help</code><br />
+<div class="outline-text-5" id="text-orge63687d">
 <p>
 Usage: <code>set-help INSTRUCTION STRING</code>
 </p>
@@ -3472,8 +3499,8 @@ Sets the help for <code>INSTRUCTION</code> to <code>STRING</code>.
 </div>
 </li>
 
-<li><a id="org4f0cd4f"></a><code>help</code><br />
-<div class="outline-text-5" id="text-org4f0cd4f">
+<li><a id="orgacc618d"></a><code>help</code><br />
+<div class="outline-text-5" id="text-orgacc618d">
 <p>
 Usage: <code>help INSTRUCTION</code>
 </p>
@@ -3487,35 +3514,35 @@ Print the help string.
 </div>
 </div>
 
-<div id="outline-container-org1da8b4c" class="outline-3">
-<h3 id="org1da8b4c">Files</h3>
-<div class="outline-text-3" id="text-org1da8b4c">
+<div id="outline-container-org7786231" class="outline-3">
+<h3 id="org7786231">Files</h3>
+<div class="outline-text-3" id="text-org7786231">
 </div>
-<div id="outline-container-org48af5cc" class="outline-4">
-<h4 id="org48af5cc">Short description</h4>
-<div class="outline-text-4" id="text-org48af5cc">
+<div id="outline-container-orgc81798f" class="outline-4">
+<h4 id="orgc81798f">Short description</h4>
+<div class="outline-text-4" id="text-orgc81798f">
 <p>
 Files are stream objects that you can write to and read from.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org91407e9" class="outline-4">
-<h4 id="org91407e9">Implementation details</h4>
-<div class="outline-text-4" id="text-org91407e9">
+<div id="outline-container-orgfb07317" class="outline-4">
+<h4 id="orgfb07317">Implementation details</h4>
+<div class="outline-text-4" id="text-orgfb07317">
 <p>
 Files are like the C FILE type.  
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga2c9edc" class="outline-4">
-<h4 id="orga2c9edc">File operations</h4>
-<div class="outline-text-4" id="text-orga2c9edc">
+<div id="outline-container-org0890fc8" class="outline-4">
+<h4 id="org0890fc8">File operations</h4>
+<div class="outline-text-4" id="text-org0890fc8">
 </div>
 <ul class="org-ul">
-<li><a id="orgf7c2151"></a><code>is-file</code><br />
-<div class="outline-text-5" id="text-orgf7c2151">
+<li><a id="org4137643"></a><code>is-file</code><br />
+<div class="outline-text-5" id="text-org4137643">
 <p>
 Usage: <code>is-file VALUE</code>
 </p>
@@ -3526,8 +3553,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if the <code>VALUE</code> i
 </div>
 </li>
 
-<li><a id="org00bdb0c"></a><code>open-file</code><br />
-<div class="outline-text-5" id="text-org00bdb0c">
+<li><a id="orgb57b714"></a><code>open-file</code><br />
+<div class="outline-text-5" id="text-orgb57b714">
 <p>
 Usage: <code>open-file STRING1 |STRING2|</code>
 </p>
@@ -3538,8 +3565,8 @@ Sets the <code>/ans</code> Slot to a File object corresponding to the file named
 </div>
 </li>
 
-<li><a id="org3969d00"></a><code>read</code><br />
-<div class="outline-text-5" id="text-org3969d00">
+<li><a id="org755ef25"></a><code>read</code><br />
+<div class="outline-text-5" id="text-org755ef25">
 <p>
 Usage: <code>read FILE</code>
 </p>
@@ -3550,8 +3577,8 @@ Read a byte from a file and set the <code>/ans</code> slot to the result (an Int
 </div>
 </li>
 
-<li><a id="org180e753"></a><code>read-char</code><br />
-<div class="outline-text-5" id="text-org180e753">
+<li><a id="orge1a6eaf"></a><code>read-char</code><br />
+<div class="outline-text-5" id="text-orge1a6eaf">
 <p>
 Usage: <code>read-char FILE</code>
 </p>
@@ -3562,8 +3589,8 @@ Read a single character from a File object and set the <code>/ans</code> Slot to
 </div>
 </li>
 
-<li><a id="org30c1cd8"></a><code>read-line</code><br />
-<div class="outline-text-5" id="text-org30c1cd8">
+<li><a id="orgc1091d2"></a><code>read-line</code><br />
+<div class="outline-text-5" id="text-orgc1091d2">
 <p>
 Usage: <code>read-line FILE</code>
 </p>
@@ -3574,8 +3601,8 @@ Sets the <code>/ans</code> Slot to the next line from FILE.
 </div>
 </li>
 
-<li><a id="orge04ff23"></a><code>write</code><br />
-<div class="outline-text-5" id="text-orge04ff23">
+<li><a id="orgac762fc"></a><code>write</code><br />
+<div class="outline-text-5" id="text-orgac762fc">
 <p>
 Usage: <code>write INTEGER FILE</code>
 </p>
@@ -3586,8 +3613,8 @@ Usage: <code>write INTEGER FILE</code>
 </div>
 </li>
 
-<li><a id="org015399c"></a><code>write-string</code><br />
-<div class="outline-text-5" id="text-org015399c">
+<li><a id="org2230ccb"></a><code>write-string</code><br />
+<div class="outline-text-5" id="text-org2230ccb">
 <p>
 Usage: <code>write-string STRING FILE</code>
 </p>
@@ -3598,8 +3625,8 @@ Write a <code>STRING</code> to <code>FILE</code> using UTF-8 encoding.
 </div>
 </li>
 
-<li><a id="orgb5be5c4"></a><code>close</code><br />
-<div class="outline-text-5" id="text-orgb5be5c4">
+<li><a id="orgc4d38f7"></a><code>close</code><br />
+<div class="outline-text-5" id="text-orgc4d38f7">
 <p>
 Usage: <code>close SLOT</code>
 </p>
@@ -3613,26 +3640,26 @@ If a File object is located at <code>SLOT</code>, close the File and remove its 
 </div>
 </div>
 
-<div id="outline-container-orgc26231e" class="outline-3">
-<h3 id="orgc26231e">Nothing</h3>
-<div class="outline-text-3" id="text-orgc26231e">
+<div id="outline-container-org9362d4f" class="outline-3">
+<h3 id="org9362d4f">Nothing</h3>
+<div class="outline-text-3" id="text-org9362d4f">
 </div>
-<div id="outline-container-orgae590de" class="outline-4">
-<h4 id="orgae590de">Short description</h4>
-<div class="outline-text-4" id="text-orgae590de">
+<div id="outline-container-org48e6dda" class="outline-4">
+<h4 id="org48e6dda">Short description</h4>
+<div class="outline-text-4" id="text-org48e6dda">
 <p>
 <code>Nothing</code> is a value that is not any other value and is a different type than any other value.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org2abc013" class="outline-4">
-<h4 id="org2abc013">Nothing operations</h4>
-<div class="outline-text-4" id="text-org2abc013">
+<div id="outline-container-org8360ff9" class="outline-4">
+<h4 id="org8360ff9">Nothing operations</h4>
+<div class="outline-text-4" id="text-org8360ff9">
 </div>
 <ul class="org-ul">
-<li><a id="org9bcfb68"></a><code>is-nothing</code><br />
-<div class="outline-text-5" id="text-org9bcfb68">
+<li><a id="orgb742ab0"></a><code>is-nothing</code><br />
+<div class="outline-text-5" id="text-orgb742ab0">
 <p>
 Usage: <code>is-nothing VALUE</code>
 </p>
@@ -3646,22 +3673,22 @@ Sets the <code>/ans</code> slot to <code>True</code> if the value is <code>Nothi
 </div>
 </div>
 
-<div id="outline-container-org01616d6" class="outline-3">
-<h3 id="org01616d6">Task Operations</h3>
-<div class="outline-text-3" id="text-org01616d6">
+<div id="outline-container-org6959e68" class="outline-3">
+<h3 id="org6959e68">Task Operations</h3>
+<div class="outline-text-3" id="text-org6959e68">
 </div>
-<div id="outline-container-orgff7fdf5" class="outline-4">
-<h4 id="orgff7fdf5">Short description</h4>
-<div class="outline-text-4" id="text-orgff7fdf5">
+<div id="outline-container-orgf41ff78" class="outline-4">
+<h4 id="orgf41ff78">Short description</h4>
+<div class="outline-text-4" id="text-orgf41ff78">
 <p>
 Tasks are objects that allow you to execute code in another thread and share data between threads.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org77a7eb1" class="outline-4">
-<h4 id="org77a7eb1">Implementation details</h4>
-<div class="outline-text-4" id="text-org77a7eb1">
+<div id="outline-container-org5c46d7a" class="outline-4">
+<h4 id="org5c46d7a">Implementation details</h4>
+<div class="outline-text-4" id="text-org5c46d7a">
 <p>
 Tasks contain three elements:
 </p>
@@ -3678,13 +3705,13 @@ Tasks use mutexes to ensure data is transferred correctly between threads.
 </div>
 </div>
 
-<div id="outline-container-orgc32382f" class="outline-4">
-<h4 id="orgc32382f">Task operations</h4>
-<div class="outline-text-4" id="text-orgc32382f">
+<div id="outline-container-org9496f04" class="outline-4">
+<h4 id="org9496f04">Task operations</h4>
+<div class="outline-text-4" id="text-org9496f04">
 </div>
 <ul class="org-ul">
-<li><a id="org7ddd9e0"></a><code>task</code><br />
-<div class="outline-text-5" id="text-org7ddd9e0">
+<li><a id="orgca38ac5"></a><code>task</code><br />
+<div class="outline-text-5" id="text-orgca38ac5">
 <p>
 Usage: <code>task SLOT INSTRUCTION |OBJECT|</code>
 </p>
@@ -3695,8 +3722,8 @@ Sets <code>SLOT</code> to contain a new Task with its Body given by the <code>IN
 </div>
 </li>
 
-<li><a id="orge9018fb"></a><code>run-task</code><br />
-<div class="outline-text-5" id="text-orge9018fb">
+<li><a id="org097fd67"></a><code>run-task</code><br />
+<div class="outline-text-5" id="text-org097fd67">
 <p>
 Usage: <code>run-task TASK</code>
 </p>
@@ -3707,8 +3734,8 @@ Executes the Task's Body in a separate thread.  The same Task object cannot be r
 </div>
 </li>
 
-<li><a id="orgbede07f"></a><code>queue</code><br />
-<div class="outline-text-5" id="text-orgbede07f">
+<li><a id="org0679c70"></a><code>queue</code><br />
+<div class="outline-text-5" id="text-org0679c70">
 <p>
 Usage: <code>queue SLOT DATA |TASK|</code>
 </p>
@@ -3719,8 +3746,8 @@ Sets the <code>SLOT</code> in the Queue of <code>TASK</code> to value <code>DATA
 </div>
 </li>
 
-<li><a id="orgfc1db45"></a><code>accept</code><br />
-<div class="outline-text-5" id="text-orgfc1db45">
+<li><a id="org7a77b73"></a><code>accept</code><br />
+<div class="outline-text-5" id="text-org7a77b73">
 <p>
 Usage: <code>accept SLOT |TASK|</code>
 </p>
@@ -3731,8 +3758,8 @@ Waits until <code>SLOT</code> has a value in <code>TASK</code>'s Queue.  Once it
 </div>
 </li>
 
-<li><a id="orgf6c9a4d"></a><code>select</code><br />
-<div class="outline-text-5" id="text-orgf6c9a4d">
+<li><a id="org704561f"></a><code>select</code><br />
+<div class="outline-text-5" id="text-org704561f">
 <p>
 Usage: <code>select SLOT1 INSTRUCTION1 SLOT2 INSTRUCTION2 ... SLOTN INSTRUCTIONN</code>
 </p>
@@ -3743,8 +3770,8 @@ Waits for the Queue in the current task to contain data at any of the Slots (it 
 </div>
 </li>
 
-<li><a id="org3c1a488"></a><code>accept-or</code><br />
-<div class="outline-text-5" id="text-org3c1a488">
+<li><a id="orged6193d"></a><code>accept-or</code><br />
+<div class="outline-text-5" id="text-orged6193d">
 <p>
 Usage: <code>accept-or SLOT INSTRUCTION |TASK|</code>
 </p>
@@ -3758,13 +3785,13 @@ Checks if <code>SLOT</code> is set in <code>TASK</code>'s Queue.  If it is, the 
 </div>
 </div>
 
-<div id="outline-container-org015b7ea" class="outline-3">
-<h3 id="org015b7ea">Control flow operations</h3>
-<div class="outline-text-3" id="text-org015b7ea">
+<div id="outline-container-orgf5b08bd" class="outline-3">
+<h3 id="orgf5b08bd">Control flow operations</h3>
+<div class="outline-text-3" id="text-orgf5b08bd">
 </div>
-<div id="outline-container-org13ad90d" class="outline-4">
-<h4 id="org13ad90d"><code>if</code></h4>
-<div class="outline-text-4" id="text-org13ad90d">
+<div id="outline-container-org8d2f1ba" class="outline-4">
+<h4 id="org8d2f1ba"><code>if</code></h4>
+<div class="outline-text-4" id="text-org8d2f1ba">
 <p>
 Usage: <code>if BOOLEAN VALUE1 |VALUE2|</code>
 </p>
@@ -3775,9 +3802,9 @@ If the first argument is <code>True</code>, sets the <code>/ans</code> slot to <
 </div>
 </div>
 
-<div id="outline-container-org64e70e6" class="outline-4">
-<h4 id="org64e70e6"><code>while</code></h4>
-<div class="outline-text-4" id="text-org64e70e6">
+<div id="outline-container-orga6c5289" class="outline-4">
+<h4 id="orga6c5289"><code>while</code></h4>
+<div class="outline-text-4" id="text-orga6c5289">
 <p>
 Usage: <code>while INSTRUCTION1 INSTRUCTION2</code>
 </p>
@@ -3788,9 +3815,9 @@ Call <code>INSTRUCTION1</code> in the current Object. If it sets its <code>/ans<
 </div>
 </div>
 
-<div id="outline-container-org608d839" class="outline-4">
-<h4 id="org608d839"><code>repeat</code></h4>
-<div class="outline-text-4" id="text-org608d839">
+<div id="outline-container-orgd41310e" class="outline-4">
+<h4 id="orgd41310e"><code>repeat</code></h4>
+<div class="outline-text-4" id="text-orgd41310e">
 <p>
 Usage: <code>repeat INTEGER INSTRUCTION</code>
 </p>
@@ -3801,9 +3828,9 @@ Call <code>INSTRUCTION</code> <code>INTEGER</code> times.
 </div>
 </div>
 
-<div id="outline-container-org74c013d" class="outline-4">
-<h4 id="org74c013d"><code>please</code></h4>
-<div class="outline-text-4" id="text-org74c013d">
+<div id="outline-container-orgaf4831e" class="outline-4">
+<h4 id="orgaf4831e"><code>please</code></h4>
+<div class="outline-text-4" id="text-orgaf4831e">
 <p>
 Usage: <code>please INSTRUCTION1 INSTRUCTION2</code>
 </p>
@@ -3815,17 +3842,17 @@ Call <code>INSTRUCTION1</code>.  If there is an error, then call <code>INSTRUCTI
 </div>
 </div>
 
-<div id="outline-container-org9aea7cd" class="outline-3">
-<h3 id="org9aea7cd">Environment operations</h3>
-<div class="outline-text-3" id="text-org9aea7cd">
+<div id="outline-container-org8786887" class="outline-3">
+<h3 id="org8786887">Environment operations</h3>
+<div class="outline-text-3" id="text-org8786887">
 </div>
-<div id="outline-container-org0c97cd6" class="outline-4">
-<h4 id="org0c97cd6">Modify the /ans slot</h4>
-<div class="outline-text-4" id="text-org0c97cd6">
+<div id="outline-container-org47a7c7e" class="outline-4">
+<h4 id="org47a7c7e">Modify the /ans slot</h4>
+<div class="outline-text-4" id="text-org47a7c7e">
 </div>
 <ul class="org-ul">
-<li><a id="org57f16f8"></a><code>answer</code><br />
-<div class="outline-text-5" id="text-org57f16f8">
+<li><a id="org174efdb"></a><code>answer</code><br />
+<div class="outline-text-5" id="text-org174efdb">
 <p>
 Usage: <code>answer VALUE</code>
 </p>
@@ -3836,8 +3863,8 @@ Set the <code>/ans</code> slot to <code>VALUE</code>.
 </div>
 </li>
 
-<li><a id="org024c84f"></a><code>sit</code><br />
-<div class="outline-text-5" id="text-org024c84f">
+<li><a id="orgd894a9b"></a><code>sit</code><br />
+<div class="outline-text-5" id="text-orgd894a9b">
 <p>
 Usage: <code>sit</code>
 </p>
@@ -3850,13 +3877,13 @@ Do nothing but lookup all arguments (causes Expressions &#x2014; instructions in
 </ul>
 </div>
 
-<div id="outline-container-org103e705" class="outline-4">
-<h4 id="org103e705">Exit SLOBIL</h4>
-<div class="outline-text-4" id="text-org103e705">
+<div id="outline-container-org50a517c" class="outline-4">
+<h4 id="org50a517c">Exit SLOBIL</h4>
+<div class="outline-text-4" id="text-org50a517c">
 </div>
 <ul class="org-ul">
-<li><a id="orga7b884e"></a><code>exit</code><br />
-<div class="outline-text-5" id="text-orga7b884e">
+<li><a id="orgf5571fb"></a><code>exit</code><br />
+<div class="outline-text-5" id="text-orgf5571fb">
 <p>
 Usage: <code>exit</code>
 </p>
@@ -3869,13 +3896,13 @@ Exit SLOBIL.
 </ul>
 </div>
 
-<div id="outline-container-orgfc6d5c7" class="outline-4">
-<h4 id="orgfc6d5c7">Print output</h4>
-<div class="outline-text-4" id="text-orgfc6d5c7">
+<div id="outline-container-orge6b98ca" class="outline-4">
+<h4 id="orge6b98ca">Print output</h4>
+<div class="outline-text-4" id="text-orge6b98ca">
 </div>
 <ul class="org-ul">
-<li><a id="orga3fbf2e"></a><code>print</code><br />
-<div class="outline-text-5" id="text-orga3fbf2e">
+<li><a id="org8d9e6f9"></a><code>print</code><br />
+<div class="outline-text-5" id="text-org8d9e6f9">
 <p>
 Usage: <code>print VALUE |BOOLEAN|</code>
 </p>
@@ -3888,13 +3915,13 @@ Prints <code>VALUE</code> to screen.  If <code>BOOLEAN</code> is <code>False</co
 </ul>
 </div>
 
-<div id="outline-container-org37bf1f4" class="outline-4">
-<h4 id="org37bf1f4">Input and output files and state</h4>
-<div class="outline-text-4" id="text-org37bf1f4">
+<div id="outline-container-orgb3141dc" class="outline-4">
+<h4 id="orgb3141dc">Input and output files and state</h4>
+<div class="outline-text-4" id="text-orgb3141dc">
 </div>
 <ul class="org-ul">
-<li><a id="org78b2ef6"></a><code>source</code><br />
-<div class="outline-text-5" id="text-org78b2ef6">
+<li><a id="org58ee48b"></a><code>source</code><br />
+<div class="outline-text-5" id="text-org58ee48b">
 <p>
 Usage: <code>source STRING</code>
 </p>
@@ -3905,8 +3932,8 @@ Executes SLOBIL code in the file named by STRING.
 </div>
 </li>
 
-<li><a id="org434adc0"></a><code>save</code><br />
-<div class="outline-text-5" id="text-org434adc0">
+<li><a id="org7927a49"></a><code>save</code><br />
+<div class="outline-text-5" id="text-org7927a49">
 <p>
 Usage: <code>save FILENAME</code>
 </p>
@@ -3917,8 +3944,8 @@ Save the contents of the current object to file.
 </div>
 </li>
 
-<li><a id="orgbf751a9"></a><code>load</code><br />
-<div class="outline-text-5" id="text-orgbf751a9">
+<li><a id="orgbb4976a"></a><code>load</code><br />
+<div class="outline-text-5" id="text-orgbb4976a">
 <p>
 Usage: <code>load FILENAME</code>
 </p>
@@ -3929,8 +3956,8 @@ Load the contents of a saved file into the environment.
 </div>
 </li>
 
-<li><a id="org5167fa3"></a><code>output-code</code><br />
-<div class="outline-text-5" id="text-org5167fa3">
+<li><a id="org2b7b6ba"></a><code>output-code</code><br />
+<div class="outline-text-5" id="text-org2b7b6ba">
 <p>
 Usage: <code>output-code STRING</code>
 </p>
@@ -3941,8 +3968,8 @@ Outputs the code that has been entered at the prompt so far to the file named ST
 </div>
 </li>
 
-<li><a id="orgddb032b"></a><code>clear-code</code><br />
-<div class="outline-text-5" id="text-orgddb032b">
+<li><a id="org2ac5518"></a><code>clear-code</code><br />
+<div class="outline-text-5" id="text-org2ac5518">
 <p>
 Usage: <code>clear-code</code>
 </p>
@@ -3956,13 +3983,13 @@ Clear code that has been entered so far so that the code that <code>output-code<
 </div>
 
 
-<div id="outline-container-org5a0ec9d" class="outline-4">
-<h4 id="org5a0ec9d">Error handling</h4>
-<div class="outline-text-4" id="text-org5a0ec9d">
+<div id="outline-container-org7589c8b" class="outline-4">
+<h4 id="org7589c8b">Error handling</h4>
+<div class="outline-text-4" id="text-org7589c8b">
 </div>
 <ul class="org-ul">
-<li><a id="orge7d1cd5"></a><code>error</code><br />
-<div class="outline-text-5" id="text-orge7d1cd5">
+<li><a id="orga633649"></a><code>error</code><br />
+<div class="outline-text-5" id="text-orga633649">
 <p>
 Usage: <code>error STRING |INTEGER|</code>
 </p>
@@ -3973,8 +4000,8 @@ Outputs error message String and sets an error code INTEGER (if specified, other
 </div>
 </li>
 
-<li><a id="org3345145"></a><code>is-error</code><br />
-<div class="outline-text-5" id="text-org3345145">
+<li><a id="org1c4fdbb"></a><code>is-error</code><br />
+<div class="outline-text-5" id="text-org1c4fdbb">
 <p>
 Usage: <code>is-error INSTRUCTION</code>
 </p>
@@ -3985,8 +4012,8 @@ Sets the <code>/ans</code> Slot to <code>True</code> if there was an error execu
 </div>
 </li>
 
-<li><a id="org4487792"></a><code>ignore-errors</code><br />
-<div class="outline-text-5" id="text-org4487792">
+<li><a id="orga83dc6e"></a><code>ignore-errors</code><br />
+<div class="outline-text-5" id="text-orga83dc6e">
 <p>
 Usage: <code>ignore-errors INSTRUCTION</code>
 </p>
@@ -3999,13 +4026,13 @@ Ignore any errors while executing the instruction, i.e. go to the next statement
 </ul>
 </div>
 
-<div id="outline-container-org6a48eeb" class="outline-4">
-<h4 id="org6a48eeb">Version</h4>
-<div class="outline-text-4" id="text-org6a48eeb">
+<div id="outline-container-org55df870" class="outline-4">
+<h4 id="org55df870">Version</h4>
+<div class="outline-text-4" id="text-org55df870">
 </div>
 <ul class="org-ul">
-<li><a id="orgd31e1c3"></a><code>version</code><br />
-<div class="outline-text-5" id="text-orgd31e1c3">
+<li><a id="org4d0530e"></a><code>version</code><br />
+<div class="outline-text-5" id="text-org4d0530e">
 <p>
 Usage: <code>version</code>
 </p>
@@ -4019,17 +4046,17 @@ Sets the <code>/ans</code> Slot to a String giving the version of SLOBIL.
 </div>
 </div>
 
-<div id="outline-container-orga5c20d2" class="outline-3">
-<h3 id="orga5c20d2">System operations</h3>
-<div class="outline-text-3" id="text-orga5c20d2">
+<div id="outline-container-orgc9d9ae7" class="outline-3">
+<h3 id="orgc9d9ae7">System operations</h3>
+<div class="outline-text-3" id="text-orgc9d9ae7">
 </div>
-<div id="outline-container-orgcd0bc96" class="outline-4">
-<h4 id="orgcd0bc96">Interacting with the shell</h4>
-<div class="outline-text-4" id="text-orgcd0bc96">
+<div id="outline-container-org02c7629" class="outline-4">
+<h4 id="org02c7629">Interacting with the shell</h4>
+<div class="outline-text-4" id="text-org02c7629">
 </div>
 <ul class="org-ul">
-<li><a id="org83cb0a2"></a><code>shell</code><br />
-<div class="outline-text-5" id="text-org83cb0a2">
+<li><a id="org112eda7"></a><code>shell</code><br />
+<div class="outline-text-5" id="text-org112eda7">
 <p>
 Usage: <code>shell STRING</code>
 </p>
@@ -4039,8 +4066,8 @@ Execute the shell command <code>STRING</code>.
 </p>
 </div>
 </li>
-<li><a id="org75965a5"></a><code>change-dir</code><br />
-<div class="outline-text-5" id="text-org75965a5">
+<li><a id="org88e1df8"></a><code>change-dir</code><br />
+<div class="outline-text-5" id="text-org88e1df8">
 <p>
 Usage: <code>change-dir STRING</code>
 </p>
@@ -4050,8 +4077,8 @@ Change directory to the location given in <code>STRING</code>.
 </p>
 </div>
 </li>
-<li><a id="org65923c4"></a><code>current-dir</code><br />
-<div class="outline-text-5" id="text-org65923c4">
+<li><a id="org7f2cca0"></a><code>current-dir</code><br />
+<div class="outline-text-5" id="text-org7f2cca0">
 <p>
 Usage: <code>current-dir</code>
 </p>
@@ -4064,13 +4091,13 @@ Set the <code>/ans</code> Slot to a String giving the current directory.
 </ul>
 </div>
 
-<div id="outline-container-org62f9c4a" class="outline-4">
-<h4 id="org62f9c4a">Time</h4>
-<div class="outline-text-4" id="text-org62f9c4a">
+<div id="outline-container-org5243331" class="outline-4">
+<h4 id="org5243331">Time</h4>
+<div class="outline-text-4" id="text-org5243331">
 </div>
 <ul class="org-ul">
-<li><a id="orgaa36bf6"></a><code>clock</code><br />
-<div class="outline-text-5" id="text-orgaa36bf6">
+<li><a id="org426806e"></a><code>clock</code><br />
+<div class="outline-text-5" id="text-org426806e">
 <p>
 Usage: <code>clock</code>
 </p>
@@ -4081,8 +4108,8 @@ Set the <code>/ans</code> slot to the current time in milliseconds from January 
 </div>
 </li>
 
-<li><a id="orge6e0e89"></a><code>make-time</code><br />
-<div class="outline-text-5" id="text-orge6e0e89">
+<li><a id="orgd2176aa"></a><code>make-time</code><br />
+<div class="outline-text-5" id="text-orgd2176aa">
 <p>
 Usage: <code>make-time INTEGER</code>
 </p>
@@ -4093,8 +4120,8 @@ Given a clock value in milliseconds (as returned by <code>clock</code>) return a
 </div>
 </li>
 
-<li><a id="orgf654da4"></a><code>make-clock</code><br />
-<div class="outline-text-5" id="text-orgf654da4">
+<li><a id="org8c52611"></a><code>make-clock</code><br />
+<div class="outline-text-5" id="text-org8c52611">
 <p>
 Usage: <code>make-clock OBJECT</code>
 </p>
@@ -4107,13 +4134,13 @@ Make a clock value in milliseconds from a object describing the time (like the o
 </ul>
 </div>
 
-<div id="outline-container-orge8ce52e" class="outline-4">
-<h4 id="orge8ce52e">Random numbers</h4>
-<div class="outline-text-4" id="text-orge8ce52e">
+<div id="outline-container-org85a2c86" class="outline-4">
+<h4 id="org85a2c86">Random numbers</h4>
+<div class="outline-text-4" id="text-org85a2c86">
 </div>
 <ul class="org-ul">
-<li><a id="org320c445"></a><code>rand</code><br />
-<div class="outline-text-5" id="text-org320c445">
+<li><a id="orgad87fb5"></a><code>rand</code><br />
+<div class="outline-text-5" id="text-orgad87fb5">
 <p>
 Usage: <code>rand |INTEGER|</code>
 </p>
@@ -4127,13 +4154,13 @@ Set the <code>/ans</code> Slot to a uniformly distributed random Real between 0 
 </div>
 </div>
 
-<div id="outline-container-org757912c" class="outline-3">
-<h3 id="org757912c">Package operations</h3>
-<div class="outline-text-3" id="text-org757912c">
+<div id="outline-container-orgfe2ab5b" class="outline-3">
+<h3 id="orgfe2ab5b">Package operations</h3>
+<div class="outline-text-3" id="text-orgfe2ab5b">
 </div>
-<div id="outline-container-org747586a" class="outline-4">
-<h4 id="org747586a"><code>use</code></h4>
-<div class="outline-text-4" id="text-org747586a">
+<div id="outline-container-org90c4a35" class="outline-4">
+<h4 id="org90c4a35"><code>use</code></h4>
+<div class="outline-text-4" id="text-org90c4a35">
 <p>
 Usage: <code>use STRING</code>
 </p>
@@ -4144,9 +4171,9 @@ Load a saved object in <code>~/.dslobs/</code> with the extension <code>.dslob</
 </div>
 </div>
 
-<div id="outline-container-orge38921a" class="outline-4">
-<h4 id="orge38921a"><code>build</code></h4>
-<div class="outline-text-4" id="text-orge38921a">
+<div id="outline-container-orgad4bd48" class="outline-4">
+<h4 id="orgad4bd48"><code>build</code></h4>
+<div class="outline-text-4" id="text-orgad4bd48">
 <p>
 Usage: <code>build STRING OBJECT</code>
 </p>
@@ -4157,9 +4184,9 @@ Saves contents of object to <code>~/.dslobs/STRING.dslob</code> so that it can b
 </div>
 </div>
 
-<div id="outline-container-org5523f8d" class="outline-4">
-<h4 id="org5523f8d"><code>link</code></h4>
-<div class="outline-text-4" id="text-org5523f8d">
+<div id="outline-container-orgadf861c" class="outline-4">
+<h4 id="orgadf861c"><code>link</code></h4>
+<div class="outline-text-4" id="text-orgadf861c">
 <p>
 Usage: <code>link STRING1 STRING2 STRING3</code>
 </p>
@@ -4171,17 +4198,17 @@ Loads shared object file <code>STRING1</code> and its function named <code>STRIN
 </div>
 </div>
 
-<div id="outline-container-orgcb2a00c" class="outline-3">
-<h3 id="orgcb2a00c">Interpreter options</h3>
-<div class="outline-text-3" id="text-orgcb2a00c">
+<div id="outline-container-org6434868" class="outline-3">
+<h3 id="org6434868">Interpreter options</h3>
+<div class="outline-text-3" id="text-org6434868">
 </div>
-<div id="outline-container-orgaf5cf37" class="outline-4">
-<h4 id="orgaf5cf37">Operation</h4>
-<div class="outline-text-4" id="text-orgaf5cf37">
+<div id="outline-container-orgef30fe1" class="outline-4">
+<h4 id="orgef30fe1">Operation</h4>
+<div class="outline-text-4" id="text-orgef30fe1">
 </div>
 <ul class="org-ul">
-<li><a id="orga45c743"></a><code>interpreter</code><br />
-<div class="outline-text-5" id="text-orga45c743">
+<li><a id="org4e5940d"></a><code>interpreter</code><br />
+<div class="outline-text-5" id="text-org4e5940d">
 <p>
 Usage: <code>interpreter SLOT VALUE</code>
 </p>
@@ -4194,13 +4221,13 @@ Sets interpreter option <code>SLOT</code> to <code>VALUE</code>.
 </ul>
 </div>
 
-<div id="outline-container-orgca6b9fb" class="outline-4">
-<h4 id="orgca6b9fb">List of options</h4>
-<div class="outline-text-4" id="text-orgca6b9fb">
+<div id="outline-container-org3d0c9af" class="outline-4">
+<h4 id="org3d0c9af">List of options</h4>
+<div class="outline-text-4" id="text-org3d0c9af">
 </div>
 <ul class="org-ul">
-<li><a id="org2ef6224"></a><code>print-ans</code><br />
-<div class="outline-text-5" id="text-org2ef6224">
+<li><a id="orgd3cb459"></a><code>print-ans</code><br />
+<div class="outline-text-5" id="text-orgd3cb459">
 <p>
 Usage: <code>/print-ans</code>
 </p>
@@ -4211,8 +4238,8 @@ If <code>True</code>, then print the value of the <code>/ans</code> Slot at the 
 </div>
 </li>
 
-<li><a id="orgeffe2f0"></a><code>auto-rehash</code><br />
-<div class="outline-text-5" id="text-orgeffe2f0">
+<li><a id="orgd113f74"></a><code>auto-rehash</code><br />
+<div class="outline-text-5" id="text-orgd113f74">
 <p>
 Usage: <code>/auto-rehash</code>
 </p>
@@ -4223,8 +4250,8 @@ If <code>True</code> (default) or any non-Boolean value, then rehash objects aut
 </div>
 </li>
 
-<li><a id="org612a024"></a><code>print-errors</code><br />
-<div class="outline-text-5" id="text-org612a024">
+<li><a id="org4036d1a"></a><code>print-errors</code><br />
+<div class="outline-text-5" id="text-org4036d1a">
 <p>
 Usage: <code>/print-errors</code>
 </p>
@@ -4239,8 +4266,8 @@ If <code>True</code> (default) or any non-Boolean value, then print error descri
 </div>
 </div>
 
-<div id="outline-container-orgb71a0a6" class="outline-2">
-<h2 id="orgb71a0a6"><span class="section-number-2">6.</span> Saved Objects</h2>
+<div id="outline-container-orga0bc401" class="outline-2">
+<h2 id="orga0bc401"><span class="section-number-2">6.</span> Saved Objects</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 <b>Note</b>: When saving, only "permanent" data is written to disk.  For example, operations written in C will not be written to disk because these are linked in at run time.  File values will also not be written to disk because the file stream would need to be re-opened after restarting SLOBIL in any case; it has no permanent information.  All other data types are written to disk.
@@ -4252,8 +4279,8 @@ This section will describe the storage format for SLOBIL saved files.  A user or
 </div>
 </div>
 
-<div id="outline-container-orgeac9ec3" class="outline-2">
-<h2 id="orgeac9ec3"><span class="section-number-2">7.</span> GNU Free Documentation License</h2>
+<div id="outline-container-org7df547c" class="outline-2">
+<h2 id="org7df547c"><span class="section-number-2">7.</span> GNU Free Documentation License</h2>
 <div class="outline-text-2" id="text-7">
 
 <h3 style="text-align: center;">GNU Free Documentation License</h3>
@@ -4737,7 +4764,7 @@ to permit their use in free software.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Zach Flynn</p>
-<p class="date">Created: 2023-06-18 Sun 15:08</p>
+<p class="date">Created: 2023-06-19 Mon 01:27</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

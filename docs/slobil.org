@@ -130,8 +130,7 @@ Substatements are statements included as an element of another statement.  They 
 
 For example,
 #+BEGIN_SRC slobil
-    ... object /number 10 /string "Hello!" /real 3.2
-    /object [ object /x 3 /y 2 ] .
+    ... object /number 10 /string "Hello!" /real 3.2 /object [ object /x 3 /y 2 ] .
     ans = an Object with:
     number of type Integer, value: 10
     string of type String, value: "Hello!"
@@ -144,6 +143,24 @@ For example,
 #+END_SRC
 
 Substatements do not need to include a =.= to end the last statement in the substatement.  They can, but they do not have to.  Substatements can include multiple statements.
+
+The brackets /can/ be placed right next to the other tokens.  For example,
+#+BEGIN_SRC slobil
+  ... add 5 [add 4 3] .
+  ans = 12
+#+END_SRC
+
+Will work, but the thing to keep in mind is that a sentence is not complete with a period until some whitespace follows the period.  So this will not work.
+#+BEGIN_SRC slobil
+  ... ' Will not work
+  ... add 5 [add 4 3 .]
+  ... 'Will work
+  ... add 5 [add 4 3 . ]
+#+END_SRC
+
+So if you prefer putting parenthesis next to the other tokens, I recommend not including the =.= on the last statement.
+
+I prefer always including spaces between the parenthesis and other tokens.
 
 *** Inserting Data Into Slots
 
