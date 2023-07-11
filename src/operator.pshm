@@ -4087,7 +4087,7 @@ op_infix (arg a, object* obj)
 	temp_arg.arg_array[1] = arg1;
 
 
-	for (uint64_t i=2; i < (a.length-1); i++)
+	for (uint32_t i=2; i < a.length; i++)
 		{
       #num=i@
 			if ((i % 2) == 0)
@@ -4121,7 +4121,7 @@ op_infix (arg a, object* obj)
 		}
 
 	if (result != NULL)
-		ret_ans(reg, copy_data(result));
+		ret_ans(obj, result);
 }
 
 
@@ -4301,6 +4301,9 @@ add_basic_ops (object* obj)
 
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(obj,d,"is-operation",1);
+
+  assign_op(&d, op_infix, NULL, NULL, 0);
+  set(obj,d,"infix",1);
 
   assign_op(&d, op_set_help, NULL, NULL, 0);
   set(obj,d,"set-help",1);
@@ -4558,6 +4561,19 @@ add_basic_ops (object* obj)
   assign_op(&d, op_link, NULL, NULL, 0);
   set(obj,d,"link",1);
 
-  
+  /* Arithmetic aliases */
+
+  assign_op(&d, op_add, NULL, NULL, 0);
+  set(obj,d,"+",1);
+
+  assign_op(&d, op_sub, NULL, NULL, 0);
+  set(obj,d,"-",1);
+
+  assign_op(&d, op_mul, NULL, NULL, 0);
+  set(obj,d,"*",1);
+
+  assign_op(&d, op_infix, NULL, NULL, 0);
+  set(obj,d,"$",1);
+
 }
   
