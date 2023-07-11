@@ -542,6 +542,32 @@ The =auto-rehash= setting indicates whether objects --- which, internally, are h
 
 The =print-errors= setting indicates whether to print the trace of the error out when an error is encountered.  The default is to do so.
 
+*** Chaining operations
+
+SLOBIL has an operation called =infix= (alias: =$=) that can be used to simulate infix notation when it is convenient.  It expects arguments with the pattern =DATA OPERATION DATA OPERATION DATA ...=.  It runs the operations on the first two data objects and then uses the result stored in the =/ans= slot for the first argument and takes the next data element as the second argument and applies the next operation to the two.  It is primarily useful for arithmetic that is easier to read in this format.
+#+BEGIN_SRC slobil
+... add 1 [ sub 3 2 ] .
+ans = 2
+... + 1 [ - 3 2 ] .
+ans = 2
+... infix 1 + 3 - 2 .
+ans = 2
+... $ 1 + 3 - 2 .
+ans = 2
+... add 1 [ mul 3 2 ] .
+ans = 7
+... + 1 [ * 3 2 ] .
+ans = 7
+... $ 1 + [ $ 3 * 2 ] .
+ans = 7
+... $ 1 + 3 * 2 .
+ans = 8
+#+END_SRC
+
+The last line illustrates a limitation of this convenience syntax.  It has no notion of precedence.  It simply changes the order in which the operations and data are interpreted.
+
+Infix-notation is not very SLOBIL-like so it should be used sparingly, but it is occasionally useful for arithmetic expressions that otherwise might look overly complex.
+
 ** Multi-threaded Programs
 
 
