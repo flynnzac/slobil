@@ -4069,6 +4069,61 @@ op_help (arg a, object* obj)
     }
 }
 
+void
+op_infix (arg a, object* obj)
+{
+	#op=infix@
+	#length=3@
+	##CHECK_ARGS~$;
+
+	#num=1@
+	#checktype=false@
+	##GETARG~$;
+  #checktype=true@
+
+	data* result;
+	arg temp_arg = gen_arg(3, 0);
+
+	temp_arg.arg_array[1] = arg1;
+
+
+	for (uint32_t i=2; i < a.length; i++)
+		{
+      #num=i@
+			if ((i % 2) == 0)
+				{
+					#type=Operation@
+					##GETARG~$;
+
+					temp_arg.arg_array[0] = argi;
+				}
+			else
+				{
+					#checktype=false@
+					##GETARG~$;
+					#checktype=true@
+
+					temp_arg.arg_array[2] = argi;
+
+					compute(temp_arg.arg_array[0], obj, temp_arg);
+
+					result = lookup(obj, &obj->task->task->slobil_slot_ans, 0);
+					if (result == NULL)
+						{
+							do_error("Operation did not set /ans slot.",
+											 obj->task->task);
+							break;
+						}
+
+					temp_arg.arg_array[1] = result;
+					
+				}
+		}
+
+	if (result != NULL)
+		ret_ans(obj, result);
+}
+
 
 void
 add_basic_ops (object* obj)
@@ -4246,6 +4301,9 @@ add_basic_ops (object* obj)
 
   assign_op(&d, op_is_operation, NULL, NULL, 0);
   set(obj,d,"is-operation",1);
+
+  assign_op(&d, op_infix, NULL, NULL, 0);
+  set(obj,d,"infix",1);
 
   assign_op(&d, op_set_help, NULL, NULL, 0);
   set(obj,d,"set-help",1);
@@ -4503,6 +4561,19 @@ add_basic_ops (object* obj)
   assign_op(&d, op_link, NULL, NULL, 0);
   set(obj,d,"link",1);
 
-  
+  /* Arithmetic aliases */
+
+  assign_op(&d, op_add, NULL, NULL, 0);
+  set(obj,d,"+",1);
+
+  assign_op(&d, op_sub, NULL, NULL, 0);
+  set(obj,d,"-",1);
+
+  assign_op(&d, op_mul, NULL, NULL, 0);
+  set(obj,d,"*",1);
+
+  assign_op(&d, op_infix, NULL, NULL, 0);
+  set(obj,d,"$",1);
+
 }
   
