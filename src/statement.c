@@ -163,7 +163,8 @@ execute_statement (statement* s, object* reg)
                                 e->hash_name,
                                 e->levels,
                                 e->is_slot,
-                                e->name);
+                                e->name,
+                                true);
               
             }
         }
@@ -239,4 +240,39 @@ execute_code (statement* s, object* reg)
 
   is_error(error, reg->task->task);
 
+}
+
+void
+replace_all_non_literals(statement* stmt, object* obj)
+{
+  statement* s = stmt;
+  while (s != NULL)
+    {
+      element* el = s->head;
+      while (el != NULL)
+        {
+          if (el->statement)
+            {
+              replace_all_non_literals(el->s, obj);
+            }
+          else if (!el->literal)
+            {
+              data* d = get_by_levels(obj,
+                                      el->hash_name,
+                                      el->levels,
+                                      el->is_slot,
+                                      el->name,
+                                      false);
+
+              if (d != NULL)
+                {
+                  el->data = copy_data(d);
+                  el->literal = 1;
+                }
+            }
+
+          el = el->right;
+        }
+      s = s->right;
+    }
 }

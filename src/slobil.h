@@ -517,7 +517,7 @@ int*
 copy_isslot (int* is_slot, int levels);
 
 data*
-get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name);
+get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name, bool error_on_not_found);
 
 const char*
 str_type (data_type type);
@@ -654,6 +654,10 @@ object_next_iter (object_iter* iter);
 
 slot
 make_slot(char* name);
+
+void
+replace_all_non_literals(statement* stmt, object* obj);
+
 
 
 #ifdef GARBAGE

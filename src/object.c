@@ -392,7 +392,7 @@ mark_do_not_free (object* obj, unsigned long hash_name)
  * @return pointer to data value at final slot location
  */
 data*
-get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name)
+get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char** name, bool error_on_not_found)
 {
   slot sl;
   sl.name = name[0];
@@ -400,12 +400,15 @@ get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char*
   data* d = get(reg, &sl, 1);
   if (d == NULL)
     {
-      char* msg = malloc(sizeof(char)*
-                         (strlen("Value at slot / not found.")
-                          + strlen(name[0]) + 1));
-      sprintf(msg, "Value at slot /%s not found.", name[0]);
-      do_error(msg, reg->task->task);
-      free(msg);
+      if (error_on_not_found)
+        {
+          char* msg = malloc(sizeof(char)*
+                             (strlen("Value at slot / not found.")
+                              + strlen(name[0]) + 1));
+          sprintf(msg, "Value at slot /%s not found.", name[0]);
+          do_error(msg, reg->task->task);
+          free(msg);
+        }
     }
   else if (d->type != Object && levels > 1)
     {
@@ -417,8 +420,11 @@ get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char*
         {
           if (d == NULL)
             {
-              do_error("Slot not found in object.",
-                       reg->task->task);
+              if (error_on_not_found)
+                {
+                  do_error("Slot not found in object.",
+                           reg->task->task);
+                }
               return NULL;
             }
 
@@ -455,8 +461,11 @@ get_by_levels (object* reg, unsigned long* hash, int levels, int* is_slot, char*
 
       if (d == NULL)
         {
-          do_error("Slot not found in object.",
-                   reg->task->task);
+          if (error_on_not_found)
+            {
+              do_error("Slot not found in object.",
+                       reg->task->task);
+            }
           return NULL;
         }
 		  

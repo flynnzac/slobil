@@ -4124,6 +4124,28 @@ op_infix (arg a, object* obj)
 		ret_ans(obj, result);
 }
 
+void
+op_bind (arg a, object* obj)
+{
+  #op=bind@
+  #length=2@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=Instruction@
+  ##GETARG~$;
+
+  statement* s = ((instruction*) arg1->data)->stmt;
+
+  object* env = new_object(NULL, new_hash_size(a.length / 2 + 1),
+                           obj->task);
+
+  bool error = object_from_args(a, env, 2, obj->task->task);
+  if (!error)
+    replace_all_non_literals(s, env);
+
+}
+
 
 void
 add_basic_ops (object* obj)
@@ -4310,6 +4332,10 @@ add_basic_ops (object* obj)
 
   assign_op(&d, op_help, NULL, NULL, 0);
   set(obj,d,"help",1);
+
+  assign_op(&d, op_bind, NULL, NULL, 0);
+  set(obj,d,"bind",1);
+  
   
   /* String operations */
 
