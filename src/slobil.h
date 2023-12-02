@@ -384,6 +384,9 @@ is_whitespace (const char c);
 void
 print_object (object* reg, bool initial);
 
+void
+print_instruction (instruction* inst);
+
 char*
 append_nl (char* str);
 

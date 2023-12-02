@@ -52,7 +52,7 @@ print_data (data* d, print_settings settings)
       print_object((object*) d->data, true);
       break;
     case Instruction:
-      printf("( %s )", ((instruction*) d->data)->code);
+      print_instruction(((instruction*) d->data));
       break;
     case Slot:
       printf("/%s", ((slot*) d->data)->name);
@@ -141,6 +141,18 @@ print_object (object* obj, bool initial)
           print_data(cur->value,PRINT_NEWLINE | PRINT_QUOTES);
           cur = cur->right;
         }
+    }
+}
+
+void
+print_instruction (instruction* inst)
+{
+  statement* stmt = inst->stmt;
+  while (stmt != NULL)
+    {
+      print_statement(stmt);
+      printf("\n");
+      stmt = stmt->right;
     }
 }
 
