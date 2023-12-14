@@ -1429,6 +1429,11 @@ Usage: =help INSTRUCTION=
 
 Print the help string.
 
+**** =bind=
+Usage: =bind INSTRUCTION SLOT VALUE SLOT VALUE ...=
+
+Sets the =/ans= slot to an instruction that is INSTRUCTION with slot values fixed to the SLOT VALUE pairs.  For example, =bind ( add t s ) /t 2= sets the =/ans= register to the instruction =( add 2 s )=.
+
 ** Files
 
 *** Short description
