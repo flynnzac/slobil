@@ -26,7 +26,7 @@ It has superficial syntax similarities to Tcl in that the language is a command-
 
 ** Lexical Elements
 
-/Slots/ are represented by a forward-slash (=/=) followed by any non-whitespace characters.  Slot names are case-sensitive.  =/a= and =/A= refer to different slots. I use lower case names for slots with multiple words separated by hyphens.  Like this: =/a-name-for-a-slot=.
+/Slots/ are represented by a forward-slash (=/=) followed by any non-whitespace characters.  Slot names are case-sensitive.  =/a= and =/A= refer to different slots. I use lower case names for slots with multiple words separated by hyphens.  Like this: =/a-name-for-a-slot=.  But the language allows for alternative naming conventions.
 
 A /literal number/ is a sequence of digits ([0-9]) that includes at most one decimal point represented by a period.  It may also be preceded by a hyphen to indicate a negative number. A /literal number/ contains no spaces.
 
@@ -1432,7 +1432,7 @@ Print the help string.
 **** =bind=
 Usage: =bind INSTRUCTION SLOT VALUE SLOT VALUE ...=
 
-Sets the =/ans= slot to an instruction that is INSTRUCTION with slot values fixed to the SLOT VALUE pairs.  For example, =bind ( add t s ) /t 2= sets the =/ans= register to the instruction =( add 2 s )=.
+Sets the =/ans= slot to an instruction that is INSTRUCTION with slot values fixed to the SLOT VALUE pairs.  For example, =bind ( add t s ) /t 2= sets the =/ans= slot to the instruction =( add 2 s )=.
 
 ** Files
 
