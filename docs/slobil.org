@@ -269,6 +269,14 @@ ans = 4
 
 Any non-literal in an instruction can be changed by adjusting the environment in which the code is executed.
 
+To bind an instruction to an environment, you can use the =bind= operation.  For example,
+#+BEGIN_SRC slobil
+... /add2 ( add t s ) .
+... bind add2 /t 3 .
+... add2 /s 4 .
+ans = 7
+#+END_SRC
+
 *** Getting data
 
 The =get= operation sets the =/ans= slot to the data located at a certain slot.
@@ -1432,7 +1440,7 @@ Print the help string.
 **** =bind=
 Usage: =bind INSTRUCTION SLOT VALUE SLOT VALUE ...=
 
-Sets the =/ans= slot to an instruction that is INSTRUCTION with slot values fixed to the SLOT VALUE pairs.  For example, =bind ( add t s ) /t 2= sets the =/ans= slot to the instruction =( add 2 s )=.
+Modifies the environment the instruction executes in so that INSTRUCTION now has slot values fixed to the SLOT VALUE pairs.  For example, suppose we have an instruction =sum= defined as =( add t s )=. Then, after =bind sum /t 2=, =/sum /s 3= will set the =/ans= slot =5=.
 
 ** Files
 
