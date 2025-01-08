@@ -138,7 +138,7 @@ run_task_socket (task_vars* task, int port, bool save_code,
       listen(sock, 3);
       size_t sz_addr = sizeof(addr);
       int new_sock = accept(sock, (struct sockaddr*) &addr,
-                            &sz_addr);
+                            (unsigned int*) &sz_addr);
       code = malloc(sizeof(char)*1024);
       size_t i = 0;
       size_t cur_size = 1024;

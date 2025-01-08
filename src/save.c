@@ -139,7 +139,7 @@ save_content (gzFile f, content* reg)
               break;
             case Real:
               {
-                uint64_t* inp = (double*) reg->value->data;
+                uint64_t* inp = (uint64_t*) reg->value->data;
                 uint64_t u = htole64(*inp);
                 gzfwrite(&u, sizeof(uint64_t), 1, f);
               }
@@ -284,7 +284,7 @@ read_object (gzFile f, object* reg)
             uint64_t input;
             gzfread(&input, sizeof(uint64_t), 1, f);
             uint64_t tmp = le64toh(input);
-            double* to_assign = &tmp;
+            double* to_assign = (double*) &tmp;
             assign_real(&d, *to_assign);
           }
           break;
@@ -358,7 +358,7 @@ read_object (gzFile f, object* reg)
             read_object(f, t->state);
 
             code = read_string(f);
-            stmt = read_in_instruction(f, t->task);
+            stmt = read_in_instruction(code, t->task);
             
             t->code = malloc(sizeof(instruction));
             t->code->stmt = stmt;
@@ -406,7 +406,7 @@ save_outer (object* reg, char* fname)
 {
   gzFile f = gzopen(fname, "w6");
   double save_version = 1.1;
-  uint64_t* inp = &save_version;
+  uint64_t* inp = (uint64_t*) &save_version;
   uint64_t u = htole64(*inp);
   gzfwrite(&u, sizeof(uint64_t), 1, f);
   
