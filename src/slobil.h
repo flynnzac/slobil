@@ -43,6 +43,7 @@
 #include <signal.h>
 #include <zlib.h>
 #include <endian.h>
+#include "libjson/json.h"
 
 /**
  * Data type enum, contains integer codes for each data type. They are powers of 2 to allow bitwise OR for accepting multiple argument types
@@ -422,7 +423,7 @@ assign_instr (data** d, statement* s, const char* code,
               const char* help);
 
 struct parser_state
-fresh_state ();
+fresh_state (int print);
 
 void
 free_state (struct parser_state* state);
@@ -662,6 +663,36 @@ void
 replace_all_non_literals(statement* stmt, object* obj);
 
 
+/* embed */
+void*
+mp_realloc_func (void* data, size_t old_size, size_t new_size);
+
+void
+mp_free (void* data, size_t size);
+
+void
+init_slobil(task** task0, struct parser_state* state);
+
+int
+slobil_send_stream (FILE* f, struct parser_state* state, task* task);
+
+int
+slobil_send_string (char* str, struct parser_state* state, task* task);
+
+void
+clean_up_slobil (task* task0, struct parser_state* state);
+
+
+/* json */
+
+void*
+json_create_structure(int nesting, int is_object);
+
+void*
+json_create_data(int type, const char* value, uint32_t length);
+
+int
+json_append(void* structure, char* key, uint32_t key_length, void* elem);
 
 #ifdef GARBAGE
 #define GC_PTHREADS

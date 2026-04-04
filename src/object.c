@@ -122,8 +122,12 @@ set (object* obj, data* d, char* name, int rehash_flag)
       if (rehash_flag && (obj->elements > (SLOBIL_LOAD_FACTOR*(obj->hash_size))))
         {
           slot sl = make_slot("auto-rehash");
-          data* check_hash = get(obj->task->task->slobil_options,
-                                 &sl, 0);
+          data* check_hash = NULL;
+          if (obj->task != NULL)
+            {
+              check_hash = get(obj->task->task->slobil_options,
+                               &sl, 0);
+            }
           bool check = true;
 
           if (!(check_hash == NULL || check_hash->type != Boolean))

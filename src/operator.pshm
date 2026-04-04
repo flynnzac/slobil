@@ -4146,6 +4146,47 @@ op_bind (arg a, object* obj)
 
 }
 
+void
+op_json (arg a, object* obj)
+{
+  #op=json@
+  #length=1@
+  ##CHECK_ARGS~$;
+
+  #num=1@
+  #type=String@
+  ##GETARG~$;
+
+  json_parser_dom helper;
+  json_parser parser;
+
+  json_parser_dom_init(&helper, json_create_structure, json_create_data, json_append);
+  json_parser_init(&parser, NULL, json_parser_dom_callback, &helper);
+
+  char* u8_json = slobil_u32_to_u8((uint32_t*) (arg1->data), u32_strlen((uint32_t*) arg1->data));
+  unsigned long i;
+  int ret;
+
+  for (i=0; i < strlen(u8_json); i++)
+    {
+      ret = json_parser_string(&parser, u8_json+i, 1, NULL);
+      if (ret)
+        {
+          do_error("JSON Parsing error!", obj->task->task);
+          json_parser_free(&parser);
+          free(u8_json);
+          free_object(res);
+          return;
+        }
+    }
+
+  
+  ret_ans(obj, (data*) helper.root_structure);
+
+  free(u8_json);
+  json_parser_free(&parser);
+}
+
 
 void
 add_basic_ops (object* obj)
@@ -4167,6 +4208,9 @@ add_basic_ops (object* obj)
 
   assign_op(&d, op_new, NULL, NULL, 0);
   set(obj, d, "new", 1);
+
+  assign_op(&d, op_json, NULL, NULL, 0);
+  set(obj, d, "json", 1);
   
   /** Insert, Move, and Remove **/
   

@@ -43,42 +43,20 @@ interrupt_handler (int status)
     }
 }
 
-void*
-mp_realloc_func (void* data, size_t old_size, size_t new_size)
-{
-  return GC_realloc(data, new_size);
-}
-
-void
-mp_free (void* data, size_t size)
-{
-  GC_free(data);
-}
 
 int
 main (int argc, char** argv)
 {
-#ifdef GARBAGE
-  GC_INIT();
-  mp_set_memory_functions(GC_malloc, mp_realloc_func, mp_free);
-#endif
 
-  srand((unsigned) time(NULL));
+
+  struct parser_state state;
+
+  init_slobil(&task0, &state);
+
   rl_event_hook = dummy_event;
-
-  task0 = malloc(sizeof(task));
-  task0->task = new_task(task0);
-  task0->state = NULL;
-  task0->code = NULL;
-  task0->queued_instruction = NULL;
-  task0->pid = 0;
-
-  task0->task->reading = true;
 
   FILE* f;
   int complete = 1;
-  struct parser_state state = fresh_state(0);
-
   int k;
   int echo = 1;
   char* script = NULL;

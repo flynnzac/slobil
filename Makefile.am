@@ -11,7 +11,7 @@ SUFFIXES = .pshm .arb
 bin_PROGRAMS = slobil
 slobil_SOURCES = src/slobil.c
 slobil_DEPENDENCIES = libslobil.la
-slobil_CFLAGS = $(AM_CFLAGS) -lslobil
+slobil_CFLAGS = $(AM_CFLAGS) -lslobil -L./libjson -ljson -g
 
 man1_MANS = docs/slobil.1
 
@@ -68,9 +68,10 @@ TESTS += test/unit/test_copy
 
 
 lib_LTLIBRARIES = libslobil.la
-libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/slot.c src/object.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c
+libslobil_la_SOURCES = src/arg.c src/compute.c src/copy.c src/memory.c src/parse.c src/print.c src/slot.c src/object.c src/save.c src/state.c src/statement.c src/type.c src/utility.c src/data.c src/task.c src/conversion.c src/embed.c src/json.c
 
 libslobil_la_SOURCES += src/operator.pshm
+libslobil_la_LIBADD = libjson/libjson.a
 
 
 test_unit_test_arg_SOURCES = test/unit/test_arg.c
@@ -82,3 +83,4 @@ test_unit_test_copy_DEPENDENCIES = libslobil.la
 test_unit_test_copy_CFLAGS = $(AM_CFLAGS) -lcheck_pic -lsubunit -lrt -Isrc -lslobil
 
 
+include_HEADERS = src/slobil.h
