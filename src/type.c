@@ -44,7 +44,7 @@ is_real (const char* str)
       if (str[i] == '.')
         decimals++;
     }
-  return decimals==1;
+  return (decimals==1) && (strcmp(str, ".") != 0);
 }
 
 

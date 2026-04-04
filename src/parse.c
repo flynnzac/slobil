@@ -304,8 +304,7 @@ parse_stmt (FILE* f, parser_state* state, int* complete, task_vars* task)
                   e = add_literal_argument(&head, e, d);
                   mpz_clear(mz);
                 }
-              else if (is_real(state->buffer) &&
-                       strcmp(state->buffer, ".")!=0)
+              else if (is_real(state->buffer))
                 {
                   /* Create Real data if a literal real. */
                   assign_real(&d, atof(state->buffer));
